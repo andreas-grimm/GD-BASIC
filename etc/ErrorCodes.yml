@@ -1,0 +1,33 @@
+# GDIS Log ErrorFile in YAML
+---
+# Message Categories: This key value pairs describe the different categories of messages
+MessageCategories:
+  Info: Informative                 #Informative - no consequences, not written if logging not set to informative
+  Warning: Warning                  # Warning - this line of code should not have been followed, but it has no direct conesequences
+  Error: SyntaxErrorException                      # SyntaxErrorException - the system runs into a situation at is not consistent with the requirements and stops
+  DataFail: Data Discrepancy        # Data is incorrect and fails check
+  DBFail: Database Failure          # Data Store is not present, data cannot be made persistent, system will retry
+  SystemFail: System Failure        # Unqualified System Failure or Exception, system will terminate
+# Message Tags: Describing the level of functional error or inconsistency. SyntaxErrorException tags are used to specialize the error category
+MessageTags:
+  GenericError: Generic SyntaxErrorException       # Generic SyntaxErrorException Tag: only used if no specific error tag is available
+  GenericWarning: Generic Warning   # Generic Warning Tag: only used if no specific warning tag is available
+  GenericInfo: Generic Info         # Generic Info Tag: only used if not specific info tag is available
+  GenericTest: Generic Test         # Generic Test Tag: only used for test cases in info messages, must not be used outside of tests
+# Message Flags: Generic Messages, to be adjusted for internationalization or special needs.
+MessageFlags:
+  ErrorFlag: Error_Flag             # Generic SyntaxErrorException Flag: only used if no specific error message available
+  WarnFlag: Warn_Flag
+  KillFlag: Kill_Flag
+  AbortFlag: Abort_Flag
+  LastSql: Last_SQL
+  NoFile: No_File
+  NoMemory: No_Memory
+  NoEnvVar: No_Environment_Variable
+  ConnectOk: Connection_OK
+  ConnectFail: Connection_Failed
+  DbLoginOk: Database|_Login_OK
+  DbLoginFail: Database_Login_Failed
+  LoginOk: Login_OK
+  LoginFail: Login_Failed
+  Logout: Logout

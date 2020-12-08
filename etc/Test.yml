@@ -1,0 +1,9 @@
+# GDAF Parameter File in YAML
+---
+# Common Parameter:
+Common:
+  RedisConnection: redis://localhost:6379/0                    # Development log level
+# LogLevel: info|warning                                       # Production log level
+# LogFileName: GDAW                                            # File name of the log file
+# LogDirectory: log/                                           # Location of the log files
+# Application Parameter
