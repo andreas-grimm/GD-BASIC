@@ -39,6 +39,7 @@ public class MemoryManagementTest {
     @Order(3)
     public void testGetLabelStatement() {
         MemoryManagement oNewMemoryManagement = new MemoryManagement();
+        oMemoryManagement.putLabelStatement("TestCase", 5);
 
         int iResult = oNewMemoryManagement.getLabelStatement("TestCase");
         assertTrue(iResult == 5);
