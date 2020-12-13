@@ -1,5 +1,5 @@
 #!/bin/sh
 
 echo "Building..."
-mvn clean compile dependency:tree dependency:copy-dependencies package
+mvn clean compile site dependency:tree dependency:copy-dependencies package
 

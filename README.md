@@ -1,6 +1,6 @@
 This is the ReadMe File of the Project:
 
-# GriCom BASIC Interpreter (GDBI)
+# GriCom Diminutive BASIC Interpreter (GDBI)
 
 &copy; 2020 - Andreas Grimm, Use according to the included licence file (LICENSE.md)
 
@@ -10,6 +10,12 @@ Based on the [JASIC project of Bob Nystrom](https://github.com/munificent/jasic)
 
 ---
 
+Project Planning and Control
+
+This project is using Jira to manage progress, but also to log bugs and plan new features. The Jira repository for the Project is here:
+[Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC)
+
+---
 Build Process:
 
 This package has been tested to build with Maven 3.6.3, using Oracle Java 1.8.0_131 under Mac OS X 10.15.7

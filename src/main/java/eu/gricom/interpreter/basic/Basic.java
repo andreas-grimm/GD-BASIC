@@ -28,11 +28,14 @@ public class Basic {
     }
 
     /**
+     * Interpret.
      * This is where the magic happens. This runs the code through the parsing pipeline to generate the AST. Then it
      * executes each statement. It keeps track of the current line in a member variable that the statement objects
      * have access to. This lets "goto" and "if then" do flow control by simply setting the index of the current statement.
      *
      * In an interpreter that didn't mix the interpretation logic in with the AST node classes, this would be doing a lot more work.
+     *
+     * TODO: Convert to stand-alone program
      *
      * @param strProgram A string containing the source code of a .bas script to interpret.
      */
