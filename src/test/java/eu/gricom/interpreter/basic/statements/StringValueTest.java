@@ -1,7 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StringValueTest {
 
@@ -11,7 +11,7 @@ public class StringValueTest {
         String strResult;
 
         strResult = oStringValue.toString();
-        assertTrue(strResult.matches("TestValue"));
+        assertEquals(strResult, "TestValue");
     }
 
     @Test
@@ -19,7 +19,7 @@ public class StringValueTest {
         StringValue oStringValue = new StringValue("999");
 
         double dResult = oStringValue.toNumber();
-        assertTrue(dResult == 999);
+        assertEquals(dResult, 999);
     }
 
     @Test
@@ -27,6 +27,6 @@ public class StringValueTest {
         StringValue oStringValue = new StringValue("TestValue");
         StringValue oNewValue = (StringValue) oStringValue.evaluate();
 
-        assertTrue(oStringValue.equals(oNewValue));
+        assertEquals(oStringValue, oNewValue);
     }
 }

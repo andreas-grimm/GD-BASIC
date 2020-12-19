@@ -1,7 +1,7 @@
 package eu.gricom.interpreter.basic;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TokenTest {
 
@@ -10,12 +10,12 @@ public class TokenTest {
     @Test
     public void testGetText() {
         String strReturn = oToken.getText();
-        assertTrue(strReturn.matches("TestToken"));
+        assertEquals(strReturn, "TestToken");
     }
 
     @Test
     public void testGetType() {
         TokenType oReturn = oToken.getType();
-        assertTrue(oReturn.equals(TokenType.STRING));
+        assertEquals(oReturn, TokenType.STRING);
     }
 }

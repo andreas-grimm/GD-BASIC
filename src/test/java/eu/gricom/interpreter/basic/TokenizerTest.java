@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TokenizerTest {
     private Logger _oLogger = new Logger(this.getClass().getName());
@@ -27,6 +27,6 @@ public class TokenizerTest {
             iCounter++;
         }
 
-        assertTrue(iCounter == 35);
+        assertEquals(iCounter, 35);
     }
 }

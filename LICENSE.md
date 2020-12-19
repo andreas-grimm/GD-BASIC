@@ -22,7 +22,7 @@ In addition to the CDDL-1.0 the following conditions are part of the granted rig
 
 * __9 (a)__ These conditions automatically transfer to any software that is incorporating the software in any form (e.g. linking, calling,...), or which is using the interface structures of this software as part of their software design
 
-* These modification in the license were made under acknowledgement of section __4.3__ of the CDDL-1.0 license. As such, section __4.1__ of the CDDL-1.0 document shall read as: "Andreas Grimm is the initial license steward".
+* These modifications in the license were made under acknowledgement of section __4.3__ of the CDDL-1.0 license. As such, section __4.1__ of the CDDL-1.0 document shall read as: "Andreas Grimm is the initial license steward".
 
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -105,10 +105,10 @@ common form of computer software code in which modifications
 are made and (b) associated documentation included in or
 with such code.
 
-*1.13 You (or Your)* means an individual or a legal
+*1.13 You (or Your)* means an individual, or a legal
 entity exercising rights under, and complying with all of
 the terms of, this License. For legal entities,
-You includes any entity which controls, is
+*You* includes any entity which controls, is
 controlled by, or is under common control with You. For
 purposes of this definition, control means
 (a) the power, direct or indirect, to cause the

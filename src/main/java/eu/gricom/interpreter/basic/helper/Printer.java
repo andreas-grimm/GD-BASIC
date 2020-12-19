@@ -1,8 +1,30 @@
 package eu.gricom.interpreter.basic.helper;
 
-public class Printer {
-    private static final String _strTarget = new String("Console");
-    public static void println (String strPrintLine) {
+/**
+ * Printer.java
+ * <p>
+ * Description:
+ * <p>
+ * Static class to bundle all outputs as part of the program execution.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ */
+public final class Printer {
+    private static String _strTarget = "Console";
+
+    /**
+     * default constructor.
+     */
+    private Printer() {
+
+    }
+
+    /**
+     * provide output to the console terminal.
+     *
+     * @param strPrintLine - defined output line
+     */
+    public static void println(final String strPrintLine) {
         if (_strTarget.contains("Console")) {
             System.out.println(strPrintLine);
         }

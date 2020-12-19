@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NumberValueTest {
@@ -18,7 +19,7 @@ public class NumberValueTest {
         NumberValue oNumberValue = new NumberValue(999);
 
         double dResult = oNumberValue.toNumber();
-        assertTrue(dResult == 999);
+        assertEquals(dResult, 999);
     }
 
     @Test
@@ -26,6 +27,6 @@ public class NumberValueTest {
         NumberValue oNumberValue = new NumberValue(999);
         NumberValue oNewValue = (NumberValue) oNumberValue.evaluate();
 
-        assertTrue(oNumberValue.equals(oNewValue));
+        assertEquals(oNumberValue, oNewValue);
     }
 }
