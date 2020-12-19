@@ -2,8 +2,8 @@ package eu.gricom.interpreter.basic.statements;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class OperatorExpressionTest {
 
@@ -15,49 +15,49 @@ public class OperatorExpressionTest {
         try {
             OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '=', oLeftValue);
             NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertTrue(oResultValue.toNumber() == 1.0);
+            assertEquals(oResultValue.toNumber(), 1.0);
         } catch (Exception eException) {
-            assertTrue(false);
+            fail();
         }
 
         try {
             OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '+', oRightValue);
             NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertTrue(oResultValue.toNumber() == 3.0);
+            assertEquals(oResultValue.toNumber(), 3.0);
         } catch (Exception eException) {
-            assertTrue(false);
+            fail();
         }
 
         try {
             OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '-', oRightValue);
             NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertTrue(oResultValue.toNumber() == 1.0);
+            assertEquals(oResultValue.toNumber(), 1.0);
         } catch (Exception eException) {
-            assertTrue(false);
+            fail();
         }
 
         try {
             OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '/', oRightValue);
             NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertTrue(oResultValue.toNumber() == 2.0);
+            assertEquals(oResultValue.toNumber(), 2.0);
         } catch (Exception eException) {
-            assertTrue(false);
+            fail();
         }
 
         try {
             OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '<', oRightValue);
             NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertFalse(oResultValue.toNumber() == 1.0);
+            assertEquals(oResultValue.toNumber(), 0.0);
         } catch (Exception eException) {
-            assertTrue(false);
+            fail();
         }
 
         try {
             OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '>', oRightValue);
             NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertTrue(oResultValue.toNumber() == 1.0);
+            assertEquals(oResultValue.toNumber(), 1.0);
         } catch (Exception eException) {
-            assertTrue(false);
+            fail();
         }
     }
 }

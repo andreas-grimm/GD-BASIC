@@ -9,7 +9,7 @@ the original functionality.
 ## Language Elements
 
 ### Variables and Constants
-Currently supported are positive integers and strings. Strings should be in 
+Currently, supported are positive integers and strings. Strings should be in 
 "double quotes", and only positive integers can be parsed (though numbers 
 are double internally).
 

@@ -3,8 +3,8 @@ package eu.gricom.interpreter.basic.statements;
 import eu.gricom.interpreter.basic.helper.MemoryManagement;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class IfThenStatementTest {
 
@@ -14,24 +14,20 @@ public class IfThenStatementTest {
         oMemoryManagement.putLabelStatement("TestCase", 5);
         oMemoryManagement.setCurrentStatement(4);
 
-        int iNewLabel = oMemoryManagement.getCurrentStatement();
-
         NumberValue oLeftValue = new NumberValue(2);
 
         try {
-            iNewLabel = oMemoryManagement.getCurrentStatement();
-
             OperatorExpression oExpression = new OperatorExpression(oLeftValue, '=', oLeftValue);
 
             IfThenStatement oStatement = new IfThenStatement(oExpression, "TestCase");
 
             oStatement.execute();
 
-            iNewLabel = oMemoryManagement.getCurrentStatement();
+            int iNewLabel = oMemoryManagement.getCurrentStatement();
 
-            assertTrue(iNewLabel == 5);
+            assertEquals(iNewLabel, 5);
         } catch (Exception eException) {
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -41,25 +37,21 @@ public class IfThenStatementTest {
         oMemoryManagement.putLabelStatement("TestCase", 5);
         oMemoryManagement.setCurrentStatement(4);
 
-        int iNewLabel = oMemoryManagement.getCurrentStatement();
-
         NumberValue oLeftValue = new NumberValue(2);
         NumberValue oRightValue = new NumberValue(1);
 
         try {
-            iNewLabel = oMemoryManagement.getCurrentStatement();
-
             OperatorExpression oExpression = new OperatorExpression(oLeftValue, '=', oRightValue);
 
             IfThenStatement oStatement = new IfThenStatement(oExpression, "TestCase");
 
             oStatement.execute();
 
-            iNewLabel = oMemoryManagement.getCurrentStatement();
+            int iNewLabel = oMemoryManagement.getCurrentStatement();
 
-            assertFalse(iNewLabel == 5);
+            assertEquals(iNewLabel, 4);
         } catch (Exception eException) {
-            assertTrue(false);
+            fail();
         }
     }
 }

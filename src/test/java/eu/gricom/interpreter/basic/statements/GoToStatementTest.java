@@ -3,7 +3,8 @@ package eu.gricom.interpreter.basic.statements;
 import eu.gricom.interpreter.basic.helper.MemoryManagement;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GoToStatementTest {
 
@@ -19,9 +20,10 @@ public class GoToStatementTest {
 
             int iNewLabel = oMemoryManagement.getCurrentStatement();
 
-            assertTrue(iNewLabel == 5);
+            assertEquals(iNewLabel, 5);
+
         } catch (Exception eException) {
-            assertTrue(false);
+            fail();
         }
     }
 }

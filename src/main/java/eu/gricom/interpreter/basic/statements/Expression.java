@@ -14,11 +14,12 @@ public interface Expression {
      * return the value.
      *
      * @return The value of the calculated expression.
+     * @throws Exception - Any Exception generated in a lower part of the program.
      */
     Value evaluate() throws Exception;
 
     /**
-     * Get the content in human readable form
+     * Get the content in human readable form.
      *
      * @return Content in readable form
      */

@@ -6,16 +6,32 @@ import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.helper.MemoryManagement;
 import eu.gricom.interpreter.basic.helper.Printer;
 import eu.gricom.interpreter.basic.statements.Statement;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Basic.java
+ * <p>
+ * Description:
+ * <p>
+ * This is the main class of the Basic interpreter. It manages the execution flow of the program: read, tokenize,
+ * parse, and interpret.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ */
+@SuppressWarnings("SpellCheckingInspection")
 public class Basic {
-    public static BufferedReader _oLineIn;
-    private Logger _oLogger = new Logger(this.getClass().getName());
+    private static BufferedReader _oLineIn;
+    private final Logger _oLogger = new Logger(this.getClass().getName());
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of
@@ -23,8 +39,8 @@ public class Basic {
      * current statement.
      */
     public Basic() {
-        InputStreamReader _oConverter = new InputStreamReader(System.in);
-        _oLineIn = new BufferedReader(_oConverter);
+        InputStreamReader oConverter = new InputStreamReader(System.in);
+        _oLineIn = new BufferedReader(oConverter);
     }
 
     /**
@@ -39,7 +55,7 @@ public class Basic {
      *
      * @param strProgram A string containing the source code of a .bas script to interpret.
      */
-    public void interpret(String strProgram) {
+    public final void interpret(final String strProgram) {
         MemoryManagement oMemoryManagement = new MemoryManagement();
         List<Statement> aoStatements = null;
 
@@ -92,7 +108,7 @@ public class Basic {
      *
      * @param args Command-line arguments.
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Logger oLogger = new Logger("main");
         oLogger.setLogLevel("");
 
@@ -113,6 +129,7 @@ public class Basic {
             oCommandLine = parser.parse(options, args);
         } catch (ParseException exParseException) {
             bParseOK = false;
+            // TODO This here makes no sense...
             strParseError = exParseException.getMessage();
         }
 
@@ -123,7 +140,7 @@ public class Basic {
             Printer.println("(c) Copyright Andreas Grimm 2020");
 
             long lMaxMemory = Runtime.getRuntime().maxMemory();
-            Printer.println("Maximum memory (bytes): " + (lMaxMemory == Long.MAX_VALUE ? "no limit" : lMaxMemory) + ", ");
+            Printer.println("Maximum memory (bytes): " + lMaxMemory + ", ");
             Printer.println("Free memory (bytes): " + Runtime.getRuntime().freeMemory());
         }
 
@@ -143,7 +160,7 @@ public class Basic {
             oLogger.debug("Display help message...");
 
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp( "java -jar BASIC-<build-name>.jar -i <filename.bas>", options );
+            formatter.printHelp("java -jar BASIC-<build-name>.jar -i <filename.bas>", options);
         }
 
         if (!bParseOK) {

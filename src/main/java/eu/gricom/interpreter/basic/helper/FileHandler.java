@@ -1,19 +1,40 @@
 package eu.gricom.interpreter.basic.helper;
 
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.Charset;
 
-public class FileHandler {
+/**
+ * FileHandler.java
+ * <p>
+ * Description:
+ * <p>
+ * The FileHandler class has a single function: read a source code file and move the content into a single string.
+ * This might cause problems in case of really big programs, so this needs to be addressed later.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ */
+public final class FileHandler {
     private static Logger _oLogger = new Logger(FileHandler.class.getClass().getName());
 
-    /**I missed
-     * Reads the file from the given path and returns its contents as a single
-     * string.
+    /**
+     * default constructor.
+     */
+    private FileHandler() {
+    }
+
+    /**
+     * readFile.
+     * Reads the file from the given path and returns its contents as a single string.
      *
      * @param  strPath  Path to the text file to read.
      * @return          The contents of the file or null if the load failed.
      */
-    public static String readFile(String strPath) {
+    public static String readFile(final String strPath) {
         try {
             FileInputStream oStream = new FileInputStream(strPath);
 
@@ -37,10 +58,12 @@ public class FileHandler {
 
                 _oLogger.debug("Read File:\n" + oBuilder.toString());
                 return (oBuilder.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
             } finally {
                 oStream.close();
             }
-        } catch (IOException ex) {
+        } catch (IOException e) {
             _oLogger.error("[ERR-IO-EXCEPT] Program file could not be read.");
             System.exit(-1);
         }

@@ -30,11 +30,11 @@ The current version contains the following changes, bug fixes, and enhancements:
 
 0.0.1:
 * Setup and project re-factor the original project by Bob Nystrom, containing:
-* Mavenizing the project: Using Apache Maven as the build processor, also allowing a CI/CD development process
+* "Mavenizing" the project: Using Apache Maven as the build processor, also allowing a CI/CD development process
 * Adding Checkstyle and PMD static code testing
 
 0.0.2:
-* Adding tooling to the exising code:
+* Adding tooling to the existing code:
 * Command Line - Using Apache Commons CLI to process the input parameter
 * Logger - lightweight logger to avoid heavy-weight log4j
 * ResourceHandler - Simple Resource Handler to use .ini files as resources for programs

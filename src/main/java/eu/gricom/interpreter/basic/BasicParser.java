@@ -3,17 +3,20 @@ package eu.gricom.interpreter.basic;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.helper.MemoryManagement;
-import eu.gricom.interpreter.basic.statements.*;
+import eu.gricom.interpreter.basic.statements.AssignStatement;
+import eu.gricom.interpreter.basic.statements.Expression;
+import eu.gricom.interpreter.basic.statements.GotoStatement;
+import eu.gricom.interpreter.basic.statements.IfThenStatement;
+import eu.gricom.interpreter.basic.statements.InputStatement;
+import eu.gricom.interpreter.basic.statements.NumberValue;
+import eu.gricom.interpreter.basic.statements.OperatorExpression;
+import eu.gricom.interpreter.basic.statements.PrintStatement;
 import eu.gricom.interpreter.basic.statements.Statement;
+import eu.gricom.interpreter.basic.statements.StringValue;
+import eu.gricom.interpreter.basic.statements.VariableExpression;
 
 import java.util.ArrayList;
 import java.util.List;
-
-public class BasicParser {
-    private Logger _oLogger = new Logger(this.getClass().getName());
-    private final List<Token> _aoTokens;
-    private int _iPosition;
-
 /**
  * This defines the Basic parser. The parser takes in a sequence of tokens
  * and generates an abstract syntax tree. This is the nested data structure
@@ -24,7 +27,18 @@ public class BasicParser {
  * As a side-effect, this phase also stores off the line numbers for each
  * label in the program. It's a bit gross, but it works.
  */
-    public BasicParser(List<Token> aoTokens) {
+public class BasicParser {
+    private final Logger _oLogger = new Logger(this.getClass().getName());
+    private final List<Token> _aoTokens;
+    private int _iPosition;
+
+    /**
+     * Default constructor.
+     * The constructor receives the tokenized program and parses it.
+     *
+     * @param aoTokens - the tokenized program
+     */
+    public BasicParser(final List<Token> aoTokens) {
         MemoryManagement oMemoryManagement = new MemoryManagement();
 
         _aoTokens = aoTokens;
@@ -36,17 +50,19 @@ public class BasicParser {
      * tokens and routing to the other parse functions for the different
      * grammar syntax until we run out of code to parse.
      *
-     * @return          The list of parsed statements.
+     * @return The list of parsed statements.
+     * @throws SyntaxErrorException - marks any syntax errors
      */
-    public List<Statement> parse() throws SyntaxErrorException {
+    public final List<Statement> parse() throws SyntaxErrorException {
         MemoryManagement oMemoryManagement = new MemoryManagement();
         List<Statement> aoStatements = new ArrayList<>();
 
         while (true) {
             // Ignore empty lines.
             while (matchNextToken(TokenType.LINE)) {
+
                 _oLogger.debug("--> empty token: " + _iPosition);
-            };
+            }
 
             // if the current token is of type LABEL, then store the token number in the label list
             if (matchNextToken(TokenType.LABEL)) {
@@ -84,8 +100,10 @@ public class BasicParser {
                                     String strLabel = consumeToken(TokenType.WORD).getText();
                                     _oLogger.debug("----> THEN: [" +  strLabel + "] " +  _iPosition);
                                     aoStatements.add(new IfThenStatement(oCondition, strLabel));
-                                } else
+                                } else {
+                                    // TODO if token is not EOF - mark a syntax error
                                     break; // Unexpected token (likely EOF), so end.
+                                }
         }
 
         return aoStatements;
@@ -97,10 +115,11 @@ public class BasicParser {
 
     /**
      * Parses a single expression. Recursive descent parsers start with the
-     * lowest-precedent term and moves towards higher precedence. For Basic,
+     * lowest-precedent term and moves towards higher priority. For Basic,
      * binary operators (+, -, etc.) are the lowest.
      *
      * @return The parsed expression.
+     * @throws SyntaxErrorException - marks any syntax errors
      */
     private Expression expression() throws SyntaxErrorException {
         return operator();
@@ -127,8 +146,10 @@ public class BasicParser {
      * 8. Return the last expression built.
      *
      * @return The parsed expression.
+     * @throws SyntaxErrorException - marks any syntax issues
      */
-    public Expression operator() throws SyntaxErrorException {
+    public final Expression operator() throws SyntaxErrorException {
+
         Expression oExpression = atomic();
 
         // Keep building operator expressions as long as we have operators.
@@ -147,8 +168,10 @@ public class BasicParser {
      * well as parenthesized expressions.
      *
      * @return The parsed expression.
+     * @throws SyntaxErrorException - mark any syntax issues
      */
-    public Expression atomic() throws SyntaxErrorException {
+    public final Expression atomic() throws SyntaxErrorException {
+
         // If the current token is of type WORD, then we assume that the next token is a variable.
         if (matchNextToken(TokenType.WORD)) {
             return (new VariableExpression(lastToken(1).getText()));
@@ -182,13 +205,14 @@ public class BasicParser {
 
     /**
      * Consumes the next two tokens if they are the given type (in order).
-     * Consumes no tokens if either check fais.
+     * Consumes no tokens if either check fails.
      *
      * @param  eType1 Expected type of the next token.
      * @param  eType2 Expected type of the subsequent token.
      * @return       True if tokens were consumed.
      */
-    public boolean matchNextTwoToken(TokenType eType1, TokenType eType2) {
+    public final boolean matchNextTwoToken(final TokenType eType1, final TokenType eType2) {
+
         Token oOffsetToken0 = getToken(0);
         Token oOffsetToken1 = getToken(1);
 
@@ -210,7 +234,8 @@ public class BasicParser {
      * @param  oType Expected type of the next token.
      * @return       True if the token was consumed.
      */
-    public boolean matchNextToken(TokenType oType) {
+    public final boolean matchNextToken(final TokenType oType) {
+
         if (getToken(0).getType() != oType) {
             return (false);
         }
@@ -224,7 +249,8 @@ public class BasicParser {
      * @param  strName  Expected name of the next word token.
      * @return          True if the token was consumed.
      */
-    public boolean matchNextToken(String strName) {
+    public final boolean matchNextToken(final String strName) {
+
         if (getToken(0).getType() != TokenType.WORD) {
             return (false);
         }
@@ -246,7 +272,8 @@ public class BasicParser {
      * @param  type  Expected type of the next token.
      * @return       The consumed token.
      */
-    public Token consumeToken(TokenType type) {
+    public final Token consumeToken(final TokenType type) {
+
         if (getToken(0).getType() != type) {
             throw new Error("Expected " + type + ".");
         }
@@ -261,8 +288,10 @@ public class BasicParser {
      * @param  strName  Expected name of the next word token.
      * @return          The consumed token.
      */
-    public Token consumeToken(String strName) {
+    public final Token consumeToken(final String strName) {
+
         if (!matchNextToken(strName)) {
+            // TODO convert to syntax error
             throw new Error("Expected " + strName + ".");
         }
         return (lastToken(1));
@@ -275,7 +304,8 @@ public class BasicParser {
      * @param  iOffset How far back in the token stream to look.
      * @return        The consumed token.
      */
-    public Token lastToken(int iOffset) {
+    public final Token lastToken(final int iOffset) {
+
         return (_aoTokens.get(_iPosition - iOffset));
     }
 
@@ -286,20 +316,26 @@ public class BasicParser {
      * @param  iOffset How far forward in the token stream to look.
      * @return        The yet-to-be-consumed token.
      */
-    public Token getToken(int iOffset) {
-        if (_iPosition + iOffset >= _aoTokens.size()) {  //check whether the current position in the tokenized program is
-                                                        // larger or equal the token size
-            return new Token("", TokenType.EOF); // send an end_of_file token back - this is an unexpected EOF
+    public final Token getToken(final int iOffset) {
+
+        //check whether the current position in the tokenized program is larger or equal the token size
+        if (_iPosition + iOffset >= _aoTokens.size()) {
+            // send an end_of_file token back - this is an unexpected EOF
+            // TODO actually this is a syntax error and should throw the syntax error exception
+            return (new Token("", TokenType.EOF));
         }
-        return _aoTokens.get(_iPosition + iOffset);     // get the requested token
+
+        // get the requested token
+        return (_aoTokens.get(_iPosition + iOffset));
     }
 
     /**
-     * Helper Function for JUnit
+     * Helper Function for JUnit.
      *
      * @param iPosition artificial set iPosition
      */
-    public void setPosition(int iPosition) {
+    public final void setPosition(final int iPosition) {
+
         _iPosition = iPosition;
     }
 }
