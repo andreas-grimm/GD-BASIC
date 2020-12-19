@@ -9,6 +9,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MemoryManagementTest {
@@ -23,7 +24,7 @@ public class MemoryManagementTest {
     @Test
     @Order(2)
     public void testContainsKey() {
-        boolean bResult = false;
+        boolean bResult;
         oMemoryManagement.putLabelStatement("TestCase", 5);
 
         MemoryManagement oNewMemoryManagement = new MemoryManagement();
@@ -39,9 +40,10 @@ public class MemoryManagementTest {
     @Order(3)
     public void testGetLabelStatement() {
         MemoryManagement oNewMemoryManagement = new MemoryManagement();
+        oMemoryManagement.putLabelStatement("TestCase", 5);
 
         int iResult = oNewMemoryManagement.getLabelStatement("TestCase");
-        assertTrue(iResult == 5);
+        assertEquals(iResult, 5);
     }
 
     @Test
@@ -52,11 +54,11 @@ public class MemoryManagementTest {
         oMemoryManagement.setCurrentStatement(100);
 
         int iResult = oMemoryManagement.getCurrentStatement();
-        assertTrue(iResult == 100);
+        assertEquals(iResult, 100);
 
         oMemoryManagement.nextStatement();
         iResult = oMemoryManagement.getCurrentStatement();
-        assertTrue(iResult == 101);
+        assertEquals(iResult, 101);
     }
 
     @Test
@@ -68,7 +70,7 @@ public class MemoryManagementTest {
         oMemoryManagement.putMap("String", "TestValue");
 
         NumberValue oResult = (NumberValue) oMemoryManagement.getMap("Number");
-        assertTrue(oResult.toNumber() == 999);
+        assertEquals(oResult.toNumber(), 999);
 
         StringValue strResult = (StringValue) oMemoryManagement.getMap("String");
         assertTrue(strResult.toString().matches("TestValue"));

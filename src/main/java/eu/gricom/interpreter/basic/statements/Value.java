@@ -17,14 +17,16 @@ package eu.gricom.interpreter.basic.statements;
  */
 public interface Value extends Expression {
     /**
-     * Value types override this to convert themselves to a string
-     * representation.
+     * Value types override this to convert themselves to a string representation.
+     *
+     * @return the value as a string
      */
     String toString();
 
     /**
-     * Value types override this to convert themselves to a numeric
-     * representation.
+     * Value types override this to convert themselves to a numeric representation.
+     *
+     * @return the value as a double
      */
     double toNumber();
 }

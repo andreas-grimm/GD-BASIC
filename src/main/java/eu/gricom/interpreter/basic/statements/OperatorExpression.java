@@ -15,14 +15,27 @@ public class OperatorExpression implements Expression {
     private final char _strOperator;
     private final Expression _oRight;
 
-    public OperatorExpression(Expression oLeft, char strOperator, Expression oRight) {
+    /**
+     * Default constructor.
+     *
+     * @param oLeft left part of the operation
+     * @param strOperator the actual operator - defined as a single char
+     * @param oRight right side of the operation
+     */
+    public OperatorExpression(final Expression oLeft, final char strOperator, final Expression oRight) {
         _oLogger.debug("--->  " + oLeft.content() + " " + strOperator + " " + oRight.content());
         _oLeft = oLeft;
         _strOperator = strOperator;
         _oRight = oRight;
     }
 
-    public Value evaluate() throws Exception {
+    /**
+     * Return the content of the result of the operation as a value variable.
+     *
+     * @throws Exception syntax error is the operator cannot be executed
+     * @return returns the result of the operation.
+     */
+    public final Value evaluate() throws Exception {
         Value leftVal = _oLeft.evaluate();
         Value rightVal = _oRight.evaluate();
 
@@ -30,54 +43,105 @@ public class OperatorExpression implements Expression {
             case '=':
                 // Coerce to the left argument's type, then compare.
                 if (leftVal instanceof NumberValue) {
-                    return new NumberValue((leftVal.toNumber() ==
-                            rightVal.toNumber()) ? 1 : 0);
+                    if (leftVal.toNumber() == rightVal.toNumber()) {
+                        return (new NumberValue(1));
+                    } else {
+                        return (new NumberValue(0));
+                    }
                 }
-                return new NumberValue(leftVal.toString().equals(rightVal.toString()) ? 1 : 0);
+                if (leftVal.toString().equals(rightVal.toString())) {
+                    return (new NumberValue(1));
+                } else {
+                    return (new NumberValue(0));
+                }
 
             case '+':
                 // Addition if the left argument is a number, otherwise do
                 // string concatenation.
                 if (leftVal instanceof NumberValue) {
-                    return new NumberValue(leftVal.toNumber() +
-                            rightVal.toNumber());
+                    return new NumberValue(leftVal.toNumber() + rightVal.toNumber());
                 }
                 return new StringValue(leftVal.toString() + rightVal.toString());
 
             case '-':
-                return new NumberValue(leftVal.toNumber() -
-                        rightVal.toNumber());
+                return new NumberValue(leftVal.toNumber() - rightVal.toNumber());
             case '*':
-                return new NumberValue(leftVal.toNumber() *
-                        rightVal.toNumber());
+                return new NumberValue(leftVal.toNumber() * rightVal.toNumber());
             case '/':
-                return new NumberValue(leftVal.toNumber() /
-                        rightVal.toNumber());
+                return new NumberValue(leftVal.toNumber() / rightVal.toNumber());
             case '<':
                 // Coerce to the left argument's type, then compare.
                 if (leftVal instanceof NumberValue) {
-                    return new NumberValue((leftVal.toNumber() <
-                            rightVal.toNumber()) ? 1 : 0);
+                    if (leftVal.toNumber() < rightVal.toNumber()) {
+                        return (new NumberValue(1));
+                    } else {
+                        return (new NumberValue(0));
+                    }
                 }
-                return new NumberValue((leftVal.toString().compareTo(rightVal.toString()) < 0) ? 1 : 0);
+                if (leftVal.toString().compareTo(rightVal.toString()) < 0) {
+                    return (new NumberValue(1));
+                } else {
+                    return (new NumberValue(0));
+                }
 
             case '>':
                 // Coerce to the left argument's type, then compare.
                 if (leftVal instanceof NumberValue) {
-                    return new NumberValue((leftVal.toNumber() >
-                            rightVal.toNumber()) ? 1 : 0);
+                    if (leftVal.toNumber() > rightVal.toNumber()) {
+                        return (new NumberValue(1));
+                    } else {
+                        return (new NumberValue(0));
+                    }
                 }
-                return new NumberValue((leftVal.toString().compareTo(rightVal.toString()) > 0) ? 1 : 0);
 
+                if (leftVal.toString().compareTo(rightVal.toString()) > 0) {
+                    return (new NumberValue(1));
+                } else {
+                    return (new NumberValue(0));
+                }
+
+            default:
+                // TODO - return a syntax error
+                throw new SyntaxErrorException("Unknown operator: " + _strOperator);
         }
-        throw new SyntaxErrorException("Unknown operator: " + _strOperator);
     }
 
-    public final Expression getLeft() {return (_oLeft);}
-    public String getOperator() {return (String.valueOf(_strOperator));}
-    public final Expression getRight() {return (_oRight);}
+    /**
+     * get the left side of the operation.
+     *
+     * @return the left side of the operation as an expression
+     */
+    public final Expression getLeft() {
 
-    public String content () {
+        return (_oLeft);
+    }
+
+    /**
+     * get the operator of the operation.
+     *
+     * @return - the operator as a string
+     */
+    public final String getOperator() {
+
+        return (String.valueOf(_strOperator));
+    }
+
+    /**
+     * get the right side of the operation.
+     *
+     * @return the right side of the operation as an expression
+     */
+    public final Expression getRight() {
+
+        return (_oRight);
+    }
+
+    /**
+     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     *
+     * @return - readable string with the name and the value of the assignment
+     */
+    public final String content() {
         return (_oLeft.content() + " " + _strOperator + " " + _oRight.content());
 
     }

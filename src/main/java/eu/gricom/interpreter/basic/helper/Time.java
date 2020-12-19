@@ -1,47 +1,21 @@
 package eu.gricom.interpreter.basic.helper;
 
-/**
-Time.java
-(c) = 2004,..,2007 by Andreas Grimm, Den Haag, The Netherlands
-
-This software is protected according to Dutch and International Law. Certain components of
-this package might have been released under terms of conditions of the General Public License
-of the GNU organization. Those modules are named with name and version number under the
-following URL: http://www.gricom.nl/public_released
-
-Modules and versions not named on this location are not released and cannot be used without
-written consent of the author. General terms and conditions of the given URL apply. This
-notice cannot not be used as evidence of public release.
-
-Created in 2003
-
-$Id: Time.java,v 1.2 2009/11/05 11:12:23 Andreas Exp $
-$Author: Andreas $
-$Log: Time.java,v $
-Revision 1.2  2009/11/05 11:12:23  Andreas
-checkpoint November 2009
-Committed on the Free edition of March Hare Software CVSNT Server.
-Upgrade to CVS Suite for more features and support:
-http://march-hare.com/cvsnt/
-
-Revision 1.1  2009/04/21 19:18:21  Andreas
-Initial check in on new directory
-Committed on the Free edition of March Hare Software CVSNT Server.
-Upgrade to CVS Suite for more features and support:
-http://march-hare.com/cvsnt/
-
-Revision 1.1  2007/11/10 21:10:00  agrimm
-Windows Version
-Java 1.5
-Eclipse 3.x Europa
-
-
-*/
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
+ * Time.java
+ * (c) = 2004,..,2007 by Andreas Grimm, Den Haag, The Netherlands
+ *
+ * This software is protected according to Dutch and International Law. Certain components of this package might have
+ * been released under terms of conditions of the General Public License of the GNU organization. Those modules are
+ * named with name and version number under the following URL: http://www.gricom.nl/public_released
+ *
+ * Modules and versions not named on this location are not released and cannot be used without written consent of the
+ * author. General terms and conditions of the given URL apply. This notice cannot not be used as evidence of public
+ * release.
+ *
+ * Created in 2003
  * @author andreas
  */
 public class Time {
@@ -109,7 +83,7 @@ public class Time {
         // If this pattern is broken, the method will return a 'false'.
         parseDate(strDate);
 
-        String strDummy = "";
+        String strDummy;
 
         // first - isolate the hour
         strDummy = strDate.substring(11, 13);
@@ -154,7 +128,7 @@ public class Time {
         // assumption that all dates in ProvJs are formatted according to the
         // same pattern: YYYY-MM-DD.
         // If this pattern is broken, the method will return a 'false'.
-        String strDummy = "";
+        String strDummy;
 
         // first - isolate the year
         strDummy = strDate.substring(0, 4);
@@ -207,20 +181,20 @@ public class Time {
      * @return - date of this string
      */
     public final String getDate() {
-        String strTime = "";
-        String strDay = "";
-        String strMonth = "";
+        String strTime;
+        String strDay;
+        String strMonth;
 
         if (_iMonth < 10) {
             strMonth = "0" + _iMonth;
         } else {
-            strMonth += _iMonth;
+            strMonth = Integer.toString(_iMonth);
         }
 
         if (_iDay < 10) {
             strDay = "0" + _iDay;
         } else {
-            strDay += _iDay;
+            strDay = Integer.toString(_iDay);
         }
 
         strTime = _iYear + "-" + strMonth + "-" + strDay;
@@ -234,26 +208,26 @@ public class Time {
      */
     public final String getDateTime() {
         String strDateTime = getDate();
-        String strHour = "";
-        String strMinute = "";
-        String strSecs = "";
+        String strHour;
+        String strMinute;
+        String strSecs;
 
         if (_iHour < 10) {
             strHour = "0" + _iHour;
         } else {
-            strHour += _iHour;
+            strHour = Integer.toString(_iHour);
         }
 
         if (_iMinute < 10) {
             strMinute = "0" + _iMinute;
         } else {
-            strMinute += _iMinute;
+            strMinute = Integer.toString(_iMinute);
         }
 
         if (_iSecs < 10) {
             strSecs = "0" + _iSecs;
         } else {
-            strSecs += _iSecs;
+            strSecs = Integer.toString(_iSecs);
         }
 
         strDateTime += " " + strHour + ":" + strMinute + ":" + strSecs;
@@ -495,9 +469,9 @@ public class Time {
      */
     public final int diffInDays(final Time oTime) {
         GregorianCalendar oGregorianCalendar = new GregorianCalendar();
-        int iDifference = 0;
-        Time oLowerTime = null;
-        Time oHigherTime = null;
+        int iDifference;
+        Time oLowerTime;
+        Time oHigherTime;
 
         if (matches(oTime)) {
             return (0);

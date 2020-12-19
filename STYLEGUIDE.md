@@ -6,7 +6,7 @@ keep the code in our tutorials consistent.
 
 Our overarching goals are __conciseness__, __readability__ and __simplicity__.
 
-You should also check out out [Swift](https://github.com/raywenderlich/swift-style-guide)
+You should also check out [Swift](https://github.com/raywenderlich/swift-style-guide)
 and [Objective-C](https://github.com/raywenderlich/objective-c-style-guide)
 style guides too.
 
@@ -19,8 +19,8 @@ All rules in the styleguide are verified using the Checkstyle tool during the bu
 This style-guide is somewhat of a mash-up between the existing Java language
 style guides, style guide for C and C++ coding, and a tutorial-readability focused Swift style-guide. The language
 guidance is drawn from the
-[Android contributors style guide](https://source.android.com/source/code-style.html)
-and the
+[Android contributors style guide](https://source.android.com/source/code-style.html),
+ and the
 [Google Java Style Guide](https://google-styleguide.googlecode.com/svn/trunk/javaguide.html).
 
 ## Nomenclature

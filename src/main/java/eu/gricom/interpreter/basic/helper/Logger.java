@@ -14,39 +14,9 @@ import java.io.PrintWriter;
  * <p>
  * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
  * <p>
- * This software is protected according to Dutch and International Law. Certain components of
- * this package might have been released under terms of conditions of the General Public License
- * of the GNU organization. Those modules are named with name and version number under the
- * following URL: http://www.gricom.nl/public_released
- * <p>
- * Modules and versions not named on this location are not released and cannot be used without
- * written consent of the author. General terms and conditions of the given URL apply. This
- * notice cannot not be used as evidence of public release.
- * <p>
  * Created in 2003
- * <p>
- * Modification Log:
- * $Log: Logger.java,v $
- * Revision 1.1  2009/04/21 19:18:20  Andreas
- * Initial check in on new directory
- * Committed on the Free edition of March Hare Software CVSNT Server.
- * Upgrade to CVS Suite for more features and support:
- * http://march-hare.com/cvsnt/
- *
- * Revision 1.1.2.1  2007/11/24 10:00:45  agrimm
- * Checkpoint November 24, 2007
- *
- * Revision 1.1  2007/11/10 21:10:00  agrimm
- * Windows Version
- * Java 1.5
- * Eclipse 3.x Europa
- *
- * <p>
- * @author $Author: Andreas $
- * @version $Id: Logger.java,v 1.1 2009/04/21 19:18:20 Andreas Exp $
  *
  */
-
 public class Logger {
 
   private static PrintWriter           _oLogFile           = null;
@@ -60,7 +30,7 @@ public class Logger {
    */
   public Logger(final String strClassName) {
       if (strClassName != null) {
-          _strClassName = new String(strClassName);
+          _strClassName = strClassName;
       }
   }
 
@@ -72,7 +42,7 @@ public class Logger {
   public final void setFileName(final String strLogFileBaseName) {
     boolean bFileNameOK              = false;
     Time    oRightNow                = new Time();
-    File    oLogFile                 = null;
+    File    oLogFile;
     String  strFileName              = "";
     int     iSeqNo                   = 0;
     
@@ -218,7 +188,7 @@ public class Logger {
    */
   private void storeErrorMessage(final String strMessage) {
       Time oTime = new Time();
-      String strTime = new String(oTime.getDateTime());
+      String strTime = oTime.getDateTime();
 
       // if a log file is open -> use the log file, otherwise use default console output
       if (_oLogFile != null) {
@@ -240,7 +210,7 @@ public class Logger {
      */
     private void storeLogMessage(final String strMessageType, final String strMessage) {
         Time         oTime               = new Time();
-        String       strTime             = new String(oTime.getDateTime());
+        String       strTime             = oTime.getDateTime();
         
         // if error line is ok - then print it, otherwise log error message
         if (_oLogFile != null) {
