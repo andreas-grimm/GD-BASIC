@@ -8,11 +8,11 @@ import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.statements.GotoStatement;
 import eu.gricom.interpreter.basic.statements.IfThenStatement;
 import eu.gricom.interpreter.basic.statements.InputStatement;
-import eu.gricom.interpreter.basic.statements.NumberValue;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.PrintStatement;
 import eu.gricom.interpreter.basic.statements.Statement;
-import eu.gricom.interpreter.basic.statements.StringValue;
+import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import eu.gricom.interpreter.basic.statements.VariableExpression;
 
 import java.util.ArrayList;
@@ -179,7 +179,7 @@ public class BasicParser {
 
         // If the current token is of type number, then return the value as a double value
         if (matchNextToken(TokenType.NUMBER)) {
-              return new NumberValue(Double.parseDouble(lastToken(1).getText()));
+              return new RealValue(Double.parseDouble(lastToken(1).getText()));
         }
 
         // If the current token us of type STRING, then return the value as a string value

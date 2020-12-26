@@ -1,4 +1,6 @@
-package eu.gricom.interpreter.basic.statements;
+package eu.gricom.interpreter.basic.variableTypes;
+
+import eu.gricom.interpreter.basic.statements.Expression;
 
 /**
  * This is the base interface for a value. Values are the data that the
@@ -28,5 +30,5 @@ public interface Value extends Expression {
      *
      * @return the value as a double
      */
-    double toNumber();
+    double toReal();
 }

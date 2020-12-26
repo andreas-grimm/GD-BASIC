@@ -1,7 +1,7 @@
 package eu.gricom.interpreter.basic.helper;
 
-import eu.gricom.interpreter.basic.statements.NumberValue;
-import eu.gricom.interpreter.basic.statements.StringValue;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
+import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -69,8 +69,8 @@ public class MemoryManagementTest {
         oMemoryManagement.putMap("Number", 999);
         oMemoryManagement.putMap("String", "TestValue");
 
-        NumberValue oResult = (NumberValue) oMemoryManagement.getMap("Number");
-        assertEquals(oResult.toNumber(), 999);
+        RealValue oResult = (RealValue) oMemoryManagement.getMap("Number");
+        assertEquals(oResult.toReal(), 999);
 
         StringValue strResult = (StringValue) oMemoryManagement.getMap("String");
         assertTrue(strResult.toString().matches("TestValue"));

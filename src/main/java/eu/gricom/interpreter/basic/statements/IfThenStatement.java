@@ -41,7 +41,7 @@ public final class IfThenStatement implements Statement {
      */
     public void execute() throws Exception {
         if (_oMemoryManagement.containsLabelKey(_strLabel)) {
-            double value = _oCondition.evaluate().toNumber();
+            double value = _oCondition.evaluate().toReal();
             if (value != 0) {
                 _oMemoryManagement.setCurrentStatement(_oMemoryManagement.getLabelStatement(_strLabel));
             }

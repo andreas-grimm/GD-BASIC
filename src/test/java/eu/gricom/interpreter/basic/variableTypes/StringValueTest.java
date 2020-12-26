@@ -1,4 +1,4 @@
-package eu.gricom.interpreter.basic.statements;
+package eu.gricom.interpreter.basic.variableTypes;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,7 +18,7 @@ public class StringValueTest {
     public void testToNumber() {
         StringValue oStringValue = new StringValue("999");
 
-        double dResult = oStringValue.toNumber();
+        double dResult = oStringValue.toReal();
         assertEquals(dResult, 999);
     }
 

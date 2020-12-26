@@ -2,6 +2,8 @@ package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
+import eu.gricom.interpreter.basic.variableTypes.Value;
 
  /**
  * VariableExpression.java
@@ -41,7 +43,7 @@ public final class VariableExpression implements Expression {
         if (oMemoryManager.mapContainsKey(_strName)) {
             return (oMemoryManager.getMap(_strName));
         }
-        return (new NumberValue(0));
+        return (new RealValue(0));
     }
 
     /**

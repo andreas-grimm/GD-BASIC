@@ -3,6 +3,9 @@ package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
+import eu.gricom.interpreter.basic.variableTypes.StringValue;
+import eu.gricom.interpreter.basic.variableTypes.Value;
 
 /**
  * An operator expression evaluates two expressions and then performs some
@@ -42,62 +45,62 @@ public class OperatorExpression implements Expression {
         switch (_strOperator) {
             case '=':
                 // Coerce to the left argument's type, then compare.
-                if (leftVal instanceof NumberValue) {
-                    if (leftVal.toNumber() == rightVal.toNumber()) {
-                        return (new NumberValue(1));
+                if (leftVal instanceof RealValue) {
+                    if (leftVal.toReal() == rightVal.toReal()) {
+                        return (new RealValue(1));
                     } else {
-                        return (new NumberValue(0));
+                        return (new RealValue(0));
                     }
                 }
                 if (leftVal.toString().equals(rightVal.toString())) {
-                    return (new NumberValue(1));
+                    return (new RealValue(1));
                 } else {
-                    return (new NumberValue(0));
+                    return (new RealValue(0));
                 }
 
             case '+':
                 // Addition if the left argument is a number, otherwise do
                 // string concatenation.
-                if (leftVal instanceof NumberValue) {
-                    return new NumberValue(leftVal.toNumber() + rightVal.toNumber());
+                if (leftVal instanceof RealValue) {
+                    return new RealValue(leftVal.toReal() + rightVal.toReal());
                 }
                 return new StringValue(leftVal.toString() + rightVal.toString());
 
             case '-':
-                return new NumberValue(leftVal.toNumber() - rightVal.toNumber());
+                return new RealValue(leftVal.toReal() - rightVal.toReal());
             case '*':
-                return new NumberValue(leftVal.toNumber() * rightVal.toNumber());
+                return new RealValue(leftVal.toReal() * rightVal.toReal());
             case '/':
-                return new NumberValue(leftVal.toNumber() / rightVal.toNumber());
+                return new RealValue(leftVal.toReal() / rightVal.toReal());
             case '<':
                 // Coerce to the left argument's type, then compare.
-                if (leftVal instanceof NumberValue) {
-                    if (leftVal.toNumber() < rightVal.toNumber()) {
-                        return (new NumberValue(1));
+                if (leftVal instanceof RealValue) {
+                    if (leftVal.toReal() < rightVal.toReal()) {
+                        return (new RealValue(1));
                     } else {
-                        return (new NumberValue(0));
+                        return (new RealValue(0));
                     }
                 }
                 if (leftVal.toString().compareTo(rightVal.toString()) < 0) {
-                    return (new NumberValue(1));
+                    return (new RealValue(1));
                 } else {
-                    return (new NumberValue(0));
+                    return (new RealValue(0));
                 }
 
             case '>':
                 // Coerce to the left argument's type, then compare.
-                if (leftVal instanceof NumberValue) {
-                    if (leftVal.toNumber() > rightVal.toNumber()) {
-                        return (new NumberValue(1));
+                if (leftVal instanceof RealValue) {
+                    if (leftVal.toReal() > rightVal.toReal()) {
+                        return (new RealValue(1));
                     } else {
-                        return (new NumberValue(0));
+                        return (new RealValue(0));
                     }
                 }
 
                 if (leftVal.toString().compareTo(rightVal.toString()) > 0) {
-                    return (new NumberValue(1));
+                    return (new RealValue(1));
                 } else {
-                    return (new NumberValue(0));
+                    return (new RealValue(0));
                 }
 
             default:

@@ -38,7 +38,7 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public void execute() throws Exception {
-        _oMemoryManagement.putMap(_strName, _oValue.evaluate().toNumber());
+        _oMemoryManagement.putMap(_strName, _oValue.evaluate().toReal());
     }
 
     /**

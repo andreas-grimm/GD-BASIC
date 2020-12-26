@@ -1,8 +1,8 @@
 package eu.gricom.interpreter.basic.helper;
 
-import eu.gricom.interpreter.basic.statements.NumberValue;
-import eu.gricom.interpreter.basic.statements.StringValue;
-import eu.gricom.interpreter.basic.statements.Value;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
+import eu.gricom.interpreter.basic.variableTypes.StringValue;
+import eu.gricom.interpreter.basic.variableTypes.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -98,7 +98,7 @@ public class MemoryManagement {
      * @param dValue - value part of the pair, here as an double
      */
     public final void putMap(final String strName, final double dValue) {
-        NumberValue oValue = new NumberValue(dValue);
+        RealValue oValue = new RealValue(dValue);
         _aoVariables.put(strName, oValue);
     }
 

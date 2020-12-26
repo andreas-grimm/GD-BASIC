@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +15,7 @@ public class IfThenStatementTest {
         oMemoryManagement.putLabelStatement("TestCase", 5);
         oMemoryManagement.setCurrentStatement(4);
 
-        NumberValue oLeftValue = new NumberValue(2);
+        RealValue oLeftValue = new RealValue(2);
 
         try {
             OperatorExpression oExpression = new OperatorExpression(oLeftValue, '=', oLeftValue);
@@ -37,8 +38,8 @@ public class IfThenStatementTest {
         oMemoryManagement.putLabelStatement("TestCase", 5);
         oMemoryManagement.setCurrentStatement(4);
 
-        NumberValue oLeftValue = new NumberValue(2);
-        NumberValue oRightValue = new NumberValue(1);
+        RealValue oLeftValue = new RealValue(2);
+        RealValue oRightValue = new RealValue(1);
 
         try {
             OperatorExpression oExpression = new OperatorExpression(oLeftValue, '=', oRightValue);
