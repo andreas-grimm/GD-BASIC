@@ -1,7 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.helper.Logger;
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
 
@@ -38,10 +38,10 @@ public final class VariableExpression implements Expression {
      * @return returns the value of the variable - or if the variable does not exists - returns a 0 as a numerical value
      */
     public Value evaluate() {
-        MemoryManagement oMemoryManager = new MemoryManagement();
+        VariableManagement oVariableManager = new VariableManagement();
 
-        if (oMemoryManager.mapContainsKey(_strName)) {
-            return (oMemoryManager.getMap(_strName));
+        if (oVariableManager.mapContainsKey(_strName)) {
+            return (oVariableManager.getMap(_strName));
         }
         return (new RealValue(0));
     }

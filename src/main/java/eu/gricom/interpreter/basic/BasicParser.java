@@ -2,12 +2,12 @@ package eu.gricom.interpreter.basic;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
 import eu.gricom.interpreter.basic.statements.AssignStatement;
 import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.statements.GotoStatement;
 import eu.gricom.interpreter.basic.statements.IfThenStatement;
 import eu.gricom.interpreter.basic.statements.InputStatement;
+import eu.gricom.interpreter.basic.statements.LabelStatement;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.PrintStatement;
@@ -39,8 +39,6 @@ public class BasicParser {
      * @param aoTokens - the tokenized program
      */
     public BasicParser(final List<Token> aoTokens) {
-        MemoryManagement oMemoryManagement = new MemoryManagement();
-
         _aoTokens = aoTokens;
         _iPosition = 0;
     }
@@ -54,7 +52,7 @@ public class BasicParser {
      * @throws SyntaxErrorException - marks any syntax errors
      */
     public final List<Statement> parse() throws SyntaxErrorException {
-        MemoryManagement oMemoryManagement = new MemoryManagement();
+        LabelStatement oLabelStatement = new LabelStatement();
         List<Statement> aoStatements = new ArrayList<>();
 
         while (true) {
@@ -68,7 +66,7 @@ public class BasicParser {
             if (matchNextToken(TokenType.LABEL)) {
                 // Mark the index of the statement after the label.
                 _oLogger.debug("--> label: [" + lastToken(1).getText() + "] @ Token List position: " +  _iPosition);
-                oMemoryManagement.putLabelStatement(lastToken(1).getText(), aoStatements.size());
+                oLabelStatement.putLabelStatement(lastToken(1).getText(), aoStatements.size());
             } else
                 // if the first token is of type WORD and the second one is of type EQUAL (e.g. "a =")
                 if (matchNextTwoToken(TokenType.WORD, TokenType.EQUALS)) {

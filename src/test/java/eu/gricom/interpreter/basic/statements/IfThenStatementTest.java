@@ -1,6 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import org.junit.jupiter.api.Test;
 
@@ -11,9 +11,11 @@ public class IfThenStatementTest {
 
     @Test
     public void testEvaluate() {
-        MemoryManagement oMemoryManagement = new MemoryManagement();
-        oMemoryManagement.putLabelStatement("TestCase", 5);
-        oMemoryManagement.setCurrentStatement(4);
+        ProgramPointer oProgramPointer = new ProgramPointer();
+        LabelStatement oLabelStatement = new LabelStatement();
+
+        oLabelStatement.putLabelStatement("TestCase", 5);
+        oProgramPointer.setCurrentStatement(4);
 
         RealValue oLeftValue = new RealValue(2);
 
@@ -24,7 +26,7 @@ public class IfThenStatementTest {
 
             oStatement.execute();
 
-            int iNewLabel = oMemoryManagement.getCurrentStatement();
+            int iNewLabel = oProgramPointer.getCurrentStatement();
 
             assertEquals(iNewLabel, 5);
         } catch (Exception eException) {
@@ -34,9 +36,11 @@ public class IfThenStatementTest {
 
     @Test
     public void testNegativeEvaluate() {
-        MemoryManagement oMemoryManagement = new MemoryManagement();
-        oMemoryManagement.putLabelStatement("TestCase", 5);
-        oMemoryManagement.setCurrentStatement(4);
+        ProgramPointer oProgramPointer = new ProgramPointer();
+        LabelStatement oLabelStatement = new LabelStatement();
+
+        oLabelStatement.putLabelStatement("TestCase", 5);
+        oProgramPointer.setCurrentStatement(4);
 
         RealValue oLeftValue = new RealValue(2);
         RealValue oRightValue = new RealValue(1);
@@ -48,7 +52,7 @@ public class IfThenStatementTest {
 
             oStatement.execute();
 
-            int iNewLabel = oMemoryManagement.getCurrentStatement();
+            int iNewLabel = oProgramPointer.getCurrentStatement();
 
             assertEquals(iNewLabel, 4);
         } catch (Exception eException) {

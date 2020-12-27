@@ -3,8 +3,8 @@ package eu.gricom.interpreter.basic;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.FileHandler;
 import eu.gricom.interpreter.basic.helper.Logger;
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
 import eu.gricom.interpreter.basic.helper.Printer;
+import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.statements.Statement;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -56,7 +56,7 @@ public class Basic {
      * @param strProgram A string containing the source code of a .bas script to interpret.
      */
     public final void interpret(final String strProgram) {
-        MemoryManagement oMemoryManagement = new MemoryManagement();
+        ProgramPointer oProgramPointer = new ProgramPointer();
         List<Statement> aoStatements = null;
 
         // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
@@ -85,10 +85,10 @@ public class Basic {
         // Interpret until we're done.
         try {
             if (aoStatements != null) {
-                while (oMemoryManagement.getCurrentStatement() < aoStatements.size()) {
+                while (oProgramPointer.getCurrentStatement() < aoStatements.size()) {
                     // as long as we have not reached the end of the code
-                    int thisStatement = oMemoryManagement.getCurrentStatement();
-                    oMemoryManagement.nextStatement();
+                    int thisStatement = oProgramPointer.getCurrentStatement();
+                    oProgramPointer.calcNextStatement();
                     _oLogger.debug("Line [" + thisStatement + "]: " + aoStatements.get(thisStatement).content());
                     aoStatements.get(thisStatement).execute();
                 }

@@ -1,7 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.helper.Logger;
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 
 /**
  * GoToStatement.java
@@ -18,7 +18,8 @@ import eu.gricom.interpreter.basic.helper.MemoryManagement;
 public final class GotoStatement implements Statement {
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private final String _strLabel;
-    private final MemoryManagement _oMemoryManager = new MemoryManagement();
+    private final ProgramPointer _oProgramPointer = new ProgramPointer();
+    private final LabelStatement _oLabelStatement = new LabelStatement();
 
     /**
      * Default constructor.
@@ -33,8 +34,8 @@ public final class GotoStatement implements Statement {
      * Execute the transaction.
      */
     public void execute() {
-        if (_oMemoryManager.containsLabelKey(_strLabel)) {
-            _oMemoryManager.setCurrentStatement(_oMemoryManager.getLabelStatement(_strLabel));
+        if (_oLabelStatement.containsLabelKey(_strLabel)) {
+            _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strLabel));
         } else {
             // TODO This should be a syntax error thrown...
             _oLogger.error("GOTO [unknown]");
@@ -48,6 +49,6 @@ public final class GotoStatement implements Statement {
      */
     @Override
     public String content() {
-        return ("GOTO [" + _strLabel + "]: Destination: " + _oMemoryManager.getLabelStatement(_strLabel));
+        return ("GOTO [" + _strLabel + "]: Destination: " + _oLabelStatement.getLabelStatement(_strLabel));
     }
 }

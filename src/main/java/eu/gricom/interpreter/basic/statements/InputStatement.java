@@ -1,6 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class InputStatement implements Statement {
      * Execute the input statement.
      */
     public final void execute() {
-        MemoryManagement oMemoryManager = new MemoryManagement();
+        VariableManagement oVariableManager = new VariableManagement();
         BufferedReader oReader = new BufferedReader(new InputStreamReader(System.in));
 
         try {
@@ -44,9 +44,9 @@ public class InputStatement implements Statement {
             // Store it as a number if possible, otherwise use a string.
             try {
                 double iValue = Double.parseDouble(strInput);
-                oMemoryManager.putMap(_strName, iValue);
+                oVariableManager.putMap(_strName, iValue);
             } catch (NumberFormatException e) {
-                oMemoryManager.putMap(_strName, strInput);
+                oVariableManager.putMap(_strName, strInput);
             }
         } catch (IOException e1) {
             // TODO generate a problem error handling process

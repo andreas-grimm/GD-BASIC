@@ -1,12 +1,12 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AssignStatementTest {
-    MemoryManagement oMemoryManagement = new MemoryManagement();
+    VariableManagement oVariableManagement = new VariableManagement();
 
     @Test
     public void testExecute() {
@@ -16,7 +16,7 @@ public class AssignStatementTest {
             oAssignmentStatement.execute();
 
             assertTrue(oAssignmentStatement.content().contains("ASSIGN [Test:= 1.0]"));
-            RealValue oTestValue = (RealValue) oMemoryManagement.getMap("Test");
+            RealValue oTestValue = (RealValue) oVariableManagement.getMap("Test");
         } catch (Exception eException) {
             System.err.println(eException.getMessage());
         }

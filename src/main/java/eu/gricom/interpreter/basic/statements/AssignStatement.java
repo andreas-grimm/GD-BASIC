@@ -1,6 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 
 /**
  * AssignStatement.java
@@ -17,7 +17,7 @@ import eu.gricom.interpreter.basic.helper.MemoryManagement;
 public final class AssignStatement implements Statement {
     private final String _strName;
     private final Expression _oValue;
-    private MemoryManagement _oMemoryManagement = new MemoryManagement();
+    private VariableManagement _oVariableManagement = new VariableManagement();
 
     /**
      * Default constructor.
@@ -38,7 +38,7 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public void execute() throws Exception {
-        _oMemoryManagement.putMap(_strName, _oValue.evaluate().toReal());
+        _oVariableManagement.putMap(_strName, _oValue.evaluate().toReal());
     }
 
     /**

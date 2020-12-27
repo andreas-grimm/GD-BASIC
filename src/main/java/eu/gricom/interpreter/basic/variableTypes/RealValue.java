@@ -91,7 +91,7 @@ public class RealValue implements Value {
      */
     public final Value multiply(Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
-            RealValue oReturn = new RealValue(_fValue / oValue.toReal());
+            RealValue oReturn = new RealValue(_fValue * oValue.toReal());
             return (oReturn);
         }
 

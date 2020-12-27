@@ -1,6 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 
 /**
  */
@@ -21,7 +21,8 @@ public final class IfThenStatement implements Statement {
 
     private final Expression _oCondition;
     private final String _strLabel;
-    private MemoryManagement _oMemoryManagement = new MemoryManagement();
+    private ProgramPointer _oProgramPointer = new ProgramPointer();
+    private LabelStatement _oLabelStatement = new LabelStatement();
 
     /**
      * Default constructor.
@@ -40,10 +41,10 @@ public final class IfThenStatement implements Statement {
      * @throws Exception - exposes any exception coming from the memory management
      */
     public void execute() throws Exception {
-        if (_oMemoryManagement.containsLabelKey(_strLabel)) {
+        if (_oLabelStatement.containsLabelKey(_strLabel)) {
             double value = _oCondition.evaluate().toReal();
             if (value != 0) {
-                _oMemoryManagement.setCurrentStatement(_oMemoryManagement.getLabelStatement(_strLabel));
+                _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strLabel));
             }
         }
     }

@@ -8,6 +8,12 @@ the original functionality.
  
 ## Standards and supported Basic Implementations
 
+### General Rules Concerning the Different Dialects
+Every BASIC program consists of different elements:
+* Commands,
+* Variables, and
+* Controls (which look like commands, but control the execution)
+
 ### JASIC
 Based on the original implementation of the JASIC interpreter, this implementation
 is regression tested against the JASIC programs. Nevertheless, the interpreter
@@ -207,3 +213,9 @@ The following expressions are supported:
     that name. If the variable was never set, it defaults to 0.
 
 All binary operators have the same precedence.
+
+
+## Alternative Projects and Informtion
+
+* [Wikipedia Article on Basic](https://en.wikipedia.org/wiki/BASIC)
+* [TinyBasic](https://en.wikipedia.org/wiki/Tiny_BASIC) with the related implementation for [Java](http://www.thisiscool.com/tinybasic.htm)
