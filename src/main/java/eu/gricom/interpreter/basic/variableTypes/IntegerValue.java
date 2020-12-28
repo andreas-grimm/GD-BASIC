@@ -66,12 +66,22 @@ public class IntegerValue implements Value {
         return (this);
     }
 
-    /**
-     * Implement the add function.
-     *
-     * @return the sum of this object plus another number object as a NumberValue
-     */
-    public final Value plus(Value oValue) throws SyntaxErrorException {
+
+    @Override
+    public final Value equals(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof IntegerValue) {
+            if (this.toInt() == ((IntegerValue) oValue).toInt()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+    }
+
+    @Override
+    public final Value plus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue + ((IntegerValue) oValue).toInt());
             return (oReturn);
@@ -80,12 +90,8 @@ public class IntegerValue implements Value {
         throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
     }
 
-    /**
-     * Implement the minus function.
-     *
-     * @return the difference of this object and another number object as a NumberValue
-     */
-    public final Value minus(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value minus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue - ((IntegerValue) oValue).toInt());
             return (oReturn);
@@ -94,12 +100,8 @@ public class IntegerValue implements Value {
         throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
     }
 
-    /**
-     * Implement the multiply function.
-     *
-     * @return the result of the multiplication of this object and another number object as a NumberValue
-     */
-    public final Value multiply(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value multiply(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue / ((IntegerValue) oValue).toInt());
             return (oReturn);
@@ -108,22 +110,43 @@ public class IntegerValue implements Value {
         throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
     }
 
-    /**
-     * Implement the divide function.
-     *
-     * @return the result of the division of this object and another number object as a NumberValue
-     */
-    public final Value divide(Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    @Override
+    public final Value divide(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
         IntegerValue oReturn;
 
         if (oValue instanceof IntegerValue) {
             if (((IntegerValue) oValue).toInt() != 0) {
                 oReturn = new IntegerValue(_iValue / ((IntegerValue) oValue).toInt());
             } else {
-                throw (new DivideByZeroException(this.toInt() + "/" + ((IntegerValue) oValue).toInt() + " is a " +
-                        "division by zero"));
+                throw (new DivideByZeroException(this.toInt() + "/" + ((IntegerValue) oValue).toInt() + " is a " + "division by zero"));
             }
             return (oReturn);
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+    }
+
+    @Override
+    public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof IntegerValue) {
+            if (this.toInt() < ((IntegerValue) oValue).toInt()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+    }
+
+    @Override
+    public final Value largerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof IntegerValue) {
+            if (this.toInt() > ((IntegerValue) oValue).toInt()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
         }
 
         throw (new SyntaxErrorException(oValue.content() + " is not an integer"));

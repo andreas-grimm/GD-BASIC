@@ -3,8 +3,8 @@ package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
-import eu.gricom.interpreter.basic.variableTypes.RealValue;
-import eu.gricom.interpreter.basic.variableTypes.StringValue;
+//import eu.gricom.interpreter.basic.variableTypes.RealValue;
+//import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
 
 /**
@@ -39,69 +39,84 @@ public class OperatorExpression implements Expression {
      * @return returns the result of the operation.
      */
     public final Value evaluate() throws Exception {
-        Value leftVal = _oLeft.evaluate();
-        Value rightVal = _oRight.evaluate();
+        Value oLeftValue = _oLeft.evaluate();
+        Value oRightValue = _oRight.evaluate();
 
         switch (_strOperator) {
             case '=':
                 // Coerce to the left argument's type, then compare.
-                if (leftVal instanceof RealValue) {
-                    if (leftVal.toReal() == rightVal.toReal()) {
+                /*
+                if (oLeftValue instanceof RealValue) {
+                    if (oLeftValue.toReal() == oRightValue.toReal()) {
                         return (new RealValue(1));
                     } else {
                         return (new RealValue(0));
                     }
                 }
-                if (leftVal.toString().equals(rightVal.toString())) {
+                if (oLeftValue.toString().equals(oRightValue.toString())) {
                     return (new RealValue(1));
                 } else {
                     return (new RealValue(0));
                 }
+                */
+                return (oLeftValue.equals(oRightValue));
 
             case '+':
-                // Addition if the left argument is a number, otherwise do
-                // string concatenation.
-                if (leftVal instanceof RealValue) {
-                    return new RealValue(leftVal.toReal() + rightVal.toReal());
+                // Addition if the left argument is a number, otherwise do string concatenation.
+                /*
+                if (oLeftValue instanceof RealValue) {
+                    return new RealValue(oLeftValue.toReal() + rightVal.toReal());
                 }
-                return new StringValue(leftVal.toString() + rightVal.toString());
+
+                return (new StringValue(oLeftValue.toString() + rightVal.toString());
+                */
+                return (oLeftValue.plus(oRightValue));
 
             case '-':
-                return new RealValue(leftVal.toReal() - rightVal.toReal());
+                //return new RealValue(oLeftValue.toReal() - oRightValue.toReal());
+                return (oLeftValue.minus(oRightValue));
             case '*':
-                return new RealValue(leftVal.toReal() * rightVal.toReal());
+                //return new RealValue(oLeftValue.toReal() * oRightValue.toReal());
+                return (oLeftValue.multiply(oRightValue));
             case '/':
-                return new RealValue(leftVal.toReal() / rightVal.toReal());
+                //return new RealValue(oLeftValue.toReal() / oRightValue.toReal());
+                return (oLeftValue.divide(oRightValue));
             case '<':
                 // Coerce to the left argument's type, then compare.
-                if (leftVal instanceof RealValue) {
-                    if (leftVal.toReal() < rightVal.toReal()) {
+                /*
+                if (oLeftValue instanceof RealValue) {
+                    if (oLeftValue.toReal() < oRightValue.toReal()) {
                         return (new RealValue(1));
                     } else {
                         return (new RealValue(0));
                     }
                 }
-                if (leftVal.toString().compareTo(rightVal.toString()) < 0) {
+                if (oLeftValue.toString().compareTo(oRightValue.toString()) < 0) {
                     return (new RealValue(1));
                 } else {
                     return (new RealValue(0));
                 }
+                */
+                return (oLeftValue.smallerThan(oRightValue));
 
             case '>':
                 // Coerce to the left argument's type, then compare.
-                if (leftVal instanceof RealValue) {
-                    if (leftVal.toReal() > rightVal.toReal()) {
+                /*
+                if (oLeftValue instanceof RealValue) {
+                    if (oLeftValue.toReal() > oRightValue.toReal()) {
                         return (new RealValue(1));
                     } else {
                         return (new RealValue(0));
                     }
                 }
 
-                if (leftVal.toString().compareTo(rightVal.toString()) > 0) {
+                if (oLeftValue.toString().compareTo(oRightValue.toString()) > 0) {
                     return (new RealValue(1));
                 } else {
                     return (new RealValue(0));
                 }
+                */
+                return (oLeftValue.largerThan(oRightValue));
 
             default:
                 // TODO - return a syntax error

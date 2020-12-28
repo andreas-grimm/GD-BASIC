@@ -56,12 +56,21 @@ public class RealValue implements Value {
         return (this);
     }
 
-    /**
-     * Implement the add function.
-     *
-     * @return the sum of this object plus another number object as a NumberValue
-     */
-    public final Value plus(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value equals(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof RealValue) {
+            if (this.toReal() == oValue.toReal()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+    }
+
+    @Override
+    public final Value plus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             RealValue oReturn = new RealValue(_fValue + oValue.toReal());
             return (oReturn);
@@ -70,12 +79,8 @@ public class RealValue implements Value {
         throw (new SyntaxErrorException(oValue.content() + " is not a number"));
     }
 
-    /**
-     * Implement the minus function.
-     *
-     * @return the difference of this object and another number object as a NumberValue
-     */
-    public final Value minus(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value minus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             RealValue oReturn = new RealValue(_fValue - oValue.toReal());
             return (oReturn);
@@ -84,12 +89,8 @@ public class RealValue implements Value {
         throw (new SyntaxErrorException(oValue.content() + " is not a number"));
     }
 
-    /**
-     * Implement the multiply function.
-     *
-     * @return the result of the multiplication of this object and another number object as a NumberValue
-     */
-    public final Value multiply(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value multiply(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             RealValue oReturn = new RealValue(_fValue * oValue.toReal());
             return (oReturn);
@@ -98,12 +99,8 @@ public class RealValue implements Value {
         throw (new SyntaxErrorException(oValue.content() + " is not a number"));
     }
 
-    /**
-     * Implement the divide function.
-     *
-     * @return the result of the division of this object and another number object as a NumberValue
-     */
-    public final Value divide(Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    @Override
+    public final Value divide(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
         RealValue oReturn;
 
         if (oValue instanceof RealValue) {
@@ -113,6 +110,32 @@ public class RealValue implements Value {
                 throw (new DivideByZeroException(this.toReal() + "/" + oValue.toReal() + " is a division by zero"));
             }
             return (oReturn);
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+    }
+
+    @Override
+    public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof RealValue) {
+            if (this.toReal() < oValue.toReal()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+    }
+
+    @Override
+    public final Value largerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof RealValue) {
+            if (this.toReal() > oValue.toReal()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
         }
 
         throw (new SyntaxErrorException(oValue.content() + " is not a number"));

@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
+import eu.gricom.interpreter.basic.variableTypes.BooleanValue;
 
 /**
  */
@@ -42,8 +43,8 @@ public final class IfThenStatement implements Statement {
      */
     public void execute() throws Exception {
         if (_oLabelStatement.containsLabelKey(_strLabel)) {
-            double value = _oCondition.evaluate().toReal();
-            if (value != 0) {
+            BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
+            if (bValue.isTrue()) {
                 _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strLabel));
             }
         }

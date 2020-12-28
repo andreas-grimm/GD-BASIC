@@ -1,6 +1,5 @@
 package eu.gricom.interpreter.basic.variableTypes;
 
-import eu.gricom.interpreter.basic.error.DivideByZeroException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 
 /**
@@ -61,7 +60,7 @@ public class BooleanValue implements Value {
     @Override
     public final String toString() {
 
-        if (_bValue == true) {
+        if (_bValue) {
             return ("True");
         }
 
@@ -75,7 +74,7 @@ public class BooleanValue implements Value {
      */
     public final double toReal() {
 
-        if (_bValue == true) {
+        if (_bValue) {
             return (1);
         }
 
@@ -102,21 +101,30 @@ public class BooleanValue implements Value {
         return (_bValue);
     }
 
-    /**
-     * Implement the 'and' function.
-     *
-     * @return true, if this value is 'true' and the parameter is 'true'
-     */
-    public final Value plus(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value equals(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BooleanValue) {
+            if (this.toReal() == oValue.toReal()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+    }
+
+    @Override
+    public final Value plus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof BooleanValue) {
             // A + A = A
             if (((BooleanValue) oValue).isTrue() == _bValue) {
-                return(this);
+                return (this);
             }
 
             // A + (non A) = 1
             if (((BooleanValue) oValue).isTrue() != _bValue) {
-                return(new BooleanValue(true));
+                return (new BooleanValue(true));
             }
 
             // A + 1 = 1
@@ -124,36 +132,28 @@ public class BooleanValue implements Value {
                 return (new BooleanValue(true));
             } else {
                 // A + 0 = A
-                return(this);
+                return (this);
             }
         }
 
         throw (new SyntaxErrorException(oValue.content() + " is not of type boolean"));
     }
 
-    /**
-     * Implement the minus function.
-     *
-     * @return the difference of this object and another number object as a NumberValue
-     */
-    public final Value minus(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value minus(final Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
     }
 
-    /**
-     * Implement the multiply function.
-     *
-     * @return the result of the multiplication of this object and another number object as a NumberValue
-     */
-    public final Value multiply(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value multiply(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof BooleanValue) {
             // 0 * A = 0
-            if (_bValue == false) {
+            if (!_bValue) {
                 return (new BooleanValue(false));
             }
 
             // 1 * A = A
-            if (_bValue == true) {
+            if (_bValue) {
                 return (new BooleanValue(true));
             }
 
@@ -165,12 +165,18 @@ public class BooleanValue implements Value {
         throw (new SyntaxErrorException(oValue.content() + " is not of type boolean"));
     }
 
-    /**
-     * Blocking the divide function.
-     *
-     * @return Devide is not defined for booleans
-     */
-    public final Value divide(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value divide(final Value oValue) throws SyntaxErrorException {
+        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+    }
+
+    @Override
+    public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
+        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+    }
+
+    @Override
+    public final Value largerThan(final Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
     }
 

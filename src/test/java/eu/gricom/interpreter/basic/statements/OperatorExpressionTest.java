@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.variableTypes.BooleanValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +16,8 @@ public class OperatorExpressionTest {
 
         try {
             OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '=', oLeftValue);
-            RealValue oResultValue = (RealValue) oExpression1.evaluate();
-            assertEquals(oResultValue.toReal(), 1.0);
+            BooleanValue oResultValue = (BooleanValue) oExpression1.evaluate();
+            assertEquals(oResultValue.isTrue(), true);
         } catch (Exception eException) {
             fail();
         }
@@ -47,16 +48,16 @@ public class OperatorExpressionTest {
 
         try {
             OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '<', oRightValue);
-            RealValue oResultValue = (RealValue) oExpression1.evaluate();
-            assertEquals(oResultValue.toReal(), 0.0);
+            BooleanValue oResultValue = (BooleanValue) oExpression1.evaluate();
+            assertEquals(oResultValue.isTrue(), false);
         } catch (Exception eException) {
             fail();
         }
 
         try {
             OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '>', oRightValue);
-            RealValue oResultValue = (RealValue) oExpression1.evaluate();
-            assertEquals(oResultValue.toReal(), 1.0);
+            BooleanValue oResultValue = (BooleanValue) oExpression1.evaluate();
+            assertEquals(oResultValue.isTrue(), true);
         } catch (Exception eException) {
             fail();
         }

@@ -25,11 +25,6 @@ public class StringValue implements Value {
         _strValue = strValue;
     }
 
-    /**
-     * Override the standart toString method.
-     *
-     * @return the content of the variable as a string
-     */
     @Override
     public final String toString() {
 
@@ -37,75 +32,80 @@ public class StringValue implements Value {
     }
 
 
-    /**
-     * Transform the content of the number value into a double.
-     *
-     * @return the content of the variable as a double
-     */
+    @Override
     public final double toReal() {
 
         return (Double.parseDouble(_strValue));
     }
 
 
-    /**
-     * Return the value field as an object.
-     *
-     * @return the number value as an object
-     */
+    @Override
     public final Value evaluate() {
 
         return (this);
     }
 
-    /**
-     * Implement the 'and' function.
-     *
-     * @return concationation of the string with the object
-     * @throws SyntaxErrorException - will not be thrown
-     */
-    public final Value plus(Value oValue) throws SyntaxErrorException {
+
+    @Override
+    public final Value equals(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof StringValue) {
+            if (this.toString().matches(oValue.toString())) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a String"));
+    }
+
+    @Override
+    public final Value plus(final Value oValue) throws SyntaxErrorException {
         StringValue oReturn = new StringValue((_strValue + oValue.content()));
         return (oReturn);
     }
 
-    /**
-     * Implement the minus function.
-     *
-     * @return nothing, will always throw an exception
-     * @throws SyntaxErrorException as the function is not defined for strings
-     */
-    public final Value minus(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value minus(final Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '-' for strings, the expression is not defined"));
     }
 
-    /**
-     * Implement the multiply function.
-     *
-     * @return nothing, will always throw an exception
-     * @throws SyntaxErrorException as the function is not defined for strings
-     */
-    public final Value multiply(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value multiply(final Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '*' for strings, the expression is not defined"));
     }
 
-    /**
-     * Blocking the divide function.
-     *
-     * @return nothing, will always throw an exception
-     * @throws SyntaxErrorException as the function is not defined for strings
-     */
-    public final Value divide(Value oValue) throws SyntaxErrorException {
+    @Override
+    public final Value divide(final Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '/' for strings, the expression is not defined"));
     }
 
-    /**
-     * Content.
-     *
-     * Method for JUnit to return the content of the statement.
-     *
-     * @return - gives the name of the statement ("INPUT") and the variable name
-     */
+    @Override
+    public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof StringValue) {
+            if (this.toString().compareTo(oValue.toString()) < 0) {
+                return (new BooleanValue(true));
+            } else {
+                return (new BooleanValue(false));
+            }
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " value is not a String"));
+    }
+
+    @Override
+    public final Value largerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof StringValue) {
+            if (this.toString().compareTo(oValue.toString()) > 0) {
+                return (new BooleanValue(true));
+            } else {
+                return (new BooleanValue(false));
+            }
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " value is not a String"));
+    }
+
     @Override
     public final String content() {
 

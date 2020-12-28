@@ -7,6 +7,16 @@ import eu.gricom.interpreter.basic.variableTypes.Value;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * VariableManagement.java
+ * <p>
+ * Description:
+ * This structure holds all variables used in the Basic program.
+ * <p>
+ * The Program Pointer contains the current position of the program.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ */
 public class VariableManagement {
     private static Map<String, Value> _aoVariables = new HashMap<>();
 

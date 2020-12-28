@@ -29,6 +29,8 @@ or here: [github.com](https://guides.github.com/features/mastering-markdown/)
 
 ### The VariableType Package
 
+#### Value Interface
+
 #### Variable Type Boolean
 
 #### Variable Type Integer
@@ -42,5 +44,13 @@ or here: [github.com](https://guides.github.com/features/mastering-markdown/)
 ### The Statements Package
 
 #### Expressions
+
+##### OperatorExpression
+The __OperatorExpression__ class implements the different functions implemented as operators. This class
+originally contained not only the definition of the operators, but also the implementation. As of this
+version, the operators are now in the [VariableTypes](#The VariableType Package). By using the 
+[common interface](#Value Interface), the __OperatorExpression__ is now independent of the actual values 
+and does not need to be modified in case additional types (like [integers](#Variable Type Integer) or
+[booleans](#Variable Type Boolean)) are added in a later version.
 
 #### Statements
