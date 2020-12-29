@@ -3,6 +3,7 @@ package eu.gricom.interpreter.basic;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.statements.AssignStatement;
+import eu.gricom.interpreter.basic.statements.EndStatement;
 import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.statements.GotoStatement;
 import eu.gricom.interpreter.basic.statements.IfThenStatement;
@@ -59,7 +60,7 @@ public class BasicParser {
             // Ignore empty lines.
             while (matchNextToken(TokenType.LINE)) {
 
-                _oLogger.debug("--> empty token: " + _iPosition);
+                _oLogger.debug("--> empty line ");
             }
 
             // if the current token is of type LABEL, then store the token number in the label list
@@ -98,10 +99,13 @@ public class BasicParser {
                                     String strLabel = consumeToken(TokenType.WORD).getText();
                                     _oLogger.debug("----> THEN: [" +  strLabel + "] " +  _iPosition);
                                     aoStatements.add(new IfThenStatement(oCondition, strLabel));
-                                } else {
+                                } else
+                                    if (matchNextToken("end")) {
+                                        aoStatements.add(new EndStatement(_iPosition));
+                                    } else {
                                     // TODO if token is not EOF - mark a syntax error
-                                    break; // Unexpected token (likely EOF), so end.
-                                }
+                                        break; // Unexpected token (likely EOF), so end.
+                                    }
         }
 
         return aoStatements;
@@ -154,7 +158,7 @@ public class BasicParser {
         while ((matchNextToken(TokenType.OPERATOR)) || (matchNextToken(TokenType.EQUALS))) {
             char strOperator = lastToken(1).getText().charAt(0);
             Expression oRight = atomic();
-            oExpression = new OperatorExpression(oExpression, strOperator, oRight);
+            oExpression = new OperatorExpression(oExpression, (String.valueOf(strOperator)), oRight);
         }
 
         return (oExpression);

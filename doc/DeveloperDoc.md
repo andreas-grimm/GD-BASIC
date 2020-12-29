@@ -23,6 +23,17 @@ or here: [github.com](https://guides.github.com/features/mastering-markdown/)
 
 ### Runtime
 
+## How to add new BASIC Commands to the Interpreter
+New commands, unlike new structures, do not require a change in the Tokenizer. The main part to add new commands
+is in the [BasicParser](#BasicParser Class) class. In this class, the method __parse__ contains the logic
+to convert the identified token into the sequence of commands that will be executed in the interpreter.
+
+
+
+## Main Classes
+
+### BasicParser Class
+
 ## Package Structure
 
 ### The MemoryManager Package

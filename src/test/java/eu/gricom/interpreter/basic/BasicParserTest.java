@@ -47,7 +47,7 @@ public class BasicParserTest {
         while ((oParser.matchNextToken(TokenType.OPERATOR)) || (oParser.matchNextToken(TokenType.EQUALS))) {
             char strOperator = oParser.lastToken(1).getText().charAt(0);
             Expression oRight = oParser.atomic();
-            oExpression = new OperatorExpression(oExpression, strOperator, oRight);
+            oExpression = new OperatorExpression(oExpression, (String.valueOf(strOperator)), oRight);
         }
 
         strExpression = oExpression.toString();

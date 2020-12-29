@@ -20,7 +20,7 @@ public class IfThenStatementTest {
         RealValue oLeftValue = new RealValue(2);
 
         try {
-            OperatorExpression oExpression = new OperatorExpression(oLeftValue, '=', oLeftValue);
+            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "=", oLeftValue);
 
             IfThenStatement oStatement = new IfThenStatement(oExpression, "TestCase");
 
@@ -46,7 +46,7 @@ public class IfThenStatementTest {
         RealValue oRightValue = new RealValue(1);
 
         try {
-            OperatorExpression oExpression = new OperatorExpression(oLeftValue, '=', oRightValue);
+            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "=", oRightValue);
 
             IfThenStatement oStatement = new IfThenStatement(oExpression, "TestCase");
 

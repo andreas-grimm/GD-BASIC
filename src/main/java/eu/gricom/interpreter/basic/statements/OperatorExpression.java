@@ -3,8 +3,6 @@ package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
-//import eu.gricom.interpreter.basic.variableTypes.RealValue;
-//import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
 
 /**
@@ -15,7 +13,7 @@ import eu.gricom.interpreter.basic.variableTypes.Value;
 public class OperatorExpression implements Expression {
     private Logger _oLogger = new Logger(this.getClass().getName());
     private final Expression _oLeft;
-    private final char _strOperator;
+    private final String _strOperator;
     private final Expression _oRight;
 
     /**
@@ -25,7 +23,7 @@ public class OperatorExpression implements Expression {
      * @param strOperator the actual operator - defined as a single char
      * @param oRight right side of the operation
      */
-    public OperatorExpression(final Expression oLeft, final char strOperator, final Expression oRight) {
+    public OperatorExpression(final Expression oLeft, final String strOperator, final Expression oRight) {
         _oLogger.debug("--->  " + oLeft.content() + " " + strOperator + " " + oRight.content());
         _oLeft = oLeft;
         _strOperator = strOperator;
@@ -43,83 +41,24 @@ public class OperatorExpression implements Expression {
         Value oRightValue = _oRight.evaluate();
 
         switch (_strOperator) {
-            case '=':
-                // Coerce to the left argument's type, then compare.
-                /*
-                if (oLeftValue instanceof RealValue) {
-                    if (oLeftValue.toReal() == oRightValue.toReal()) {
-                        return (new RealValue(1));
-                    } else {
-                        return (new RealValue(0));
-                    }
-                }
-                if (oLeftValue.toString().equals(oRightValue.toString())) {
-                    return (new RealValue(1));
-                } else {
-                    return (new RealValue(0));
-                }
-                */
+            case "=":
                 return (oLeftValue.equals(oRightValue));
 
-            case '+':
-                // Addition if the left argument is a number, otherwise do string concatenation.
-                /*
-                if (oLeftValue instanceof RealValue) {
-                    return new RealValue(oLeftValue.toReal() + rightVal.toReal());
-                }
-
-                return (new StringValue(oLeftValue.toString() + rightVal.toString());
-                */
+            case "+":
                 return (oLeftValue.plus(oRightValue));
-
-            case '-':
-                //return new RealValue(oLeftValue.toReal() - oRightValue.toReal());
+            case "-":
                 return (oLeftValue.minus(oRightValue));
-            case '*':
-                //return new RealValue(oLeftValue.toReal() * oRightValue.toReal());
+            case "*":
                 return (oLeftValue.multiply(oRightValue));
-            case '/':
-                //return new RealValue(oLeftValue.toReal() / oRightValue.toReal());
+            case "/":
                 return (oLeftValue.divide(oRightValue));
-            case '<':
-                // Coerce to the left argument's type, then compare.
-                /*
-                if (oLeftValue instanceof RealValue) {
-                    if (oLeftValue.toReal() < oRightValue.toReal()) {
-                        return (new RealValue(1));
-                    } else {
-                        return (new RealValue(0));
-                    }
-                }
-                if (oLeftValue.toString().compareTo(oRightValue.toString()) < 0) {
-                    return (new RealValue(1));
-                } else {
-                    return (new RealValue(0));
-                }
-                */
+
+            case "<":
                 return (oLeftValue.smallerThan(oRightValue));
-
-            case '>':
-                // Coerce to the left argument's type, then compare.
-                /*
-                if (oLeftValue instanceof RealValue) {
-                    if (oLeftValue.toReal() > oRightValue.toReal()) {
-                        return (new RealValue(1));
-                    } else {
-                        return (new RealValue(0));
-                    }
-                }
-
-                if (oLeftValue.toString().compareTo(oRightValue.toString()) > 0) {
-                    return (new RealValue(1));
-                } else {
-                    return (new RealValue(0));
-                }
-                */
+            case ">":
                 return (oLeftValue.largerThan(oRightValue));
 
             default:
-                // TODO - return a syntax error
                 throw new SyntaxErrorException("Unknown operator: " + _strOperator);
         }
     }
