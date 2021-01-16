@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="org.codehaus.mojo.taglist-maven-plugin">
+  <tags>
+    <tag name="TODO" count="11">
+      <files>
+        <file name="eu.gricom.interpreter.basic.Basic" count="2">
+          <comments>
+            <comment>
+              <lineNumber>64</lineNumber>
+              <comment>Convert to stand-alone program</comment>
+            </comment>
+            <comment>
+              <lineNumber>173</lineNumber>
+              <comment>This here makes no sense...</comment>
+            </comment>
+          </comments>
+        </file>
+        <file name="eu.gricom.interpreter.basic.variableTypes.BooleanValue" count="1">
+          <comments>
+            <comment>
+              <lineNumber>176</lineNumber>
+              <comment>Implement the XOR method</comment>
+            </comment>
+          </comments>
+        </file>
+        <file name="eu.gricom.interpreter.basic.tokenizer.TokenizerTest" count="1">
+          <comments>
+            <comment>
+              <lineNumber>27</lineNumber>
+              <comment>Compare the expected lists with the generated list...</comment>
+            </comment>
+          </comments>
+        </file>
+        <file name="eu.gricom.interpreter.basic.statements.InputStatement" count="1">
+          <comments>
+            <comment>
+              <lineNumber>76</lineNumber>
+              <comment>generate a problem error handling process HACK: Just ignore the problem.</comment>
+            </comment>
+          </comments>
+        </file>
+        <file name="eu.gricom.interpreter.basic.parser.JasicParser" count="3">
+          <comments>
+            <comment>
+              <lineNumber>109</lineNumber>
+              <comment>if token is not EOF - mark a syntax error</comment>
+            </comment>
+            <comment>
+              <lineNumber>299</lineNumber>
+              <comment>convert to syntax error</comment>
+            </comment>
+            <comment>
+              <lineNumber>329</lineNumber>
+              <comment>actually this is a syntax error and should throw the syntax error exception</comment>
+            </comment>
+          </comments>
+        </file>
+        <file name="eu.gricom.interpreter.basic.tokenizer.JasicLexer" count="1">
+          <comments>
+            <comment>
+              <lineNumber>120</lineNumber>
+              <comment>- This needs to be fixed... HACK: Silently ignore any in-progress token when we run out of characters. This means that, for example, if a script has a string that's missing the closing ", it will just ditch it.</comment>
+            </comment>
+          </comments>
+        </file>
+        <file name="eu.gricom.interpreter.basic.parser.BasicParser" count="2">
+          <comments>
+            <comment>
+              <lineNumber>417</lineNumber>
+              <comment>convert to syntax error</comment>
+            </comment>
+            <comment>
+              <lineNumber>449</lineNumber>
+              <comment>actually this is a syntax error and should throw the syntax error exception</comment>
+            </comment>
+          </comments>
+        </file>
+      </files>
+    </tag>
+    <tag name="@todo" count="0" />
+    <tag name="FIXME" count="0" />
+    <tag name="@fixme" count="0" />
+    <tag name="@deprecated" count="0" />
+  </tags>
+</report>

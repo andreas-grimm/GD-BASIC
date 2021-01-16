@@ -1,0 +1,17 @@
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/statements/OperatorExpressionTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/tokenizer/TokenizerTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/statements/LabelStatementTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/memoryManager/VariableManagementTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/parser/JasicParserTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/variableTypes/StringValueTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/statements/IfThenStatementTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/statements/GoToStatementTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/tokenizer/TokenTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/statements/VariableExpressionTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/statements/AssignStatementTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/variableTypes/RealValueTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/variableTypes/BooleanValueTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/BasicTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/helper/FileHandlerTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/variableTypes/IntegerValueTest.java
+/Users/andreas/Projects/Sources/Java/Interpreters/src/test/java/eu/gricom/interpreter/basic/memoryManager/ProgramPointerTest.java

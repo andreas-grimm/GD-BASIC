@@ -1,0 +1,445 @@
+<?xml version="1.0"?>
+<JDepend>
+    <Packages>
+
+        <Package name="eu.gricom.interpreter.basic">
+            <Stats>
+                <TotalClasses>1</TotalClasses>
+                <ConcreteClasses>1</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>0</Ca>
+                <Ce>10</Ce>
+                <A>0</A>
+                <I>1</I>
+                <D>0</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="Basic.java">
+                    eu.gricom.interpreter.basic.Basic
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>eu.gricom.interpreter.basic.error</Package>
+                <Package>eu.gricom.interpreter.basic.helper</Package>
+                <Package>eu.gricom.interpreter.basic.memoryManager</Package>
+                <Package>eu.gricom.interpreter.basic.parser</Package>
+                <Package>eu.gricom.interpreter.basic.statements</Package>
+                <Package>eu.gricom.interpreter.basic.tokenizer</Package>
+                <Package>java.io</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>org.apache.commons.cli</Package>
+            </DependsUpon>
+
+            <UsedBy>
+            </UsedBy>
+        </Package>
+
+        <Package name="eu.gricom.interpreter.basic.error">
+            <Stats>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>5</Ca>
+                <Ce>1</Ce>
+                <A>0</A>
+                <I>0.17</I>
+                <D>0.83</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="DivideByZeroException.java">
+                    eu.gricom.interpreter.basic.error.DivideByZeroException
+                </Class>
+                <Class sourceFile="SyntaxErrorException.java">
+                    eu.gricom.interpreter.basic.error.SyntaxErrorException
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>java.lang</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>eu.gricom.interpreter.basic</Package>
+                <Package>eu.gricom.interpreter.basic.parser</Package>
+                <Package>eu.gricom.interpreter.basic.statements</Package>
+                <Package>eu.gricom.interpreter.basic.tokenizer</Package>
+                <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="eu.gricom.interpreter.basic.helper">
+            <Stats>
+                <TotalClasses>4</TotalClasses>
+                <ConcreteClasses>4</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>4</Ca>
+                <Ce>4</Ce>
+                <A>0</A>
+                <I>0.5</I>
+                <D>0.5</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="FileHandler.java">
+                    eu.gricom.interpreter.basic.helper.FileHandler
+                </Class>
+                <Class sourceFile="Logger.java">
+                    eu.gricom.interpreter.basic.helper.Logger
+                </Class>
+                <Class sourceFile="Printer.java">
+                    eu.gricom.interpreter.basic.helper.Printer
+                </Class>
+                <Class sourceFile="Time.java">
+                    eu.gricom.interpreter.basic.helper.Time
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>java.io</Package>
+                <Package>java.lang</Package>
+                <Package>java.nio.charset</Package>
+                <Package>java.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>eu.gricom.interpreter.basic</Package>
+                <Package>eu.gricom.interpreter.basic.parser</Package>
+                <Package>eu.gricom.interpreter.basic.statements</Package>
+                <Package>eu.gricom.interpreter.basic.tokenizer</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="eu.gricom.interpreter.basic.memoryManager">
+            <Stats>
+                <TotalClasses>3</TotalClasses>
+                <ConcreteClasses>3</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>2</Ca>
+                <Ce>3</Ce>
+                <A>0</A>
+                <I>0.6</I>
+                <D>0.4</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="ProgramPointer.java">
+                    eu.gricom.interpreter.basic.memoryManager.ProgramPointer
+                </Class>
+                <Class sourceFile="Stack.java">
+                    eu.gricom.interpreter.basic.memoryManager.Stack
+                </Class>
+                <Class sourceFile="VariableManagement.java">
+                    eu.gricom.interpreter.basic.memoryManager.VariableManagement
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>eu.gricom.interpreter.basic</Package>
+                <Package>eu.gricom.interpreter.basic.statements</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="eu.gricom.interpreter.basic.parser">
+            <Stats>
+                <TotalClasses>4</TotalClasses>
+                <ConcreteClasses>3</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>7</Ce>
+                <A>0.25</A>
+                <I>0.88</I>
+                <D>0.12</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="Parser.java">
+                    eu.gricom.interpreter.basic.parser.Parser
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="BasicParser.java">
+                    eu.gricom.interpreter.basic.parser.BasicParser
+                </Class>
+                <Class sourceFile="BasicParser.java">
+                    eu.gricom.interpreter.basic.parser.BasicParser$1
+                </Class>
+                <Class sourceFile="JasicParser.java">
+                    eu.gricom.interpreter.basic.parser.JasicParser
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>eu.gricom.interpreter.basic.error</Package>
+                <Package>eu.gricom.interpreter.basic.helper</Package>
+                <Package>eu.gricom.interpreter.basic.statements</Package>
+                <Package>eu.gricom.interpreter.basic.tokenizer</Package>
+                <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>eu.gricom.interpreter.basic</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="eu.gricom.interpreter.basic.statements">
+            <Stats>
+                <TotalClasses>12</TotalClasses>
+                <ConcreteClasses>10</ConcreteClasses>
+                <AbstractClasses>2</AbstractClasses>
+                <Ca>3</Ca>
+                <Ce>7</Ce>
+                <A>0.17</A>
+                <I>0.7</I>
+                <D>0.13</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="Expression.java">
+                    eu.gricom.interpreter.basic.statements.Expression
+                </Class>
+                <Class sourceFile="Statement.java">
+                    eu.gricom.interpreter.basic.statements.Statement
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="AssignStatement.java">
+                    eu.gricom.interpreter.basic.statements.AssignStatement
+                </Class>
+                <Class sourceFile="EndStatement.java">
+                    eu.gricom.interpreter.basic.statements.EndStatement
+                </Class>
+                <Class sourceFile="GotoStatement.java">
+                    eu.gricom.interpreter.basic.statements.GotoStatement
+                </Class>
+                <Class sourceFile="IfThenStatement.java">
+                    eu.gricom.interpreter.basic.statements.IfThenStatement
+                </Class>
+                <Class sourceFile="InputStatement.java">
+                    eu.gricom.interpreter.basic.statements.InputStatement
+                </Class>
+                <Class sourceFile="LabelStatement.java">
+                    eu.gricom.interpreter.basic.statements.LabelStatement
+                </Class>
+                <Class sourceFile="LineNumberStatement.java">
+                    eu.gricom.interpreter.basic.statements.LineNumberStatement
+                </Class>
+                <Class sourceFile="OperatorExpression.java">
+                    eu.gricom.interpreter.basic.statements.OperatorExpression
+                </Class>
+                <Class sourceFile="PrintStatement.java">
+                    eu.gricom.interpreter.basic.statements.PrintStatement
+                </Class>
+                <Class sourceFile="VariableExpression.java">
+                    eu.gricom.interpreter.basic.statements.VariableExpression
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>eu.gricom.interpreter.basic.error</Package>
+                <Package>eu.gricom.interpreter.basic.helper</Package>
+                <Package>eu.gricom.interpreter.basic.memoryManager</Package>
+                <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+                <Package>java.io</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>eu.gricom.interpreter.basic</Package>
+                <Package>eu.gricom.interpreter.basic.parser</Package>
+                <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="eu.gricom.interpreter.basic.tokenizer">
+            <Stats>
+                <TotalClasses>8</TotalClasses>
+                <ConcreteClasses>7</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>2</Ca>
+                <Ce>5</Ce>
+                <A>0.12</A>
+                <I>0.71</I>
+                <D>0.16</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="Tokenizer.java">
+                    eu.gricom.interpreter.basic.tokenizer.Tokenizer
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="BasicLexer.java">
+                    eu.gricom.interpreter.basic.tokenizer.BasicLexer
+                </Class>
+                <Class sourceFile="JasicLexer.java">
+                    eu.gricom.interpreter.basic.tokenizer.JasicLexer
+                </Class>
+                <Class sourceFile="JasicLexer.java">
+                    eu.gricom.interpreter.basic.tokenizer.JasicLexer$1
+                </Class>
+                <Class sourceFile="ReservedWords.java">
+                    eu.gricom.interpreter.basic.tokenizer.ReservedWords
+                </Class>
+                <Class sourceFile="Token.java">
+                    eu.gricom.interpreter.basic.tokenizer.Token
+                </Class>
+                <Class sourceFile="TokenType.java">
+                    eu.gricom.interpreter.basic.tokenizer.TokenType
+                </Class>
+                <Class sourceFile="TokenizeState.java">
+                    eu.gricom.interpreter.basic.tokenizer.TokenizeState
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>eu.gricom.interpreter.basic.error</Package>
+                <Package>eu.gricom.interpreter.basic.helper</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>java.util.regex</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>eu.gricom.interpreter.basic</Package>
+                <Package>eu.gricom.interpreter.basic.parser</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="eu.gricom.interpreter.basic.variableTypes">
+            <Stats>
+                <TotalClasses>5</TotalClasses>
+                <ConcreteClasses>4</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>3</Ca>
+                <Ce>3</Ce>
+                <A>0.2</A>
+                <I>0.5</I>
+                <D>0.3</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="Value.java">
+                    eu.gricom.interpreter.basic.variableTypes.Value
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="BooleanValue.java">
+                    eu.gricom.interpreter.basic.variableTypes.BooleanValue
+                </Class>
+                <Class sourceFile="IntegerValue.java">
+                    eu.gricom.interpreter.basic.variableTypes.IntegerValue
+                </Class>
+                <Class sourceFile="RealValue.java">
+                    eu.gricom.interpreter.basic.variableTypes.RealValue
+                </Class>
+                <Class sourceFile="StringValue.java">
+                    eu.gricom.interpreter.basic.variableTypes.StringValue
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>eu.gricom.interpreter.basic.error</Package>
+                <Package>eu.gricom.interpreter.basic.statements</Package>
+                <Package>java.lang</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>eu.gricom.interpreter.basic.memoryManager</Package>
+                <Package>eu.gricom.interpreter.basic.parser</Package>
+                <Package>eu.gricom.interpreter.basic.statements</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="java.io">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.nio.charset">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.util.regex">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.commons.cli">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+    </Packages>
+
+    <Cycles>
+        <Package Name="eu.gricom.interpreter.basic">
+            <Package>eu.gricom.interpreter.basic.statements</Package>
+            <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+            <Package>eu.gricom.interpreter.basic.statements</Package>
+        </Package>
+
+        <Package Name="eu.gricom.interpreter.basic.memoryManager">
+            <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+            <Package>eu.gricom.interpreter.basic.statements</Package>
+            <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+        </Package>
+
+        <Package Name="eu.gricom.interpreter.basic.parser">
+            <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+            <Package>eu.gricom.interpreter.basic.statements</Package>
+            <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+        </Package>
+
+        <Package Name="eu.gricom.interpreter.basic.statements">
+            <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+            <Package>eu.gricom.interpreter.basic.statements</Package>
+        </Package>
+
+        <Package Name="eu.gricom.interpreter.basic.variableTypes">
+            <Package>eu.gricom.interpreter.basic.statements</Package>
+            <Package>eu.gricom.interpreter.basic.variableTypes</Package>
+        </Package>
+
+    </Cycles>
+</JDepend>
