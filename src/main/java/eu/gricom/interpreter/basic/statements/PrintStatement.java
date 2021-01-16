@@ -14,6 +14,7 @@ package eu.gricom.interpreter.basic.statements;
  */
 public final class PrintStatement implements Statement {
     private final Expression _oExpression;
+    private final int _iLineNumber;
 
     /**
      * Default constructor.
@@ -23,7 +24,31 @@ public final class PrintStatement implements Statement {
      * @param oExpression - input to the print statement
      */
     public PrintStatement(final Expression oExpression) {
+        _iLineNumber = 0;
         _oExpression = oExpression;
+    }
+
+    /**
+     * Default constructor.
+     *
+     * Receive the statement that is targeted to be printed.
+     *
+     * @param iLineNumber  - number of the line in the BASIC program
+     * @param oExpression - input to the print statement
+     */
+    public PrintStatement(final int iLineNumber, final Expression oExpression) {
+        _iLineNumber = iLineNumber;
+        _oExpression = oExpression;
+    }
+
+    /**
+     * Get Line Number.
+     *
+     * @return iLineNumber - the command line number of the statement
+     */
+    @Override
+    public int getLineNumber() {
+        return (_iLineNumber);
     }
 
     /**

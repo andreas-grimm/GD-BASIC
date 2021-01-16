@@ -1,9 +1,8 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
+import eu.gricom.interpreter.basic.variableTypes.BooleanValue;
 
-/**
- */
 /**
  * IfThenStatement.java
  * <p>
@@ -21,10 +20,13 @@ public final class IfThenStatement implements Statement {
 
     private final Expression _oCondition;
     private final String _strLabel;
-    private MemoryManagement _oMemoryManagement = new MemoryManagement();
+    private int _iStatementNumber = 0;
+    private int _iEndLocation = 0;
+    private ProgramPointer _oProgramPointer = new ProgramPointer();
+    private LabelStatement _oLabelStatement = new LabelStatement();
 
     /**
-     * Default constructor.
+     * JASIC constructor.
      *
      * @param oCondition - condition to be tested.
      * @param strLabel - destination for the jump after successful completion of the condition.
@@ -35,15 +37,52 @@ public final class IfThenStatement implements Statement {
     }
 
     /**
+     * BASIC constructor.
+     *
+     * @param oCondition - condition to be tested.
+     * @param iStatementNumber - the sequence number of this statement in the program
+     * @param iEndLocation - destination for the jump after unsuccessful completion of the condition.
+     */
+    public IfThenStatement(final Expression oCondition, final int iStatementNumber, final int iEndLocation) {
+        _iStatementNumber = iStatementNumber;
+        _oCondition = oCondition;
+        _strLabel = "";
+        _iEndLocation = iEndLocation;
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param oCondition - condition to be tested.
+     * @param strLabel - destination for the jump after successful completion of the condition.
+     */
+    public IfThenStatement(final int iLineNumber, final Expression oCondition, final String strLabel) {
+        _iStatementNumber = iLineNumber;
+        _oCondition = oCondition;
+        _strLabel = strLabel;
+        _iEndLocation = 0;
+    }
+
+    /**
+     * Get Line Number.
+     *
+     * @return iLineNumber - the command line number of the statement
+     */
+    @Override
+    public int getLineNumber() {
+        return (_iStatementNumber);
+    }
+
+    /**
      * Execute the If statement.
      *
      * @throws Exception - exposes any exception coming from the memory management
      */
     public void execute() throws Exception {
-        if (_oMemoryManagement.containsLabelKey(_strLabel)) {
-            double value = _oCondition.evaluate().toNumber();
-            if (value != 0) {
-                _oMemoryManagement.setCurrentStatement(_oMemoryManagement.getLabelStatement(_strLabel));
+        if (_oLabelStatement.containsLabelKey(_strLabel)) {
+            BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
+            if (bValue.isTrue()) {
+                _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strLabel));
             }
         }
     }

@@ -1,7 +1,8 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 
 /**
  * GoToStatement.java
@@ -18,7 +19,10 @@ import eu.gricom.interpreter.basic.helper.MemoryManagement;
 public final class GotoStatement implements Statement {
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private final String _strLabel;
-    private final MemoryManagement _oMemoryManager = new MemoryManagement();
+    private final int _iLineNumber;
+    private final ProgramPointer _oProgramPointer = new ProgramPointer();
+    private final LabelStatement _oLabelStatement = new LabelStatement();
+    private final LineNumberStatement _oLineNumber = new LineNumberStatement();
 
     /**
      * Default constructor.
@@ -26,18 +30,55 @@ public final class GotoStatement implements Statement {
      * @param strLabel - target of the jump - defined by a label
      */
     public GotoStatement(final String strLabel) {
+        _iLineNumber = 0;
         _strLabel = strLabel;
+    }
+
+    /**
+     * Default constructor.
+     * @param iLineNumber - number of the line of the command
+     * @param strLabel - target of the jump - defined by a label
+     */
+    public GotoStatement(final int iLineNumber, final String strLabel) {
+        _iLineNumber = iLineNumber;
+        _strLabel = strLabel;
+    }
+
+    /**
+     * Get Line Number.
+     *
+     * @return iLineNumber - the command line number of the statement
+     */
+    @Override
+    public int getLineNumber() {
+        return (_iLineNumber);
     }
 
     /**
      * Execute the transaction.
      */
-    public void execute() {
-        if (_oMemoryManager.containsLabelKey(_strLabel)) {
-            _oMemoryManager.setCurrentStatement(_oMemoryManager.getLabelStatement(_strLabel));
-        } else {
-            // TODO This should be a syntax error thrown...
-            _oLogger.error("GOTO [unknown]");
+    public void execute() throws SyntaxErrorException {
+        // This part of the method is executed if the BASIC interpreter uses labels (e.g. we are using JASIC)
+        if (_oLabelStatement.containsLabelKey(_strLabel)) {
+            _oLogger.debug("-execute-> jump to [" + _strLabel + "]");
+            _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strLabel));
+            _oLogger.debug("-execute-> jump to [" + _oLabelStatement.getLabelStatement(_strLabel) + "]");
+            return;
+        }
+
+        // here we are using line numbers to jump to
+        try {
+            int iTokenNo = _oLineNumber.getStatement(Integer.parseInt(_strLabel));
+            _oLogger.debug("-execute-> jump to Token [" + iTokenNo + "]");
+
+            if (iTokenNo != 0) {
+                _oProgramPointer.setCurrentStatement(iTokenNo);
+                return;
+            }
+
+            throw (new SyntaxErrorException("GOTO [unknown]: Target: " + _strLabel));
+        } catch (NumberFormatException eNumberException) {
+            throw (new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strLabel));
         }
     }
 
@@ -48,6 +89,10 @@ public final class GotoStatement implements Statement {
      */
     @Override
     public String content() {
-        return ("GOTO [" + _strLabel + "]: Destination: " + _oMemoryManager.getLabelStatement(_strLabel));
+        if (_oLabelStatement.containsLabelKey(_strLabel)) {
+            return ("GOTO [" + _strLabel + "]: Destination: " + _oLabelStatement.getLabelStatement(_strLabel));
+        }
+
+        return ("GOTO [" + _strLabel + "]: Destination: " + _oLineNumber.getStatement(Integer.parseInt(_strLabel)));
     }
 }
