@@ -62,7 +62,7 @@
     <property name="jvmci.Compiler" value="graal"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="eu.gricom.interpreter.basic.statements.LabelStatementTest" name="eu.gricom.interpreter.basic.statements.LabelStatementTest.testContainsKey" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.statements.LabelStatementTest" name="eu.gricom.interpreter.basic.statements.LabelStatementTest.testPutLabelStatement" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.statements.LabelStatementTest" name="eu.gricom.interpreter.basic.statements.LabelStatementTest.testContainsKey" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.statements.LabelStatementTest" name="eu.gricom.interpreter.basic.statements.LabelStatementTest.testGetLabelStatement" time="0"/>
 </testsuite>

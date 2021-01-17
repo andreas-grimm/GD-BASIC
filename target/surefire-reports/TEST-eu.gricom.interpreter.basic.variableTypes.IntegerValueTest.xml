@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="18" failures="0" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" time="0.004" errors="0" skipped="0">
+<testsuite tests="18" failures="0" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" time="0.002" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.1.0/Contents/Home/jre/lib"/>
@@ -62,22 +62,22 @@
     <property name="jvmci.Compiler" value="graal"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testMinusTypeException" time="0"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testPlusTypeException" time="0"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testMultiplyTypeException" time="0.001"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testDivideTypeException" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testEvaluate" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testToString" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testPlus" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testToNumber" time="0"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testLargerThanTypeException" time="0.001"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testLargerThanTypeException" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testPlusTypeException" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testMinusTypeException" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testMinus" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testMultiply" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testDivide" time="0"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testDivideByZero" time="0.001"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testDivideByZero" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testPower" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testPowerTypeException" time="0"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testPlus" time="0"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testSmallerThan" time="0.001"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testSmallerThanTypeException" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testSmallerThan" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testSmallerThanTypeException" time="0.001"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testLargerThan" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testMultiplyTypeException" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest" name="eu.gricom.interpreter.basic.variableTypes.IntegerValueTest.testDivideTypeException" time="0.001"/>
 </testsuite>

@@ -3,18 +3,12 @@
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/Basic.java">
 <error line="64" severity="warning" message="Comment matches to-do format &apos;TODO:&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
 <error line="98" severity="warning" message="Line is longer than 150 characters (found 155)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="128" severity="warning" message="Line is longer than 150 characters (found 208)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="128" column="62" severity="warning" message="&apos;+&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="128" column="157" severity="warning" message="&apos;+&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="131" severity="warning" message="Line is longer than 150 characters (found 207)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="131" column="61" severity="warning" message="&apos;+&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="131" column="156" severity="warning" message="&apos;+&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="173" severity="warning" message="Comment matches to-do format &apos;TODO:&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
+<error line="131" column="81" severity="warning" message="&apos;+&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="145" column="81" severity="warning" message="&apos;+&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="193" severity="warning" message="Comment matches to-do format &apos;TODO:&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/TokenType.java">
 <error line="0" severity="warning" message="Missing package-info.java file." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocPackageCheck"/>
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/JasicLexer.java">
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/ReservedWords.java">
 <error line="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTypeCheck"/>
@@ -33,8 +27,6 @@
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/Tokenizer.java">
 <error line="28" column="57" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/TokenizeState.java">
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/Token.java">
 <error line="25" column="63" severity="warning" message="Parameter iLineNumber should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
@@ -85,35 +77,9 @@
 <error line="354" column="120" severity="warning" message="&apos;+&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
 <error line="398" column="67" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
 </file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/parser/JasicParser.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/memoryManager/ProgramPointer.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/memoryManager/VariableManagement.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/memoryManager/package-info.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/memoryManager/Stack.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/LabelStatement.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/OperatorExpression.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/PrintStatement.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/Statement.java">
-</file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/EndStatement.java">
 <error line="42" column="5" severity="warning" message="Method &apos;getLineNumber&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
 <error line="52" column="40" severity="warning" message="Expected @throws tag for &apos;Exception&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/VariableExpression.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/LineNumberStatement.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/Expression.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/AssignStatement.java">
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/IfThenStatement.java">
 <error line="59" column="38" severity="warning" message="Expected @param tag for &apos;iLineNumber&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
@@ -125,8 +91,6 @@
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/GotoStatement.java">
 <error line="60" column="34" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/package-info.java">
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/RealValue.java">
 <error line="56" column="22" severity="warning" message="&apos;typecast&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
@@ -142,31 +106,9 @@
 <error line="83" column="5" severity="warning" message="Method &apos;power&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
 <error line="84" column="24" severity="warning" message="Parameter oValue should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
 </file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/Value.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/package-info.java">
-</file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/IntegerValue.java">
 <error line="129" column="5" severity="warning" message="Method &apos;power&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
 <error line="130" column="24" severity="warning" message="Parameter oValue should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
 <error line="135" column="72" severity="warning" message="&apos;,&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/Logger.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/Time.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/FileHandler.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/Printer.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/package-info.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/error/DivideByZeroException.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/error/package-info.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/error/SyntaxErrorException.java">
-</file>
-<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/package-info.java">
 </file>
 </checkstyle>

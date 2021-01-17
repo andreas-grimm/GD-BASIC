@@ -125,10 +125,30 @@ public class Basic {
                     int iThisStatement = oProgramPointer.getCurrentStatement();
                     int iSourceCodeLineNumber = _aoLineNumbers.getLineNumber(aoStatements.get(iThisStatement).getLineNumber());
                     oProgramPointer.calcNextStatement();
-                    _oLogger.debug("Basic Source Code Line ["+ iSourceCodeLineNumber + "] Statement [ " + aoStatements.get(iThisStatement).getLineNumber() +"]: " + aoStatements.get(iThisStatement).content());
+
+                    if (_strBasicVersion.contains("jasic")) {
+                        _oLogger.debug(
+                                "Current Source Code Line [" + iThisStatement + "/"+ aoStatements.size() + "]: " + aoStatements.get(
+                                        iThisStatement).content());
+                    } else {
+                        _oLogger.debug(
+                                "Basic Source Code Line [" + iSourceCodeLineNumber + "] Statement [ " + aoStatements.get(
+                                        iThisStatement).getLineNumber() + "]: " + aoStatements.get(
+                                        iThisStatement).content());
+                    }
+
                     aoStatements.get(iThisStatement).execute();
                     iThisStatement = oProgramPointer.getCurrentStatement();
-                    _oLogger.debug("Next Source Code Line ["+ iSourceCodeLineNumber + "] Statement [ " + aoStatements.get(iThisStatement).getLineNumber() +"]: " + aoStatements.get(iThisStatement).content());
+
+                    if (_strBasicVersion.contains("jasic")) {
+                        _oLogger.debug(
+                                "Next Source Code Line [" + iThisStatement + "/"+ aoStatements.size() + "]");
+                    } else {
+                        _oLogger.debug(
+                                "Next Source Code Line [" + iSourceCodeLineNumber + "] Statement [ " + aoStatements.get(
+                                        iThisStatement).getLineNumber() + "]: " + aoStatements.get(
+                                        iThisStatement).content());
+                    }
                 }
             } else {
                 _oLogger.error("Parsing delivered empty program");

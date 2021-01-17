@@ -25,9 +25,9 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2021 GriCom</copyright>
     <item>
-      <title>File: 43,
+      <title>File: 16,
              Errors: 0,
-             Warnings: 83,
+             Warnings: 79,
              Infos: 0
       </title>
             <link>www.gricom.de/projects/Interpreter/checkstyle.html</link>
@@ -46,6 +46,20 @@ under the License.
           <tbody>
                           <tr>
                 <td>
+                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.tokenizer.ReservedWords.java">eu/gricom/interpreter/basic/tokenizer/ReservedWords.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  13
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.GotoStatement.java">eu/gricom/interpreter/basic/statements/GotoStatement.java</a>
                 </td>
                 <td>
@@ -53,48 +67,6 @@ under the License.
                 </td>
                 <td>
                   1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.variableTypes.package-info.java">eu/gricom/interpreter/basic/variableTypes/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.tokenizer.TokenizeState.java">eu/gricom/interpreter/basic/tokenizer/TokenizeState.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.OperatorExpression.java">eu/gricom/interpreter/basic/statements/OperatorExpression.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
                 </td>
                 <td>
                   0
@@ -130,13 +102,13 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.helper.Printer.java">eu/gricom/interpreter/basic/helper/Printer.java</a>
+                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.tokenizer.Tokenizer.java">eu/gricom/interpreter/basic/tokenizer/Tokenizer.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  0
+                  1
                 </td>
                 <td>
                   0
@@ -164,7 +136,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  9
+                  5
                 </td>
                 <td>
                   0
@@ -172,55 +144,13 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.package-info.java">eu/gricom/interpreter/basic/statements/package-info.java</a>
+                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.InputStatement.java">eu/gricom/interpreter/basic/statements/InputStatement.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.error.SyntaxErrorException.java">eu/gricom/interpreter/basic/error/SyntaxErrorException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.helper.package-info.java">eu/gricom/interpreter/basic/helper/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.package-info.java">eu/gricom/interpreter/basic/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
+                  3
                 </td>
                 <td>
                   0
@@ -256,13 +186,13 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.helper.Time.java">eu/gricom/interpreter/basic/helper/Time.java</a>
+                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.variableTypes.IntegerValue.java">eu/gricom/interpreter/basic/variableTypes/IntegerValue.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  0
+                  3
                 </td>
                 <td>
                   0
@@ -284,55 +214,13 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.Expression.java">eu/gricom/interpreter/basic/statements/Expression.java</a>
+                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.tokenizer.TokenType.java">eu/gricom/interpreter/basic/tokenizer/TokenType.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.LabelStatement.java">eu/gricom/interpreter/basic/statements/LabelStatement.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.PrintStatement.java">eu/gricom/interpreter/basic/statements/PrintStatement.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.error.DivideByZeroException.java">eu/gricom/interpreter/basic/error/DivideByZeroException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
+                  1
                 </td>
                 <td>
                   0
@@ -354,34 +242,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.memoryManager.Stack.java">eu/gricom/interpreter/basic/memoryManager/Stack.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.helper.Logger.java">eu/gricom/interpreter/basic/helper/Logger.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.IfThenStatement.java">eu/gricom/interpreter/basic/statements/IfThenStatement.java</a>
                 </td>
                 <td>
@@ -396,230 +256,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.Statement.java">eu/gricom/interpreter/basic/statements/Statement.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.error.package-info.java">eu/gricom/interpreter/basic/error/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.parser.JasicParser.java">eu/gricom/interpreter/basic/parser/JasicParser.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.variableTypes.Value.java">eu/gricom/interpreter/basic/variableTypes/Value.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.helper.FileHandler.java">eu/gricom/interpreter/basic/helper/FileHandler.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.tokenizer.ReservedWords.java">eu/gricom/interpreter/basic/tokenizer/ReservedWords.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  13
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.memoryManager.VariableManagement.java">eu/gricom/interpreter/basic/memoryManager/VariableManagement.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.tokenizer.Tokenizer.java">eu/gricom/interpreter/basic/tokenizer/Tokenizer.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.tokenizer.JasicLexer.java">eu/gricom/interpreter/basic/tokenizer/JasicLexer.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.InputStatement.java">eu/gricom/interpreter/basic/statements/InputStatement.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  3
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.LineNumberStatement.java">eu/gricom/interpreter/basic/statements/LineNumberStatement.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.variableTypes.IntegerValue.java">eu/gricom/interpreter/basic/variableTypes/IntegerValue.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  3
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.tokenizer.TokenType.java">eu/gricom/interpreter/basic/tokenizer/TokenType.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.AssignStatement.java">eu/gricom/interpreter/basic/statements/AssignStatement.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.VariableExpression.java">eu/gricom/interpreter/basic/statements/VariableExpression.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.memoryManager.package-info.java">eu/gricom/interpreter/basic/memoryManager/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.statements.EndStatement.java">eu/gricom/interpreter/basic/statements/EndStatement.java</a>
                 </td>
                 <td>
@@ -627,20 +263,6 @@ under the License.
                 </td>
                 <td>
                   2
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="www.gricom.de/projects/Interpreter/checkstyle.html#eu.gricom.interpreter.basic.memoryManager.ProgramPointer.java">eu/gricom/interpreter/basic/memoryManager/ProgramPointer.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
                 </td>
                 <td>
                   0

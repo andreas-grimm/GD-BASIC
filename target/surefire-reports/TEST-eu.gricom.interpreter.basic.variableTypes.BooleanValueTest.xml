@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="7" failures="0" name="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest" time="0.042" errors="0" skipped="0">
+<testsuite tests="7" failures="0" name="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest" time="0.033" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.1.0/Contents/Home/jre/lib"/>
@@ -68,5 +68,5 @@
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest" name="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest.testToNumber" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest" name="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest.testIsTrue" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest" name="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest.testEquals" time="0"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest" name="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest.testLargerThanTypeException" time="0.042"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest" name="eu.gricom.interpreter.basic.variableTypes.BooleanValueTest.testLargerThanTypeException" time="0.033"/>
 </testsuite>

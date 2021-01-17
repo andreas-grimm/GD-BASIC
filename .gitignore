@@ -1,0 +1,10 @@
+.classpath
+.project
+.settings
+.idea
+target
+javadoc
+*.iml
+*.swp
+.pmd
+dependency-reduced-pom.xml

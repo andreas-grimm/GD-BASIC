@@ -16,7 +16,56 @@ format can be found here: [www.markdownguide.org](https://www.markdownguide.org/
 or here: [github.com](https://guides.github.com/features/mastering-markdown/)
 
 ## Installing and Using the Interpreter
+The interpreter is delivered source code only. To use it, the package is using Apache Maven to compile.
 
+Use the `git clone` command to retrieve the latest version of the interpreter. The package will download into any location, there is 
+no need for a special filesystem set-up. The package has been tested using Mac OS X and Linux, but the installation should support
+Windows as well.
+
+For the compilation, the project is using *Apache Maven* as the build manager tool. The implementation is tested with Maven 3.6.3, but
+any newer version of Maven should work as well. The command line to run Maven is:
+
+    mvn clean compile dependency:tree dependency:copy-dependencies package
+
+During the build process, the interpreter is compiled, but the process also runs a number of JUNIT test cases, and performs
+a static code analysis using Checkstyle. The definition of the syntax for Checkstyle is in the `./etc` directory, Checkstyle
+is working with the code style guide of the project. The code style guide is located in the projects root directory, named `STYLEGUIDE.md`.
+If you want to participate, please adopt your contributions to the look and feel of the project. Code submissions not reflecting
+the styleguide will be rejected.
+
+A wrapper around this command can be found in the `./bin`-directory: `./bin/build`. A number of test
+scripts are added: `bin/test` is running the _JASIC_ test programs, `bin/test2` runs the same program logic as a _BASIC_
+program. `bin/dev` is used to run the development _BASIC_ program that is used to implement and unit test the _BASIC_
+version of the interpreter.
+
+At this stage, the interpreter is using a command line interface (`CLI`). The syntax of the `CLI` is:
+
+`java -jar target/BASIC-`<version-SNAPSHOT>`.jar` <parameter> <program name>.<`.bas`|`.jas`>
+
+Possible optional parameter supported are:
+* "`-h`" - help (This screen), no further arguments
+* "`-q`" - quiet mode, disables all interpeter messages and only displays the output of the program
+* "`-v`" - verbose level: parameter defines the debug level, e.g. `info`, `debug`. See the following example.
+* "`-b`" - language type: `J` = Jasic, `B` = Basic, default is set to `B`
+
+The only mandatory parameter is:
+* "`-i`" - mandatory name of the input file, with the name of the input file as an argument
+
+_Example_:
+`java -jar target/BASIC-0.0.2-SNAPSHOT.jar -v"debug|info" -i src/test/resources/testfile_basic.bas`
+
+## Participation in the Development of the Interpreter
+As of version `0.1.0` (planned) the interpeter is avaialble in a public _GITHUB_ (`github.com`) repository. It is covered by
+a modified version of the CDDL 1.0 License, see `LICENSE.md` in the project root directory.
+
+The project is following open source project standard processes. Anybody with an interest to participate can and may clone or
+fork a copy of the project. Deliveries back to the author can be done using pull requests. Refer to the `git` documentation
+to gain information on the process.
+
+A `GIST` space might be opened at a later stage, right now the project is using a _Jira_ space to plan additional functionality
+and release dates. The _Jira_ project can be found here:
+
+[Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC)
 
 ## General Structure of the Interpreter
 

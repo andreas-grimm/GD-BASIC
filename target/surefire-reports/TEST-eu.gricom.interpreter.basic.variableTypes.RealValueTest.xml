@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="14" failures="0" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest" time="0.001" errors="0" skipped="0">
+<testsuite tests="14" failures="0" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest" time="0.002" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/graalvm-ce-java8-20.1.0/Contents/Home/jre/lib"/>
@@ -65,14 +65,14 @@
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testEvaluate" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testToString" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testToReal" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testPlus" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testLargerThanTypeException" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testMinus" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testMultiply" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testDivide" time="0"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testDivideByZero" time="0"/>
+  <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testDivideByZero" time="0.001"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testPower" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testPowerTypeException" time="0"/>
-  <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testPlus" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testSmallerThan" time="0"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testSmallerThanTypeException" time="0.001"/>
   <testcase classname="eu.gricom.interpreter.basic.variableTypes.RealValueTest" name="eu.gricom.interpreter.basic.variableTypes.RealValueTest.testLargerThan" time="0"/>
