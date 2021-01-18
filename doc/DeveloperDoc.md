@@ -40,7 +40,7 @@ version of the interpreter.
 
 At this stage, the interpreter is using a command line interface (`CLI`). The syntax of the `CLI` is:
 
-`java -jar target/BASIC-`<version-SNAPSHOT>`.jar` <parameter> <program name>.<`.bas`|`.jas`>
+`java -jar target/BASIC-`\<version-SNAPSHOT>`.jar` \<parameter> \<program name>.\<`.bas`|`.jas`>
 
 Possible optional parameter supported are:
 * "`-h`" - help (This screen), no further arguments
@@ -68,6 +68,8 @@ and release dates. The _Jira_ project can be found here:
 [Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC)
 
 ## General Structure of the Interpreter
+
+![Interpreter Structure](Process Flow.jpg)
 
 ### Tokenizer
 The Tokenizer or Lexer of the interpreter translates the read source code into a list of recognized tokens.
@@ -292,8 +294,9 @@ of the keywords can vary - refer to the language manual for the use of the reser
 
 ## How to add new BASIC Commands to the Interpreter
 New commands, unlike new structures, do not require a change in the Tokenizer. The main part to add new commands
-is in the [BasicParser](#BasicParser Class) class. In this class, the method __parse__ contains the logic
-to convert the identified token into the sequence of commands that will be executed in the interpreter.
+is in the [BasicParser](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#BasicParser-Class)
+class. In this class, the method __parse__ contains the logic to convert the identified token into the sequence of commands 
+that will be executed in the interpreter.
 
 
 
@@ -345,10 +348,10 @@ The content of the TokenType file is limited to the definition of the available 
 ##### OperatorExpression
 The __OperatorExpression__ class implements the different functions implemented as operators. This class
 originally contained not only the definition of the operators, but also the implementation. As of this
-version, the operators are now in the [VariableTypes](#The VariableType Package). By using the 
-[common interface](#Value Interface), the __OperatorExpression__ is now independent of the actual values 
+version, the operators are now in the [VariableTypes](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#The-VariableType-Package). By using the 
+[common interface](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#value-interface), the __OperatorExpression__ is now independent of the actual values 
 and does not need to be modified in case additional types (like 
-[integers](#https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#variable-type-integer) or
+[integers](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#variable-type-integer) or
 [booleans](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#variable-type-boolean)) are added in a later version.
 
 #### Statements
@@ -364,10 +367,10 @@ to a different location in the program. The executable functionality is located 
 The implementation of the functionality is realized by using two different classes: 
 `eu.gricom.interpreter.basic.statements.LabelStatement` for the JASIC programs, and 
 `eu.gricom.interpreter.basic.statements.LineNumberStatement` for the BASIC program. These classes are used to identify
-the target for the jump, which is either a Label (see `LabelStatement`) or a line number.
+the target for the jump, which is either a Label (see `LabelStatement`), or a line number.
 
 When using labels, the actual label is identified by the parsing process and is added to the list of locations in the
-`LabelStatement` class. The class then has a second method to retrieve the location of the label in the program and the
+`LabelStatement` class. The class then has a second method to retrieve the location of the label in the program, and the
 program pointer can be set to the location in the program. While the label functionality is relatively simple, the 
 `LineNumberStatement` needs some extra effort to implement the use of line numbers. The class uses two internal hashmaps 
 to build the logical connection between the BASIC source code lines and the executeable statements, using the identified 
@@ -390,7 +393,7 @@ Limitations of the current implementation:
 * As the comments commands `REM` and `'` are not reflected in the executables, those commands can not be justed as targets 
   for a jump. The current functionality needs to be extended in such a way that if the target line is not found in the
   reference list in `LineNumberStatement`, then the flow needs to find the command with the next higher statement / token / 
-  source line number. [link](#https://gricom.atlassian.net/browse/BASIC-58)
+  source line number. [link](https://gricom.atlassian.net/browse/BASIC-58)
 * The performance of the retrieval of the BASIC source line is non-optimal and should be improved.
 
 ##### `IF-THEN` Statement
@@ -408,7 +411,7 @@ The implementation of the structure for BASIC is similar to the JASIC implementa
 
 Limitations of the current implementation:
 * With this version of the interpreter, the negative case of the control statement (`ELSE`) is not yet implemented 
-  [link](#https://gricom.atlassian.net/browse/BASIC-64)
+  [link](https://gricom.atlassian.net/browse/BASIC-64)
 * Potential change of the logic (to be determined): If the BASIC `IF-THEN` command has no token, but a number following 
   the `THEN` statement, the command could execute a jump to the line number in the statement.
 
