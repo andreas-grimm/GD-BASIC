@@ -52,11 +52,17 @@ The current version contains the following changes, bug fixes, and enhancements:
 
 0.0.4:
 * Starting to build the interpreter to support Datmouth style BASIC
-  * Tokenizer re-build:
+  * Tokenizer and Parser re-build:
     * Moving from character based tokenization to line based tokenization
-  * Introducing variable naming to typed variables: string type: `variable$`, integer type: `variable%`, double type: `variable#`, long type: `variable&`, and boolean type: `variable!`
+    * General code cleansing
+    * Added JUnit test cases for new classes
   * Implemented commands:
+    * All JASIC commands are now implemented in the BASIC branch
+    * Added functionality to the `IF` command: using block structure to allow more commands after an `IF` command (BASIC branch only)  
     * `PRINT` - general output command
     * `REM` for any remarks. This is now not only ignored but passed to the parser.
+
+0.0.5
+* Introducing variable naming to typed variables: string type: `variable$`, integer type: `variable%`, double type: `variable#`, long type: `variable&`, and boolean type: `variable!`
 
 ** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **
