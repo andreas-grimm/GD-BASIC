@@ -69,7 +69,7 @@ and release dates. The _Jira_ project can be found here:
 
 ## General Structure of the Interpreter
 
-![Interpreter Structure](Process Flow.jpg)
+![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/Process%20Flow.jpg?raw=true)
 
 ### Tokenizer
 The Tokenizer or Lexer of the interpreter translates the read source code into a list of recognized tokens.
