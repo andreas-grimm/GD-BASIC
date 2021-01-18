@@ -54,6 +54,8 @@ public class BasicParser implements Parser {
         LabelStatement oLabelStatement = new LabelStatement();
         List<Statement> aoStatements = new ArrayList<>();
 
+        int iOrgPosition;
+
         _oLogger.debug("Start parsing...");
         boolean _bContinue = true;
 
@@ -83,18 +85,24 @@ public class BasicParser implements Parser {
                 // GOTO Token: Read the line from terminal for processing
                 case GOTO:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOTO] ");
+                    iOrgPosition = _iPosition;
                     oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     _iPosition++;
-                    aoStatements.add(new GotoStatement(_iPosition -1, consumeToken(TokenType.NUMBER).getText()));
+                    String strLineNumber = consumeToken(TokenType.NUMBER).getText();
+                    aoStatements.add(new GotoStatement(iOrgPosition, strLineNumber));
                     break;
 
                 case IF:
+                    iOrgPosition = _iPosition;
+                    oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    _iPosition++;
                     Expression oCondition = expression();
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [IF]: <" + oCondition.content() + ">");
-                    consumeToken(TokenType.THEN);
-                    String strLabel = consumeToken(TokenType.WORD).getText();
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [THEN]: <" + strLabel + ">");
-//                aoStatements.add(new IfThenStatement(oCondition, strLabel));
+                    _oLogger.debug("-parse-> found Token: <" + (_iPosition -1) + "> [IF]: <" + oCondition.content() + ">");
+                    String strLabel = consumeToken(TokenType.THEN).getText();
+                    _oLogger.debug("-parse-> followed Token: <" + _iPosition + "> [THEN]: <" + strLabel + ">");
+                    Token oEndIfToken = findToken(TokenType.ENDIF);
+                    _oLogger.debug("-parse-> followed Token: <" + oEndIfToken.getLine() + "> [END-IF]");
+                    aoStatements.add(new IfThenStatement(oCondition, iOrgPosition, oEndIfToken.getLine()));
                     break;
 
                 // INPUT Token: Read the line from terminal for processing
@@ -148,6 +156,12 @@ public class BasicParser implements Parser {
                                 " in Line [" + getToken(0).getLine() + "]");
                     }
 
+                    break;
+
+                // List of all tokens that are used in a different context (e.g. as part of the IFTHEN token)
+                case ENDIF:
+                    _oLogger.debug("-parse-> ignoring token: <" + _iPosition + "> [" + getToken(0).getType() + "] ");
+                    _iPosition++;
                     break;
 
                 // No Token identified, Syntax Error
@@ -277,29 +291,6 @@ public class BasicParser implements Parser {
                 return (expression);
         }
 
-        //if (matchNextToken(TokenType.WORD)) {
-        //    Token oToken = previousToken(1);
-        //    return (new VariableExpression(oToken.getText()));
-        //}
-
-        // If the current token is of type number, then return the value as a double value
-        //if (matchNextToken(TokenType.NUMBER)) {
-        //    Token oToken = previousToken(1);
-        //    _oLogger.debug("-------> lastToken: <" + _iPosition + "> [" + oToken.getType().toString() + "] '" +
-        //    oToken.getText() +
-        //            "' [" + oToken.getLine() + "]");
-        //    return new RealValue(Double.parseDouble(previousToken(1).getText()));
-        //}
-
-        // If the current token us of type STRING, then return the value as a string value
-        //if (matchNextToken(TokenType.STRING)) {
-        //    oToken = previousToken(1);
-        //    _oLogger.debug("-------> lastToken: <" + _iPosition + "> [" + oToken.getType().toString() + "] '" +
-        //    oToken.getText() +
-        //            "' [" + oToken.getLine() + "]");
-        //    return new StringValue(previousToken(1).getText());
-        //}
-
         // The contents of a parenthesized expression can be any expression. This lets us "restart" the precedence cascade
         // so that you can have a lower precedence expression inside the parentheses.
         //if (matchNextToken(TokenType.LEFT_PAREN)) {
@@ -396,6 +387,8 @@ public class BasicParser implements Parser {
      * @return       The consumed token.
      */
     public final Token consumeToken(final TokenType oType) throws SyntaxErrorException {
+        _oLogger.debug("-consumeToken-> looking for Token: <" + (_iPosition) + "> ["+ oType.toString() + "]: <" + getToken(0).getType() +
+                ">");
 
         if (getToken(0).getType() != oType) {
             throw new SyntaxErrorException("Expected " + oType + ".");
@@ -403,6 +396,37 @@ public class BasicParser implements Parser {
 
         return (_aoTokens.get(_iPosition++));
     }
+
+    /**
+     * Consumes the next token if it's the given type. If not, throws an
+     * exception. This is for cases where the parser demands a token of a
+     * certain type in a certain position, for example a matching ) after
+     * an opening (.
+     *
+     * @param  oType  Expected type of the next token.
+     * @return       The found token.
+     */
+    public final Token findToken(final TokenType oType) throws SyntaxErrorException {
+        _oLogger.debug("-findToken-> looking for Token: <" + (_iPosition) + "> ["+ oType.toString() + "]: <" + getToken(0).getType() +
+                ">");
+
+        int iCurrentPosition = _iPosition;
+
+        while (iCurrentPosition < _aoTokens.size()) {
+            Token oToken = _aoTokens.get(iCurrentPosition);
+
+            if (oToken.getType() == oType) {
+                _oLogger.debug("-findToken-> found: <" + (iCurrentPosition) + "> ["+ oToken.getType() + "]");
+                return (oToken);
+            } else {
+                _oLogger.debug("-findToken-> failed: <" + (iCurrentPosition) + "> ["+ oToken.getType() + "]");
+                iCurrentPosition++;
+            }
+        }
+
+        throw new SyntaxErrorException("Missing statement " + oType + ".");
+    }
+
 
     /**
      * Consumes the next token if it's a word with the given name. If not,

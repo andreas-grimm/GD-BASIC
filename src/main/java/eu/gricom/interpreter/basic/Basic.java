@@ -41,7 +41,7 @@ public class Basic {
     private static BufferedReader _oLineIn;
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strBasicVersion = "basic";
-    private LineNumberStatement _aoLineNumbers = new LineNumberStatement();
+    private LineNumberStatement _oLineNumbers = new LineNumberStatement();
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of
@@ -123,7 +123,7 @@ public class Basic {
                 while (oProgramPointer.getCurrentStatement() < aoStatements.size()) {
                     // as long as we have not reached the end of the code
                     int iThisStatement = oProgramPointer.getCurrentStatement();
-                    int iSourceCodeLineNumber = _aoLineNumbers.getLineNumber(aoStatements.get(iThisStatement).getLineNumber());
+                    int iSourceCodeLineNumber = _oLineNumbers.getLineNumber(aoStatements.get(iThisStatement).getLineNumber());
                     oProgramPointer.calcNextStatement();
 
                     if (_strBasicVersion.contains("jasic")) {
@@ -138,17 +138,6 @@ public class Basic {
                     }
 
                     aoStatements.get(iThisStatement).execute();
-                    iThisStatement = oProgramPointer.getCurrentStatement();
-
-                    if (_strBasicVersion.contains("jasic")) {
-                        _oLogger.debug(
-                                "Next Source Code Line [" + iThisStatement + "/"+ aoStatements.size() + "]");
-                    } else {
-                        _oLogger.debug(
-                                "Next Source Code Line [" + iSourceCodeLineNumber + "] Statement [ " + aoStatements.get(
-                                        iThisStatement).getLineNumber() + "]: " + aoStatements.get(
-                                        iThisStatement).content());
-                    }
                 }
             } else {
                 _oLogger.error("Parsing delivered empty program");

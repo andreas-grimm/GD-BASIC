@@ -2,18 +2,24 @@
 <pmd xmlns="http://pmd.sourceforge.net/report/2.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd"
-    version="6.21.0" timestamp="2021-01-17T11:08:34.201">
+    version="6.21.0" timestamp="2021-01-18T18:14:05.472">
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/Basic.java">
 <violation beginline="41" endline="41" begincolumn="35" endcolumn="42" rule="UnusedPrivateField" ruleset="Best Practices" package="eu.gricom.interpreter.basic" class="Basic" variable="_oLineIn" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_bestpractices.html#unusedprivatefield" priority="3">
 Avoid unused private fields such as '_oLineIn'.
 </violation>
-<violation beginline="176" endline="176" begincolumn="16" endcolumn="28" rule="UnusedLocalVariable" ruleset="Best Practices" package="eu.gricom.interpreter.basic" class="Basic" method="main" variable="strParseError" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+<violation beginline="165" endline="165" begincolumn="16" endcolumn="28" rule="UnusedLocalVariable" ruleset="Best Practices" package="eu.gricom.interpreter.basic" class="Basic" method="main" variable="strParseError" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
 Avoid unused local variables such as 'strParseError'.
+</violation>
+<violation beginline="186" endline="186" begincolumn="14" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+<violation beginline="186" endline="186" begincolumn="40" endcolumn="67" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
 </violation>
 <violation beginline="197" endline="197" begincolumn="14" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="197" endline="197" begincolumn="40" endcolumn="67" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="197" endline="197" begincolumn="40" endcolumn="66" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
 <violation beginline="208" endline="208" begincolumn="14" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
@@ -22,22 +28,16 @@ Useless parentheses.
 <violation beginline="208" endline="208" begincolumn="40" endcolumn="66" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="219" endline="219" begincolumn="14" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="222" endline="222" begincolumn="14" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="219" endline="219" begincolumn="40" endcolumn="66" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="222" endline="222" begincolumn="40" endcolumn="67" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="233" endline="233" begincolumn="14" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="230" endline="230" begincolumn="14" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="233" endline="233" begincolumn="40" endcolumn="67" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
-Useless parentheses.
-</violation>
-<violation beginline="241" endline="241" begincolumn="14" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
-Useless parentheses.
-</violation>
-<violation beginline="241" endline="241" begincolumn="40" endcolumn="66" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="230" endline="230" begincolumn="40" endcolumn="66" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic" class="Basic" method="main" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
 </file>
@@ -341,73 +341,73 @@ Useless parentheses.
 </violation>
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/parser/BasicParser.java">
-<violation beginline="9" endline="9" begincolumn="1" endcolumn="62" rule="UnusedImports" ruleset="Best Practices" package="eu.gricom.interpreter.basic.parser" class="BasicParser" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_bestpractices.html#unusedimports" priority="4">
-Avoid unused imports such as 'eu.gricom.interpreter.basic.statements.IfThenStatement'
-</violation>
-<violation beginline="216" endline="216" begincolumn="17" endcolumn="50" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="230" endline="230" begincolumn="17" endcolumn="50" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="217" endline="217" begincolumn="18" endcolumn="52" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="231" endline="231" begincolumn="18" endcolumn="52" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="218" endline="218" begincolumn="18" endcolumn="55" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="232" endline="232" begincolumn="18" endcolumn="55" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="219" endline="219" begincolumn="18" endcolumn="53" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="233" endline="233" begincolumn="18" endcolumn="53" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="220" endline="220" begincolumn="18" endcolumn="52" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="234" endline="234" begincolumn="18" endcolumn="52" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="221" endline="221" begincolumn="18" endcolumn="59" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="235" endline="235" begincolumn="18" endcolumn="59" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="230" endline="230" begincolumn="17" endcolumn="27" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="244" endline="244" begincolumn="17" endcolumn="27" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="operator" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="253" endline="253" begincolumn="25" endcolumn="64" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="atomic" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="267" endline="267" begincolumn="25" endcolumn="64" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="atomic" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="277" endline="277" begincolumn="25" endcolumn="34" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="atomic" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="291" endline="291" begincolumn="25" endcolumn="34" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="atomic" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="334" endline="334" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextTwoToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="325" endline="325" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextTwoToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="338" endline="338" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextTwoToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="329" endline="329" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextTwoToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="342" endline="342" begincolumn="17" endcolumn="20" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextTwoToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="333" endline="333" begincolumn="17" endcolumn="20" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextTwoToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="359" endline="359" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="350" endline="350" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="363" endline="363" begincolumn="17" endcolumn="20" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="354" endline="354" begincolumn="17" endcolumn="20" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="376" endline="376" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="367" endline="367" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="381" endline="381" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="372" endline="372" begincolumn="21" endcolumn="25" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="386" endline="386" begincolumn="17" endcolumn="20" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="377" endline="377" begincolumn="17" endcolumn="20" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="matchNextToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="404" endline="404" begincolumn="17" endcolumn="43" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="consumeToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="397" endline="397" begincolumn="17" endcolumn="43" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="consumeToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="420" endline="420" begincolumn="17" endcolumn="32" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="consumeToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="420" endline="420" begincolumn="25" endcolumn="30" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="findToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="434" endline="434" begincolumn="17" endcolumn="22" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="previousToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="444" endline="444" begincolumn="17" endcolumn="32" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="consumeToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="450" endline="450" begincolumn="21" endcolumn="51" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="getToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="458" endline="458" begincolumn="17" endcolumn="22" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="previousToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="454" endline="454" begincolumn="17" endcolumn="51" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="getToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="474" endline="474" begincolumn="21" endcolumn="51" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="getToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+<violation beginline="478" endline="478" begincolumn="17" endcolumn="51" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.parser" class="BasicParser" method="getToken" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
 </file>
@@ -501,27 +501,30 @@ Useless parentheses.
 <violation beginline="54" endline="54" begincolumn="17" endcolumn="28" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="GotoStatement" method="getLineNumber" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="79" endline="79" begincolumn="20" endcolumn="83" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="GotoStatement" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="78" endline="78" begincolumn="20" endcolumn="83" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="GotoStatement" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="81" endline="81" begincolumn="20" endcolumn="92" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="GotoStatement" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="80" endline="80" begincolumn="20" endcolumn="92" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="GotoStatement" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="93" endline="93" begincolumn="21" endcolumn="109" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="GotoStatement" method="content" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="92" endline="92" begincolumn="21" endcolumn="109" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="GotoStatement" method="content" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="96" endline="96" begincolumn="17" endcolumn="114" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="GotoStatement" method="content" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="95" endline="95" begincolumn="17" endcolumn="120" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="GotoStatement" method="content" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/IfThenStatement.java">
-<violation beginline="24" endline="24" begincolumn="17" endcolumn="29" rule="UnusedPrivateField" ruleset="Best Practices" package="eu.gricom.interpreter.basic.statements" class="IfThenStatement" variable="_iEndLocation" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_bestpractices.html#unusedprivatefield" priority="3">
-Avoid unused private fields such as '_iEndLocation'.
-</violation>
-<violation beginline="73" endline="73" begincolumn="17" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="IfThenStatement" method="getLineNumber" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="62" endline="62" begincolumn="17" endcolumn="33" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="IfThenStatement" method="getLineNumber" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="98" endline="98" begincolumn="17" endcolumn="70" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="IfThenStatement" method="content" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="101" endline="101" begincolumn="24" endcolumn="94" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="IfThenStatement" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+<violation beginline="103" endline="103" begincolumn="24" endcolumn="94" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="IfThenStatement" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+<violation beginline="117" endline="117" begincolumn="17" endcolumn="70" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="IfThenStatement" method="content" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
 </file>
@@ -545,19 +548,25 @@ Useless parentheses.
 </violation>
 </file>
 <file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/LineNumberStatement.java">
-<violation beginline="56" endline="56" begincolumn="25" endcolumn="38" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="getLineNumber" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="3" endline="3" begincolumn="1" endcolumn="49" rule="UnusedImports" ruleset="Best Practices" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_bestpractices.html#unusedimports" priority="4">
+Avoid unused imports such as 'eu.gricom.interpreter.basic.helper.Logger'
+</violation>
+<violation beginline="57" endline="57" begincolumn="25" endcolumn="38" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="getLineNumber" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="59" endline="59" begincolumn="17" endcolumn="17" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="getLineNumber" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="60" endline="60" begincolumn="17" endcolumn="17" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="getLineNumber" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="75" endline="75" begincolumn="25" endcolumn="61" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="getStatement" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="77" endline="77" begincolumn="25" endcolumn="61" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="getStatement" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="79" endline="79" begincolumn="17" endcolumn="17" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="getStatement" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="81" endline="81" begincolumn="17" endcolumn="17" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="getStatement" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
-<violation beginline="90" endline="90" begincolumn="17" endcolumn="60" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="contains" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+<violation beginline="108" endline="108" begincolumn="17" endcolumn="36" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="getNextStatement" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+<violation beginline="119" endline="119" begincolumn="17" endcolumn="60" rule="UselessParentheses" ruleset="Code Style" package="eu.gricom.interpreter.basic.statements" class="LineNumberStatement" method="contains" externalInfoUrl="https://pmd.github.io/pmd-6.21.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
 Useless parentheses.
 </violation>
 </file>

@@ -10,7 +10,7 @@
               <comment>Convert to stand-alone program</comment>
             </comment>
             <comment>
-              <lineNumber>193</lineNumber>
+              <lineNumber>182</lineNumber>
               <comment>This here makes no sense...</comment>
             </comment>
           </comments>
@@ -66,11 +66,11 @@
         <file name="eu.gricom.interpreter.basic.parser.BasicParser" count="2">
           <comments>
             <comment>
-              <lineNumber>417</lineNumber>
+              <lineNumber>441</lineNumber>
               <comment>convert to syntax error</comment>
             </comment>
             <comment>
-              <lineNumber>449</lineNumber>
+              <lineNumber>473</lineNumber>
               <comment>actually this is a syntax error and should throw the syntax error exception</comment>
             </comment>
           </comments>

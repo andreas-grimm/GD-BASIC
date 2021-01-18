@@ -22,7 +22,7 @@ public final class GotoStatement implements Statement {
     private final int _iLineNumber;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final LabelStatement _oLabelStatement = new LabelStatement();
-    private final LineNumberStatement _oLineNumber = new LineNumberStatement();
+    private final LineNumberStatement _oLineNumberObject = new LineNumberStatement();
 
     /**
      * Default constructor.
@@ -66,10 +66,9 @@ public final class GotoStatement implements Statement {
             return;
         }
 
-        // here we are using line numbers to jump to
+        // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
         try {
-            int iTokenNo = _oLineNumber.getStatement(Integer.parseInt(_strLabel));
-            _oLogger.debug("-execute-> jump to Token [" + iTokenNo + "]");
+            int iTokenNo = _oLineNumberObject.getStatement(Integer.parseInt(_strLabel));
 
             if (iTokenNo != 0) {
                 _oProgramPointer.setCurrentStatement(iTokenNo);
@@ -93,6 +92,6 @@ public final class GotoStatement implements Statement {
             return ("GOTO [" + _strLabel + "]: Destination: " + _oLabelStatement.getLabelStatement(_strLabel));
         }
 
-        return ("GOTO [" + _strLabel + "]: Destination: " + _oLineNumber.getStatement(Integer.parseInt(_strLabel)));
+        return ("GOTO [" + _strLabel + "]: Destination: " + _oLineNumberObject.getStatement(Integer.parseInt(_strLabel)));
     }
 }
