@@ -3,6 +3,7 @@ package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
+import eu.gricom.interpreter.basic.variableTypes.Value;
 
 /**
  * An operator expression evaluates two expressions and then performs some
@@ -12,7 +13,7 @@ import eu.gricom.interpreter.basic.helper.Logger;
 public class OperatorExpression implements Expression {
     private Logger _oLogger = new Logger(this.getClass().getName());
     private final Expression _oLeft;
-    private final char _strOperator;
+    private final String _strOperator;
     private final Expression _oRight;
 
     /**
@@ -22,7 +23,7 @@ public class OperatorExpression implements Expression {
      * @param strOperator the actual operator - defined as a single char
      * @param oRight right side of the operation
      */
-    public OperatorExpression(final Expression oLeft, final char strOperator, final Expression oRight) {
+    public OperatorExpression(final Expression oLeft, final String strOperator, final Expression oRight) {
         _oLogger.debug("--->  " + oLeft.content() + " " + strOperator + " " + oRight.content());
         _oLeft = oLeft;
         _strOperator = strOperator;
@@ -36,72 +37,30 @@ public class OperatorExpression implements Expression {
      * @return returns the result of the operation.
      */
     public final Value evaluate() throws Exception {
-        Value leftVal = _oLeft.evaluate();
-        Value rightVal = _oRight.evaluate();
+        Value oLeftValue = _oLeft.evaluate();
+        Value oRightValue = _oRight.evaluate();
 
         switch (_strOperator) {
-            case '=':
-                // Coerce to the left argument's type, then compare.
-                if (leftVal instanceof NumberValue) {
-                    if (leftVal.toNumber() == rightVal.toNumber()) {
-                        return (new NumberValue(1));
-                    } else {
-                        return (new NumberValue(0));
-                    }
-                }
-                if (leftVal.toString().equals(rightVal.toString())) {
-                    return (new NumberValue(1));
-                } else {
-                    return (new NumberValue(0));
-                }
+            case "=":
+                return (oLeftValue.equals(oRightValue));
 
-            case '+':
-                // Addition if the left argument is a number, otherwise do
-                // string concatenation.
-                if (leftVal instanceof NumberValue) {
-                    return new NumberValue(leftVal.toNumber() + rightVal.toNumber());
-                }
-                return new StringValue(leftVal.toString() + rightVal.toString());
+            case "+":
+                return (oLeftValue.plus(oRightValue));
+            case "-":
+                return (oLeftValue.minus(oRightValue));
+            case "*":
+                return (oLeftValue.multiply(oRightValue));
+            case "/":
+                return (oLeftValue.divide(oRightValue));
+            case "^":
+                return (oLeftValue.power(oRightValue));
 
-            case '-':
-                return new NumberValue(leftVal.toNumber() - rightVal.toNumber());
-            case '*':
-                return new NumberValue(leftVal.toNumber() * rightVal.toNumber());
-            case '/':
-                return new NumberValue(leftVal.toNumber() / rightVal.toNumber());
-            case '<':
-                // Coerce to the left argument's type, then compare.
-                if (leftVal instanceof NumberValue) {
-                    if (leftVal.toNumber() < rightVal.toNumber()) {
-                        return (new NumberValue(1));
-                    } else {
-                        return (new NumberValue(0));
-                    }
-                }
-                if (leftVal.toString().compareTo(rightVal.toString()) < 0) {
-                    return (new NumberValue(1));
-                } else {
-                    return (new NumberValue(0));
-                }
-
-            case '>':
-                // Coerce to the left argument's type, then compare.
-                if (leftVal instanceof NumberValue) {
-                    if (leftVal.toNumber() > rightVal.toNumber()) {
-                        return (new NumberValue(1));
-                    } else {
-                        return (new NumberValue(0));
-                    }
-                }
-
-                if (leftVal.toString().compareTo(rightVal.toString()) > 0) {
-                    return (new NumberValue(1));
-                } else {
-                    return (new NumberValue(0));
-                }
+            case "<":
+                return (oLeftValue.smallerThan(oRightValue));
+            case ">":
+                return (oLeftValue.largerThan(oRightValue));
 
             default:
-                // TODO - return a syntax error
                 throw new SyntaxErrorException("Unknown operator: " + _strOperator);
         }
     }

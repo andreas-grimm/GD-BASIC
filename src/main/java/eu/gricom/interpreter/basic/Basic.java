@@ -3,9 +3,17 @@ package eu.gricom.interpreter.basic;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.FileHandler;
 import eu.gricom.interpreter.basic.helper.Logger;
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
 import eu.gricom.interpreter.basic.helper.Printer;
+import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
+import eu.gricom.interpreter.basic.parser.BasicParser;
+import eu.gricom.interpreter.basic.parser.JasicParser;
+import eu.gricom.interpreter.basic.parser.Parser;
+import eu.gricom.interpreter.basic.statements.LineNumberStatement;
 import eu.gricom.interpreter.basic.statements.Statement;
+import eu.gricom.interpreter.basic.tokenizer.BasicLexer;
+import eu.gricom.interpreter.basic.tokenizer.Token;
+import eu.gricom.interpreter.basic.tokenizer.Tokenizer;
+import eu.gricom.interpreter.basic.tokenizer.JasicLexer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -32,6 +40,8 @@ import java.util.Locale;
 public class Basic {
     private static BufferedReader _oLineIn;
     private final Logger _oLogger = new Logger(this.getClass().getName());
+    private static String _strBasicVersion = "basic";
+    private LineNumberStatement _oLineNumbers = new LineNumberStatement();
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of
@@ -56,18 +66,36 @@ public class Basic {
      * @param strProgram A string containing the source code of a .bas script to interpret.
      */
     public final void interpret(final String strProgram) {
-        MemoryManagement oMemoryManagement = new MemoryManagement();
+        ProgramPointer oProgramPointer = new ProgramPointer();
         List<Statement> aoStatements = null;
 
         // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
         _oLogger.info("Starting tokenization...");
-        List<Token> aoTokens = Tokenizer.tokenize(strProgram);
+
+        Tokenizer oTokenizer;
+
+        if (_strBasicVersion.contains("jasic")) {
+            oTokenizer = new JasicLexer();
+        } else {
+            oTokenizer = new BasicLexer();
+        }
+
+        List<Token> aoTokens = null;
+
+        try {
+            aoTokens = oTokenizer.tokenize(strProgram);
+
+        } catch (SyntaxErrorException e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
+
         int iCounter = 0;
         for (Token oToken: aoTokens) {
             if (oToken.getType().toString().contains("LINE")) {
-                _oLogger.debug("Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: []");
+                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: []");
             } else {
-                _oLogger.debug("Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: [" + oToken.getText() + "]");
+                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: [" + oToken.getText() + "]");
             }
             iCounter++;
         }
@@ -75,23 +103,44 @@ public class Basic {
         // Parse.
         _oLogger.info("Starting parsing...");
         try {
-            BasicParser oParser = new BasicParser(aoTokens);
+            Parser oParser;
+
+            if (_strBasicVersion.contains("jasic")) {
+                oParser = new JasicParser(aoTokens);
+            } else {
+                oParser = new BasicParser(aoTokens);
+            }
+
             aoStatements = oParser.parse();
         } catch (SyntaxErrorException eSyntaxError) {
             eSyntaxError.printStackTrace();
         }
 
+        // Run.
         _oLogger.info("Starting execution...");
-        // Interpret until we're done.
         try {
             if (aoStatements != null) {
-                while (oMemoryManagement.getCurrentStatement() < aoStatements.size()) {
+                while (oProgramPointer.getCurrentStatement() < aoStatements.size()) {
                     // as long as we have not reached the end of the code
-                    int thisStatement = oMemoryManagement.getCurrentStatement();
-                    oMemoryManagement.nextStatement();
-                    _oLogger.debug("Line [" + thisStatement + "]: " + aoStatements.get(thisStatement).content());
-                    aoStatements.get(thisStatement).execute();
+                    int iThisStatement = oProgramPointer.getCurrentStatement();
+                    int iSourceCodeLineNumber = _oLineNumbers.getLineNumber(aoStatements.get(iThisStatement).getLineNumber());
+                    oProgramPointer.calcNextStatement();
+
+                    if (_strBasicVersion.contains("jasic")) {
+                        _oLogger.debug(
+                                "Current Source Code Line [" + iThisStatement + "/"+ aoStatements.size() + "]: " + aoStatements.get(
+                                        iThisStatement).content());
+                    } else {
+                        _oLogger.debug(
+                                "Basic Source Code Line [" + iSourceCodeLineNumber + "] Statement [ " + aoStatements.get(
+                                        iThisStatement).getLineNumber() + "]: " + aoStatements.get(
+                                        iThisStatement).content());
+                    }
+
+                    aoStatements.get(iThisStatement).execute();
                 }
+            } else {
+                _oLogger.error("Parsing delivered empty program");
             }
         } catch (Exception eException) {
             eException.printStackTrace();
@@ -124,12 +173,13 @@ public class Basic {
             options.addOption("i", true, "define input file");
             options.addOption("q", false, "quiet mode");
             options.addOption("v", true, "verbose level: (0 - 3");
+            options.addOption("b", true, "BASIC type (J = Jasic, B = Basic");
 
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(options, args);
         } catch (ParseException exParseException) {
             bParseOK = false;
-            // TODO This here makes no sense...
+            // TODO: This here makes no sense...
             strParseError = exParseException.getMessage();
         }
 
@@ -175,6 +225,19 @@ public class Basic {
             Printer.println("usage: java -jar BASIC-<build-name>.jar -i <filename.bas>");
             Printer.println("where <filename.bas> is a relative path to a .bas program to run.");
             System.exit(-1);
+        }
+
+        if ((oCommandLine != null) && (oCommandLine.hasOption("b"))) {
+            // get the Basic Version
+            oLogger.debug("Get BASIC version...");
+            String strBasicVersion = oCommandLine.getOptionValue("b").toLowerCase(Locale.ROOT);
+            String strBasicVersionList = "jasic|basic";
+
+            if (strBasicVersionList.contains(strBasicVersion.toLowerCase(Locale.ROOT))) {
+                _strBasicVersion = strBasicVersion.toLowerCase(Locale.ROOT);
+            }
+
+            oLogger.debug("Basic version set: " + _strBasicVersion + "...");
         }
 
         String strProgram = oCommandLine.getOptionValue("i");

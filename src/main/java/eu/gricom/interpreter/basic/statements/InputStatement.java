@@ -1,6 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
  */
 public class InputStatement implements Statement {
     private final String _strName;
+    private final int _iLineNumber;
 
     /**
      * Default constructor.
@@ -26,7 +27,30 @@ public class InputStatement implements Statement {
      * @param strName - the name of the variable to be read.
      */
     public InputStatement(final String strName) {
+        _iLineNumber = 0;
         _strName = strName;
+    }
+
+    /**
+     * Default constructor.
+     *
+     * An "input" statement reads input from the user and stores it in a variable.
+     *
+     * @param strName - the name of the variable to be read.
+     */
+    public InputStatement(int iLineNumber, final String strName) {
+        _iLineNumber = iLineNumber;
+        _strName = strName;
+    }
+
+    /**
+     * Get Line Number.
+     *
+     * @return iLineNumber - the command line number of the statement
+     */
+    @Override
+    public int getLineNumber() {
+        return (_iLineNumber);
     }
 
     /**
@@ -35,7 +59,7 @@ public class InputStatement implements Statement {
      * Execute the input statement.
      */
     public final void execute() {
-        MemoryManagement oMemoryManager = new MemoryManagement();
+        VariableManagement oVariableManager = new VariableManagement();
         BufferedReader oReader = new BufferedReader(new InputStreamReader(System.in));
 
         try {
@@ -44,9 +68,9 @@ public class InputStatement implements Statement {
             // Store it as a number if possible, otherwise use a string.
             try {
                 double iValue = Double.parseDouble(strInput);
-                oMemoryManager.putMap(_strName, iValue);
+                oVariableManager.putMap(_strName, iValue);
             } catch (NumberFormatException e) {
-                oMemoryManager.putMap(_strName, strInput);
+                oVariableManager.putMap(_strName, strInput);
             }
         } catch (IOException e1) {
             // TODO generate a problem error handling process

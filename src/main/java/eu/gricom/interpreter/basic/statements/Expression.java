@@ -1,5 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.variableTypes.Value;
+
 /**
  * Base interface for an expression. An expression is like a statement
  * except that it also returns a value when executed. Expressions do not

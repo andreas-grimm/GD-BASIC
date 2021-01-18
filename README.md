@@ -37,12 +37,32 @@ The current version contains the following changes, bug fixes, and enhancements:
 * Adding tooling to the existing code:
 * Command Line - Using Apache Commons CLI to process the input parameter
 * Logger - lightweight logger to avoid heavy-weight log4j
-* ResourceHandler - Simple Resource Handler to use .ini files as resources for programs
 * Adding JUnit Test Cases for a majority of the functions
 * Adding regression testing with provided BASIC programs
 
 0.0.3:
-* Changed variable management to typed variables: string type: `variable$`, integer type: `variable%`, double type: `variable#`, long type: `variable&`, and boolean type: `variable!`
-* Introduction of new commands: `REM`, `TRON`, and `TROFF`
+* Leaving JASIC as it is and starting the BASIC interpreter functionality
+* Changed variable management to new typed variables: string, integer, real, and boolean 
+  * Moving math functions `+`,`*`, `-`, `/`, `=`, `<`, and `>` into the type classes
+  * Added JUnit test classes  
+* Changed memory management: Converting the MemoryManage class into a package withy dedicated classes  
+* Introduction of new command: `END`
+* Bug fixes:
+  * BASIC-28: Correcting the design and implementation of the `LabeLStatement` class
+
+0.0.4:
+* Starting to build the interpreter to support Datmouth style BASIC
+  * Tokenizer and Parser re-build:
+    * Moving from character based tokenization to line based tokenization
+    * General code cleansing
+    * Added JUnit test cases for new classes
+  * Implemented commands:
+    * All JASIC commands are now implemented in the BASIC branch
+    * Added functionality to the `IF` command: using block structure to allow more commands after an `IF` command (BASIC branch only)  
+    * `PRINT` - general output command
+    * `REM` for any remarks. This is now not only ignored but passed to the parser.
+
+0.0.5
+* Introducing variable naming to typed variables: string type: `variable$`, integer type: `variable%`, double type: `variable#`, long type: `variable&`, and boolean type: `variable!`
 
 ** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **

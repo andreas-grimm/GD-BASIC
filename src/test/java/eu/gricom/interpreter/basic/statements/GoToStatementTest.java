@@ -1,6 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -10,15 +10,17 @@ public class GoToStatementTest {
 
     @Test
     public void testEvaluate() {
-        MemoryManagement oMemoryManagement = new MemoryManagement();
-        oMemoryManagement.putLabelStatement("TestCase", 5);
+        ProgramPointer oProgramPointer = new ProgramPointer();
+        LabelStatement oLabelStatement = new LabelStatement();
+
+        oLabelStatement.putLabelStatement("TestCase", 5);
 
         try {
             GotoStatement oStatement = new GotoStatement("TestCase");
 
             oStatement.execute();
 
-            int iNewLabel = oMemoryManagement.getCurrentStatement();
+            int iNewLabel = oProgramPointer.getCurrentStatement();
 
             assertEquals(iNewLabel, 5);
 

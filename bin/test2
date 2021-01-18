@@ -1,0 +1,1 @@
+java -jar target/BASIC-0.0.4-SNAPSHOT.jar -v"debug|info" -i src/test/resources/testfile_dartmouth.bas

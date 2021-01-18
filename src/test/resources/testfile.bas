@@ -4,10 +4,10 @@
       count = count * 2
 
       ' stop looping if we're done
-top:  if count = 0 then end
+top:  if count = 0 then ende
       print "Hello, world!"
       
       ' decrement and restart the loop
       count = count - 1
       goto top
-end:
+ende:

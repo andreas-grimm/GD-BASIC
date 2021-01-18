@@ -10,6 +10,14 @@ package eu.gricom.interpreter.basic.statements;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public interface Statement {
+
+    /**
+     * Get Line Number.
+     *
+     * @return iLineNumber - the command line number of the statement
+     */
+    int getLineNumber();
+
     /**
      * Statements implement this to actually perform whatever behavior the
      * statement causes. "print" statements will display text here, "goto"

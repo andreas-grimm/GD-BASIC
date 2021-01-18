@@ -1,6 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 
 /**
  * AssignStatement.java
@@ -17,7 +17,21 @@ import eu.gricom.interpreter.basic.helper.MemoryManagement;
 public final class AssignStatement implements Statement {
     private final String _strName;
     private final Expression _oValue;
-    private MemoryManagement _oMemoryManagement = new MemoryManagement();
+    private final int _iLineNumber;
+    private VariableManagement _oVariableManagement = new VariableManagement();
+
+    /**
+     * Default constructor.
+     *
+     * @param iLineNumber - number of the basic command line
+     * @param strName - target of the assign statement
+     * @param oValue - value of the assignment statement
+     */
+    public AssignStatement(final int iLineNumber, final String strName, final Expression oValue) {
+        _strName = strName;
+        _oValue = oValue;
+        _iLineNumber = iLineNumber;
+    }
 
     /**
      * Default constructor.
@@ -28,6 +42,17 @@ public final class AssignStatement implements Statement {
     public AssignStatement(final String strName, final Expression oValue) {
         _strName = strName;
         _oValue = oValue;
+        _iLineNumber = 0;
+    }
+
+    /**
+     * Get Line Number.
+     *
+     * @return iLineNumber - the command line number of the statement
+     */
+    @Override
+    public int getLineNumber() {
+        return (_iLineNumber);
     }
 
     /**
@@ -38,7 +63,7 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public void execute() throws Exception {
-        _oMemoryManagement.putMap(_strName, _oValue.evaluate().toNumber());
+        _oVariableManagement.putMap(_strName, _oValue.evaluate().toReal());
     }
 
     /**

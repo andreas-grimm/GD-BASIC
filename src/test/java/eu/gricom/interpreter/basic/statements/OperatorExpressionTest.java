@@ -1,5 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.variableTypes.BooleanValue;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,53 +11,53 @@ public class OperatorExpressionTest {
 
     @Test
     public void testEvaluate() {
-        NumberValue oLeftValue = new NumberValue(2);
-        NumberValue oRightValue = new NumberValue(1);
+        RealValue oLeftValue = new RealValue(2);
+        RealValue oRightValue = new RealValue(1);
 
         try {
-            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '=', oLeftValue);
-            NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertEquals(oResultValue.toNumber(), 1.0);
+            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, "=", oLeftValue);
+            BooleanValue oResultValue = (BooleanValue) oExpression1.evaluate();
+            assertEquals(oResultValue.isTrue(), true);
         } catch (Exception eException) {
             fail();
         }
 
         try {
-            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '+', oRightValue);
-            NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertEquals(oResultValue.toNumber(), 3.0);
+            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, "+", oRightValue);
+            RealValue oResultValue = (RealValue) oExpression1.evaluate();
+            assertEquals(oResultValue.toReal(), 3.0);
         } catch (Exception eException) {
             fail();
         }
 
         try {
-            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '-', oRightValue);
-            NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertEquals(oResultValue.toNumber(), 1.0);
+            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, "-", oRightValue);
+            RealValue oResultValue = (RealValue) oExpression1.evaluate();
+            assertEquals(oResultValue.toReal(), 1.0);
         } catch (Exception eException) {
             fail();
         }
 
         try {
-            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '/', oRightValue);
-            NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertEquals(oResultValue.toNumber(), 2.0);
+            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, "/", oRightValue);
+            RealValue oResultValue = (RealValue) oExpression1.evaluate();
+            assertEquals(oResultValue.toReal(), 2.0);
         } catch (Exception eException) {
             fail();
         }
 
         try {
-            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '<', oRightValue);
-            NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertEquals(oResultValue.toNumber(), 0.0);
+            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, "<", oRightValue);
+            BooleanValue oResultValue = (BooleanValue) oExpression1.evaluate();
+            assertEquals(oResultValue.isTrue(), false);
         } catch (Exception eException) {
             fail();
         }
 
         try {
-            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, '>', oRightValue);
-            NumberValue oResultValue = (NumberValue) oExpression1.evaluate();
-            assertEquals(oResultValue.toNumber(), 1.0);
+            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, ">", oRightValue);
+            BooleanValue oResultValue = (BooleanValue) oExpression1.evaluate();
+            assertEquals(oResultValue.isTrue(), true);
         } catch (Exception eException) {
             fail();
         }

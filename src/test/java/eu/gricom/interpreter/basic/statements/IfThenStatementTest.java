@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.MemoryManagement;
+import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,20 +11,22 @@ public class IfThenStatementTest {
 
     @Test
     public void testEvaluate() {
-        MemoryManagement oMemoryManagement = new MemoryManagement();
-        oMemoryManagement.putLabelStatement("TestCase", 5);
-        oMemoryManagement.setCurrentStatement(4);
+        ProgramPointer oProgramPointer = new ProgramPointer();
+        LabelStatement oLabelStatement = new LabelStatement();
 
-        NumberValue oLeftValue = new NumberValue(2);
+        oLabelStatement.putLabelStatement("TestCase", 5);
+        oProgramPointer.setCurrentStatement(4);
+
+        RealValue oLeftValue = new RealValue(2);
 
         try {
-            OperatorExpression oExpression = new OperatorExpression(oLeftValue, '=', oLeftValue);
+            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "=", oLeftValue);
 
             IfThenStatement oStatement = new IfThenStatement(oExpression, "TestCase");
 
             oStatement.execute();
 
-            int iNewLabel = oMemoryManagement.getCurrentStatement();
+            int iNewLabel = oProgramPointer.getCurrentStatement();
 
             assertEquals(iNewLabel, 5);
         } catch (Exception eException) {
@@ -33,21 +36,23 @@ public class IfThenStatementTest {
 
     @Test
     public void testNegativeEvaluate() {
-        MemoryManagement oMemoryManagement = new MemoryManagement();
-        oMemoryManagement.putLabelStatement("TestCase", 5);
-        oMemoryManagement.setCurrentStatement(4);
+        ProgramPointer oProgramPointer = new ProgramPointer();
+        LabelStatement oLabelStatement = new LabelStatement();
 
-        NumberValue oLeftValue = new NumberValue(2);
-        NumberValue oRightValue = new NumberValue(1);
+        oLabelStatement.putLabelStatement("TestCase", 5);
+        oProgramPointer.setCurrentStatement(4);
+
+        RealValue oLeftValue = new RealValue(2);
+        RealValue oRightValue = new RealValue(1);
 
         try {
-            OperatorExpression oExpression = new OperatorExpression(oLeftValue, '=', oRightValue);
+            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "=", oRightValue);
 
             IfThenStatement oStatement = new IfThenStatement(oExpression, "TestCase");
 
             oStatement.execute();
 
-            int iNewLabel = oMemoryManagement.getCurrentStatement();
+            int iNewLabel = oProgramPointer.getCurrentStatement();
 
             assertEquals(iNewLabel, 4);
         } catch (Exception eException) {

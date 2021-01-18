@@ -1,32 +1,49 @@
 This is the License File of the Project:
 
-# GriCom Development Infrastructure (GDIS)
+# GriCom Diminutive BASIC Interpreter (GDBI), License
 
 ---
 
-&copy; 2004 - 2017 Andreas Grimm
+&copy; 2004 - 2021 Andreas Grimm
 
-&trade; gricom.eu, gricom.de, and gricom.nl are owned domains by Andreas Grimm, reflecting in the classnames in the software. Modifications shall not use class names following eu.gricom, de.gricom, or nl.gricom
+&trade; gricom.eu, gricom.de, and gricom.nl are owned domains by Andreas Grimm, reflecting in the classnames in the software. 
+Additions shall not use class names following org.gricom, eu.gricom, de.gricom, or nl.gricom
 
-According to [Common Development and Distribution License 1.0](https://opensource.org/licenses/CDDL-1.0), permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+According to [Common Development and Distribution License 1.0](https://opensource.org/licenses/CDDL-1.0), permission is 
+hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 
+"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, 
+merge, publish, distribute, and to permit persons to whom the Software is furnished to do so, subject to the following 
+conditions:
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 In addition to the CDDL-1.0 the following conditions are part of the granted rights and privileges:
 
-* __2.2 (e)__ The user will report and submit any changes, problems, modifications, and enhancements of any kind to the source code or documentation to the original author as a contribution to the code base free of charge. Failure to deliver those do this will result in the revocation of the granted permission.  The original author of the software assumes the freedom to add or modify the code based on and with the submitted contribution.
+* __2.2 (e)__ The user will report and submit any changes, problems, modifications, and enhancements of any kind to the 
+  source code or documentation to the original author as a contribution to the code base free of charge. Failure to deliver 
+  those do this will result in the revocation of the granted permission.  The original author of the software assumes the 
+  freedom to add or modify the code based on and with the submitted contribution.
 
 * __8 (a)__ The software must not be used in any form as part of the following:
-* _8 (a.1)_ as part of a military use, whereas military is defined as including but not limited to the armed forces or para-military organisation of any state or group of people declaring or assuming state-hood or independence from a state-organisation, any civilian organisation that supports or supplies the armed forces, or any government agency that is involved in the use of force against a third party, including and not limiting to intelligence services (non-militant clause)
-* _8 (a.2)_ any entity or person with direct or indirect ownership or control or employment links to members of a state government (anti-corruption clause)
+* _8 (a.1)_ as part of a military use, whereas military is defined as including but not limited to the armed forces or 
+  para-military organisation of any state or group of people declaring or assuming state-hood or independence from a 
+  state-organisation, any civilian organisation that supports or supplies the armed forces, or any government agency that 
+  is involved in the use of force against a third party, including and not limiting to intelligence services (non-militant 
+  clause)
+* _8 (a.2)_ any entity or person with direct or indirect ownership or control or employment links to members of a state 
+  government (anti-corruption clause)
 
-* __9 (a)__ These conditions automatically transfer to any software that is incorporating the software in any form (e.g. linking, calling,...), or which is using the interface structures of this software as part of their software design
+* __9 (a)__ These conditions automatically transfer to any software that is incorporating the software in any form (e.g. 
+  linking, calling,...), or which is using the interface structures of this software as part of their software design
 
-* These modifications in the license were made under acknowledgement of section __4.3__ of the CDDL-1.0 license. As such, section __4.1__ of the CDDL-1.0 document shall read as: "Andreas Grimm is the initial license steward".
+* These modifications in the license were made under acknowledgement of section __4.3__ of the CDDL-1.0 license. As such, 
+  section __4.1__ of the CDDL-1.0 document shall read as: "Andreas Grimm is the initial license steward".
 
-This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-This text does not serve as a notice or prove of publication. Prove of publication is only the exposure of the software on a public software repository (e.g. Github,...) by the author
+This text does not serve as a notice or prove of publication. Prove of publication is only the exposure of the software 
+on a public software repository (e.g. Github,...) by the author
 
 ---  
 
