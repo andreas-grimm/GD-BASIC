@@ -280,15 +280,9 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `^` | implemented, used token: `POWER` | reserved | implemented | | implemented |
 | `\'` (`REM` Quote) | implemented | implemented | implemented | |
 
-### Adding new token to the Tokenizer
-
-- Step 1: Add the new reserved word into the list of reserved words (`eu.gricom.interpreter.basic.tokenizer.ReservedWords.java`) 
-  and the token file (`eu.gricom.interpeter.basic.tokenizer.TokenType.java`).
-- Step 2: Verify that the BASIC tokenizer (`eu.gricom.interpreter.basic.BasicLexer.java`) can process the added new tokens and reserved word.
-
-### References to alternative installations
-
 ### Parser
+The parser translates the program, representated as a list of token, to a list of statement objects. These statement objects
+contain all logic of the different commands, so the runtime part of the interpreter does barely contain any logic.
 
 ### Runtime
 
@@ -298,7 +292,11 @@ is in the [BasicParser](https://github.com/andreas-grimm/Interpreters/blob/featu
 class. In this class, the method __parse__ contains the logic to convert the identified token into the sequence of commands 
 that will be executed in the interpreter.
 
+### Adding new token to the Tokenizer
 
+- Step 1: Add the new reserved word into the list of reserved words (`eu.gricom.interpreter.basic.tokenizer.ReservedWords.java`)
+  and the token file (`eu.gricom.interpeter.basic.tokenizer.TokenType.java`).
+- Step 2: Verify that the BASIC tokenizer (`eu.gricom.interpreter.basic.BasicLexer.java`) can process the added new tokens and reserved word.
 
 ## Main Classes
 
