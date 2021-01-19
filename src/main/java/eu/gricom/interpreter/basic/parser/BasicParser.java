@@ -67,7 +67,7 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
-                // END Token: Terminate run of program
+                // END Token: Terminate execution of program
                 case END:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [END] ");
                     oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);

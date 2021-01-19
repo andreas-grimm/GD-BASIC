@@ -5,29 +5,30 @@ import eu.gricom.interpreter.basic.helper.FileHandler;
 import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.VariableExpression;
+import eu.gricom.interpreter.basic.tokenizer.BasicLexer;
 import eu.gricom.interpreter.basic.tokenizer.JasicLexer;
 import eu.gricom.interpreter.basic.tokenizer.Token;
-import eu.gricom.interpreter.basic.tokenizer.Tokenizer;
 import eu.gricom.interpreter.basic.tokenizer.TokenType;
+import eu.gricom.interpreter.basic.tokenizer.Tokenizer;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class JasicParserTest {
+public class BasicParserTest {
 
     @Test
     public void testAtomicWord() throws SyntaxErrorException {
-        Tokenizer oTokenizer = new JasicLexer();
+        Tokenizer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.bas");
+        String strReadText = FileHandler.readFile("src/test/resources/test_basic_Q1_unittest.bas");
         List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
-        JasicParser oParser = new JasicParser(aoTokens);
+        BasicParser oParser = new BasicParser(aoTokens);
         Expression oExpression = oParser.atomic();
 
         String strExpression = oExpression.toString();
@@ -36,14 +37,15 @@ public class JasicParserTest {
         assertTrue(strExpression.matches("eu.gricom.interpreter.basic.statements.VariableExpression"));
     }
 
+    /*
     @Test
     public void testAssignment() throws SyntaxErrorException {
-        Tokenizer oTokenizer = new JasicLexer();
+        Tokenizer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.bas");
+        String strReadText = FileHandler.readFile("src/test/resources/test_basic_Q1_unittest.bas");
         List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
-        JasicParser oParser = new JasicParser(aoTokens);
+        BasicParser oParser = new BasicParser(aoTokens);
         Expression oExpression = oParser.atomic();
 
         String strExpression = oExpression.toString();
@@ -214,4 +216,6 @@ public class JasicParserTest {
         }
 
     }
+
+ */
 }
