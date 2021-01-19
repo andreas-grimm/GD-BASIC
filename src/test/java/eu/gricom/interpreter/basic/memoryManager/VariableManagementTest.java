@@ -1,5 +1,7 @@
 package eu.gricom.interpreter.basic.memoryManager;
 
+import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import org.junit.jupiter.api.MethodOrderer;
@@ -15,16 +17,16 @@ public class VariableManagementTest {
 
     @Test
     @Order(1)
-    public void testVariableStorage() {
+    public void testVariableStorage() throws SyntaxErrorException {
         VariableManagement oVariableManagement = new VariableManagement();
 
-        oVariableManagement.putMap("Number", 999);
-        oVariableManagement.putMap("String", "TestValue");
+        oVariableManagement.putMap("Integer%", 999);
+        oVariableManagement.putMap("String$", "TestValue");
 
-        RealValue oResult = (RealValue) oVariableManagement.getMap("Number");
-        assertEquals(oResult.toReal(), 999);
+        IntegerValue oResult = (IntegerValue) oVariableManagement.getMap("Integer%");
+        assertEquals(oResult.toInt(), 999);
 
-        StringValue strResult = (StringValue) oVariableManagement.getMap("String");
+        StringValue strResult = (StringValue) oVariableManagement.getMap("String$");
         assertTrue(strResult.toString().matches("TestValue"));
     }
 }

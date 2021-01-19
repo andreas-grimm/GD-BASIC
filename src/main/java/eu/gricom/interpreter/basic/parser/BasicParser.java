@@ -67,7 +67,7 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
-                // END Token: Terminate run of program
+                // END Token: Terminate execution of program
                 case END:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [END] ");
                     oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
@@ -232,6 +232,7 @@ public class BasicParser implements Parser {
                 (oToken.getType() == TokenType.MULTIPLY) ||
                 (oToken.getType() == TokenType.DIVIDE) ||
                 (oToken.getType() == TokenType.POWER) ||
+                (oToken.getType() == TokenType.COMPARE_EQUAL) ||
                 (oToken.getType() == TokenType.ASSIGN_EQUAL)) {
             _oLogger.debug("-operator-> token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '" + oToken.getText() + "' [" + oToken.getLine() + "]");
             _iPosition++;
@@ -301,57 +302,6 @@ public class BasicParser implements Parser {
 
         // OK - here we have a text block that we cannot parse, so we throw an syntax exception
         throw new SyntaxErrorException("Couldn't parse : [" + getToken(0).getType().toString() + "] <" + getToken(0).getLine() + ">");
-    }
-
-    // The following functions are the core low-level operations that the
-    // grammar parser is built in terms of. They match and consume tokens in
-    // the token stream.
-
-    /**
-     * Consumes the next two tokens if they are the given type (in order).
-     * Consumes no tokens if either check fails.
-     *
-     * @param  eType1 Expected type of the next token.
-     * @param  eType2 Expected type of the subsequent token.
-     * @return       True if tokens were consumed.
-     */
-    public final boolean matchNextTwoToken(final TokenType eType1, final TokenType eType2) {
-        _oLogger.debug("-----> matchNextTwoToken...");
-
-        Token oOffsetToken0 = getToken(0);
-        Token oOffsetToken1 = getToken(1);
-
-        if (oOffsetToken0.getType() != eType1) {
-            return (false);
-        }
-
-        if (oOffsetToken1.getType() != eType2) {
-            return (false);
-        }
-
-        _iPosition += 2;
-        return (true);
-    }
-
-    /**
-     * Consumes the next token if it's the given type.
-     *
-     * @param  oType Expected type of the next token.
-     * @return       True if the token was consumed.
-     */
-    public final boolean matchNextToken(final TokenType oType) {
-        Token oFoundToken = getToken(0);
-
-        _oLogger.debug("-------> matchNextToken: <" + _iPosition + " + @0> [" + oFoundToken.getType().toString() + "]" +
-                " '" + oFoundToken.getText() + "' [" + oFoundToken.getLine() + "] compared to " + oType.toString());
-
-        if (oFoundToken.getType() != oType) {
-            _oLogger.debug("---------> token compare failed");
-            return (false);
-        }
-        _oLogger.debug("---------> token compare success");
-        _iPosition++;
-        return (true);
     }
 
     /**
@@ -425,37 +375,6 @@ public class BasicParser implements Parser {
         }
 
         throw new SyntaxErrorException("Missing statement " + oType + ".");
-    }
-
-
-    /**
-     * Consumes the next token if it's a word with the given name. If not,
-     * throws an exception.
-     *
-     * @param  strName  Expected name of the next word token.
-     * @return          The consumed token.
-     */
-    public final Token consumeToken(final String strName) {
-
-        if (!matchNextToken(strName)) {
-            // TODO convert to syntax error
-            throw new Error("Expected " + strName + ".");
-        }
-        return (previousToken(1));
-    }
-
-    /**
-     * Gets a previously consumed token, indexing backwards. last(1) will
-     * be the token just consumed, last(2) the one before that, etc.
-     *
-     * @param  iOffset How far back in the token stream to look.
-     * @return        The consumed token.
-     */
-    public final Token previousToken(final int iOffset) {
-        Token oToken = _aoTokens.get(_iPosition - iOffset);
-        _oLogger.debug("-previousToken-> found token: <" + _iPosition + " - " + iOffset + "> [" + oToken.getType().toString() + "]");
-
-        return (oToken);
     }
 
     /**

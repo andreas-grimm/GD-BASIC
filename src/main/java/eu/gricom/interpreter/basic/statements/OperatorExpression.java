@@ -11,7 +11,7 @@ import eu.gricom.interpreter.basic.variableTypes.Value;
  */
 
 public class OperatorExpression implements Expression {
-    private Logger _oLogger = new Logger(this.getClass().getName());
+    private final Logger _oLogger = new Logger(this.getClass().getName());
     private final Expression _oLeft;
     private final String _strOperator;
     private final Expression _oRight;
@@ -41,8 +41,8 @@ public class OperatorExpression implements Expression {
         Value oRightValue = _oRight.evaluate();
 
         switch (_strOperator) {
-            case "=":
-                return (oLeftValue.equals(oRightValue));
+//            case "=":
+//                return (oLeftValue.equals(oRightValue));
 
             case "+":
                 return (oLeftValue.plus(oRightValue));
@@ -55,6 +55,8 @@ public class OperatorExpression implements Expression {
             case "^":
                 return (oLeftValue.power(oRightValue));
 
+            case "==":
+                return (oLeftValue.equals(oRightValue));
             case "<":
                 return (oLeftValue.smallerThan(oRightValue));
             case ">":

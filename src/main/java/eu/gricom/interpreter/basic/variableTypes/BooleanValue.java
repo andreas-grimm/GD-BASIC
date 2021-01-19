@@ -68,6 +68,15 @@ public class BooleanValue implements Value {
     }
 
     /**
+     * Override the standart toString method.
+     *
+     * @return the content of the variable as a string
+     */
+    public final boolean toBoolean() {
+        return (_bValue);
+    }
+
+    /**
      * Transform the content of the number value into a double.
      *
      * @return the content of the variable as a double
@@ -173,8 +182,17 @@ public class BooleanValue implements Value {
     // This one implemented the XOR statement
     @Override
     public Value power(Value oValue) throws SyntaxErrorException {
-        //TODO Implement the XOR method
-        return null;
+        if (oValue instanceof BooleanValue) {
+            BooleanValue oWorkValue = (BooleanValue)oValue;
+
+            if (_bValue == oWorkValue.toBoolean()) {
+                return (new BooleanValue(false));
+            } else {
+                return (new BooleanValue(true));
+            }
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not of type boolean"));
     }
 
     @Override

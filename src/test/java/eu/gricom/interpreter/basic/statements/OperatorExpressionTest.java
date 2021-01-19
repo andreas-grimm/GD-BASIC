@@ -15,7 +15,7 @@ public class OperatorExpressionTest {
         RealValue oRightValue = new RealValue(1);
 
         try {
-            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, "=", oLeftValue);
+            OperatorExpression oExpression1 = new OperatorExpression(oLeftValue, "==", oLeftValue);
             BooleanValue oResultValue = (BooleanValue) oExpression1.evaluate();
             assertEquals(oResultValue.isTrue(), true);
         } catch (Exception eException) {

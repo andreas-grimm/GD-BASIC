@@ -1,6 +1,5 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
@@ -14,11 +13,10 @@ import eu.gricom.interpreter.basic.variableTypes.Value;
  * <p>
  * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
  * <p>
- * Created in 2003
+ * Created in 2020
  *
  */
 public final class VariableExpression implements Expression {
-    private Logger _oLogger = new Logger(this.getClass().getName());
 
     private final String _strName;
 
