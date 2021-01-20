@@ -45,13 +45,13 @@ The current version contains the following changes, bug fixes, and enhancements:
 * Changed variable management to new typed variables: string, integer, real, and boolean 
   * Moving math functions `+`,`*`, `-`, `/`, `=`, `<`, and `>` into the type classes
   * Added JUnit test classes  
-* Changed memory management: Converting the MemoryManage class into a package withy dedicated classes  
+* Changed memory management: Converting the MemoryManage class into a package with dedicated classes  
 * Introduction of new command: `END`
 * Bug fixes:
   * BASIC-28: Correcting the design and implementation of the `LabeLStatement` class
 
 0.0.4:
-* Starting to build the interpreter to support Datmouth style BASIC
+* Starting to build the interpreter to support Dartmouth style BASIC
   * Tokenizer and Parser re-build:
     * Moving from character based tokenization to line based tokenization
     * General code cleansing
@@ -61,8 +61,11 @@ The current version contains the following changes, bug fixes, and enhancements:
     * Added functionality to the `IF` command: using block structure to allow more commands after an `IF` command (BASIC branch only)  
     * `PRINT` - general output command
     * `REM` for any remarks. This is now not only ignored but passed to the parser.
+* Introducing variable naming to typed variables: string type: `variable$`, integer type: `variable%`, real type: `variable#`, and boolean type: `variable!`
+* Added additional math operators: `^` (power of), `!=`, `<=`, and `>=`; replaced `=` in comparisons by `==`
+* Added JUNIT tests for all new functions
 
 0.0.5
-* Introducing variable naming to typed variables: string type: `variable$`, integer type: `variable%`, double type: `variable#`, long type: `variable&`, and boolean type: `variable!`
+* Added variable naming to typed variables: long type: `variable&`
 
 ** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **
