@@ -1,0 +1,6 @@
+app
+.classpath
+.project
+.settings
+target
+*.iml
