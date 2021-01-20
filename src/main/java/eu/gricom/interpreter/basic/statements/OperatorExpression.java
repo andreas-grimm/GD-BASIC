@@ -57,10 +57,16 @@ public class OperatorExpression implements Expression {
 
             case "==":
                 return (oLeftValue.equals(oRightValue));
+            case "!=":
+                return (oLeftValue.notEqual(oRightValue));
             case "<":
                 return (oLeftValue.smallerThan(oRightValue));
+            case "<=":
+                return (oLeftValue.smallerEqualThan(oRightValue));
             case ">":
                 return (oLeftValue.largerThan(oRightValue));
+            case ">=":
+                return (oLeftValue.largerEqualThan(oRightValue));
 
             default:
                 throw new SyntaxErrorException("Unknown operator: " + _strOperator);

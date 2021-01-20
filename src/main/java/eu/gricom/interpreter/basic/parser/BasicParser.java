@@ -233,6 +233,11 @@ public class BasicParser implements Parser {
                 (oToken.getType() == TokenType.DIVIDE) ||
                 (oToken.getType() == TokenType.POWER) ||
                 (oToken.getType() == TokenType.COMPARE_EQUAL) ||
+                (oToken.getType() == TokenType.COMPARE_NOT_EQUAL) ||
+                (oToken.getType() == TokenType.SMALLER) ||
+                (oToken.getType() == TokenType.SMALLER_EQUAL) ||
+                (oToken.getType() == TokenType.GREATER) ||
+                (oToken.getType() == TokenType.GREATER_EQUAL) ||
                 (oToken.getType() == TokenType.ASSIGN_EQUAL)) {
             _oLogger.debug("-operator-> token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '" + oToken.getText() + "' [" + oToken.getLine() + "]");
             _iPosition++;
