@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "Building..."
-mvn compile site dependency:tree dependency:copy-dependencies package
+mvn compile site dependency:tree dependency:copy-dependencies package -Dmaven.javadoc.skip=true
 
 echo " Building documentation"
 

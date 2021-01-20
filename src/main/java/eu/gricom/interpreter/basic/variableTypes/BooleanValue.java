@@ -124,6 +124,19 @@ public class BooleanValue implements Value {
     }
 
     @Override
+    public Value notEqual(Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BooleanValue) {
+            if (this.toReal() != oValue.toReal()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a boolean"));
+    }
+
+    @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof BooleanValue) {
             // A + A = A
@@ -201,7 +214,17 @@ public class BooleanValue implements Value {
     }
 
     @Override
+    public Value smallerEqualThan(Value oValue) throws SyntaxErrorException {
+        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+    }
+
+    @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
+        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+    }
+
+    @Override
+    public Value largerEqualThan(Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
     }
 

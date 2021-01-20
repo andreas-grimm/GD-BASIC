@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd-cpd>
+   <duplication lines="37" tokens="122">
+      <file column="26" endcolumn="44" endline="79" line="43"
+            path="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/GosubStatement.java"/>
+      <file column="25" endcolumn="44" endline="78" line="42"
+            path="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/GotoStatement.java"/>
+      <codefragment><![CDATA[    public GosubStatement(final int iLineNumber, final String strLabel) {
+        _iLineNumber = iLineNumber;
+        _strLabel = strLabel;
+    }
+
+    /**
+     * Get Line Number.
+     *
+     * @return iLineNumber - the command line number of the statement
+     */
+    @Override
+    public int getLineNumber() {
+        return (_iLineNumber);
+    }
+
+    /**
+     * Execute the transaction.
+     */
+    public void execute() throws SyntaxErrorException {
+        // This part of the method is executed if the BASIC interpreter uses labels (e.g. we are using JASIC)
+        if (_oLabelStatement.containsLabelKey(_strLabel)) {
+            _oLogger.debug("-execute-> jump to [" + _strLabel + "]");
+            _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strLabel));
+            _oLogger.debug("-execute-> jump to [" + _oLabelStatement.getLabelStatement(_strLabel) + "]");
+            return;
+        }
+
+        // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
+        try {
+            int iTokenNo = _oLineNumberObject.getStatement(Integer.parseInt(_strLabel));
+
+            if (iTokenNo != 0) {
+                _oProgramPointer.setCurrentStatement(iTokenNo);
+                return;
+            }
+
+            throw (new SyntaxErrorException("GOSUB [unknown]: Target: " + _strLabel));]]></codefragment>
+   </duplication>
+</pmd-cpd>

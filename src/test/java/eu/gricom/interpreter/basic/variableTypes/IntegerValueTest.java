@@ -32,6 +32,35 @@ public class IntegerValueTest {
         assertEquals(oNumberValue, oNewValue);
     }
 
+    @Test
+    public void testEquals() {
+        try {
+            IntegerValue oFirstValue = new IntegerValue(1);
+            IntegerValue oSecondValue = new IntegerValue(1);
+
+            BooleanValue oResult = (BooleanValue) oFirstValue.equals(oSecondValue);
+            assertTrue(oResult.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testNotEqual() {
+        try {
+            IntegerValue oFirstValue = new IntegerValue(1);
+            IntegerValue oSecondValue = new IntegerValue(2);
+
+            BooleanValue oResult = (BooleanValue) oFirstValue.notEqual(oSecondValue);
+            assertTrue(oResult.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
 
     @Test
     public void testPlus() {
@@ -200,6 +229,32 @@ public class IntegerValueTest {
     }
 
     @Test
+    public void testSmallerEqualThan() {
+        try {
+            IntegerValue oFirstValue = new IntegerValue(1);
+            IntegerValue oSecondValue = new IntegerValue(2);
+
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testSmallerEqualThanTypeException() {
+        IntegerValue oFirstValue = new IntegerValue(1);
+        RealValue oSecondValue = new RealValue(2);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+        });
+    }
+
+    @Test
     public void testLargerThan() {
         try {
             IntegerValue oFirstValue = new IntegerValue(2);
@@ -222,6 +277,32 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testLargerEqualThan() {
+        try {
+            IntegerValue oFirstValue = new IntegerValue(2);
+            IntegerValue oSecondValue = new IntegerValue(1);
+
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testLargerEqualThanTypeException() {
+        IntegerValue oFirstValue = new IntegerValue(2);
+        RealValue oSecondValue = new RealValue(1);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
         });
     }
 }

@@ -80,6 +80,19 @@ public class RealValue implements Value {
     }
 
     @Override
+    public Value notEqual(Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof RealValue) {
+            if (this.toReal() != oValue.toReal()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+    }
+
+    @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             RealValue oReturn = new RealValue(_fValue + oValue.toReal());
@@ -152,9 +165,35 @@ public class RealValue implements Value {
     }
 
     @Override
+    public Value smallerEqualThan(Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof RealValue) {
+            if (this.toReal() <= oValue.toReal()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+    }
+
+    @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() > oValue.toReal()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+    }
+
+    @Override
+    public Value largerEqualThan(Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof RealValue) {
+            if (this.toReal() >= oValue.toReal()) {
                 return (new BooleanValue(true));
             }
 

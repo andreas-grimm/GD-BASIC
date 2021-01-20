@@ -35,6 +35,36 @@ public class StringValueTest {
     }
 
     @Test
+    public void testEquals() {
+        try {
+            StringValue oFirstValue = new StringValue("1");
+            StringValue oSecondValue = new StringValue("1");
+
+            BooleanValue oResult = (BooleanValue) oFirstValue.equals(oSecondValue);
+            assertTrue(oResult.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testNotEqual() {
+        try {
+            StringValue oFirstValue = new StringValue("1");
+            StringValue oSecondValue = new StringValue("2");
+
+            BooleanValue oResult = (BooleanValue) oFirstValue.notEqual(oSecondValue);
+            assertTrue(oResult.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
     public void testPlus() {
         try {
             StringValue oFirstValue = new StringValue("a");
@@ -116,6 +146,32 @@ public class StringValueTest {
     }
 
     @Test
+    public void testSmallerEqualThan() {
+        try {
+            StringValue oFirstValue = new StringValue("a");
+            StringValue oSecondValue = new StringValue("b");
+
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testSmallerEqualThanTypeException() {
+        StringValue oFirstValue = new StringValue("a");
+        IntegerValue oSecondValue = new IntegerValue(2);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+        });
+    }
+
+    @Test
     public void testLargerThan() {
         try {
             StringValue oFirstValue = new StringValue("b");
@@ -132,6 +188,32 @@ public class StringValueTest {
 
     @Test
     public void testLargerThanTypeException() {
+        StringValue oFirstValue = new StringValue("a");
+        IntegerValue oSecondValue = new IntegerValue(1);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testLargerEqualThan() {
+        try {
+            StringValue oFirstValue = new StringValue("b");
+            StringValue oSecondValue = new StringValue("a");
+
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testLargerEqualThanTypeException() {
         StringValue oFirstValue = new StringValue("a");
         IntegerValue oSecondValue = new IntegerValue(1);
 

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="6.18">
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/Basic.java">
+<error line="64" severity="warning" message="Comment matches to-do format &apos;TODO:&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
+<error line="98" severity="warning" message="Line is longer than 150 characters (found 155)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="131" column="84" severity="warning" message="&apos;+&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="182" severity="warning" message="Comment matches to-do format &apos;TODO:&apos;." source="com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/TokenType.java">
+<error line="0" severity="warning" message="Missing package-info.java file." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocPackageCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/JasicLexer.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/ReservedWords.java">
+<error line="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTypeCheck"/>
+<error line="5" column="1" severity="warning" message="Utility classes should not have a public or default constructor." source="com.puppycrawl.tools.checkstyle.checks.design.HideUtilityClassConstructorCheck"/>
+<error line="10" column="28" severity="warning" message="Name &apos;astrReservedWords&apos; must match pattern &apos;^_[abfdiosv][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.StaticVariableNameCheck"/>
+<error line="10" column="28" severity="warning" message="Variable &apos;astrReservedWords&apos; must be private and have accessor methods." source="com.puppycrawl.tools.checkstyle.checks.design.VisibilityModifierCheck"/>
+<error line="14" column="37" severity="warning" message="&apos;,&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="32" column="24" severity="warning" message="Name &apos;aeTokenTypes&apos; must match pattern &apos;^_[abfdiosv][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.StaticVariableNameCheck"/>
+<error line="32" column="24" severity="warning" message="Variable &apos;aeTokenTypes&apos; must be private and have accessor methods." source="com.puppycrawl.tools.checkstyle.checks.design.VisibilityModifierCheck"/>
+<error line="34" severity="warning" message="Line is longer than 150 characters (found 164)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="55" column="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="55" column="32" severity="warning" message="&apos;(&apos; is preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.MethodParamPadCheck"/>
+<error line="71" column="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="71" column="42" severity="warning" message="&apos;(&apos; is preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.MethodParamPadCheck"/>
+<error line="71" column="43" severity="warning" message="Parameter iIndex should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/Tokenizer.java">
+<error line="28" column="57" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/TokenizeState.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/Token.java">
+<error line="25" column="63" severity="warning" message="Parameter iLineNumber should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="25" column="67" severity="warning" message="Expected @param tag for &apos;iLineNumber&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="63" column="27" severity="warning" message="Parameter strText should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="63" column="34" severity="warning" message="Expected @param tag for &apos;strText&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/tokenizer/BasicLexer.java">
+<error line="25" column="5" severity="warning" message="Method &apos;tokenize&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
+<error line="26" column="33" severity="warning" message="Parameter strSource should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="73" column="101" severity="warning" message="&apos;+&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="91" column="63" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="136" column="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="136" column="31" severity="warning" message="Parameter strWord should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="144" column="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="144" column="30" severity="warning" message="Parameter strWord should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="152" column="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="152" column="30" severity="warning" message="Parameter strWord should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/parser/Parser.java">
+<error line="0" severity="warning" message="Missing package-info.java file." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocPackageCheck"/>
+<error line="26" severity="warning" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="26" column="5" severity="warning" message="Redundant &apos;public&apos; modifier." source="com.puppycrawl.tools.checkstyle.checks.modifier.RedundantModifierCheck"/>
+<error line="26" column="43" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/parser/BasicParser.java">
+<error line="0" severity="warning" message="File does not end with a newline." source="com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck"/>
+<error line="39" column="33" severity="warning" message="Name &apos;oLineNumber&apos; must match pattern &apos;^_[abfdiosv][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.MemberNameCheck"/>
+<error line="52" column="5" severity="warning" message="Method &apos;parse&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
+<error line="60" column="17" severity="warning" message="Name &apos;_bContinue&apos; must match pattern &apos;^[a-z][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.LocalVariableNameCheck"/>
+<error line="100" column="77" severity="warning" message="&apos;-&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="113" column="69" severity="warning" message="&apos;-&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="134" column="69" severity="warning" message="&apos;-&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="155" column="114" severity="warning" message="&apos;+&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="227" severity="warning" message="Line is longer than 150 characters (found 158)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="230" column="53" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="231" column="55" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="232" column="58" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="233" column="56" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="234" column="55" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="235" column="63" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="237" severity="warning" message="Line is longer than 150 characters (found 162)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="261" severity="warning" message="switch without &quot;default&quot; clause." source="com.puppycrawl.tools.checkstyle.checks.coding.MissingSwitchDefaultCheck"/>
+<error line="266" severity="warning" message="Line is longer than 150 characters (found 170)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="273" severity="warning" message="Line is longer than 150 characters (found 170)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="280" severity="warning" message="Line is longer than 150 characters (found 170)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="288" severity="warning" message="Line is longer than 150 characters (found 170)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="339" column="67" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="340" column="85" severity="warning" message="&apos;+&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="340" column="137" severity="warning" message="&apos;+&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="359" column="64" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="360" column="82" severity="warning" message="&apos;+&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="360" column="134" severity="warning" message="&apos;+&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="369" column="84" severity="warning" message="&apos;+&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="372" column="85" severity="warning" message="&apos;+&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/parser/JasicParser.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/memoryManager/ProgramPointer.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/memoryManager/VariableManagement.java">
+<error line="4" column="8" severity="warning" message="Unused import - eu.gricom.interpreter.basic.helper.Logger." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="25" column="19" severity="warning" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+<error line="25" column="45" severity="warning" message="Name &apos;_aoUntyped&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="26" column="19" severity="warning" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+<error line="26" column="52" severity="warning" message="Name &apos;_aoBooleans&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="27" column="19" severity="warning" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+<error line="27" column="52" severity="warning" message="Name &apos;_aoIntegers&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="28" column="19" severity="warning" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+<error line="28" column="49" severity="warning" message="Name &apos;_aoReals&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="29" column="19" severity="warning" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+<error line="29" column="51" severity="warning" message="Name &apos;_aoStrings&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="44" column="79" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="48" column="54" severity="warning" message="&apos;typecast&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="52" column="56" severity="warning" message="&apos;typecast&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="56" column="50" severity="warning" message="&apos;typecast&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="59" column="56" severity="warning" message="&apos;typecast&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="72" column="80" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="88" column="82" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="104" column="77" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="105" column="66" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="112" column="120" severity="warning" message="&apos;+&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="122" column="81" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="169" column="44" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="170" column="45" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="171" column="45" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="172" column="42" severity="warning" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+<error line="174" column="19" severity="warning" message="&apos;return&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/memoryManager/package-info.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/memoryManager/Stack.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/LabelStatement.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/OperatorExpression.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/PrintStatement.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/Statement.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/EndStatement.java">
+<error line="42" column="5" severity="warning" message="Method &apos;getLineNumber&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
+<error line="52" column="40" severity="warning" message="Expected @throws tag for &apos;Exception&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/VariableExpression.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/LineNumberStatement.java">
+<error line="3" column="8" severity="warning" message="Unused import - eu.gricom.interpreter.basic.helper.Logger." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/Expression.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/GosubStatement.java">
+<error line="61" column="34" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/AssignStatement.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/IfThenStatement.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/InputStatement.java">
+<error line="42" column="27" severity="warning" message="Parameter iLineNumber should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="42" column="31" severity="warning" message="Expected @param tag for &apos;iLineNumber&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="52" column="5" severity="warning" message="Method &apos;getLineNumber&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/GotoStatement.java">
+<error line="60" column="34" severity="warning" message="Expected @throws tag for &apos;SyntaxErrorException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/statements/package-info.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/RealValue.java">
+<error line="56" column="22" severity="warning" message="&apos;typecast&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+<error line="128" column="5" severity="warning" message="Method &apos;power&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
+<error line="129" column="24" severity="warning" message="Parameter oValue should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="133" column="54" severity="warning" message="&apos;,&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/BooleanValue.java">
+<error line="183" column="5" severity="warning" message="Method &apos;power&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
+<error line="184" column="24" severity="warning" message="Parameter oValue should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="186" column="53" severity="warning" message="&apos;typecast&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/StringValue.java">
+<error line="83" column="5" severity="warning" message="Method &apos;power&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
+<error line="84" column="24" severity="warning" message="Parameter oValue should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/Value.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/package-info.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/variableTypes/IntegerValue.java">
+<error line="129" column="5" severity="warning" message="Method &apos;power&apos; is not designed for extension - needs to be abstract, final or empty." source="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck"/>
+<error line="130" column="24" severity="warning" message="Parameter oValue should be final." source="com.puppycrawl.tools.checkstyle.checks.FinalParametersCheck"/>
+<error line="135" column="72" severity="warning" message="&apos;,&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/Logger.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/Time.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/FileHandler.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/Printer.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/helper/package-info.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/error/DivideByZeroException.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/error/package-info.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/error/SyntaxErrorException.java">
+</file>
+<file name="/Users/andreas/Projects/Sources/Java/Interpreters/src/main/java/eu/gricom/interpreter/basic/package-info.java">
+</file>
+</checkstyle>
