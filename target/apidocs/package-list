@@ -1,8 +1,0 @@
-eu.gricom.interpreter.basic
-eu.gricom.interpreter.basic.error
-eu.gricom.interpreter.basic.helper
-eu.gricom.interpreter.basic.memoryManager
-eu.gricom.interpreter.basic.parser
-eu.gricom.interpreter.basic.statements
-eu.gricom.interpreter.basic.tokenizer
-eu.gricom.interpreter.basic.variableTypes
