@@ -180,7 +180,7 @@ The following keywords are reserved and cannot be used for variables:
 | `DATA` | reserved | |
 | `DEF FN` | reserved | |
 | `DIM` | reserved | |
-| `ELSE` | reserved | |
+| `ELSE` | planned | |
 | `END` | implemented | |
 | `END-IF` | implemented | |
 | `EOF` | reserved | |
@@ -188,22 +188,21 @@ The following keywords are reserved and cannot be used for variables:
 | `ERL` | reserved | |
 | `ERR` | reserved | |
 | `EXP` | reserved | |
-| `FOR` | reserved | |
+| `FOR` | planned | |
 | `FRE` | reserved | |
-| `GOSUB` | reserved | |
+| `GOSUB` | planned | |
 | `GOTO` | implemented | implemented |
-| `IF` | reserved | implemented |
+| `IF` | implemented | implemented |
 | `INSTR` | reserved | |
 | `INT` | reserved | |
-| `INPUT` | reserved | implemented |
+| `INPUT` | implemented | implemented |
 | `LEFT$` | reserved | |
 | `LEN` | reserved | |
 | `LET` | reserved | |
-| `LINE` | implemented | implemented |
 | `LOG` | reserved | |
 | `MEM` | reserved | |
 | `MID$` | reserved | |
-| `NEXT` | reserved | |
+| `NEXT` | planned | |
 | `NOT` | reserved | |
 | `ON` | reserved | |
 | `OR` | reserved | |
@@ -212,22 +211,22 @@ The following keywords are reserved and cannot be used for variables:
 | `READ` | reserved | |
 | `REM` | implemented | |
 | `REMINDER` | reserved | |
-| `RETURN` | reserved | |
+| `RETURN` | planned | |
 | `RIGHT$` | reserved | |
 | `RND` | reserved | |
 | `SGN` | reserved | |
 | `SIN` | reserved | |
 | `SQR` | reserved | |
-| `STEP` | reserved | |
-| `STOP` | reserved | |
+| `STEP` | planned | |
+| `STOP` | planned | |
 | `STRING$` | reserved | |
 | `STR$` | reserved | |
 | `SYSTEM` | reserved | |
 | `TAB` | reserved | |
 | `TAN` | reserved | |
-| `THEN` | reserved | implemented |
+| `THEN` | implemented | implemented |
 | `TIME$` | reserved | |
-| `TO` | reserved | |
+| `TO` | planned | |
 | `VAL` | reserved | |
 | `&` | reserved | |
 | `+` | implemented | implemented |
@@ -235,14 +234,14 @@ The following keywords are reserved and cannot be used for variables:
 | `*` | implemented | implemented |
 | `/` | implemented | implemented |
 | `:` | reserved | implemented |
-| `>` | reserved | implemented |
-| `=>` | reserved | |
-| `<` | reserved | implemented |
-| `=<` | reserved |  |
+| `>` | implemented | implemented |
+| `=>` | implemented | |
+| `<` | implemented | implemented |
+| `=<` | implemented |  |
 | `=` | implemented | implemented |
 | `:=` | reserved | |
 | `==` | implemented | |
-| `!=` | reserved | |
+| `!=` | implemented | |
 | `^` | implemented | |
 | `'` | implemented | |
 
@@ -293,38 +292,54 @@ operation only the assignment operator can be used. The comparison user is gener
 
 ### Commands
 
-##### Input
+##### FOR Command
 
-###### Input Command
+###### BASIC Syntax
+
+    FOR X = -2 TO 2 STEP .1
+
+##### INPUT Command
 input \<name\>
 
 Reads in a line of input from the user and stores it in the variable with
 the given name.
 
-    input guess
+    INPUT guess$
 
+##### PRINT Command  
 
-#### Input / Output
-
-##### Output
-
-###### Print Command    
-print \<expression\>
+`PRINT <expression>`
 
 Evaluates the expression and prints the result.
 
-    print "hello, " + "world"
+    PRINT "hello, " + "world"
 
-#### Process Control
+### Process Control
 
-##### Unconditional Process Control (Jump)
+#### Unconditional Process Control (Jump)
 
-###### Goto Command
-`GOTO` \<label\>
+##### GOSUB Command
+
+##### GOTO Command
+
+###### JASIC Syntax
+
+`GOTO <label>`
 
 Jumps to the statement after the label with the given name.
 
-    GOTO loop
+    loop:
+          PRINT "Hello"
+          GOTO loop
+
+###### BASIC Syntax
+
+`GOTO <line_number>`
+
+Jumps to the statement after the label with the given name.
+
+      10 PRINT "Hello"
+      20 GOTO 10
 
 ##### Conditional Process Control
 
@@ -376,15 +391,17 @@ The following expressions are supported:
 
 * \<expression\> `<` \<expression\>
 
+* \<expression\> `<=` \<expression\>
+
 * \<expression\> `>` \<expression\>
 
-    You can figure it out.
+* \<expression\> `>` \<expression\>
 
 * \<name\>:
     A name in an expression simply returns the value of the variable with
     that name. If the variable was never set, it defaults to 0.
 
-All binary operators have the same precedence.
+All binary (atomic) operators have the same precedence.
 
 
 ## Alternative Projects and Informtion
