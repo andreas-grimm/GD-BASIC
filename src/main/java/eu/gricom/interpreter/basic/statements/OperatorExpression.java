@@ -41,8 +41,9 @@ public class OperatorExpression implements Expression {
         Value oRightValue = _oRight.evaluate();
 
         switch (_strOperator) {
-//            case "=":
-//                return (oLeftValue.equals(oRightValue));
+            // needed for Jasic
+            case "=":
+                return (oLeftValue.equals(oRightValue));
 
             case "+":
                 return (oLeftValue.plus(oRightValue));

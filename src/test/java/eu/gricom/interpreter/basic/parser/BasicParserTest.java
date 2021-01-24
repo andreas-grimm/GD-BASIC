@@ -78,7 +78,7 @@ public class BasicParserTest {
     public void testMatchNextTokenType() {
         Tokenizer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.bas");
+        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -96,7 +96,7 @@ public class BasicParserTest {
     public void testMatchNextTwoTokenType() {
         Tokenizer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.bas");
+        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -114,7 +114,7 @@ public class BasicParserTest {
     public void testMatchNextTokenName() {
         Tokenizer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.bas");
+        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
@@ -136,7 +136,7 @@ public class BasicParserTest {
     public void testConsumeTokenType() {
         Tokenizer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.bas");
+        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -156,7 +156,7 @@ public class BasicParserTest {
     public void testConsumeTokenName() {
         Tokenizer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.bas");
+        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -175,7 +175,7 @@ public class BasicParserTest {
     public void testLastToken() {
         Tokenizer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.bas");
+        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -197,7 +197,7 @@ public class BasicParserTest {
     public void testGetToken() {
         Tokenizer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.bas");
+        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);

@@ -322,6 +322,10 @@ Evaluates the expression and prints the result.
 
 ##### GOTO Command
 
+The `GOTO` command represents the unconditional jump to another location in the program without return after completion 
+(different to the `GOSUB` command). The command will not change any variable content or any status of the program, just 
+will move the program pointer to the new location.
+
 ###### JASIC Syntax
 
 `GOTO <label>`
@@ -365,7 +369,7 @@ is executed. If it evaluates to a false value, the flow jumps to the statement p
 ## Expressions
 The following expressions are supported:
 
-* \<expression\> `=` \<expression\>: (JASIC only)
+* \<expression\> `=` \<expression\>: (for JASIC, but works for BASIC)
   Evaluates to 1 if the two expressions are equal, 0 otherwise.
 
 * \<expression\> `==` \<expression\>: (BASIC only)
