@@ -18,7 +18,7 @@ import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
  */
 public final class GotoStatement implements Statement {
     private final Logger _oLogger = new Logger(this.getClass().getName());
-    private final String _strLabel;
+    private final String _strTarget;
     private final int _iLineNumber;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final LabelStatement _oLabelStatement = new LabelStatement();
@@ -27,21 +27,21 @@ public final class GotoStatement implements Statement {
     /**
      * Default constructor.
      *
-     * @param strLabel - target of the jump - defined by a label
+     * @param strTarget - target of the jump - defined by a label
      */
-    public GotoStatement(final String strLabel) {
+    public GotoStatement(final String strTarget) {
         _iLineNumber = 0;
-        _strLabel = strLabel;
+        _strTarget = strTarget;
     }
 
     /**
      * Default constructor.
      * @param iLineNumber - number of the line of the command
-     * @param strLabel - target of the jump - defined by a label
+     * @param strTarget - target of the jump - defined by a label
      */
-    public GotoStatement(final int iLineNumber, final String strLabel) {
+    public GotoStatement(final int iLineNumber, final String strTarget) {
         _iLineNumber = iLineNumber;
-        _strLabel = strLabel;
+        _strTarget = strTarget;
     }
 
     /**
@@ -59,25 +59,25 @@ public final class GotoStatement implements Statement {
      */
     public void execute() throws SyntaxErrorException {
         // This part of the method is executed if the BASIC interpreter uses labels (e.g. we are using JASIC)
-        if (_oLabelStatement.containsLabelKey(_strLabel)) {
-            _oLogger.debug("-execute-> jump to [" + _strLabel + "]");
-            _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strLabel));
-            _oLogger.debug("-execute-> jump to [" + _oLabelStatement.getLabelStatement(_strLabel) + "]");
+        if (_oLabelStatement.containsLabelKey(_strTarget)) {
+            _oLogger.debug("-execute-> jump to [" + _strTarget + "]");
+            _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strTarget));
+            _oLogger.debug("-execute-> jump to [" + _oLabelStatement.getLabelStatement(_strTarget) + "]");
             return;
         }
 
         // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
         try {
-            int iTokenNo = _oLineNumberObject.getStatement(Integer.parseInt(_strLabel));
+            int iTokenNo = _oLineNumberObject.getStatement(Integer.parseInt(_strTarget));
 
             if (iTokenNo != 0) {
                 _oProgramPointer.setCurrentStatement(iTokenNo);
                 return;
             }
 
-            throw (new SyntaxErrorException("GOTO [unknown]: Target: " + _strLabel));
+            throw (new SyntaxErrorException("GOTO [unknown]: Target: " + _strTarget));
         } catch (NumberFormatException eNumberException) {
-            throw (new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strLabel));
+            throw (new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strTarget));
         }
     }
 
@@ -88,10 +88,10 @@ public final class GotoStatement implements Statement {
      */
     @Override
     public String content() {
-        if (_oLabelStatement.containsLabelKey(_strLabel)) {
-            return ("GOTO [" + _strLabel + "]: Destination: " + _oLabelStatement.getLabelStatement(_strLabel));
+        if (_oLabelStatement.containsLabelKey(_strTarget)) {
+            return ("GOTO [" + _strTarget + "]: Destination: " + _oLabelStatement.getLabelStatement(_strTarget));
         }
 
-        return ("GOTO [" + _strLabel + "]: Destination: " + _oLineNumberObject.getStatement(Integer.parseInt(_strLabel)));
+        return ("GOTO [" + _strTarget + "]: Destination: " + _oLineNumberObject.getStatement(Integer.parseInt(_strTarget)));
     }
 }

@@ -89,7 +89,6 @@ public final class IfThenStatement implements Statement {
                 if (_iEndIfLine != 0) {
                     int iStatementNo =
                             _oLineNumberObject.getStatement(_oLineNumberObject.getNextStatement(_iEndIfLine));
-
                     if (iStatementNo != 0) {
                         _oProgramPointer.setCurrentStatement(iStatementNo);
                         return;

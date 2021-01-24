@@ -12,11 +12,11 @@ public class AssignStatementTest {
     public void testExecute() {
         try {
             RealValue oNumberValue = new RealValue(1.0);
-            AssignStatement oAssignmentStatement = new AssignStatement("Test", oNumberValue);
+            AssignStatement oAssignmentStatement = new AssignStatement("Test#", oNumberValue);
             oAssignmentStatement.execute();
 
-            assertTrue(oAssignmentStatement.content().contains("ASSIGN [Test:= 1.0]"));
-            RealValue oTestValue = (RealValue) oVariableManagement.getMap("Test");
+            assertTrue(oAssignmentStatement.content().contains("ASSIGN [Test#:= 1.0]"));
+            RealValue oTestValue = (RealValue) oVariableManagement.getMap("Test#");
         } catch (Exception eException) {
             System.err.println(eException.getMessage());
         }
