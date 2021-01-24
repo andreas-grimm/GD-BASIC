@@ -6,7 +6,7 @@
 
     <groupId>eu.gricom</groupId>
     <artifactId>BASIC</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.4-RC</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
