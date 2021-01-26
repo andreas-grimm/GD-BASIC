@@ -1,1 +1,1 @@
-java -jar target/BASIC-0.0.5-SNAPSHOT.jar -v"debug|info" -b=jasic -i src/test/resources/test_jasic_1.jas
+java -jar target/BASIC-0.0.5-SNAPSHOT-jar-with-dependencies.jar -v"debug|info" -b=jasic -i src/test/resources/test_jasic_1.jas

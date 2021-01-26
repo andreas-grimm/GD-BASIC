@@ -9,9 +9,9 @@ public class ReservedWords {
      */
     public static String[] astrReservedWords = {
             "ABS", "AND", "ASC", "ATN",
-            "CALL", "CDBL", "CHR$", "CINT", "CLOSE", "CLS", "CMD", "CONT", "COS", "CSNG",
+            "CALL", "CDBL", "CHR$", "CINT", "CLOSE", "CLS", "CMD", "CONT", "CONTINUE", "COS", "CSNG",
             "DATA", "DEFFN", "DIM",
-            "ELSE", "END", "END-IF","EOF", "EOL", "ERL", "ERR", "EXP",
+            "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT-WHILE", "EXP",
             "FOR", "FRE",
             "GOSUB", "GOTO",
             "IF", "INSTR$", "INT", "INPUT",
@@ -23,7 +23,9 @@ public class ReservedWords {
             "RANDOM", "READ", "REM", "%", "RETURN", "RIGHT$", "RND",
             "SGN", "SIN", "SQR", "STEP", "STOP", "STRING$", "STR$", "SYSTEM",
             "TAB", "TAN", "THEN", "TIME$", "TO",
+            "UNTIL",
             "VAL",
+            "WHILE",
             "&", "\\+", "\\-", "\\*", "\\/", ":",
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
             "\\(", "\\)", "\\'"
@@ -31,10 +33,10 @@ public class ReservedWords {
 
     static TokenType[] aeTokenTypes = {
         TokenType.ABS, TokenType.AND, TokenType.ASC, TokenType.ATN,
-        TokenType.CALL, TokenType.CDBL, TokenType.CHR, TokenType.CINT, TokenType.CLOSE, TokenType.CLS, TokenType.CMD, TokenType.CONT, TokenType.COS, TokenType.CSNG,
+        TokenType.CALL, TokenType.CDBL, TokenType.CHR, TokenType.CINT, TokenType.CLOSE, TokenType.CLS, TokenType.CMD,
+            TokenType.CONT, TokenType.CONTWHILE, TokenType.COS, TokenType.CSNG,
         TokenType.DATA, TokenType.DEFFN, TokenType.DIM,
-        TokenType.ELSE, TokenType.END, TokenType.ENDIF, TokenType.EOF, TokenType.EOL, TokenType.ERL, TokenType.ERR,
-            TokenType.EXP,
+        TokenType.ELSE, TokenType.END, TokenType.ENDIF, TokenType.ENDWHILE, TokenType.EOF, TokenType.EOL, TokenType.ERL, TokenType.ERR, TokenType.EXITWHILE, TokenType.EXP,
         TokenType.FOR, TokenType.FRE,
         TokenType.GOSUB, TokenType.GOTO,
         TokenType.IF, TokenType.INSTR, TokenType.INT, TokenType.INPUT,
@@ -46,7 +48,9 @@ public class ReservedWords {
         TokenType.RANDOM, TokenType.READ, TokenType.REM, TokenType.REMAINDER, TokenType.RETURN, TokenType.RIGHT, TokenType.RND,
         TokenType.SGN, TokenType.SIN, TokenType.SQR, TokenType.STEP, TokenType.STOP, TokenType.TOSTRING, TokenType.STR, TokenType.SYSTEM,
         TokenType.TAB, TokenType.TAN, TokenType.THEN, TokenType.TIME, TokenType.TO,
+        TokenType.UNTIL,
         TokenType.VAL,
+        TokenType.WHILE,
         TokenType.AMPERSAND, TokenType.PLUS, TokenType.MINUS, TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.COLON,
         TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.SMALLER, TokenType.SMALLER_EQUAL, TokenType.ASSIGN_EQUAL,
             TokenType.PASCAL_ASSIGN_EQUAL, TokenType.COMPARE_EQUAL, TokenType.COMPARE_NOT_EQUAL, TokenType.POWER,

@@ -41,13 +41,28 @@ This link leads to an implementation of a Basic to Pascal translator, written by
 [Basic to Pascal](http://hp.vector.co.jp/authors/VA008683/english/BASICAcc.htm).
 
 ### GDBasic
-GDBasic is a superset of the different basic dialects. This document describes - apart from communalities -
-differences, where GDBasic programs exceed the different dialcts.
+GDBasic is a superset of the different basic dialects. This document describes - apart from commonalities -
+differences, where GDBasic programs exceed the different dialects.
+
+## Document Conventions
+
+In this document, a number of different symbols and placeholders are used. The following list declares these symbols and
+gives a high level overview on their expected use.
+
+| Used Symbol  | Description |
+|--------------|-------------|
+| `<label>` | for `JASIC` only. Labels are defined as character strings terminated by a colon `:`|
+| `<line_number>` | for `BASIC` only. Line numbers are integer values at the beginning of each command line. |
+| `<statement>` | a statement is a command, comment, assignment (which could be understood as a special form of a command), or condition. |
+| `<comment>` | a comment is a command with no function, entered to document the program. |
+| `<assignment>` | an assignment is a command that assigns a value (string, numeric, or boolean) to a variable. |
+| `<command>` | a command is an expression in the program that changes the state of the process. For details, refer to the command section of this document. |
+| `<condition>` | a condition is a comparing statement that ends with a result, either `true` or `false`. For details, refer to the section on control statements in this document.|
+| `<number>` | a number is an integer used for programming purposes. |
+| `<expression>` | an expression is part of an assignment, reflecting the call to a function or a mathematical formula. |
+
 
 ## Language Elements
-
-### Structure of Basic Programs
-
 
 #### Structure of JASIC Programs
 
@@ -108,6 +123,7 @@ Constants are not supported. All variables are globally scoped.
 Named Reals or Numbers, these variable types represent floating-point variables.
 They provide the most coverage of mathematical functions, and the largest number
 range. It is the default representation of variables in the interpreter.
+
 *Note:* This version does only support double length floating-point variables, as 
 this variable type is already implemented using the largest representation.
 
@@ -159,7 +175,11 @@ names and therefore more variables:
 | `STRING` | `AB$` | 0 to 256 Characters |
 
 ## Reserved Words
-The following keywords are reserved and cannot be used for variables:
+The following keywords are reserved and cannot be used for variables. The following list defines the use of the keywords:
+
+- `implemented`: the keyword is actively used in the interpreter
+- `planned`: the keyword is used in the current development and/or released as a beta
+- `reserved`: the keyword might be used in the future or is already on the roadmap. Do not use these keywords in order to be compatible in the future.
 
 | Reserved Word |  GD-Basic | Jasic | 
 |---------------|-----------|-------|
@@ -175,18 +195,24 @@ The following keywords are reserved and cannot be used for variables:
 | `CLS` | reserved | |
 | `CMD` | reserved | |
 | `CONT` | reserved | |
+| `CONTINUE-DO` | reserved | |
+| `CONTINUE-WHILE` | reserved | |
 | `COS` | reserved | |
 | `CSNG` | reserved | |
 | `DATA` | reserved | |
 | `DEF FN` | reserved | |
 | `DIM` | reserved | |
+| `DO` | planned | |
 | `ELSE` | planned | |
 | `END` | implemented | |
 | `END-IF` | implemented | |
+| `END-WHILE` | planned | |
 | `EOF` | reserved | |
 | `EOL` | reserved | |
 | `ERL` | reserved | |
 | `ERR` | reserved | |
+| `EXIT-DO` | planned | |
+| `EXIT-WHILE` | planned | |
 | `EXP` | reserved | |
 | `FOR` | planned | |
 | `FRE` | reserved | |
@@ -227,7 +253,9 @@ The following keywords are reserved and cannot be used for variables:
 | `THEN` | implemented | implemented |
 | `TIME$` | reserved | |
 | `TO` | planned | |
+| `UNTIL` | reserved | |
 | `VAL` | reserved | |
+| `WHILE` | planned | |
 | `&` | reserved | |
 | `+` | implemented | implemented |
 | `-` | implemented | implemented |
@@ -261,7 +289,7 @@ Example:
 Each statement is on its own line. It starts with an integer number, which is increasing for each following line. Duplicates 
 of the line numbers is not allowed. The structure of a statement is:
 
-    line_number <comment | assignment | command>
+    <line_number> <comment | assignment | command>
 
 Example:
 
@@ -292,14 +320,34 @@ operation only the assignment operator can be used. The comparison user is gener
 
 ### Commands
 
-##### FOR Command
+##### DO Command
+
+`DO <statement> CONTINUE-DO <statement> EXIT-DO <statement> UNTIL <condition>`
 
 ###### BASIC Syntax
 
-    FOR X = -2 TO 2 STEP .1
+    10 X# = 0
+    20 DO
+    30  PRINT X#
+    40  X# = X# + 1
+    50 UNTIL X# >= 10
+
+###### CONTINUE-DO Command
+
+###### EXIT-DO Command
+
+##### FOR Command
+
+`FOR <assignment> TO <number> STEP <number> <statement> NEXT`
+
+###### BASIC Syntax
+
+    10 FOR X# = -2 TO 2 STEP .1
+    20   PRINT X#
+    30 NEXT
 
 ##### INPUT Command
-input \<name\>
+`INPUT <variable>`
 
 Reads in a line of input from the user and stores it in the variable with
 the given name.
@@ -314,11 +362,44 @@ Evaluates the expression and prints the result.
 
     PRINT "hello, " + "world"
 
+##### WHILE Command
+
+`WHILE <condition> <statement> CONTINUE-WHILE <statement> EXIT-WHILE <statement> END-WHILE`
+
+###### BASIC Syntax
+
+    WHILE X# > 0 
+      PRINT X#
+      X# = X# -1
+    END-WHILE
+
+###### CONTINUE-WHILE Command
+
+###### EXIT-WHILE Command
+
 ### Process Control
 
 #### Unconditional Process Control (Jump)
 
 ##### GOSUB Command
+
+`GOSUB <line_number> <statements> RETURN`
+
+Jumps to the statement at the given line number. Processes the program from that location on until the `RETURN` command is found.
+Returns to the next statement past the command.
+
+      100 GOSUB 200
+      110 PRINT "Second line output"
+      120 END
+      ...
+      200 PRINT "First line output"
+      210 RETURN
+
+###### RETURN Command
+
+*NOTE:* The `RETURN` command assumes that a prior `GOSUB` command has been executed. If the `RETURN` is found without a prior `GOSUB` the
+location for further processing is not predicable, if possible an error is thrown.
+
 
 ##### GOTO Command
 
@@ -330,7 +411,7 @@ will move the program pointer to the new location.
 
 `GOTO <label>`
 
-Jumps to the statement after the label with the given name.
+Jumps to the statement after the label in the program. Processes the program from that location on.
 
     loop:
           PRINT "Hello"
@@ -340,7 +421,7 @@ Jumps to the statement after the label with the given name.
 
 `GOTO <line_number>`
 
-Jumps to the statement after the label with the given name.
+Jumps to the statement at the given line number. Processes the program from that location on.
 
       10 PRINT "Hello"
       20 GOTO 10
@@ -349,7 +430,7 @@ Jumps to the statement after the label with the given name.
 
 ###### JASIC Syntax
 
-`IF <expression> THEN <label>`
+`IF <condition> THEN <label>`
 
 Evaluates the expression. If it evaluates to a non-zero number, then jumps to the statement after the given label.
 
@@ -357,14 +438,15 @@ Evaluates the expression. If it evaluates to a non-zero number, then jumps to th
 
 ###### BASIC Syntax
 
-`IF <expression> THEN <commands> END-IF`
+`IF <condition> THEN <statement> END-IF`
 
 Evaluates the expression. If it evaluates to a true value, then the commands in the block between the `THEN` and the `END-IF`
 is executed. If it evaluates to a false value, the flow jumps to the statement past the `END-IF` statement.
 
     10 IF a < b THEN 
-    20   some commands
+    20   PRINT "Inside the IF block"
     30 END-IF 
+    40 PRINT "Outside the IF block"
 
 ## Expressions
 The following expressions are supported:

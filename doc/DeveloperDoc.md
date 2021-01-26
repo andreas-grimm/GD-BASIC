@@ -28,7 +28,7 @@ any newer version of Maven should work as well. The command line to run Maven is
     mvn clean compile dependency:tree dependency:copy-dependencies package
 
 During the build process, the interpreter is compiled, but the process also runs a number of JUNIT test cases, and performs
-a static code analysis using Checkstyle. The definition of the syntax for Checkstyle is in the `./etc` directory, Checkstyle
+a static code analysis using Checkstyle. The definition ofgi the syntax for Checkstyle is in the `./etc` directory, Checkstyle
 is working with the code style guide of the project. The code style guide is located in the projects root directory, named `STYLEGUIDE.md`.
 If you want to participate, please adopt your contributions to the look and feel of the project. Code submissions not reflecting
 the styleguide will be rejected.
@@ -38,9 +38,13 @@ scripts are added: `bin/test` is running the _JASIC_ test programs, `bin/test2` 
 program. `bin/dev` is used to run the development _BASIC_ program that is used to implement and unit test the _BASIC_
 version of the interpreter.
 
-At this stage, the interpreter is using a command line interface (`CLI`). The syntax of the `CLI` is:
+At this stage, the interpreter is using a command line interface (`CLI`). The syntax of the `CLI` is (setting the link for the `JAVA` libraries up before):
 
     java -jar target/BASIC-<version-SNAPSHOT>.jar <parameter> <program name>.<.bas|.jas>
+
+or (if the `JAVA` libraries are nto in the path):
+
+    java -jar target/BASIC-<version-SNAPSHOT>-jar-with-dependencies.jar  <parameter> <program name>.<.bas|.jas>
 
 Possible optional parameter supported are:
 * "`-h`" - help (This screen), no further arguments
@@ -53,10 +57,10 @@ The only mandatory parameter is:
 
 _Example_:
 
-    java -jar target/BASIC-0.0.2-SNAPSHOT.jar -v"debug|info" -i src/test/resources/testfile_basic.bas
+    java -jar target/BASIC-0.0.5-SNAPSHOT-jar-with-dependencies.jar -v"debug|info" -i src/test/resources/testfile_basic.bas
 
 ## Participation in the Development of the Interpreter
-As of version `0.1.0` (planned) the interpeter is avaialble in a public _GITHUB_ (`github.com`) repository. It is covered by
+As of version `0.1.0` (planned) the interpreter is avaiable in a public _GITHUB_ (`github.com`) repository. It is covered by
 a modified version of the __CDDL 1.0 License__, see `LICENSE.md` in the project root directory.
 
 The project is following open source project standard processes. Anybody with an interest to participate can and may clone or
@@ -170,6 +174,16 @@ and does not need to be modified in case additional types (like
 
 ##### Assignment to variables and basic mathematical operators
 
+##### `DO - UNTIL` Loop Statement
+
+    DO <statements> CONTINUE-DO <statements> EXIT-DO <statements> LOOP-UNTIL <condition>
+
+###### `CONTINUE-DO` Statement
+
+###### `EXIT-DO` Statement
+
+###### `LOOP-UNTIL` Statement
+
 ##### `GOTO` Statement
 The `GOTO` Statement - or non-conditional jump - moves the execution of the running Basic program
 to a different location in the program. The executable functionality is located in class 
@@ -208,6 +222,10 @@ Limitations of the current implementation:
   source line number. [link](https://gricom.atlassian.net/browse/BASIC-58)
 * The performance of the retrieval of the BASIC source line is non-optimal and should be improved.
 
+##### `GOSUB` Statement
+
+###### `RETURN` Statement
+
 ##### `IF-THEN` Statement
 The `IF-THEN` statement implements the main control statement in the programming language. The main structure of the control
 statement consists of 4 token: `IF`, `THEN`, `ELSE`, `END-IF`. In the JASIC implementation the structure only consist of
@@ -227,9 +245,21 @@ Limitations of the current implementation:
 * Potential change of the logic (to be determined): If the BASIC `IF-THEN` command has no token, but a number following 
   the `THEN` statement, the command could execute a jump to the line number in the statement.
 
+###### `END-IF` Statement
+
 ##### `INPUT` Statement
 
 ##### `PRINT` Statement
+
+##### `WHILE` Loop Statement
+
+    WHILE <condition> <statements> CONTINUE <statements> EXIT-WHILE <statements> END-WHILE
+
+###### `CONTINUE-WHILE` Statement
+
+###### `EXIT-WHILE` Statement
+
+###### `END-WHILE` Statement
 
 ## Appendix
 
@@ -257,6 +287,9 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `CLOAD` |  |  | implemented |  |  |
 | `CLS` | reserved |  | implemented |  |  |
 | `CLR` |  |  |  |  | implemented |
+| `CONT` | reserved |  |  |  |  |  |
+| `CONTINUE-DO` | reserved |  |  |  |  |  |
+| `CONTINUE-WHILE` | reserved |  |  |  |  |  |
 | `CSAVE` |  |  | implemented | | |
 | `CMD` | reserved |  | implemented | | implemented |
 | `COLOR=` |  |  |  | implemented |  |
@@ -276,11 +309,13 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `DEL` |  |  |  | implemented |  |
 | `DELETE` |  |  | implemented |  |  |
 | `DIM` | reserved |  | implemented | implemented | implemented |
+| `DO` | reserved |  |  |  |  |
 | `DRAW` |  |  |  | implemented |  |
 | `EDIT` |  |  | implemented |  |  |
 | `ELSE` | reserved |  | implemented | implemented | implemented |
 | `END` | implemented |  | implemented | implemented | implemented |
 | `END-IF` | implemented |  |  |  |  |
+| `END-WHILE` | implemented |  |  |  |  |
 | `EOF` | reserved |  | implemented |  |  |
 | `EOL` | reserved |  |  |  |  |
 | `EOP` | implemented | implemented |  |  |  | `EOP` is a token used to mark the end of the program. It is not the implementation of a reserved word.
@@ -328,6 +363,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `LOF` |  |  | implemented |  |  |
 | `LOG` | reserved |  | implemented | implemented | implemented |
 | `LOMEM:` |  |  |  | implemented |  |
+| `LOOP-UNTIL` | reserved |  |  |  |  |
 | `LPRINT` |  |  | implemented |  |  |
 | `LSET` |  |  | implemented |  |  |
 | `MEM` | reserved |  | implemented |  |

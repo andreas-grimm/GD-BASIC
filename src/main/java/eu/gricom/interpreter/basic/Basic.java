@@ -185,13 +185,16 @@ public class Basic {
 
         if ((oCommandLine != null) && (!oCommandLine.hasOption("q"))) {
 
-            Printer.println("GriCom Basic Interpreter Version 0.1.0");
-            Printer.println("(c) Copyright Bob Nystrom 2010");
-            Printer.println("(c) Copyright Andreas Grimm 2020");
-
             long lMaxMemory = Runtime.getRuntime().maxMemory();
-            Printer.println("Maximum memory (bytes): " + lMaxMemory + ", ");
-            Printer.println("Free memory (bytes): " + Runtime.getRuntime().freeMemory());
+            Printer.println();
+            Printer.println("  #####  ######  ######     #     #####  ###  #####     ");
+            Printer.println(" #     # #     # #     #   # #   #     #  #  #     #    GriCom Basic Interpreter Version 0.1.0");
+            Printer.println(" #       #     # #     #  #   #  #        #  #          (c) Copyright Andreas Grimm 2020");
+            Printer.println(" #  #### #     # ######  #     #  #####   #  #          (c) Copyright Bob Nystrom 2010");
+            Printer.println(" #     # #     # #     # #######       #  #  #          Maximum memory (bytes): " + lMaxMemory);
+            Printer.println(" #     # #     # #     # #     # #     #  #  #     #    Free memory (bytes): " + Runtime.getRuntime().freeMemory());
+            Printer.println("  #####  ######  ######  #     #  #####  ###  #####     ");
+            Printer.println();
         }
 
         if ((oCommandLine != null) && (oCommandLine.hasOption("v"))) {

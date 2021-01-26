@@ -16,6 +16,7 @@ public enum TokenType {
     CLS,
     CMD,
     CONT,
+    CONTWHILE,
     COS,
     CSNG,
     DATA,
@@ -24,11 +25,13 @@ public enum TokenType {
     ELSE,
     END,
     ENDIF,
+    ENDWHILE,
     EOF,
     EOL,
     EOP,
     ERL,
     ERR,
+    EXITWHILE,
     EXP,
     FOR,
     FRE,
@@ -69,7 +72,9 @@ public enum TokenType {
     THEN,
     TIME, // token for the TIME$ function
     TO,
+    UNTIL,
     VAL,
+    WHILE,
     AMPERSAND, // token for the & operator
     PLUS, // token for the + operator
     MINUS, // token for the - operator

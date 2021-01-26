@@ -22,7 +22,9 @@ This package has been tested to build with Maven 3.6.3, using Oracle Java 1.8.0_
 
 Use the following command line:
 
-    mvn clean compile dependency:tree dependency:copy-dependencies package
+    mvn clean site package -Dmaven.javadoc.skip=true
+
+or execute the build shell script at `bin/build`
 
 --- 
 
