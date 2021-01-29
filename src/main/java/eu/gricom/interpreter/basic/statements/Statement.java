@@ -34,5 +34,5 @@ public interface Statement {
      *
      * @return - gives the name of the statement ("INPUT") and the variable name
      */
-    String content();
+    String content() throws Exception;
 }

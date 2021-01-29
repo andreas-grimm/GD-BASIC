@@ -5,11 +5,13 @@ import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.statements.AssignStatement;
 import eu.gricom.interpreter.basic.statements.EndStatement;
 import eu.gricom.interpreter.basic.statements.Expression;
+import eu.gricom.interpreter.basic.statements.ForStatement;
 import eu.gricom.interpreter.basic.statements.GotoStatement;
 import eu.gricom.interpreter.basic.statements.IfThenStatement;
 import eu.gricom.interpreter.basic.statements.InputStatement;
 import eu.gricom.interpreter.basic.statements.LabelStatement;
 import eu.gricom.interpreter.basic.statements.LineNumberStatement;
+import eu.gricom.interpreter.basic.statements.NextStatement;
 import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.PrintStatement;
 import eu.gricom.interpreter.basic.statements.Statement;
@@ -18,6 +20,7 @@ import eu.gricom.interpreter.basic.tokenizer.Token;
 import eu.gricom.interpreter.basic.tokenizer.TokenType;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
+import eu.gricom.interpreter.basic.variableTypes.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +85,62 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
+                // FOR Token: Start of the FOR-NEXT loop
+                case FOR:
+                    Expression oStartValueExpression;
+                    RealValue oEndValueExpression;
+                    RealValue oStepSize;
+
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FOR] ");
+                    final int iForPosition = _iPosition++;
+                    oLineNumber.putLineNumber(getToken(0).getLine(), iForPosition);
+
+                    // Get start assignment, target value, and step size
+                    String strForVariable = consumeToken(TokenType.WORD).getText();
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [WORD] " + strForVariable);
+
+                    if (getToken(0).getType() != TokenType.ASSIGN_EQUAL) {
+                        throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString() + " in Line [" + getToken(0).getLine() + "]");
+                    } else {
+                        _iPosition = _iPosition + 1;
+                        oStartValueExpression = new RealValue(Double.parseDouble(consumeToken(TokenType.NUMBER).getText()));
+                        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oStartValueExpression.content());
+                    }
+
+                    if (getToken(0).getType() != TokenType.TO) {
+                        throw new SyntaxErrorException("Missing TO Operator: " + getToken(0).getType().toString() +
+                                " in Line [" + getToken(0).getLine() + "]");
+                    } else {
+                        _iPosition = _iPosition + 1;
+                        oEndValueExpression = new RealValue(Double.parseDouble(consumeToken(TokenType.NUMBER).getText()));
+                        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oEndValueExpression.content());
+                    }
+
+                    if (getToken(0).getType() != TokenType.STEP) {
+                        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [" + getToken(0).getType().toString() + " ] StepSize set to 1");
+                        oStepSize = new RealValue(1); // default step size
+                    } else {
+                        _iPosition = _iPosition + 1;
+                         oStepSize = new RealValue(Double.parseDouble(consumeToken(TokenType.NUMBER).getText()));
+
+                        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oStepSize.content());
+                    }
+
+                    Token oNextToken = findToken(TokenType.NEXT);
+                    _oLogger.debug("-parse-> followed Token: <" + oNextToken.getLine() + "> [NEXT]");
+
+                    // add FOR statement to statement list
+                    ForStatement oForStatement = new ForStatement(iForPosition, strForVariable, oStartValueExpression,
+                            oEndValueExpression, oStepSize, oNextToken.getLine());
+
+                    try {
+                        _oLogger.debug("-parse-> build statement: " + oForStatement.content());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    aoStatements.add(oForStatement);
+                    break;
+
                 // GOTO Token: Read the line from terminal for processing
                 case GOTO:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOTO] ");
@@ -123,6 +182,14 @@ public class BasicParser implements Parser {
                 // LINE Token: Describe an empty line, ignore
                 case LINE:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [LINE] ");
+                    _iPosition++;
+                    break;
+
+                // NEXT Token: Start of the FOR-NEXT loop
+                case NEXT:
+                    oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NEXT] ");
+                    aoStatements.add(new NextStatement(_iPosition));
                     _iPosition++;
                     break;
 
@@ -315,6 +382,7 @@ public class BasicParser implements Parser {
      * @param  strName  Expected name of the next word token.
      * @return          True if the token was consumed.
      */
+    @Deprecated
     public final boolean matchNextToken(final String strName) {
 
         if (getToken(0).getType() != TokenType.WORD) {

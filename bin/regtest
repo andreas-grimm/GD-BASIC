@@ -3,10 +3,14 @@ tput clear
 echo "--- Basic Regresssion Test---"
 VERSION=0.0.5
 
+tput clear
+echo "Test run: src/test/resources/test_basic_jasic_1_recoded.bas"
+java -jar target/BASIC-$VERSION-SNAPSHOT-jar-with-dependencies.jar -i src/test/resources/test_basic_jasic_1_recoded.bas
+read -p "Press any [enter] to resume ..."
+
 echo "Test run: src/test/resources/test_basic1_Q1_dev.bas"
 java -jar target/BASIC-$VERSION-SNAPSHOT-jar-with-dependencies.jar -i src/test/resources/test_basic_Q1_dev.bas
 read -p "Press any [enter] to resume ..."
 
-tput clear
-echo "Test run: src/test/resources/test_basic_jasic_1_recoded.bas"
-java -jar target/BASIC-$VERSION-SNAPSHOT-jar-with-dependencies.jar -i src/test/resources/test_basic_jasic_1_recoded.bas
+echo "Test run: src/test/resources/test_basic1_Q2_dev.bas"
+java -jar target/BASIC-$VERSION-SNAPSHOT-jar-with-dependencies.jar -i src/test/resources/test_basic_Q2_dev.bas

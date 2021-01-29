@@ -106,7 +106,6 @@ public class JasicParser implements Parser {
                                     if (matchNextToken("end")) {
                                         aoStatements.add(new EndStatement());
                                     } else {
-                                    // TODO if token is not EOF - mark a syntax error
                                         break; // Unexpected token (likely EOF), so end.
                                     }
         }
@@ -293,11 +292,11 @@ public class JasicParser implements Parser {
      * @param  strName  Expected name of the next word token.
      * @return          The consumed token.
      */
-    public final Token consumeToken(final String strName) {
+    public final Token consumeToken(final String strName) throws SyntaxErrorException {
 
         if (!matchNextToken(strName)) {
             // TODO convert to syntax error
-            throw new Error("Expected " + strName + ".");
+            throw new SyntaxErrorException("Expected " + strName + ".");
         }
         return (lastToken(1));
     }

@@ -77,7 +77,7 @@ and release dates. The _Jira_ project can be found here:
 
 ## General Structure of the Interpreter
 
-![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/Process%20Flow.jpg?raw=true)
+![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/master/doc/Process%20Flow.jpg?raw=true)
 
 ### Tokenizer
 The Tokenizer or Lexer of the interpreter translates the read source code into a list of recognized tokens.
@@ -97,24 +97,59 @@ Each token object holds three attributes:
 * __Text__: the program code identified by the token
 * __Line__: the line number of the program code in the original program. This is used i.e. for interpreter error messages.
 
-
-### Parser
-The parser translates the program, representated as a list of token, to a list of statement objects. These statement objects
-contain all logic of the different commands, so the runtime part of the interpreter does barely contain any logic.
-
-### Runtime
-
-## How to add new BASIC Commands to the Interpreter
-New commands, unlike new structures, do not require a change in the Tokenizer. The main part to add new commands
-is in the [BasicParser](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#BasicParser-Class)
-class. In this class, the method __parse__ contains the logic to convert the identified token into the sequence of commands 
-that will be executed in the interpreter.
-
 ### Adding new token to the Tokenizer
 
 - Step 1: Add the new reserved word into the list of reserved words (`eu.gricom.interpreter.basic.tokenizer.ReservedWords.java`)
   and the token file (`eu.gricom.interpeter.basic.tokenizer.TokenType.java`).
 - Step 2: Verify that the BASIC tokenizer (`eu.gricom.interpreter.basic.BasicLexer.java`) can process the added new tokens and reserved word.
+
+### Parser
+The parser translates the program, representated as a list of token, to a list of statement objects. These statement objects
+contain all logic of the different commands, so the runtime part of the interpreter does barely contain any logic.
+
+#### Adding New Basic Commands
+New commands, unlike new structures, do not require a change in the Tokenizer. The main part to add new commands
+is in the [BasicParser](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#BasicParser-Class)
+class. In this class, the method __parse__ contains the logic to convert the identified token into the sequence of commands
+that will be executed in the interpreter.
+
+Before Adding new Basic Commands to the Parser, it is important to prepare and verify that
+1. Both, Keyword and Token Type are generated. The TokenType is in the `TokenType`-file in the `tokenizer` package. The mapping between the keyword and the token type is defined
+   in the `ReservedWords` file in the same package. Note: The sequence of token and keyword defines the relationship. Ensure that the sequence of the two lists in the `ReservedWords`
+   file is always maintained.
+2. Generate the statement (alternative expression where appropriate) in the `statements` package. Every statement is an implementation of the `Statement` interface class and inherits
+   a number of methods that are required for the execution:
+   * `int getLineNumber()`
+   * `void execute() throws Exception`, and
+   * `String content() throws Exception` - this function is mainly need if the program is run in `debug` mode.
+3. Generate the JUnit test cases for the statement classes.
+
+When adding the command into the parser, add the token in the `case` statement of the `parse()` method in the `BasicParser` class in the `parser` package.
+Every `case` block starts with:
+
+    case <Token>:
+      _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [Token] ");
+      iOrgPosition = _iPosition++;
+      oLineNumber.putLineNumber(getToken(0).getLine(), iOrgPosition);
+
+This code is required to map the Basic source code line number with the number of the token and ultimately with the number of the statement in the program execution flow.
+
+4. Generate the parser code to retrieve the parameter for the statement class constructor
+5. Add the instantiation of the statement object into the statement list (aka executable program):
+
+   `aoStatements.add(new GotoStatement(iOrgPosition, strLineNumber));`
+
+Some rules about the implementations of the Statement classes:
+* The statement class does not implement any persistent information, e.g. uses any static variables inside the class. If the statement needs to keep information, the information
+should be managed by the `VariableManagement` class or the `Stack` class in the `memoryManager` package.
+
+### Runtime
+
+Internally the parsed program is stored in a number of data structures:
+- The `parse` method of the Jasic and the Basic parser returns a list of objects (instantiated statement classes) in a processing sequence. This list is defined as `List<Statement> aoStatements`.
+- For Jasic programs: The execute function of the program utilizes the `LabelStatement` class to have a reference for jumps and conditions.
+- For Basic programs: The execute function of the program utilizes the `LineNumberStatement` class to have a reference between the basic line numbers, token number, and statement number.
+
 
 ## Main Classes
 
@@ -123,6 +158,41 @@ that will be executed in the interpreter.
 #### JasicParser
 
 #### BasicParser
+
+Available methods in the BasicParser class to navigate the tokenized list and to find the information needed for the population of the statement class constructors are:
+
+###### findToken
+This method is used to scan the list of tokens provided by the lexer to identify the existence and location of a particular token. This function will report the first token 
+fitting a certain token type. If the token is found, the method returns the found token - but does not change the position of the parse process in the list of tokens.
+If the token is not found, the method will throw a `SyntaxErrorException` and terminate the parsing step.
+This is the definition of the method:
+
+    public final Token findToken(final TokenType oType) throws SyntaxErrorException
+
+
+###### getToken
+The `getToken`-Method does return the token found at a location defined by an offset. The offset is calculated by a number of tokens from the current token.
+
+    public final Token getToken(final int iOffset)
+
+###### consumeToken
+
+    public final Token consumeToken(final TokenType oType) throws SyntaxErrorException
+
+##### Expression processing
+
+    private Expression expression() throws SyntaxErrorException
+    public final Expression operator() throws SyntaxErrorException
+    public final Expression atomic() throws SyntaxErrorException
+
+##### Depreciated methods
+
+###### matchNextToken
+The method is used in the Jasic parser, but is not needed in the Basic parser at this time. As a general the Basic parser will not use the
+name in the token, but the token type. In this release, the method is not used and marked as depreciated.
+
+    public final boolean matchNextToken(final String strName)
+
 
 ### Tokenizer Package
 
@@ -183,6 +253,13 @@ and does not need to be modified in case additional types (like
 ###### `EXIT-DO` Statement
 
 ###### `LOOP-UNTIL` Statement
+
+##### `FOR` Statement
+A `For` statement counts an integer or real value from a start value to an end value - and with every increase it
+loops through the block from the `For` statement to the next `Next` statement. When the target value is reached, the
+program flow will jump to the statement past the next statement.
+
+###### `NEXT` Statement
 
 ##### `GOTO` Statement
 The `GOTO` Statement - or non-conditional jump - moves the execution of the running Basic program

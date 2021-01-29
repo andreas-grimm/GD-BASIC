@@ -17,14 +17,14 @@ Every BASIC program consists of different elements:
 ### JASIC
 Based on the original implementation of the JASIC interpreter, this implementation is regression tested against the JASIC 
 programs. Nevertheless, the interpreter will provide a superset of the programming language. Different to all other BASIC
-diaplects implemented, JASIC does not require line numbers, but uses labels to address jump destinations.
+dialects implemented, JASIC does not require line numbers, but uses labels to address jump destinations.
 
 ### Dartmouth Basic
-This Basic interpreter is targeted to implement the defintion of the BASIC programming language as defined by Thomas Kurtz 
-from [Dartmouth Colleage](https://en.wikipedia.org/wiki/Dartmouth_BASIC).
+This Basic interpreter is targeted to implement the definition of the BASIC programming language as defined by Thomas Kurtz 
+from [Dartmouth College](https://en.wikipedia.org/wiki/Dartmouth_BASIC).
 
 The following [Link](https://www.dartmouth.edu/basicfifty/commands.html) links to the definition of the language. At this 
-moment, the interpreter supports both versions - Jasic, and the Dartmouth Basic format. 
+moment, the interpreter supports both versions - JASIC, and the Dartmouth Basic format. 
 The language support is mightier for the Dartmouth version, no additional language enhancement have been made for the Jasic version.
 Jasic, as a less formatted later version of the programming language, will remain to be supported 
 (why throwing working functions out?). A copy of the Dartmouth Basic programming manual is added to the documentation.
@@ -35,7 +35,7 @@ To ensure that this interpreter is compatible with the ECMA standard, the progra
 added in the test area. A copy of the ECMA Basic standard document has been added to the documentation.
 
 ### Decimal BASIC
-Decimal Basic seems to be an active Japanese BASIC implementation initative that is working also from the 
+Decimal Basic seems to be an active Japanese BASIC implementation initiative that is working also from the 
 Dartmouth and ECMA standard. The project webpage can be found here: [Decimal Basic](http://hp.vector.co.jp/authors/VA008683/english/)
 This link leads to an implementation of a Basic to Pascal translator, written by Shiraishi Kazuo:
 [Basic to Pascal](http://hp.vector.co.jp/authors/VA008683/english/BASICAcc.htm).
@@ -85,7 +85,7 @@ __Example of a JASIC Program__
           goto top
     ende:
 
-#### Structure of BASIC Porgrams
+#### Structure of BASIC Programs
 
 __Example of a BASIC Program__
 
@@ -463,17 +463,17 @@ The following expressions are supported:
   As of this version, the addition of two variables is supported for all
   data types. If the left-hand expression is a number, integer, or boolean 
   then adds the two expressions; otherwise concatenates the two strings.
-  In this case the second value can be of any type, the vairable will be
+  In this case the second value can be of any type, the variable will be
   converted to a string.
 
 * \<expression\> `-` \<expression\>:
-  The substraction is supported for numbers and integers.
+  The subtraction is supported for numbers and integers.
 
 * \<expression\> `*` \<expression\>:
   Multiplication is supported for numbers, integers, and booleans.
 
 * \<expression\> `/` \<expression\>:
-  Division is supported for numbers and intwgers
+  Division is supported for numbers and integers
 
 * \<expression\> `<` \<expression\>
 
@@ -490,7 +490,7 @@ The following expressions are supported:
 All binary (atomic) operators have the same precedence.
 
 
-## Alternative Projects and Informtion
+## Alternative Projects and Information
 
 * [Wikipedia Article on Basic](https://en.wikipedia.org/wiki/BASIC)
 * [TinyBasic](https://en.wikipedia.org/wiki/Tiny_BASIC) with the related implementation for [Java](http://www.thisiscool.com/tinybasic.htm)

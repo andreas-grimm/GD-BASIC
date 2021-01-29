@@ -16,7 +16,7 @@ import java.util.Map;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class LineNumberStatement {
-//    private final Logger _oLogger = new Logger(this.getClass().getName());
+    private final Logger _oLogger = new Logger(this.getClass().getName());
     private static Map<Integer, Integer> _aoLineNumbers = new HashMap<>();
     private static Map<Integer, Integer> _aoStatementNumbers = new HashMap<>();
 
@@ -38,8 +38,8 @@ public class LineNumberStatement {
      * @param iStatementNumber - statement number
      */
     public final void putStatementNumber(final int iTokenNumber, final int iStatementNumber) {
-//        _oLogger.debug("-putStatementNumber-> iTokenNumber [" + iTokenNumber + "] iStatementNumber [" +
-//        iStatementNumber + "]");
+        _oLogger.debug("-putStatementNumber-> iTokenNumber [" + iTokenNumber + "] iStatementNumber [" +
+        iStatementNumber + "]");
         _aoStatementNumbers.put(iTokenNumber, iStatementNumber);
     }
 
@@ -50,10 +50,10 @@ public class LineNumberStatement {
      * @return - statement number
      */
     public final int getLineNumber(final int iStatementNumber) {
-//        _oLogger.debug("-getTokenNumber-> Statement No. [" + iStatementNumber + "]");
+        _oLogger.debug("-getTokenNumber-> Statement No. [" + iStatementNumber + "]");
         for (Map.Entry<Integer, Integer> oLine : _aoLineNumbers.entrySet()) {
             if (oLine.getValue().equals(iStatementNumber)) {
-//                _oLogger.debug("-getTokenNumber-> found [" + oLine.getKey() + "]");
+                _oLogger.debug("-getTokenNumber-> found [" + oLine.getKey() + "]");
                 return (oLine.getKey());
             }
         }
@@ -72,10 +72,27 @@ public class LineNumberStatement {
             int iTokenNumber = _aoLineNumbers.get(iLineNumber);
 
             if (_aoStatementNumbers.containsKey(iTokenNumber)) {
-//                _oLogger.debug("-getStatement-> Source Code Line No. [" + iLineNumber + "] jumps to [" +
-//                _aoStatementNumbers.get(iTokenNumber) + "]");
+                _oLogger.debug("-getStatement-> Source Code Line No. [" + iLineNumber + "] refers to [" +
+                _aoStatementNumbers.get(iTokenNumber) + "]");
                 return (_aoStatementNumbers.get(iTokenNumber));
             }
+        }
+
+        return (0);
+    }
+
+    /**
+     * get the statement number of the token number searched.
+     *
+     * @param iTokenNumber - line number
+     * @return - statement number
+     */
+    public final int getStatementForToken(final int iTokenNumber) {
+
+        if (_aoStatementNumbers.containsKey(iTokenNumber)) {
+            _oLogger.debug("-getStatement-> Token No. [" + iTokenNumber + "] refers to [" +
+                    _aoStatementNumbers.get(iTokenNumber) + "]");
+            return (_aoStatementNumbers.get(iTokenNumber));
         }
 
         return (0);

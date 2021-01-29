@@ -18,7 +18,7 @@ public final class AssignStatement implements Statement {
     private final String _strName;
     private final Expression _oValue;
     private final int _iLineNumber;
-    private VariableManagement _oVariableManagement = new VariableManagement();
+    private final VariableManagement _oVariableManagement = new VariableManagement();
 
     /**
      * Default constructor.

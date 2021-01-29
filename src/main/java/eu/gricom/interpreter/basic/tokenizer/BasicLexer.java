@@ -104,8 +104,17 @@ public class BasicLexer implements Tokenizer {
                         } else if (isString(strWord)) {
                             // now check whether the word is marked as the beginning of a String
                             strWord = strWord.substring(1); // remove the "
-                            oToken = new Token(strWord, TokenType.STRING, iLineNumber);
-                            bIsStringRunning = true;
+
+                            // this section handles single word strings
+                            if (strWord.endsWith("\"")) {
+                                strWord = strWord.substring(0, strWord.length() - 1);
+                                bIsStringRunning = false;
+                                oToken = new Token(strWord, TokenType.STRING, iLineNumber);
+                                aoTokens.add(oToken);
+                            } else {
+                                oToken = new Token(strWord, TokenType.STRING, iLineNumber);
+                                bIsStringRunning = true;
+                            }
 
                         } else if (isBoolean(strWord)) {
                             // now check whether it is a boolean
@@ -150,7 +159,7 @@ public class BasicLexer implements Tokenizer {
     }
 
     private boolean isNumber(String strWord) {
-        Pattern oPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+        Pattern oPattern = Pattern.compile("-?\\d*(\\.\\d+)?");
 
         if (strWord == null) {
             return (false);

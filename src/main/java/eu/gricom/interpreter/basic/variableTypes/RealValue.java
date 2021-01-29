@@ -3,6 +3,9 @@ package eu.gricom.interpreter.basic.variableTypes;
 import eu.gricom.interpreter.basic.error.DivideByZeroException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * RealValue.java
  * <p>
@@ -201,6 +204,14 @@ public class RealValue implements Value {
         }
 
         throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+    }
+
+    public static double round(double dValue, int iPlaces) {
+        if (iPlaces < 0) throw new IllegalArgumentException();
+
+        BigDecimal oBigDecimal = BigDecimal.valueOf(dValue);
+        oBigDecimal = oBigDecimal.setScale(iPlaces, RoundingMode.HALF_UP);
+        return (oBigDecimal.doubleValue());
     }
 
     /**
