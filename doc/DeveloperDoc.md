@@ -188,17 +188,32 @@ All functions to retrieve navigational information and manipulate the structure 
 The class has implemented a number of methods that allow the navigation between the different representations of the BASIC program. The following list explains the methods:
 
 Input methods:
-- `public final void putLineNumber(final int iLineNumber, final int iTokenNumber)` - add a line number destination in the memory management.
-- `public final void putStatementNumber(final int iTokenNumber, final int iStatementNumber)` - add a line number destination in the memory management.
+- `public final void putLineNumber(final int iLineNumber, final int iTokenNumber)` - add a BASIC line number with a related token number into the object.
+- `public final void putStatementNumber(final int iTokenNumber, final int iStatementNumber)` - add a token number with the related statement number into the object.
 
 Output methods:
-- `public final int getLineNumberFromToken(final int iTokenNumber) throws RuntimeException` - get the statement number of the line number searched.
-- `public final int getTokenFromStatement(final int iStatement) throws RuntimeException` - get the statement number of the line number searched.
-- `public final int getStatementFromLineNumber(final int iLineNumber) throws RuntimeException` - get the statement number of the line number searched.
-- `public final int getStatementFromToken(final int iTokenNumber) throws RuntimeException` - get the statement number of the token number searched.
+- `public final int getLineNumberFromToken(final int iTokenNumber) throws RuntimeException` - get the line number related to a token number.
+- `public final int getTokenFromStatement(final int iStatement) throws RuntimeException` - get the token number related to a statement number.
+- `public final int getStatementFromLineNumber(final int iLineNumber) throws RuntimeException` - get the statement number related to a line number.
+- `public final int getStatementFromToken(final int iTokenNumber) throws RuntimeException` - get the statement number related to a token number.
 
 Utility methods:
-- `public final int getNextLineNumber(final int iLineNumber)` - get the statement number of the line number searched.
+- `public final int getNextLineNumber(final int iLineNumber)` - get the next line number following the line number found.
+
+##### Example
+1. Set the program pointer to the next BASIC program line following the BASIC line number defined in `iTargetNumber`:
+
+
+    import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
+    ...
+
+    private final LineNumberStatement oLineNumberObject = new LineNumberStatement();
+    ...
+
+    _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
+            oLineNumberObject.getNextLineNumber(
+                    oLineNumberObject.getLineNumberFromToken(
+                            oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
 
 
 ## Main Classes
