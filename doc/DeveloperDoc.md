@@ -204,16 +204,16 @@ Utility methods:
 1. Set the program pointer to the next BASIC program line following the BASIC line number defined in `iTargetNumber`:
 
 
-    import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
-    ...
+    `import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;`
+    `...`
 
-    private final LineNumberStatement oLineNumberObject = new LineNumberStatement();
-    ...
+    `private final LineNumberStatement oLineNumberObject = new LineNumberStatement();`
+    `...`
 
-    _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
+    `_oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
             oLineNumberObject.getNextLineNumber(
                     oLineNumberObject.getLineNumberFromToken(
-                            oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
+                            oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));`
 
 
 ## Main Classes
