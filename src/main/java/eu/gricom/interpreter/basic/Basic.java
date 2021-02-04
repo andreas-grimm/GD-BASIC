@@ -123,7 +123,8 @@ public class Basic {
                 while (oProgramPointer.getCurrentStatement() < aoStatements.size()) {
                     // as long as we have not reached the end of the code
                     int iThisStatement = oProgramPointer.getCurrentStatement();
-                    int iSourceCodeLineNumber = _oLineNumbers.getLineNumber(aoStatements.get(iThisStatement).getLineNumber());
+                    int iSourceCodeLineNumber =
+                            _oLineNumbers.getLineNumberFromToken(aoStatements.get(iThisStatement).getLineNumber());
                     oProgramPointer.calcNextStatement();
 
                     if (_strBasicVersion.contains("jasic")) {

@@ -6,6 +6,20 @@ the original functionality.
 # GDBasic language syntax
 ---------------------
 
+## Introduction
+
+This text starts with a correction. The GDBasic interpreter is not an interpreter in the pure sense of the definition of an interpreter as it does not react on
+entered words as they are entered and changes its state. It actually works more live a `JAVA` compiler, as it performs a lexical analysis of the program, then parses
+the result, and finally generates executable code that is run by a runtime module. In this version all three components are in one project / `JAVA` executable, but as a plan
+the runtime components might end up in a separate component.
+
+GDBasic is also not a compiler as it does not generate machine code, but `JAVA` objects that are executed in sequence. At this time of the work that saves the translation into
+platform dependent code and keeps the platform migrate-able - it shall run on Windows, Linux, and Mac OSX. The change to low level machine code might happen at a later stage.
+It is nit planned, as the performance of a standard laptop or even Raspberry Pi is sufficient to outperform any classical BASIC computer.
+
+The focus at this time of the work is to provide a function complete, extended `JAVA` based interpreter that can work standalone or can be embedded in `JAVA` programs, following
+the example of `JRUBY` for Ruby or `JYTHON` for Python.Hi,
+
 ## Standards and supported Basic Implementations
 
 ### General Rules Concerning the Different Dialects
@@ -216,7 +230,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `EXP` | reserved | |
 | `FOR` | planned | |
 | `FRE` | reserved | |
-| `GOSUB` | planned | |
+| `GOSUB` | implemented | |
 | `GOTO` | implemented | implemented |
 | `IF` | implemented | implemented |
 | `INSTR` | reserved | |
@@ -237,7 +251,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `READ` | reserved | |
 | `REM` | implemented | |
 | `REMINDER` | reserved | |
-| `RETURN` | planned | |
+| `RETURN` | implemented | |
 | `RIGHT$` | reserved | |
 | `RND` | reserved | |
 | `SGN` | reserved | |
@@ -337,14 +351,28 @@ operation only the assignment operator can be used. The comparison user is gener
 ###### EXIT-DO Command
 
 ##### FOR Command
+The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command), 
+using increments defined by the `STEP` command.
+Between the increment number after the step and the `NEXT` command, which triggers the next iteration, the developer can include one or multiple commands.
+The syntax looks as follows:
 
-`FOR <assignment> TO <number> STEP <number> <statement> NEXT`
+`FOR <variable> = <number> TO <number> STEP <number> <statement> NEXT`
 
 ###### BASIC Syntax
 
-    10 FOR X# = -2 TO 2 STEP .1
-    20   PRINT X#
-    30 NEXT
+Example for a FOR loop counting upwards from -2 to 2 in increments of 0.2 and printing the value of the variable:
+
+    50 FOR X# = -2 TO 2 STEP .2
+    60 PRINT X#
+    70 NEXT
+    80 REM Test2
+
+Example for a FOR loop counting downwards from 2 to -2 in decrements of -0.2 and printing the value of the variable:
+
+    140 PRINT "Downwards..."
+    150 FOR Y# = 2 TO -2 STEP -.2
+    160 PRINT Y#
+    170 NEXT
 
 ##### INPUT Command
 `INPUT <variable>`
@@ -374,8 +402,19 @@ Evaluates the expression and prints the result.
     END-WHILE
 
 ###### CONTINUE-WHILE Command
+The `CONTINUE-WHILE` command stops the execution of the loop block and jumps back to the `WHILE` statement:
+
+    WHILE X# > 0 
+      PRINT X#
+      X# = X# -1
+      CONTINUE-WHILE
+      PRINT "This line will not be printed."
+    END-WHILE
+
 
 ###### EXIT-WHILE Command
+The `EXIT-WHILE` command terminates the `WHILE` loop immediatedly and continues with the first command after the `END-WHILE`
+statement.
 
 ### Process Control
 

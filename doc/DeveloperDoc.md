@@ -150,6 +150,56 @@ Internally the parsed program is stored in a number of data structures:
 - For Jasic programs: The execute function of the program utilizes the `LabelStatement` class to have a reference for jumps and conditions.
 - For Basic programs: The execute function of the program utilizes the `LineNumberStatement` class to have a reference between the basic line numbers, token number, and statement number.
 
+## Basic Concepts
+
+### Memory Management
+
+### Program Control
+
+#### Relationship between Program Lines, Token, and Object Statements
+
+
+![Line Number Relationship](https://github.com/andreas-grimm/Interpreters/blob/master/doc/LineNumberRelationship.jpg?raw=true)
+
+##### Definitions
+For the navigation between program lines in the BASIC program and the executables, the BASIC interpreter provides a central reference mechanism.
+This part of the documentation describes the function of this part of the implementation.
+
+###### Program Lines
+The project lines in this context are the program line numbers of the Dartmouth style BASIC program.
+
+###### Token Numbers
+Every token identified by the lexer is in a strict sequential list. The position of the list is part of the attributes of the token object.
+
+###### Object Statement Numbers
+The instantiated objects for the program execution are in a strict sequential list. As the position is not known at the time of the creation,
+the number is at this version not an attribute of the object. This will change in the next main release, the object will also provide a method
+to retrieve the information.
+
+###### Implementation of the Relationship
+The relationship is implemented by using two in-memory key-value stores. These key-value stores are hidden in the mentioned class below. It is possible to navigate between
+the key-value stores (or program lists). None of the information is accessible from outside the class and all information is stored in the class. In a later version, as the programs can
+be stored in a tokenized and parsed format (called object format) all information in the key-value stores and the program coded processable data will be part of the object file.
+
+##### The Class `LineNumberStatement`
+All functions to retrieve navigational information and manipulate the structure of the program in the different incarnations are located in the class
+`LineNumberStatement` in the package `eu.gricom.interpreter.basic.statements`.
+
+The class has implemented a number of methods that allow the navigation between the different representations of the BASIC program. The following list explains the methods:
+
+Input methods:
+- `public final void putLineNumber(final int iLineNumber, final int iTokenNumber)` - add a line number destination in the memory management.
+- `public final void putStatementNumber(final int iTokenNumber, final int iStatementNumber)` - add a line number destination in the memory management.
+
+Output methods:
+- `public final int getLineNumberFromToken(final int iTokenNumber) throws RuntimeException` - get the statement number of the line number searched.
+- `public final int getTokenFromStatement(final int iStatement) throws RuntimeException` - get the statement number of the line number searched.
+- `public final int getStatementFromLineNumber(final int iLineNumber) throws RuntimeException` - get the statement number of the line number searched.
+- `public final int getStatementFromToken(final int iTokenNumber) throws RuntimeException` - get the statement number of the token number searched.
+
+Utility methods:
+- `public final int getNextLineNumber(final int iLineNumber)` - get the statement number of the line number searched.
+
 
 ## Main Classes
 

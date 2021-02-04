@@ -6,24 +6,24 @@ import eu.gricom.interpreter.basic.memoryManager.Stack;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 
 /**
- * NextStatement.java
+ * ReturnStatement.java
  *
  * Description:
  *
- * A For statement counts an integer or real value from a start value to an end value - and with every increase it
- * loops thru the block from the For statement to the next Next statement. When the target value is reached, the
- * program flow will jump to the statement past the next statement.
+ * The Return command retrieves the caller address from the stack and calculates the next statement as return address.
+ * It then changes the program pointer to that address.
  *
  * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
  *
  * Created in 2021
  */
-public class NextStatement implements Statement {
+public class ReturnStatement implements Statement {
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
+    private final LineNumberStatement oLineNumberObject = new LineNumberStatement();
 
     int  _iLineNumber;
 
-    public NextStatement (final int iLineNumber) {
+    public ReturnStatement(final int iLineNumber) {
         _iLineNumber = iLineNumber;
     }
 
@@ -41,13 +41,16 @@ public class NextStatement implements Statement {
         if (iTargetLineNumber == 0) {
             throw (new SyntaxErrorException("Undefined Jump Target"));
         } else {
-            _oProgramPointer.setCurrentStatement(iTargetLineNumber);
+            _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
+                    oLineNumberObject.getNextLineNumber(
+                            oLineNumberObject.getLineNumberFromToken(
+                                    oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
         }
 
     }
 
     @Override
     public String content() {
-        return ("NEXT");
+        return ("RETURN");
     }
 }

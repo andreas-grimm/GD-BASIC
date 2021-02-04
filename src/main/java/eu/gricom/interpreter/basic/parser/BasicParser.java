@@ -6,6 +6,7 @@ import eu.gricom.interpreter.basic.statements.AssignStatement;
 import eu.gricom.interpreter.basic.statements.EndStatement;
 import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.statements.ForStatement;
+import eu.gricom.interpreter.basic.statements.GosubStatement;
 import eu.gricom.interpreter.basic.statements.GotoStatement;
 import eu.gricom.interpreter.basic.statements.IfThenStatement;
 import eu.gricom.interpreter.basic.statements.InputStatement;
@@ -14,6 +15,7 @@ import eu.gricom.interpreter.basic.statements.LineNumberStatement;
 import eu.gricom.interpreter.basic.statements.NextStatement;
 import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.PrintStatement;
+import eu.gricom.interpreter.basic.statements.ReturnStatement;
 import eu.gricom.interpreter.basic.statements.Statement;
 import eu.gricom.interpreter.basic.statements.VariableExpression;
 import eu.gricom.interpreter.basic.tokenizer.Token;
@@ -58,6 +60,7 @@ public class BasicParser implements Parser {
         List<Statement> aoStatements = new ArrayList<>();
 
         int iOrgPosition;
+        String strTargetLineNumber = null;
 
         _oLogger.debug("Start parsing...");
         boolean _bContinue = true;
@@ -147,10 +150,21 @@ public class BasicParser implements Parser {
                     iOrgPosition = _iPosition;
                     oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     _iPosition++;
-                    String strLineNumber = consumeToken(TokenType.NUMBER).getText();
-                    aoStatements.add(new GotoStatement(iOrgPosition, strLineNumber));
+                    strTargetLineNumber = consumeToken(TokenType.NUMBER).getText();
+                    aoStatements.add(new GotoStatement(iOrgPosition, strTargetLineNumber));
                     break;
 
+                // GOSUB Token: Read the line from terminal for processing
+                case GOSUB:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOSUB] ");
+                    iOrgPosition = _iPosition;
+                    oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    _iPosition++;
+                    strTargetLineNumber = consumeToken(TokenType.NUMBER).getText();
+                    aoStatements.add(new GosubStatement(iOrgPosition, strTargetLineNumber));
+                    break;
+
+                // IF Token: Conditional processing
                 case IF:
                     iOrgPosition = _iPosition;
                     oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
@@ -182,6 +196,14 @@ public class BasicParser implements Parser {
                 // LINE Token: Describe an empty line, ignore
                 case LINE:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [LINE] ");
+                    _iPosition++;
+                    break;
+
+                // RETURN Token: Jump to the GoSub statement
+                case RETURN:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [RETURN], to be translated ");
+                    oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    aoStatements.add(new ReturnStatement(_iPosition));
                     _iPosition++;
                     break;
 

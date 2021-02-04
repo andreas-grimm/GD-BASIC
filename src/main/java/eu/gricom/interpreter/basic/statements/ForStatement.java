@@ -63,8 +63,6 @@ public final class ForStatement implements Statement {
 
     @Override
     public int getLineNumber() {
-        final LineNumberStatement oLineNumberObject = new LineNumberStatement();
-
         return _iTokenNo;
     }
 
@@ -81,24 +79,26 @@ public final class ForStatement implements Statement {
 
             if (((dCounter + dStepSize <= dEndValue) && (!_bCountingDown)) ||
                 ((dCounter + dStepSize >= dEndValue) && (_bCountingDown))) {
+
                 // if the sum of the current value + step size remains lower than the end value, continue
                 _oVariableManagement.putMap(_strName, new RealValue(RealValue.round(dCounter + dStepSize, 2)));
                 oLogger.debug("_iTokenNo: " + _iTokenNo);
-                oLogger.debug("_iStatementNo: " + oLineNumberObject.getStatementForToken(_iTokenNo));
-                _oStack.push(new IntegerValue(oLineNumberObject.getStatementForToken(_iTokenNo)));
+                oLogger.debug("_iStatementNo: " + oLineNumberObject.getStatementFromToken(_iTokenNo));
+                _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNo)));
 
                 return;
             } else  {
                 // calculate the final sum of the current value and leave the loop
-                _oVariableManagement.putMap(_strName, new RealValue(dCounter + dStepSize));
-                _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatement(oLineNumberObject.getNextStatement(_iPostLoopStatement)));
+                _oProgramPointer.setCurrentStatement(
+                        oLineNumberObject.getStatementFromLineNumber(
+                                oLineNumberObject.getNextLineNumber(_iPostLoopStatement)));
                 return;
             }
         } else {
             // define the variable and set the initial value. If the value already exists - overwrite.
-            _oStack.push(new IntegerValue(oLineNumberObject.getStatementForToken(_iTokenNo)));
+            _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNo)));
             oLogger.debug("_iTokenNo: " + _iTokenNo);
-            oLogger.debug("_iStatementNo: " + oLineNumberObject.getStatementForToken(_iTokenNo));
+            oLogger.debug("_iStatementNo: " + oLineNumberObject.getStatementFromToken(_iTokenNo));
             _oVariableManagement.putMap(_strName, _oStartValue.evaluate());
             _bForStarted = true;
         }

@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
@@ -68,7 +69,7 @@ public final class GotoStatement implements Statement {
 
         // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
         try {
-            int iTokenNo = _oLineNumberObject.getStatement(Integer.parseInt(_strTarget));
+            int iTokenNo = _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget));
 
             if (iTokenNo != 0) {
                 _oProgramPointer.setCurrentStatement(iTokenNo);
@@ -77,6 +78,8 @@ public final class GotoStatement implements Statement {
 
             throw (new SyntaxErrorException("GOTO [unknown]: Target: " + _strTarget));
         } catch (NumberFormatException eNumberException) {
+            throw (new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strTarget));
+        } catch (RuntimeException e) {
             throw (new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strTarget));
         }
     }
@@ -87,11 +90,11 @@ public final class GotoStatement implements Statement {
      * @return - readable string with the name and the value of the assignment
      */
     @Override
-    public String content() {
+    public String content() throws RuntimeException {
         if (_oLabelStatement.containsLabelKey(_strTarget)) {
             return ("GOTO [" + _strTarget + "]: Destination: " + _oLabelStatement.getLabelStatement(_strTarget));
         }
 
-        return ("GOTO [" + _strTarget + "]: Destination: " + _oLineNumberObject.getStatement(Integer.parseInt(_strTarget)));
+        return ("GOTO [" + _strTarget + "]: Destination: " + _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget)));
     }
 }

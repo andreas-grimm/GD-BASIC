@@ -44,7 +44,7 @@ public class GoToStatementTest {
 
             int iNewLabel = oProgramPointer.getCurrentStatement();
 
-            assertEquals(iNewLabel, 6);
+            assertEquals(6, iNewLabel);
 
         } catch (Exception eException) {
             fail();

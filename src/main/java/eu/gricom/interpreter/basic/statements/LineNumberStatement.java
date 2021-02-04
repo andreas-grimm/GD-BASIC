@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.helper.Logger;
 
 import java.util.HashMap;
@@ -46,18 +47,39 @@ public class LineNumberStatement {
     /**
      * get the statement number of the line number searched.
      *
-     * @param iStatementNumber - line number
-     * @return - statement number
+     * @param iTokenNumber - line number
+     * @return - line number
+     * @throws RuntimeException
      */
-    public final int getLineNumber(final int iStatementNumber) {
-        _oLogger.debug("-getTokenNumber-> Statement No. [" + iStatementNumber + "]");
+    public final int getLineNumberFromToken(final int iTokenNumber) throws RuntimeException {
         for (Map.Entry<Integer, Integer> oLine : _aoLineNumbers.entrySet()) {
-            if (oLine.getValue().equals(iStatementNumber)) {
-                _oLogger.debug("-getTokenNumber-> found [" + oLine.getKey() + "]");
+            if (oLine.getValue().equals(iTokenNumber)) {
+                _oLogger.debug("-getLineNumberFromToken-> Token No. [" + iTokenNumber + "] ---> Line No. [" + oLine.getKey() +
+                        "]");
                 return (oLine.getKey());
             }
         }
-        return (0);
+
+        throw (new RuntimeException("getLineNumberFromToken: Token No. [" + iTokenNumber + "] not found"));
+    }
+
+    /**
+     * get the statement number of the line number searched.
+     *
+     * @param iStatement - line number
+     * @return - line number
+     * @throws RuntimeException
+     */
+    public final int getTokenFromStatement(final int iStatement) throws RuntimeException {
+        for (Map.Entry<Integer, Integer> oToken : _aoStatementNumbers.entrySet()) {
+            if (oToken.getValue().equals(iStatement)) {
+                _oLogger.debug("-getTokenFromStatement-> Statement No. [" + iStatement + "] ---> Token No. " +
+                        "[" + oToken.getKey() + "]");
+                return (oToken.getKey());
+            }
+        }
+
+        throw (new RuntimeException("getTokenFromStatement-> Statement No. [" + iStatement + "] not found"));
     }
 
     /**
@@ -66,19 +88,19 @@ public class LineNumberStatement {
      * @param iLineNumber - line number
      * @return - statement number
      */
-    public final int getStatement(final int iLineNumber) {
+    public final int getStatementFromLineNumber(final int iLineNumber) throws RuntimeException {
 
         if (_aoLineNumbers.containsKey(iLineNumber)) {
             int iTokenNumber = _aoLineNumbers.get(iLineNumber);
 
             if (_aoStatementNumbers.containsKey(iTokenNumber)) {
-                _oLogger.debug("-getStatement-> Source Code Line No. [" + iLineNumber + "] refers to [" +
+                _oLogger.debug("-getStatementFromLineNumber-> Line No. [" + iLineNumber + "] ---> Statement [" +
                 _aoStatementNumbers.get(iTokenNumber) + "]");
                 return (_aoStatementNumbers.get(iTokenNumber));
             }
         }
 
-        return (0);
+        throw (new RuntimeException("getStatementFromLineNumber: Line No. [" + iLineNumber + "] not found"));
     }
 
     /**
@@ -86,16 +108,16 @@ public class LineNumberStatement {
      *
      * @param iTokenNumber - line number
      * @return - statement number
+     * @throws RuntimeException
      */
-    public final int getStatementForToken(final int iTokenNumber) {
+    public final int getStatementFromToken(final int iTokenNumber) throws RuntimeException {
 
         if (_aoStatementNumbers.containsKey(iTokenNumber)) {
-            _oLogger.debug("-getStatement-> Token No. [" + iTokenNumber + "] refers to [" +
-                    _aoStatementNumbers.get(iTokenNumber) + "]");
+            _oLogger.debug("-getStatementFromToken-> Token No. [" + iTokenNumber + "] ---> Statement [" + _aoStatementNumbers.get(iTokenNumber) + "]");
             return (_aoStatementNumbers.get(iTokenNumber));
         }
 
-        return (0);
+        throw (new RuntimeException("getStatementFromToken-> Token No. [" + iTokenNumber + "] not found"));
     }
 
     /**
@@ -104,7 +126,7 @@ public class LineNumberStatement {
      * @param iLineNumber - line number
      * @return - statement number
      */
-    public final int getNextStatement(final int iLineNumber) {
+    public final int getNextLineNumber(final int iLineNumber) {
         int iNextHigherStatement = 0;
 
         for (Map.Entry<Integer, Integer> oLine : _aoLineNumbers.entrySet()) {
@@ -121,6 +143,8 @@ public class LineNumberStatement {
                 }
             }
         }
+        _oLogger.debug("-getNextLineNumber-> Line No. [" + iLineNumber + "] ---> next Line No. [" + iNextHigherStatement +
+                "]");
 
         return (iNextHigherStatement);
     }

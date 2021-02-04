@@ -9,4 +9,8 @@
 150 FOR Y# = 2 TO -2 STEP -.2
 160 PRINT Y#
 170 NEXT
-999 END
+180 GOSUB 910
+890 PRINT "Last line of the program"
+900 END
+910 PRINT "Subprogram - this line should be print before the end message"
+920 RETURN
