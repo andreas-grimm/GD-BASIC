@@ -11,7 +11,7 @@ import eu.gricom.interpreter.basic.statements.GotoStatement;
 import eu.gricom.interpreter.basic.statements.IfThenStatement;
 import eu.gricom.interpreter.basic.statements.InputStatement;
 import eu.gricom.interpreter.basic.statements.LabelStatement;
-import eu.gricom.interpreter.basic.statements.LineNumberStatement;
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.statements.NextStatement;
 import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.PrintStatement;
@@ -22,7 +22,6 @@ import eu.gricom.interpreter.basic.tokenizer.Token;
 import eu.gricom.interpreter.basic.tokenizer.TokenType;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
-import eu.gricom.interpreter.basic.variableTypes.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class BasicParser implements Parser {
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private final List<Token> _aoTokens;
     private int _iPosition;
-    private LineNumberStatement oLineNumber = new LineNumberStatement();
+    private LineNumberXRef oLineNumber = new LineNumberXRef();
 
     /**
      * Default constructor.
@@ -219,8 +218,11 @@ public class BasicParser implements Parser {
                 case PRINT:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [PRINT] ");
                     oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    int iPrintPosition = +_iPosition;
                     _iPosition++;
-                    aoStatements.add(new PrintStatement(_iPosition -1, expression()));
+                    List<Expression> aoExpression = new ArrayList<>();
+                    aoExpression.add(expression());
+                    aoStatements.add(new PrintStatement(iPrintPosition, aoExpression, true));
                     break;
 
                 // REM Token: contains comments to the program, ignore the rest of the line

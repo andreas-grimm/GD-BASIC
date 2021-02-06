@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.helper.Logger;
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.memoryManager.Stack;
 import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
@@ -69,7 +70,7 @@ public final class ForStatement implements Statement {
     @Override
     public void execute() throws Exception {
         final Logger oLogger = new Logger(this.getClass().getName());
-        final LineNumberStatement oLineNumberObject = new LineNumberStatement();
+        final LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
         if (_bForStarted) {
             // if the FOR loop is already started - ie. this is the second iteration then process here

@@ -3,6 +3,7 @@ package eu.gricom.interpreter.basic.statements;
 import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.memoryManager.Stack;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
@@ -25,7 +26,7 @@ public final class GosubStatement implements Statement {
     private final int _iTokenNumber;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final LabelStatement _oLabelStatement = new LabelStatement();
-    private final LineNumberStatement _oLineNumberObject = new LineNumberStatement();
+    private final LineNumberXRef _oLineNumberObject = new LineNumberXRef();
     private final Stack _oStack = new Stack();
 
     /**

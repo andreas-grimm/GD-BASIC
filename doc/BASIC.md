@@ -18,7 +18,7 @@ platform dependent code and keeps the platform migrate-able - it shall run on Wi
 It is nit planned, as the performance of a standard laptop or even Raspberry Pi is sufficient to outperform any classical BASIC computer.
 
 The focus at this time of the work is to provide a function complete, extended `JAVA` based interpreter that can work standalone or can be embedded in `JAVA` programs, following
-the example of `JRUBY` for Ruby or `JYTHON` for Python.Hi,
+the example of `JRUBY` for Ruby or `JYTHON` for Python.
 
 ## Standards and supported Basic Implementations
 

@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import org.junit.jupiter.api.Test;
@@ -63,7 +64,7 @@ public class IfThenStatementTest {
     @Test
     public void testEvaluateBasic() {
         ProgramPointer oProgramPointer = new ProgramPointer();
-        LineNumberStatement _oLineNumberObject = new LineNumberStatement();
+        LineNumberXRef _oLineNumberObject = new LineNumberXRef();
 
         _oLineNumberObject.putLineNumber(6, 1);
         _oLineNumberObject.putStatementNumber(1,6);
@@ -93,7 +94,7 @@ public class IfThenStatementTest {
     @Test
     public void testNegativeEvaluateBasic() {
         ProgramPointer oProgramPointer = new ProgramPointer();
-        LineNumberStatement _oLineNumberObject = new LineNumberStatement();
+        LineNumberXRef _oLineNumberObject = new LineNumberXRef();
 
         _oLineNumberObject.putLineNumber(5, 1);
         _oLineNumberObject.putStatementNumber(1,6);

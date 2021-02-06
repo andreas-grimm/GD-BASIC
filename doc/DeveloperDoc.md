@@ -204,16 +204,14 @@ Utility methods:
 1. Set the program pointer to the next BASIC program line following the BASIC line number defined in `iTargetNumber`:
 
 
-    `import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;`
-    `...`
-
-    `private final LineNumberStatement oLineNumberObject = new LineNumberStatement();`
-    `...`
-
-    `_oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
+    import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
+    ...
+    private final LineNumberStatement oLineNumberObject = new LineNumberStatement();
+    ...
+    _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
             oLineNumberObject.getNextLineNumber(
                     oLineNumberObject.getLineNumberFromToken(
-                            oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));`
+                            oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
 
 
 ## Main Classes
@@ -277,6 +275,28 @@ The content of the TokenType file is limited to the definition of the available 
 ## Package Structure
 
 ### The MemoryManager Package
+The memory manager functionality, located in the package `eu.gricom.interpreter.basic.memoryManager`, consists of three main
+classes:
+- the program pointer class (`ProgramPointer`), which contains the functionality related with the current place of execution.
+- the stack class (`Stack`), which implements the needed stack functionality for the interpreter
+- the variable management class (`VariableManagement`), which host all variables used in the program
+- the line number cross-reference class (`LineNumberXRef`), replacing the `LineNumberStatement` class of previous versions - build the
+reference between BASIC program lines, token numbers, and statement numbers.
+
+A further planned class is:
+- the array management class (`ArrayManagement`) that handles arrays of variables
+
+#### The `ProgramPointer` Class
+
+#### The `Stack` Class
+
+The `Stack` class (`eu.gricom.interpreter.basic.memoryManager.Stack`) is a wrapper around the standard Java Stack class (`java.util.Stack`).
+In order to make a common stack available in the interpreter, the `Stack` class implements internally a static private stack object
+which can be accessed using the class `push` and `pop` method.
+
+The implementation does only allow 
+
+#### The `VariableManagement` Class
 
 ### The VariableType Package
 
@@ -322,9 +342,31 @@ and does not need to be modified in case additional types (like
 ##### `FOR` Statement
 A `For` statement counts an integer or real value from a start value to an end value - and with every increase it
 loops through the block from the `For` statement to the next `Next` statement. When the target value is reached, the
-program flow will jump to the statement past the next statement.
+program flow will jump to the statement past the `NEXT` statement.
+
+When the loop command is reached the first time (initial execution), the variable named in the loop command is set with the initial
+value. The current implementation of the `FOR` loop allows this variable to be either of type `real` or `integer`. After 
+this, when the loop is iterating, the variable is incremented, and the result of the increment is compared with the target
+value. As long as the target value is not reached the iteration continues. As the loop exceeds the target value, the loop 
+terminates and processes with the next line after the `NEXT` statement. At this moment, the variable has the value of the last
+increment, e.g. the value exceeds or equals the target value. The target of the new program pointer is defined as a line number
+in the `FOR` loop - and the loop with use the `LineNumberStatement` class to retrieve the actual statement number for the
+jump.
+
+This logic will work the same way for negative loops, e.g. the flow decrements the variable, the loop counts downwards.
+
+The `FOR` statement uses the `STACK` object to store the location of the `FOR` statement, so that the `NEXT` statement
+finds it. Any `STACK` manipulation needs to be aware of this.
 
 ###### `NEXT` Statement
+The `NEXT` statement terminates the execution of the `FOR` loop. In the program flow, the command has two functions:
+- when the program flow reaches the `NEXT` command, the command will retrieve the location of the `FOR` command from the
+`STACK` object. This target information is at this moment destroyed (see the description of the `Stack`-class). The program
+flow will then continue at this location.
+- when the `FOR`-loop reaches the end of the processing, the program flow will be adjusted to the first command after the `NEXT`
+statement. *NOTE:* Intentionally the interpreter will always pair the `FOR` statement with the next `NEXT` statement. Overlapping
+  or named `NEXT` statements (e.g. `NEXT X#`) like in other BASIC dialects are not supported. Overlapping loops are seen as an anti-pattern
+  and violating the idea of structured programming.
 
 ##### `GOTO` Statement
 The `GOTO` Statement - or non-conditional jump - moves the execution of the running Basic program
@@ -365,8 +407,29 @@ Limitations of the current implementation:
 * The performance of the retrieval of the BASIC source line is non-optimal and should be improved.
 
 ##### `GOSUB` Statement
+The `GOSUB` Statement - or non-conditional jump into a subroutine - moves the execution of the running Basic program
+to a different location in the program. The executable functionality is located in class `eu.gricom.interpreter.basic.statements.GosubStatement`. 
+The class is an implementation of the `eu.gricom.interpreter.basic.statements.Statement` interface.
+
+The implementation of the functionality is realized by using two different classes:
+`eu.gricom.interpreter.basic.statements.LineNumberStatement` to determine the target for the jump and `eu.gricom.interpreter.basic.memoryManager.Stack`
+to store the location of the `GOSUB` command. The later is needed for the calculation of the return to the main program
+using the `RETURN` command.
+
+Limitations of the current implementation:
+* As the comments commands `REM` and `'` are not reflected in the executables, those commands can not be justed as targets
+  for a jump. The current functionality needs to be extended in such a way that if the target line is not found in the
+  reference list in `LineNumberStatement`, then the flow needs to find the command with the next higher statement / token /
+  source line number. [link](https://gricom.atlassian.net/browse/BASIC-58)
 
 ###### `RETURN` Statement
+The `RETURN` statement retrieves the location of the `GOSUB` statement from the stack, and calculates the location of the
+next following command. It the performs an un-conditional jump to that location. At this time, the information of the calling 
+`GOSUB` is removed from the stack.
+
+*NOTE:* If a program execution runs into a `RETURN` statement without a prior `GOSUB` call being made, the stack will be empty and the program will terminate with an exception.
+If the `RETURN` statement finds information on the stack - like from a previous `FOR` or `GOSUB` statement on the stack, it will execute on
+this information - which will cause deterministic but incorrect behaviour and will ultimately end in an error situation.
 
 ##### `IF-THEN` Statement
 The `IF-THEN` statement implements the main control statement in the programming language. The main structure of the control

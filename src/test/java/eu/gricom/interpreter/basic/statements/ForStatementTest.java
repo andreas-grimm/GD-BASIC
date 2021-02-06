@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.memoryManager.Stack;
 import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
@@ -19,7 +20,7 @@ public class ForStatementTest {
         RealValue oStart = new RealValue(0);
         RealValue oEnd = new RealValue(1);
         RealValue oStep = new RealValue(1);
-        LineNumberStatement oLineNumber = new LineNumberStatement();
+        LineNumberXRef oLineNumber = new LineNumberXRef();
 
         oLineNumber.putStatementNumber(5, 5);
         oLineNumber.putLineNumber(5, 5);
@@ -63,7 +64,7 @@ public class ForStatementTest {
         RealValue oEnd = new RealValue(0);
         RealValue oStep = new RealValue(-1);
 
-        LineNumberStatement oLineNumber = new LineNumberStatement();
+        LineNumberXRef oLineNumber = new LineNumberXRef();
 
         oLineNumber.putStatementNumber(5, 5);
         oLineNumber.putLineNumber(5, 5);

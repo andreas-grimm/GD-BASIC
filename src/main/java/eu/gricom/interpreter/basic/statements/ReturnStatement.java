@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.memoryManager.Stack;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
@@ -19,7 +20,7 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  */
 public class ReturnStatement implements Statement {
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
-    private final LineNumberStatement oLineNumberObject = new LineNumberStatement();
+    private final LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
     int  _iLineNumber;
 

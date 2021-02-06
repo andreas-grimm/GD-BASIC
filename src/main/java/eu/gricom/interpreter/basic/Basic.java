@@ -8,7 +8,7 @@ import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.parser.BasicParser;
 import eu.gricom.interpreter.basic.parser.JasicParser;
 import eu.gricom.interpreter.basic.parser.Parser;
-import eu.gricom.interpreter.basic.statements.LineNumberStatement;
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.statements.Statement;
 import eu.gricom.interpreter.basic.tokenizer.BasicLexer;
 import eu.gricom.interpreter.basic.tokenizer.Token;
@@ -41,7 +41,7 @@ public class Basic {
     private static BufferedReader _oLineIn;
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strBasicVersion = "basic";
-    private LineNumberStatement _oLineNumbers = new LineNumberStatement();
+    private LineNumberXRef _oLineNumbers = new LineNumberXRef();
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of
@@ -120,11 +120,17 @@ public class Basic {
         _oLogger.info("Starting execution...");
         try {
             if (aoStatements != null) {
+                int iSourceCodeLineNumber = -1;
+
                 while (oProgramPointer.getCurrentStatement() < aoStatements.size()) {
                     // as long as we have not reached the end of the code
                     int iThisStatement = oProgramPointer.getCurrentStatement();
-                    int iSourceCodeLineNumber =
-                            _oLineNumbers.getLineNumberFromToken(aoStatements.get(iThisStatement).getLineNumber());
+
+                    // Line numbers are only used in BASIC
+                    if (!_strBasicVersion.contains("jasic")) {
+                        iSourceCodeLineNumber = _oLineNumbers.getLineNumberFromToken(aoStatements.get(iThisStatement).getLineNumber());
+                    }
+
                     oProgramPointer.calcNextStatement();
 
                     if (_strBasicVersion.contains("jasic")) {

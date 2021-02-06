@@ -1,4 +1,4 @@
-package eu.gricom.interpreter.basic.statements;
+package eu.gricom.interpreter.basic.memoryManager;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.helper.Logger;
@@ -16,7 +16,7 @@ import java.util.Map;
  * <p>
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
-public class LineNumberStatement {
+public class LineNumberXRef {
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private static Map<Integer, Integer> _aoLineNumbers = new HashMap<>();
     private static Map<Integer, Integer> _aoStatementNumbers = new HashMap<>();

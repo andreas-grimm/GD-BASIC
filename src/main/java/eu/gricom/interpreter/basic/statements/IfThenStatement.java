@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.variableTypes.BooleanValue;
 
@@ -23,7 +24,7 @@ public final class IfThenStatement implements Statement {
     private int _iStatementNumber = 0;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final LabelStatement _oLabelStatement = new LabelStatement();
-    private final LineNumberStatement _oLineNumberObject = new LineNumberStatement();
+    private final LineNumberXRef _oLineNumberObject = new LineNumberXRef();
     private final int _iEndIfLine;
 
     /**

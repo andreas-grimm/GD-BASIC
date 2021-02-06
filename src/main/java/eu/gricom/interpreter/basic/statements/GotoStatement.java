@@ -3,6 +3,7 @@ package eu.gricom.interpreter.basic.statements;
 import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 
 /**
@@ -23,7 +24,7 @@ public final class GotoStatement implements Statement {
     private final int _iLineNumber;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final LabelStatement _oLabelStatement = new LabelStatement();
-    private final LineNumberStatement _oLineNumberObject = new LineNumberStatement();
+    private final LineNumberXRef _oLineNumberObject = new LineNumberXRef();
 
     /**
      * Default constructor.

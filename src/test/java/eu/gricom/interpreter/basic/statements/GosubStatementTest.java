@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.memoryManager.Stack;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
@@ -14,7 +15,7 @@ public class GosubStatementTest {
     @Test
     public void testEvaluate() {
         ProgramPointer oProgramPointer = new ProgramPointer();
-        LineNumberStatement _oLineNumberObject = new LineNumberStatement();
+        LineNumberXRef _oLineNumberObject = new LineNumberXRef();
         Stack oStack = new Stack();
 
         // setting the line number object for the actual jump:

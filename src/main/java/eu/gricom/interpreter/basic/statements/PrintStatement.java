@@ -1,5 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
+import java.util.List;
+
 /**
  * PrintStatement.java
  * <p>
@@ -15,6 +17,8 @@ package eu.gricom.interpreter.basic.statements;
 public final class PrintStatement implements Statement {
     private final Expression _oExpression;
     private final int _iLineNumber;
+    private final List<Expression> _aoExpression;
+    private final boolean _bCRLF;
 
     /**
      * Default constructor.
@@ -26,6 +30,8 @@ public final class PrintStatement implements Statement {
     public PrintStatement(final Expression oExpression) {
         _iLineNumber = 0;
         _oExpression = oExpression;
+        _aoExpression = null;
+        _bCRLF = true;
     }
 
     /**
@@ -34,11 +40,14 @@ public final class PrintStatement implements Statement {
      * Receive the statement that is targeted to be printed.
      *
      * @param iLineNumber  - number of the line in the BASIC program
-     * @param oExpression - input to the print statement
+     * @param aoExpression - list of inputs to the print statement
+     * @param bCRLF - if true, the line to be printed ends with a CR
      */
-    public PrintStatement(final int iLineNumber, final Expression oExpression) {
+    public PrintStatement(final int iLineNumber, final List<Expression> aoExpression, boolean bCRLF) {
         _iLineNumber = iLineNumber;
-        _oExpression = oExpression;
+        _oExpression = null;
+        _aoExpression = aoExpression;
+        _bCRLF = bCRLF;
     }
 
     /**
@@ -57,7 +66,22 @@ public final class PrintStatement implements Statement {
      * @throws Exception any execution error found throws an exception
      */
     public void execute() throws Exception {
-        System.out.println(_oExpression.evaluate().toString());
+        // the simple output of the expression is only used for the JASIC version
+        if (_oExpression != null) {
+            System.out.println(_oExpression.evaluate().toString());
+        }
+
+        // this more complex version is used by the BASIC version
+        if (_aoExpression != null) {
+            for (Expression oExpression : _aoExpression) {
+                if (_bCRLF) {
+                    System.out.println(oExpression.evaluate().toString());
+                } else {
+                    System.out.print(oExpression.evaluate().toString());
+                }
+            }
+        }
+
     }
 
     /**
@@ -67,7 +91,14 @@ public final class PrintStatement implements Statement {
      */
     @Override
     public String content() {
+        if (_aoExpression != null) {
+            return ("PRINT (" + _aoExpression.toString() + ")");
+        }
 
-        return ("PRINT (" + _oExpression.content() + ")");
+        if (_oExpression != null) {
+            return ("PRINT (" + _oExpression.content() + ")");
+        }
+
+        return ("PRINT ()");
     }
 }

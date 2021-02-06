@@ -101,6 +101,7 @@ public enum TokenType {
     OPERATOR, // super-token to cover all operations in JASIC
     LABEL, // JASIC GOTO label, not supported for the Dartmouth BASIC dialects
     LINE, // empty line - white space. Kept to keep the line numbering consistent
-    ASSIGN, // duplication of the ASSIGN_EQUAL and COMPARE_EQUAL token - to be removed
-    EQUALS
+    EQUALS, // used exclusively for the JASIC version
+    COMMA, // used exclusively for the print command
+    SEMICOLON // used exclusively for the print command
 }
