@@ -57,8 +57,9 @@ public class BasicLexer implements Tokenizer {
                 aoTokens.add(new Token("empty", TokenType.LINE, iLineNumber));
             } else {
 
-                // now remove all tabulators and replace them with 4 spaces
+                // now remove all tabulators and replace them with 4 spaces, and every semicolon gets a leading space
                 strProgramLine = strProgramLine.replace("\t", "    ");
+                strProgramLine = strProgramLine.replace(";", " ;");
 
                 // find reserved words
                 List<String> astrWords = Arrays.asList(strProgramLine.split("\\s"));
@@ -81,6 +82,8 @@ public class BasicLexer implements Tokenizer {
                         }
 
                         oToken.setText(oToken.getText() + " " + strWord);
+                        // there is a leading space in front the semicolon, so the string will be incorrectly formatted.
+                        oToken.setText(oToken.getText().replace(" ;", ";"));
                     } else {
                         int iIndex = ReservedWords.getIndex(strWord);
 

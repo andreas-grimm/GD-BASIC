@@ -5,7 +5,7 @@
 60 PRINT X#
 70 NEXT
 80 REM Test2
-140 PRINT "Downwards..."
+140 PRINT "Downwards; this semicolon should be correctly formatted...";
 150 FOR Y# = 2 TO -2 STEP -.2
 160 PRINT Y#
 170 NEXT

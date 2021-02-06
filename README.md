@@ -68,6 +68,9 @@ The current version contains the following changes, bug fixes, and enhancements:
 * Added JUNIT tests for all new functions
 
 0.0.5
+* Added `FOR`-loop
+* Added `GOSUB`-statement
+* `PRINT` with a trailing semicolon `;` surpresses LF  
 * Added variable naming to typed variables: long type: `variable&`
 
 ** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **

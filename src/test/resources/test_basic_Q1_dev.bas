@@ -6,7 +6,7 @@
 50 rem Testing the REM command
 60 ' Testing the Comment tick
 110 print "Testing: Assignment of a variable"
-120 print "Result of 1 + 2 * 3 / 4 ^ 5 = "
+120 print "Result of 1 + 2 * 3 / 4 ^ 5 = ";
 130 a# = 1 + 2 * 3 / 4 ^ 5
 140 print a#
 150 b# = a# * 2

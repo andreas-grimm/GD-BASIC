@@ -216,13 +216,27 @@ public class BasicParser implements Parser {
 
                 // PRINT Token: print to the terminal
                 case PRINT:
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [PRINT] ");
-                    oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    int iPrintPosition = +_iPosition;
-                    _iPosition++;
+                    int iPrintPosition = _iPosition;
                     List<Expression> aoExpression = new ArrayList<>();
+                    boolean bCRLF = true;
+
+                    _oLogger.debug("-parse-> found Token: <" + iPrintPosition + "> [PRINT] ");
+                    oLineNumber.putLineNumber(getToken(0).getLine(), iPrintPosition);
+                    _iPosition++;
+
                     aoExpression.add(expression());
-                    aoStatements.add(new PrintStatement(iPrintPosition, aoExpression, true));
+
+                    while (getToken(0).getType() == TokenType.COMMA) {
+                        _iPosition++;
+                        aoExpression.add(expression());
+                    }
+
+                    if (getToken(0).getType() == TokenType.SEMICOLON) {
+                        _iPosition++;
+                        bCRLF = false;
+                    }
+
+                    aoStatements.add(new PrintStatement(iPrintPosition, aoExpression, bCRLF));
                     break;
 
                 // REM Token: contains comments to the program, ignore the rest of the line
