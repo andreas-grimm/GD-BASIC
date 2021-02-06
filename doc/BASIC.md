@@ -390,6 +390,28 @@ Evaluates the expression and prints the result.
 
     PRINT "hello, " + "world"
 
+The `PRINT` command terminates its output with CRLF (Carriage return / line feed) character, the next output is at the beginning
+of a new line. By ending the `PRINT` command with a semicolon (`;`), the CRLF character sequence is not printed, the next output starts
+after the last output printed.
+
+Example:
+
+    10 PRINT "These two commands ";
+    20 PRINT "will print in the same line."
+
+Output:
+
+    These two commands will print in the same line.
+
+The `PRINT` command also allows to print multiple fields in the same command. These fields are seperated by a comma (`,`).
+
+Example:
+
+    160 PRINT a#, " x 2 = ", b#;
+
+*NOTE:* In the current version of BASIC, the character behind the comma has to be a white space (" "). A missing white space will
+lead to an error message.
+
 ##### WHILE Command
 
 `WHILE <condition> <statement> CONTINUE-WHILE <statement> EXIT-WHILE <statement> END-WHILE`

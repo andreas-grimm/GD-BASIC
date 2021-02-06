@@ -72,8 +72,12 @@ and release dates. The _Jira_ project can be found here:
 
 [Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC)
 
-## Before Starting Modifications...
+## Document Standard...
 
+When we show the structure of the BASIC code, we follow there document standards:
+- [mandatory information]: This field is required for the execution of the command
+- <[optional information]>: This field is optional and not needed for the execution
+- ... : Repetition of the content
 
 ## General Structure of the Interpreter
 
@@ -127,7 +131,7 @@ Before Adding new Basic Commands to the Parser, it is important to prepare and v
 When adding the command into the parser, add the token in the `case` statement of the `parse()` method in the `BasicParser` class in the `parser` package.
 Every `case` block starts with:
 
-    case <Token>:
+    case [Token]:
       _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [Token] ");
       iOrgPosition = _iPosition++;
       oLineNumber.putLineNumber(getToken(0).getLine(), iOrgPosition);
@@ -437,7 +441,7 @@ statement consists of 4 token: `IF`, `THEN`, `ELSE`, `END-IF`. In the JASIC impl
 two token: `IF` and `THEN`.
 
 The structure of the command in BASIC is:
-`IF` [condition] `THEN` [commands] `ELSE` [commands] `END-IF`
+`IF` [condition] `THEN` [commands] <`ELSE` [commands]> `END-IF`
 
 The same structure in JASIC is:
 `IF` [condition] `THEN` [jump target]
@@ -455,6 +459,23 @@ Limitations of the current implementation:
 ##### `INPUT` Statement
 
 ##### `PRINT` Statement
+The `PRINT` command is the general output command for the BASIC language. This version follows the Dartmouth standard for
+the output, which allows concatenating multiple variables and text fields in a single line by listing them separated by a comma `,`.
+
+The `PRINT` command terminates its output with CRLF (Carriage return / line feed) character, the next output is at the beginning
+of a new line. By ending the `PRINT` command with a semicolon (`;`), the CRLF character sequence is not printed, the next output starts
+after the last output printed.
+
+This behaviour is different from the ECMA version of BASIC, which uses the semicolon to separate different fields and the comma to surpress
+the CRLF characters at the end of the line.
+
+`PRINT` [expression] <`,` [expression]`,` ... [expression]`;`>
+
+The implementation of the `PRINT` command can be found in the statement package (`eu.gricom.interpreter.basic.statements`) in the
+`PrintStatement` class. Adding the comma and semicolon to the `PRINT` command needs some special code in the `BasicLexer` class:
+In order to make sure that the lexer identifies the characters, the lexer adds in the method `tokenize` an extra white space in front of the respective
+character. As this will interfere with the formatting of any string using the characters, the white space will be removed 
+in every string. This function should therefore not change the output.
 
 ##### `WHILE` Loop Statement
 

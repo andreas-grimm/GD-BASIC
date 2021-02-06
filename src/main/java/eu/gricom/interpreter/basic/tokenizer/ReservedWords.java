@@ -28,7 +28,7 @@ public class ReservedWords {
             "WHILE",
             "&", "\\+", "\\-", "\\*", "\\/", ":",
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
-            "\\(", "\\)", "\\'", "\\;"
+            "\\(", "\\)", "\\'", "\\;", "\\,"
     };
 
     static TokenType[] aeTokenTypes = {
@@ -54,7 +54,7 @@ public class ReservedWords {
         TokenType.AMPERSAND, TokenType.PLUS, TokenType.MINUS, TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.COLON,
         TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.SMALLER, TokenType.SMALLER_EQUAL, TokenType.ASSIGN_EQUAL,
             TokenType.PASCAL_ASSIGN_EQUAL, TokenType.COMPARE_EQUAL, TokenType.COMPARE_NOT_EQUAL, TokenType.POWER,
-        TokenType.LEFT_PAREN, TokenType.RIGHT_PAREN, TokenType.COMMENT, TokenType.SEMICOLON};
+        TokenType.LEFT_PAREN, TokenType.RIGHT_PAREN, TokenType.COMMENT, TokenType.SEMICOLON, TokenType.COMMA};
 
     public static int getIndex (final String strSearchRole) {
         int iReturn = -1;

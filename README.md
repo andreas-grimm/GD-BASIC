@@ -68,9 +68,11 @@ The current version contains the following changes, bug fixes, and enhancements:
 * Added JUNIT tests for all new functions
 
 0.0.5
-* Added `FOR`-loop
+* Added the `FOR-NEXT`-loop
+* Added the `DO-UNTIL`-loop  
 * Added `GOSUB`-statement
-* `PRINT` with a trailing semicolon `;` surpresses LF  
+* `PRINT` with a trailing semicolon `;` surpresses LF at the end of the output. Also using a comma `,` in the argument list to
+  print multiple outputs in a single command.
 * Added variable naming to typed variables: long type: `variable&`
 
 ** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **

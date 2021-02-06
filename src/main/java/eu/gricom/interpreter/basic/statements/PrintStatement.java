@@ -74,14 +74,13 @@ public final class PrintStatement implements Statement {
         // this more complex version is used by the BASIC version
         if (_aoExpression != null) {
             for (Expression oExpression : _aoExpression) {
-                if (_bCRLF) {
-                    System.out.println(oExpression.evaluate().toString());
-                } else {
-                    System.out.print(oExpression.evaluate().toString());
-                }
+                System.out.print(oExpression.evaluate().toString());
+            }
+
+            if (_bCRLF) {
+                System.out.println();
             }
         }
-
     }
 
     /**

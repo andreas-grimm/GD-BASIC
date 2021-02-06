@@ -10,9 +10,9 @@
 130 a# = 1 + 2 * 3 / 4 ^ 5
 140 print a#
 150 b# = a# * 2
-160 print b#
+160 print a#, " x 2 = ", b#;
 170 b# = b# * 2
-180 print b#
+180 print " x2 = ", b#
 200 rem Test Case 3: Testing the GOTO
 210 print "Testing of the GOTO command"
 220 goto 240
