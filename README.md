@@ -22,7 +22,7 @@ This package has been tested to build with Maven 3.6.3, using Oracle Java 1.8.0_
 
 Use the following command line:
 
-    mvn clean site package -Dmaven.javadoc.skip=true
+    mvn -Drevision=0.0.5-SNAPSHOT -Dmaven.javadoc.skip=true clean site package
 
 or execute the build shell script at `bin/build`
 
@@ -42,6 +42,10 @@ The current version contains the following changes, bug fixes, and enhancements:
 * Adding JUnit Test Cases for a majority of the functions
 * Adding regression testing with provided BASIC programs
 
+Implemented Backlog Items: 
+
+    [BASIC-16], [BASIC-7], [BASIC-11], [BASIC-12], [BASIC-14], [BASIC-17]
+
 0.0.3:
 * Leaving JASIC as it is and starting the BASIC interpreter functionality
 * Changed variable management to new typed variables: string, integer, real, and boolean 
@@ -50,7 +54,11 @@ The current version contains the following changes, bug fixes, and enhancements:
 * Changed memory management: Converting the MemoryManage class into a package with dedicated classes  
 * Introduction of new command: `END`
 * Bug fixes:
-  * BASIC-28: Correcting the design and implementation of the `LabeLStatement` class
+  * `[BASIC-28]`: Correcting the design and implementation of the `LabeLStatement` class
+
+Implemented Backlog Items: 
+
+    [BASIC-4], [BASIC-23], [BASIC-8], [BASIC-38], [BASIC-25], [BASIC-6], [BASIC-39], [BASIC-9], [BASIC-28]
 
 0.0.4:
 * Starting to build the interpreter to support Dartmouth style BASIC
@@ -67,6 +75,12 @@ The current version contains the following changes, bug fixes, and enhancements:
 * Added additional math operators: `^` (power of), `!=`, `<=`, and `>=`; replaced `=` in comparisons by `==`
 * Added JUNIT tests for all new functions
 
+Implemented Backlog Items: 
+
+    [BASIC-15], [BASIC-10], [BASIC-47], [BASIC-40], [BASIC-56], [BASIC-21], [BASIC-20], [BASIC-22], [BASIC-32], [BASIC-33],
+    [BASIC-34], [BASIC-35], [BASIC-18], [BASIC-29], [BASIC-30], [BASIC-31], [BASIC-44], [BASIC-45], [BASIC-46], [BASIC-59], [BASIC-60], [BASIC-61],
+    [BASIC-63]
+
 0.0.5
 * Added the `FOR-NEXT`-loop
 * Added the `DO-UNTIL`-loop  
@@ -74,5 +88,10 @@ The current version contains the following changes, bug fixes, and enhancements:
 * `PRINT` with a trailing semicolon `;` surpresses LF at the end of the output. Also using a comma `,` in the argument list to
   print multiple outputs in a single command.
 * Added variable naming to typed variables: long type: `variable&`
+
+Implemented Backlog Items: 
+
+    [BASIC-24], [BASIC-26], [BASIC-43], [BASIC-48], [BASIC-58], [BASIC-62], [BASIC-66], [BASIC-65], [BASIC-74],
+    [BASIC-80], [BASIC-67], [BASIC-68], [BASIC-69], [BASIC-70], [BASIC-71], [BASIC-72], [BASIC-81], [BASIC-84]
 
 ** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **

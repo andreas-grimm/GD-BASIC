@@ -24,6 +24,7 @@ public interface Tokenizer {
      *
      * @param strSource - the basic source code as a single string.
      * @return list of token found in the source code.
+     * @throws SyntaxErrorException for any situation in which the tokenizer fails
      */
     List<Token> tokenize(final String strSource) throws SyntaxErrorException;
 }

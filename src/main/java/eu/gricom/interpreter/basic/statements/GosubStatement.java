@@ -2,7 +2,6 @@ package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
-import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.memoryManager.Stack;
@@ -21,7 +20,6 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  * Created in 2021
  */
 public final class GosubStatement implements Statement {
-    private final Logger _oLogger = new Logger(this.getClass().getName());
     private final String _strTarget;
     private final int _iTokenNumber;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
@@ -52,6 +50,9 @@ public final class GosubStatement implements Statement {
 
     /**
      * Execute the transaction.
+     *
+     * @throws SyntaxErrorException when the target of the GoSub command is unknown
+     * @throws RuntimeException escalated from the LineNumberXRef class
      */
     public void execute() throws SyntaxErrorException, RuntimeException {
         // This class is only used for the BASIC version...

@@ -124,7 +124,7 @@ public class BooleanValue implements Value {
     }
 
     @Override
-    public Value notEqual(Value oValue) throws SyntaxErrorException {
+    public final Value notEqual(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof BooleanValue) {
             if (this.toReal() != oValue.toReal()) {
                 return (new BooleanValue(true));
@@ -194,9 +194,9 @@ public class BooleanValue implements Value {
 
     // This one implemented the XOR statement
     @Override
-    public Value power(Value oValue) throws SyntaxErrorException {
+    public final Value power(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof BooleanValue) {
-            BooleanValue oWorkValue = (BooleanValue)oValue;
+            BooleanValue oWorkValue = (BooleanValue) oValue;
 
             if (_bValue == oWorkValue.toBoolean()) {
                 return (new BooleanValue(false));
@@ -214,7 +214,7 @@ public class BooleanValue implements Value {
     }
 
     @Override
-    public Value smallerEqualThan(Value oValue) throws SyntaxErrorException {
+    public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
     }
 
@@ -224,7 +224,7 @@ public class BooleanValue implements Value {
     }
 
     @Override
-    public Value largerEqualThan(Value oValue) throws SyntaxErrorException {
+    public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
     }
 

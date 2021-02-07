@@ -289,13 +289,13 @@ public class JasicParser implements Parser {
      * Consumes the next token if it's a word with the given name. If not,
      * throws an exception.
      *
-     * @param  strName  Expected name of the next word token.
-     * @return          The consumed token.
+     * @param  strName expected name of the next word token.
+     * @return the consumed token.
+     * @throws SyntaxErrorException if the next token does not comply to the expected name
      */
     public final Token consumeToken(final String strName) throws SyntaxErrorException {
 
         if (!matchNextToken(strName)) {
-            // TODO convert to syntax error
             throw new SyntaxErrorException("Expected " + strName + ".");
         }
         return (lastToken(1));

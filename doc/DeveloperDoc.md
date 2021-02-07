@@ -152,7 +152,7 @@ should be managed by the `VariableManagement` class or the `Stack` class in the 
 Internally the parsed program is stored in a number of data structures:
 - The `parse` method of the Jasic and the Basic parser returns a list of objects (instantiated statement classes) in a processing sequence. This list is defined as `List<Statement> aoStatements`.
 - For Jasic programs: The execute function of the program utilizes the `LabelStatement` class to have a reference for jumps and conditions.
-- For Basic programs: The execute function of the program utilizes the `LineNumberStatement` class to have a reference between the basic line numbers, token number, and statement number.
+- For Basic programs: The execute function of the program utilizes the `LineNumberXRef` class to have a reference between the basic line numbers, token number, and statement number.
 
 ## Basic Concepts
 
@@ -185,9 +185,9 @@ The relationship is implemented by using two in-memory key-value stores. These k
 the key-value stores (or program lists). None of the information is accessible from outside the class and all information is stored in the class. In a later version, as the programs can
 be stored in a tokenized and parsed format (called object format) all information in the key-value stores and the program coded processable data will be part of the object file.
 
-##### The Class `LineNumberStatement`
+##### The Class `LineNumberXRef`
 All functions to retrieve navigational information and manipulate the structure of the program in the different incarnations are located in the class
-`LineNumberStatement` in the package `eu.gricom.interpreter.basic.statements`.
+`LineNumberXRef` in the package `eu.gricom.interpreter.basic.memoryManager`.
 
 The class has implemented a number of methods that allow the navigation between the different representations of the BASIC program. The following list explains the methods:
 
@@ -210,7 +210,7 @@ Utility methods:
 
     import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
     ...
-    private final LineNumberStatement oLineNumberObject = new LineNumberStatement();
+    private final LineNumberXRef oLineNumberObject = new LineNumberXRef();
     ...
     _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
             oLineNumberObject.getNextLineNumber(
@@ -284,7 +284,7 @@ classes:
 - the program pointer class (`ProgramPointer`), which contains the functionality related with the current place of execution.
 - the stack class (`Stack`), which implements the needed stack functionality for the interpreter
 - the variable management class (`VariableManagement`), which host all variables used in the program
-- the line number cross-reference class (`LineNumberXRef`), replacing the `LineNumberStatement` class of previous versions - build the
+- the line number cross-reference class (`LineNumberXRef`), replaced the `LineNumberStatement` class of previous versions - build the
 reference between BASIC program lines, token numbers, and statement numbers.
 
 A further planned class is:
@@ -354,7 +354,7 @@ this, when the loop is iterating, the variable is incremented, and the result of
 value. As long as the target value is not reached the iteration continues. As the loop exceeds the target value, the loop 
 terminates and processes with the next line after the `NEXT` statement. At this moment, the variable has the value of the last
 increment, e.g. the value exceeds or equals the target value. The target of the new program pointer is defined as a line number
-in the `FOR` loop - and the loop with use the `LineNumberStatement` class to retrieve the actual statement number for the
+in the `FOR` loop - and the loop with use the `LineNumberXRef` class to retrieve the actual statement number for the
 jump.
 
 This logic will work the same way for negative loops, e.g. the flow decrements the variable, the loop counts downwards.
@@ -380,14 +380,14 @@ to a different location in the program. The executable functionality is located 
 
 The implementation of the functionality is realized by using two different classes: 
 `eu.gricom.interpreter.basic.statements.LabelStatement` for the JASIC programs, and 
-`eu.gricom.interpreter.basic.statements.LineNumberStatement` for the BASIC program. These classes are used to identify
+`eu.gricom.interpreter.basic.memoryManagement.LineNumberXRef` for the BASIC program. These classes are used to identify
 the target for the jump, which is either a Label (see `LabelStatement`), or a line number.
 
 When using labels, the actual label is identified by the parsing process and is added to the list of locations in the
 `LabelStatement` class. The class then has a second method to retrieve the location of the label in the program, and the
 program pointer can be set to the location in the program. While the label functionality is relatively simple, the 
-`LineNumberStatement` needs some extra effort to implement the use of line numbers. The class uses two internal hashmaps 
-to build the logical connection between the BASIC source code lines and the executeable statements, using the identified 
+`LineNumberXRef` needs some extra effort to implement the use of line numbers. The class uses two internal hashmaps 
+to build the logical connection between the BASIC source code lines and the executable statements, using the identified 
 token as a link. As the target of the jump is a location, not a command or token, the class has to perform some look-ups
 to determine the target of the jump. The link looks as follows:
 
@@ -395,7 +395,7 @@ Basic Source Code Line -> Token -> Executable Statement
 
 When the `GOTO` command is executed, it will first look whether the argument with the command is located in the list of 
 the labels. If there is no reference in the `Label` object (which will only be populated for JASIC programs), the flow
-will use the `LineNumberStatement` object to determine the target of the jump. For this, the `GOTO` statement
+will use the `LineNumberXRef` object to determine the target of the jump. For this, the `GOTO` statement
 will use the token sequence number (an attribute of the `Statement` classes) to retrieve the line number in the BASIC 
 program.
 
@@ -406,7 +406,7 @@ number - which makes it part of the BASIC implementation.
 Limitations of the current implementation:
 * As the comments commands `REM` and `'` are not reflected in the executables, those commands can not be justed as targets 
   for a jump. The current functionality needs to be extended in such a way that if the target line is not found in the
-  reference list in `LineNumberStatement`, then the flow needs to find the command with the next higher statement / token / 
+  reference list in `LineNumberXRef`, then the flow needs to find the command with the next higher statement / token / 
   source line number. [link](https://gricom.atlassian.net/browse/BASIC-58)
 * The performance of the retrieval of the BASIC source line is non-optimal and should be improved.
 
@@ -416,14 +416,14 @@ to a different location in the program. The executable functionality is located 
 The class is an implementation of the `eu.gricom.interpreter.basic.statements.Statement` interface.
 
 The implementation of the functionality is realized by using two different classes:
-`eu.gricom.interpreter.basic.statements.LineNumberStatement` to determine the target for the jump and `eu.gricom.interpreter.basic.memoryManager.Stack`
+`eu.gricom.interpreter.basic.memoryManagement.LineNumberXRef` to determine the target for the jump and `eu.gricom.interpreter.basic.memoryManager.Stack`
 to store the location of the `GOSUB` command. The later is needed for the calculation of the return to the main program
 using the `RETURN` command.
 
 Limitations of the current implementation:
 * As the comments commands `REM` and `'` are not reflected in the executables, those commands can not be justed as targets
   for a jump. The current functionality needs to be extended in such a way that if the target line is not found in the
-  reference list in `LineNumberStatement`, then the flow needs to find the command with the next higher statement / token /
+  reference list in `LineNumberXRef`, then the flow needs to find the command with the next higher statement / token /
   source line number. [link](https://gricom.atlassian.net/browse/BASIC-58)
 
 ###### `RETURN` Statement

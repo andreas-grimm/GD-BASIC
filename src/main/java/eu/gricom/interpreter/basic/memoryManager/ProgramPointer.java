@@ -29,7 +29,7 @@ public class ProgramPointer {
      */
     public final int getCurrentStatement() {
 
-        return (_iCurrentStatement);
+        return _iCurrentStatement;
     }
 
     /**

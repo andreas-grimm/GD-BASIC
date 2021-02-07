@@ -56,7 +56,7 @@ public class RealValue implements Value {
      */
     public final int toInt() {
 
-        return ((int)_fValue);
+        return ((int) _fValue);
     }
 
     /**
@@ -83,7 +83,7 @@ public class RealValue implements Value {
     }
 
     @Override
-    public Value notEqual(Value oValue) throws SyntaxErrorException {
+    public final Value notEqual(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() != oValue.toReal()) {
                 return (new BooleanValue(true));
@@ -142,11 +142,11 @@ public class RealValue implements Value {
     }
 
     @Override
-    public Value power(Value oValue) throws SyntaxErrorException {
+    public final Value power(final Value oValue) throws SyntaxErrorException {
         RealValue oReturn;
 
         if (oValue instanceof RealValue) {
-            oReturn = new RealValue(Math.pow(_fValue,oValue.toReal()));
+            oReturn = new RealValue(Math.pow(_fValue, oValue.toReal()));
 
             return oReturn;
         }
@@ -168,7 +168,7 @@ public class RealValue implements Value {
     }
 
     @Override
-    public Value smallerEqualThan(Value oValue) throws SyntaxErrorException {
+    public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() <= oValue.toReal()) {
                 return (new BooleanValue(true));
@@ -194,7 +194,7 @@ public class RealValue implements Value {
     }
 
     @Override
-    public Value largerEqualThan(Value oValue) throws SyntaxErrorException {
+    public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() >= oValue.toReal()) {
                 return (new BooleanValue(true));
@@ -206,8 +206,18 @@ public class RealValue implements Value {
         throw (new SyntaxErrorException(oValue.content() + " is not a number"));
     }
 
-    public static double round(double dValue, int iPlaces) {
-        if (iPlaces < 0) throw new IllegalArgumentException();
+    /**
+     * The method round does a mathematical correct rounding of the input dValue,
+     * to the number of digits defined by iPlaces.
+     *
+     * @param dValue number to be rounded
+     * @param iPlaces digits behind the decimal point
+     * @return rounded number
+     */
+    public static double round(final double dValue, final int iPlaces) {
+        if (iPlaces < 0) {
+            throw new IllegalArgumentException();
+        }
 
         BigDecimal oBigDecimal = BigDecimal.valueOf(dValue);
         oBigDecimal = oBigDecimal.setScale(iPlaces, RoundingMode.HALF_UP);

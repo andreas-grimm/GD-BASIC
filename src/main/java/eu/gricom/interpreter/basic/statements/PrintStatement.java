@@ -43,7 +43,7 @@ public final class PrintStatement implements Statement {
      * @param aoExpression - list of inputs to the print statement
      * @param bCRLF - if true, the line to be printed ends with a CR
      */
-    public PrintStatement(final int iLineNumber, final List<Expression> aoExpression, boolean bCRLF) {
+    public PrintStatement(final int iLineNumber, final List<Expression> aoExpression, final boolean bCRLF) {
         _iLineNumber = iLineNumber;
         _oExpression = null;
         _aoExpression = aoExpression;

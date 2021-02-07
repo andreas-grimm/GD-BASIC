@@ -6,7 +6,7 @@
 
     <groupId>eu.gricom</groupId>
     <artifactId>BASIC</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>${revision}</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -15,8 +15,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.reporting.outputDirectory>doc</project.reporting.outputDirectory>
         <additionalparam>-Xdoclint:none</additionalparam>
-        <!--maven.build.timestamp.format>yyyy.MM.dd.HH.mm</maven.build.timestamp.format>
-        <buildNumber>b${maven.build.timestamp}</buildNumber-->
         <revision>0.0.1-java8</revision>
         <java-version>1.8</java-version>
     </properties>

@@ -26,12 +26,15 @@ public class TokenizerTest {
 
             //TODO: Compare the expected lists with the generated list...
             int iCounter = 0;
+
+            /*
             for (Token oToken : aoTokens) {
                 System.out.println(iCounter + "-->" + oToken.getText() + "<-->" + oToken.getType().toString());
                 iCounter++;
             }
+            */
 
-            assertEquals(iCounter, 35);
+            assertEquals(aoTokens.size(), 35);
         } catch (SyntaxErrorException e) {
             assertTrue(false);
         }

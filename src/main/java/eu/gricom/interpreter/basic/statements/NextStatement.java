@@ -20,20 +20,26 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  */
 public class NextStatement implements Statement {
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
+    private final int _iLineNumber;
 
-    int  _iLineNumber;
-
-    public NextStatement (final int iLineNumber) {
+    /**
+     * Default constructor.
+     *
+     * An "next" statement returns to the "for" loop start.
+     *
+     * @param iLineNumber the line number of this command
+     */
+    public NextStatement(final int iLineNumber) {
         _iLineNumber = iLineNumber;
     }
 
     @Override
-    public int getLineNumber() {
+    public final int getLineNumber() {
         return _iLineNumber;
     }
 
     @Override
-    public void execute() throws Exception {
+    public final void execute() throws Exception {
         final Stack oStack = new Stack();
 
         int iTargetLineNumber = ((IntegerValue) oStack.pop()).toInt();
@@ -47,7 +53,7 @@ public class NextStatement implements Statement {
     }
 
     @Override
-    public String content() {
+    public final String content() {
         return ("NEXT");
     }
 }

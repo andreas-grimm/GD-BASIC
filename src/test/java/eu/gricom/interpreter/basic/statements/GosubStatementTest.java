@@ -33,8 +33,6 @@ public class GosubStatementTest {
             oStatement.execute();
             int iTokenNumber = ((IntegerValue) oStack.pop()).toInt();
 
-            System.out.println(iTokenNumber);
-
             assertEquals(5, iTokenNumber);
             assertEquals(5, oProgramPointer.getCurrentStatement());
 

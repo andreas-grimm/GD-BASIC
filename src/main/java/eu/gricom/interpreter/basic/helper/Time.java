@@ -109,7 +109,12 @@ public class Time {
             throw new Exception("[eu.gricom.interpreter.basic.helper.Time] Seconds could not been parsed");
         }
 
-        if ((_iHour < 0) || (_iHour > 23) || (_iMinute < 0) || (_iMinute > 59) || (_iSecs < 0) || (_iSecs > 59)) {
+        if (_iHour < 0
+                || _iHour > 23
+                || _iMinute < 0
+                || _iMinute > 59
+                || _iSecs < 0
+                || _iSecs > 59) {
             throw new Exception("[eu.gricom.interpreter.basic.helper.Time] Time out of range");
         }
 
@@ -154,7 +159,12 @@ public class Time {
             throw new Exception("[eu.gricom.interpreter.basic.helper.Time] Day could not been parsed");
         }
 
-        if ((_iYear < 0) || (_iYear > 3000) || (_iMonth < 1) || (_iMonth > 12) || (_iDay < 0) || (_iDay > 31)) {
+        if (_iYear < 0
+                || _iYear > 3000
+                || _iMonth < 1
+                || _iMonth > 12
+                || _iDay < 0
+                || _iDay > 31) {
             throw new Exception("[eu.gricom.interpreter.basic.helper.Time] Date out of range");
         }
 
@@ -198,7 +208,7 @@ public class Time {
         }
 
         strTime = _iYear + "-" + strMonth + "-" + strDay;
-        return (strTime);
+        return strTime;
     }
 
     /**
@@ -231,7 +241,7 @@ public class Time {
         }
 
         strDateTime += " " + strHour + ":" + strMinute + ":" + strSecs;
-        return (strDateTime);
+        return strDateTime;
     }
 
     /**
@@ -240,7 +250,7 @@ public class Time {
      * @return - year value of this date
      */
     public final int getYear() {
-        return (_iYear);
+        return _iYear;
     }
 
     /**
@@ -249,7 +259,7 @@ public class Time {
      * @return - month value of date
      */
     public final int getMonth() {
-        return (_iMonth);
+        return _iMonth;
     }
 
     /**
@@ -258,7 +268,7 @@ public class Time {
      * @return - day value of date
      */
     public final int getDay() {
-        return (_iDay);
+        return _iDay;
     }
 
     /**
@@ -267,7 +277,7 @@ public class Time {
      * @return - number of days passed for this time object in this year
      */
     public final int getDayOfYear() {
-        return (_oDate.get(GregorianCalendar.DAY_OF_YEAR));
+        return _oDate.get(GregorianCalendar.DAY_OF_YEAR);
     }
 
     /**
@@ -276,25 +286,43 @@ public class Time {
      * @return - true, if date is valid
      */
     public final boolean isValid() {
-        if ((_iYear < 1900) || (_iYear > 2100)) {
-            return (false);
+        if (_iYear < 1900
+                || _iYear > 2100) {
+            return false;
         }
-        if ((_iMonth < 1) || (_iMonth > 12)) {
-            return (false);
+
+        if (_iMonth < 1
+                || _iMonth > 12) {
+            return false;
         }
-        if ((_iDay < 1) || (_iDay > 31)) {
-            return (false);
+
+        if (_iDay < 1
+                || _iDay > 31) {
+            return false;
         }
-        if (((_iMonth == 4) || (_iMonth == 6) || (_iMonth == 9) || (_iMonth == 11)) && (_iDay > 30)) {
-            return (false);
+
+        if ((_iMonth == 4
+                || _iMonth == 6
+                || _iMonth == 9
+                || _iMonth == 11)
+                && _iDay > 30) {
+            return false;
         }
-        if ((_iMonth == 2) && (_iDay > 29)) {
-            return (false);
+
+        if (_iMonth == 2
+                && _iDay > 29) {
+            return false;
         }
-        if ((_iHour < 0) || (_iHour > 23) || (_iMinute < 0) || (_iMinute > 59) || (_iSecs < 0) || (_iSecs > 59)) {
-            return (false);
+
+        if (_iHour < 0
+                || _iHour > 23
+                || _iMinute < 0
+                || _iMinute > 59
+                || _iSecs < 0
+                || _iSecs > 59) {
+            return false;
         }
-        return (true);
+        return true;
     }
 
     /**
@@ -306,7 +334,7 @@ public class Time {
         Time oTempTime = new Time(getDateTime());
         oTempTime.addDays(1);
 
-        return (oTempTime.getDateTime());
+        return oTempTime.getDateTime();
     }
 
     /**
@@ -394,14 +422,14 @@ public class Time {
      */
     public final boolean lessThan(final Time oTime) {
         if (greaterThan(oTime)) {
-            return (false);
+            return false;
         }
 
         if (matches(oTime)) {
-            return (false);
+            return false;
         }
 
-        return (true);
+        return true;
     }
 
     /**
@@ -412,11 +440,15 @@ public class Time {
      * @return - true, if objects represent the same time
      */
     public final boolean matches(final Time oTime) {
-        if ((oTime._iYear == _iYear) && (oTime._iMonth == _iMonth) && (oTime._iDay == _iDay) && (oTime._iHour == _iHour)
-                && (oTime._iMinute == _iMinute) && (oTime._iSecs == _iSecs)) {
-            return (true);
+        if (oTime._iYear == _iYear
+                && oTime._iMonth == _iMonth
+                && oTime._iDay == _iDay
+                && oTime._iHour == _iHour
+                && oTime._iMinute == _iMinute
+                && oTime._iSecs == _iSecs) {
+            return true;
         }
-        return (false);
+        return false;
     }
 
     /**
@@ -428,33 +460,45 @@ public class Time {
      */
     public final boolean greaterThan(final Time oTime) {
         if (oTime._iYear < _iYear) {
-            return (true);
+            return true;
         }
 
-        if ((oTime._iYear == _iYear) && (oTime._iMonth < _iMonth)) {
-            return (true);
+        if (oTime._iYear == _iYear
+                && oTime._iMonth < _iMonth) {
+            return true;
         }
 
-        if ((oTime._iYear == _iYear) && (oTime._iMonth == _iMonth) && (oTime._iDay < _iDay)) {
-            return (true);
+        if (oTime._iYear == _iYear
+                && oTime._iMonth == _iMonth
+                && oTime._iDay < _iDay) {
+            return true;
         }
 
-        if ((oTime._iYear == _iYear) && (oTime._iMonth == _iMonth) && (oTime._iDay == _iDay)
-                && (oTime._iHour < _iHour)) {
-            return (true);
+        if (oTime._iYear == _iYear
+                && oTime._iMonth == _iMonth
+                && oTime._iDay == _iDay
+                && oTime._iHour < _iHour) {
+            return true;
         }
 
-        if ((oTime._iYear == _iYear) && (oTime._iMonth == _iMonth) && (oTime._iDay == _iDay) && (oTime._iHour == _iHour)
-                && (oTime._iMinute < _iMinute)) {
-            return (true);
+        if (oTime._iYear == _iYear
+                && oTime._iMonth == _iMonth
+                && oTime._iDay == _iDay
+                && oTime._iHour == _iHour
+                && oTime._iMinute < _iMinute) {
+            return true;
         }
 
-        if ((oTime._iYear == _iYear) && (oTime._iMonth == _iMonth) && (oTime._iDay == _iDay) && (oTime._iHour == _iHour)
-                && (oTime._iMinute == _iMinute) && (oTime._iSecs < _iSecs)) {
-            return (true);
+        if (oTime._iYear == _iYear
+                && oTime._iMonth == _iMonth
+                && oTime._iDay == _iDay
+                && oTime._iHour == _iHour
+                && oTime._iMinute == _iMinute
+                && oTime._iSecs < _iSecs) {
+            return true;
         }
 
-        return (false);
+        return false;
     }
 
     /**
@@ -474,7 +518,7 @@ public class Time {
         Time oHigherTime;
 
         if (matches(oTime)) {
-            return (0);
+            return 0;
         }
 
         if (greaterThan(oTime)) {
@@ -496,7 +540,7 @@ public class Time {
             }
         }
 
-        return (iDifference);
+        return iDifference;
     }
 
     /**
@@ -523,10 +567,13 @@ public class Time {
             }
         }
 
-        if ((iMonth == 4) || (iMonth == 6) || (iMonth == 9) || (iMonth == 11)) {
+        if (iMonth == 4
+                || iMonth == 6
+                || iMonth == 9
+                || iMonth == 11) {
             iMaxDays = 30;
         }
-        return (iMaxDays);
+        return iMaxDays;
     }
 
     /**
@@ -545,7 +592,7 @@ public class Time {
         }
 
         iDays += getDaysUntilEndOfMonth(oTime);
-        return (iDays);
+        return iDays;
     }
 
     /**
@@ -557,6 +604,6 @@ public class Time {
      */
     private int getDaysUntilEndOfMonth(final Time oTime) {
         int iDays = getDaysInMonth(oTime._iMonth, oTime._iYear) - oTime._iDay;
-        return (iDays);
+        return iDays;
     }
 }

@@ -19,30 +19,37 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  * Created in 2021
  */
 public class ReturnStatement implements Statement {
-    private final ProgramPointer _oProgramPointer = new ProgramPointer();
-    private final LineNumberXRef oLineNumberObject = new LineNumberXRef();
+    private final int _iLineNumber;
 
-    int  _iLineNumber;
+    /**
+     * Default constructor.
+     *
+     * An "return" statement terminates the GoSub subroutine and jumps to the command after the GoSub statement.
+     *
+     * @param iLineNumber the line number of this command
+     */
 
     public ReturnStatement(final int iLineNumber) {
         _iLineNumber = iLineNumber;
     }
 
     @Override
-    public int getLineNumber() {
+    public final int getLineNumber() {
         return _iLineNumber;
     }
 
     @Override
-    public void execute() throws Exception {
+    public final void execute() throws Exception {
         final Stack oStack = new Stack();
+        final ProgramPointer oProgramPointer = new ProgramPointer();
+        final LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
         int iTargetLineNumber = ((IntegerValue) oStack.pop()).toInt();
 
         if (iTargetLineNumber == 0) {
             throw (new SyntaxErrorException("Undefined Jump Target"));
         } else {
-            _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
+            oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
                     oLineNumberObject.getNextLineNumber(
                             oLineNumberObject.getLineNumberFromToken(
                                     oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
@@ -51,7 +58,7 @@ public class ReturnStatement implements Statement {
     }
 
     @Override
-    public String content() {
+    public final String content() {
         return ("RETURN");
     }
 }

@@ -60,7 +60,7 @@ public class StringValue implements Value {
     }
 
     @Override
-    public Value notEqual(Value oValue) throws SyntaxErrorException {
+    public final Value notEqual(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof StringValue) {
             if (this.toString().matches(oValue.toString())) {
                 return (new BooleanValue(false));
@@ -94,7 +94,7 @@ public class StringValue implements Value {
     }
 
     @Override
-    public Value power(Value oValue) throws SyntaxErrorException {
+    public final Value power(final Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '^' for strings, the expression is not defined"));
     }
 
@@ -112,7 +112,7 @@ public class StringValue implements Value {
     }
 
     @Override
-    public Value smallerEqualThan(Value oValue) throws SyntaxErrorException {
+    public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
         if ((equals(oValue).toString() == "True") || (smallerThan(oValue).toString() == "True")) {
             return (new BooleanValue(true));
         } else {
@@ -134,7 +134,7 @@ public class StringValue implements Value {
     }
 
     @Override
-    public Value largerEqualThan(Value oValue) throws SyntaxErrorException {
+    public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
         if ((equals(oValue).toString() == "True") || (largerThan(oValue).toString() == "True")) {
             return (new BooleanValue(true));
         } else {

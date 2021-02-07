@@ -4,7 +4,7 @@ import eu.gricom.interpreter.basic.error.DivideByZeroException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 
 /**
- * RealValue.java
+ * LongValue.java
  * <p>
  * Description:
  * <p>
@@ -12,17 +12,17 @@ import eu.gricom.interpreter.basic.error.SyntaxErrorException;
  * <p>
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
-public class IntegerValue implements Value {
-    private final int _iValue;
+public class LongValue implements Value {
+    private final long _lValue;
 
     /**
      * Default constructor.
      *
-     * @param iValue Value to be stored in the container
+     * @param lValue Value to be stored in the container
      */
-    public IntegerValue(final int iValue) {
+    public LongValue(final long lValue) {
 
-        _iValue = iValue;
+        _lValue = lValue;
     }
 
     /**
@@ -33,7 +33,7 @@ public class IntegerValue implements Value {
     @Override
     public final String toString() {
 
-        return (Integer.toString(_iValue));
+        return (Long.toString(_lValue));
     }
 
     /**
@@ -43,17 +43,17 @@ public class IntegerValue implements Value {
      */
     public final double toReal() {
 
-        return (_iValue);
+        return (_lValue);
     }
 
     /**
-     * Transform the content of the number value into a double.
+     * Transform the content of the number value into a long.
      *
-     * @return the content of the variable as a double
+     * @return the content of the variable as a long
      */
-    public final int toInt() {
+    public final Long toLong() {
 
-        return (_iValue);
+        return (_lValue);
     }
 
     /**
@@ -69,140 +69,141 @@ public class IntegerValue implements Value {
 
     @Override
     public final Value equals(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof IntegerValue) {
-            if (this.toInt() == ((IntegerValue) oValue).toInt()) {
+        if (oValue instanceof LongValue) {
+            if (this.toLong() == ((LongValue) oValue).toLong()) {
                 return (new BooleanValue(true));
             }
 
             return (new BooleanValue(false));
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     @Override
     public final Value notEqual(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof IntegerValue) {
-            if (this.toInt() != ((IntegerValue) oValue).toInt()) {
+        if (oValue instanceof LongValue) {
+            if (this.toLong() != ((LongValue) oValue).toLong()) {
                 return (new BooleanValue(true));
             }
 
             return (new BooleanValue(false));
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof IntegerValue) {
-            IntegerValue oReturn = new IntegerValue(_iValue + ((IntegerValue) oValue).toInt());
+        if (oValue instanceof LongValue) {
+            LongValue oReturn = new LongValue(_lValue + ((LongValue) oValue).toLong());
             return (oReturn);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     @Override
     public final Value minus(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof IntegerValue) {
-            IntegerValue oReturn = new IntegerValue(_iValue - ((IntegerValue) oValue).toInt());
+        if (oValue instanceof LongValue) {
+            LongValue oReturn = new LongValue(_lValue - ((LongValue) oValue).toLong());
             return (oReturn);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     @Override
     public final Value multiply(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof IntegerValue) {
-            IntegerValue oReturn = new IntegerValue(_iValue * ((IntegerValue) oValue).toInt());
+        if (oValue instanceof LongValue) {
+            LongValue oReturn = new LongValue(_lValue * ((LongValue) oValue).toLong());
             return (oReturn);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     @Override
     public final Value divide(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
-        IntegerValue oReturn;
+        LongValue oReturn;
 
-        if (oValue instanceof IntegerValue) {
-            if (((IntegerValue) oValue).toInt() != 0) {
-                oReturn = new IntegerValue(_iValue / ((IntegerValue) oValue).toInt());
+        if (oValue instanceof LongValue) {
+            if (((LongValue) oValue).toLong() != 0) {
+                oReturn = new LongValue(_lValue / ((LongValue) oValue).toLong());
             } else {
-                throw (new DivideByZeroException(this.toInt() + "/" + ((IntegerValue) oValue).toInt() + " is a " + "division by zero"));
+                throw (new DivideByZeroException(this.toLong() + "/" + ((LongValue) oValue).toLong() + " is a "
+                        + "division by zero"));
             }
             return (oReturn);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     @Override
     public final Value power(final Value oValue) throws SyntaxErrorException {
-        IntegerValue oReturn;
+        LongValue oReturn;
         RealValue oPower;
 
-        if (oValue instanceof IntegerValue) {
-            oReturn = new IntegerValue(new RealValue((Math.pow(_iValue, ((IntegerValue) oValue).toInt()))).toInt());
+        if (oValue instanceof LongValue) {
+            oReturn = new LongValue(new RealValue((Math.pow(_lValue, ((LongValue) oValue).toReal()))).toInt());
 
             return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not a long"));
     }
 
     @Override
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof IntegerValue) {
-            if (this.toInt() < ((IntegerValue) oValue).toInt()) {
+        if (oValue instanceof LongValue) {
+            if (this.toLong() < ((LongValue) oValue).toLong()) {
                 return (new BooleanValue(true));
             }
 
             return (new BooleanValue(false));
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof IntegerValue) {
-            if (this.toInt() <= ((IntegerValue) oValue).toInt()) {
+        if (oValue instanceof LongValue) {
+            if (this.toLong() <= ((LongValue) oValue).toLong()) {
                 return (new BooleanValue(true));
             }
 
             return (new BooleanValue(false));
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof IntegerValue) {
-            if (this.toInt() > ((IntegerValue) oValue).toInt()) {
+        if (oValue instanceof LongValue) {
+            if (this.toLong() > ((LongValue) oValue).toLong()) {
                 return (new BooleanValue(true));
             }
 
             return (new BooleanValue(false));
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof IntegerValue) {
-            if (this.toInt() >= ((IntegerValue) oValue).toInt()) {
+        if (oValue instanceof LongValue) {
+            if (this.toLong() >= ((LongValue) oValue).toLong()) {
                 return (new BooleanValue(true));
             }
 
             return (new BooleanValue(false));
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
     }
 
     /**
@@ -215,6 +216,6 @@ public class IntegerValue implements Value {
     @Override
     public final String content() {
 
-        return (String.valueOf(_iValue));
+        return (String.valueOf(_lValue));
     }
 }

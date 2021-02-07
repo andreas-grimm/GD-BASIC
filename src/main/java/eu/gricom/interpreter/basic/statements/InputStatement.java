@@ -37,9 +37,10 @@ public class InputStatement implements Statement {
      *
      * An "input" statement reads input from the user and stores it in a variable.
      *
-     * @param strName - the name of the variable to be read.
+     * @param iLineNumber the line number of this command
+     * @param strName the name of the variable to be read.
      */
-    public InputStatement(int iLineNumber, final String strName) {
+    public InputStatement(final int iLineNumber, final String strName) {
         _iLineNumber = iLineNumber;
         _strName = strName;
     }
@@ -47,10 +48,10 @@ public class InputStatement implements Statement {
     /**
      * Get Line Number.
      *
-     * @return iLineNumber - the command line number of the statement
+     * @return the command line number of the statement
      */
     @Override
-    public int getLineNumber() {
+    public final int getLineNumber() {
         return (_iLineNumber);
     }
 

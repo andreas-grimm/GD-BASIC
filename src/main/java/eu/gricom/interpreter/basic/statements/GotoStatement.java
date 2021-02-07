@@ -58,6 +58,8 @@ public final class GotoStatement implements Statement {
 
     /**
      * Execute the transaction.
+     *
+     * @throws SyntaxErrorException for unknown or incorrect formatted targets
      */
     public void execute() throws SyntaxErrorException {
         // This part of the method is executed if the BASIC interpreter uses labels (e.g. we are using JASIC)

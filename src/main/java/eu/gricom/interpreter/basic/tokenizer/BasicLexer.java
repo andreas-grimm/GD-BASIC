@@ -23,7 +23,7 @@ public class BasicLexer implements Tokenizer {
     private final Logger _oLogger = new Logger(this.getClass().getName());
 
     @Override
-    public List<Token> tokenize(String strSource) throws SyntaxErrorException {
+    public final List<Token> tokenize(final String strSource) throws SyntaxErrorException {
 
         List<Token> aoTokens = new ArrayList<>();
 
@@ -72,8 +72,8 @@ public class BasicLexer implements Tokenizer {
                     if (bIsStringRunning) {
                         if (oToken == null) {
                             throw (new SyntaxErrorException(
-                                    "Syntax Error: Unrecognized character sequence: " + iLineNumber +
-                                            " " + strProgramLine));
+                                    "Syntax Error: Unrecognized character sequence: " + iLineNumber
+                                            + " " + strProgramLine));
                         }
 
                         if (strWord.endsWith("\"")) {
@@ -94,8 +94,8 @@ public class BasicLexer implements Tokenizer {
                             // we found a reserved word...
                             TokenType oTokenType = ReservedWords.getTokenType(iIndex);
 
-                            if ((oTokenType == TokenType.REM) ||
-                                    (oTokenType == TokenType.COMMENT))  {
+                            if ((oTokenType == TokenType.REM)
+                                    || (oTokenType == TokenType.COMMENT))  {
                                 aoTokens.add(new Token(strProgramLine, oTokenType, iLineNumber));
 
                                 break;
@@ -148,7 +148,13 @@ public class BasicLexer implements Tokenizer {
         return (aoTokens);
     }
 
-    private boolean isBoolean(String strWord) {
+    /**
+     * isBoolean identifies a boolean in the BASIC program by the keywords "TRUE" and "FALSE".
+     *
+     * @param strWord argument for the check
+     * @return true if argument is a boolean
+     */
+    private boolean isBoolean(final String strWord) {
         if (strWord.toUpperCase(Locale.ROOT).matches("TRUE") || strWord.toUpperCase(Locale.ROOT).matches("FALSE")) {
             return (true);
         }
@@ -156,7 +162,13 @@ public class BasicLexer implements Tokenizer {
         return (false);
     }
 
-    private boolean isString(String strWord) {
+    /**
+     * isString identifies a string in the BASIC program by the trailing quotation marks (").
+     *
+     * @param strWord argument for the check
+     * @return true if argument is a string
+     */
+    private boolean isString(final String strWord) {
         if (strWord.startsWith("\"")) {
             return (true);
         }
@@ -164,7 +176,13 @@ public class BasicLexer implements Tokenizer {
         return (false);
     }
 
-    private boolean isNumber(String strWord) {
+    /**
+     * isNumber uses a regular expression to verify that the argument string contains a number.
+     *
+     * @param strWord argument for the check
+     * @return true if argument is a number
+     */
+    private boolean isNumber(final String strWord) {
         Pattern oPattern = Pattern.compile("-?\\d*(\\.\\d+)?");
 
         if (strWord == null) {

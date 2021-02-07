@@ -1,7 +1,6 @@
 package eu.gricom.interpreter.basic.memoryManager;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
-import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.variableTypes.BooleanValue;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
@@ -22,11 +21,11 @@ import java.util.Map;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class VariableManagement {
-    private final static Map<String, Value> _aoUntyped = new HashMap<>();
-    private final static Map<String, BooleanValue> _aoBooleans = new HashMap<>();
-    private final static Map<String, IntegerValue> _aoIntegers = new HashMap<>();
-    private final static Map<String, RealValue> _aoReals = new HashMap<>();
-    private final static Map<String, StringValue> _aoStrings = new HashMap<>();
+    private static Map<String, Value> _aoUntyped = new HashMap<>();
+    private static Map<String, BooleanValue> _aoBooleans = new HashMap<>();
+    private static Map<String, IntegerValue> _aoIntegers = new HashMap<>();
+    private static Map<String, RealValue> _aoReals = new HashMap<>();
+    private static Map<String, StringValue> _aoStrings = new HashMap<>();
 
     /**
      * Default Constructor.
@@ -38,25 +37,25 @@ public class VariableManagement {
     /**
      * Put a key - value pair into the variable map structure.
      *
-     * @param strName - key part of the pair
-     * @param oValue - value part of the pair, here as an Value object
+     * @param strName key part of the pair
+     * @param oValue value part of the pair, here as an Value object
      */
-    public final void putMap(final String strName, final Value oValue) throws SyntaxErrorException {
+    public final void putMap(final String strName, final Value oValue) {
 
         switch (strName.substring(strName.length() - 1)) {
             case "$":
-                _aoStrings.put(strName, (StringValue)oValue);
+                _aoStrings.put(strName, (StringValue) oValue);
                 break;
             case "%":
             case "&":
-                _aoIntegers.put(strName, (IntegerValue)oValue);
+                _aoIntegers.put(strName, (IntegerValue) oValue);
                 break;
             case "!":
             case "#":
-                _aoReals.put(strName, (RealValue)oValue);
+                _aoReals.put(strName, (RealValue) oValue);
                 break;
             case "@":
-                _aoBooleans.put(strName, (BooleanValue)oValue);
+                _aoBooleans.put(strName, (BooleanValue) oValue);
                 break;
             default:
                 _aoUntyped.put(strName, oValue);
@@ -68,6 +67,7 @@ public class VariableManagement {
      *
      * @param strName - key part of the pair
      * @param dValue - value part of the pair, here as an double
+     * @throws SyntaxErrorException variable is not marked as real
      */
     public final void putMap(final String strName, final double dValue) throws SyntaxErrorException {
         if (strName.endsWith("!") || strName.endsWith("#")) {
@@ -82,8 +82,9 @@ public class VariableManagement {
     /**
      * Put a key - value pair into the variable map structure.
      *
-     * @param strName - key part of the pair
-     * @param strValue - value part of the pair, here as a string
+     * @param strName key part of the pair
+     * @param strValue value part of the pair, here as a string
+     * @throws SyntaxErrorException variable is not marked as string
      */
     public final void putMap(final String strName, final String strValue) throws SyntaxErrorException {
         if (strName.endsWith("$")) {
@@ -100,17 +101,18 @@ public class VariableManagement {
      *
      * @param strName - key part of the pair
      * @param iValue - value part of the pair, here as an integer
+     * @throws SyntaxErrorException variable is not marked as integer
      */
     public final void putMap(final String strName, final int iValue) throws SyntaxErrorException {
-        if (strName.substring(strName.length() - 1).matches("%") ||
-                strName.substring(strName.length() - 1).matches("&")) {
+        if (strName.substring(strName.length() - 1).matches("%")
+                || strName.substring(strName.length() - 1).matches("&")) {
             IntegerValue oValue = new IntegerValue(iValue);
             _aoIntegers.put(strName, oValue);
             return;
         }
 
-        throw new SyntaxErrorException("Syntax Error: Variable name [" + strName + "] does not end as a Integer: '%' " +
-                "or '&'");
+        throw new SyntaxErrorException("Syntax Error: Variable name [" + strName + "] does not end as a Integer: '%' "
+                + "or '&'");
     }
 
     /**
@@ -118,6 +120,7 @@ public class VariableManagement {
      *
      * @param strName - key part of the pair
      * @param bValue - value part of the pair, here as a boolean
+     * @throws SyntaxErrorException variable name is not marked as boolean
      */
     public final void putMap(final String strName, final boolean bValue) throws SyntaxErrorException {
         if (strName.endsWith("@")) {
@@ -162,16 +165,16 @@ public class VariableManagement {
     /**
      * Verifies that the variables structure contains a given key.
      *
-     * @param strKey - Key to be verified
+     * @param strKey Key to be verified
      * @return true, if key is in the data structure
      */
     public final boolean mapContainsKey(final String strKey) {
-        if (_aoUntyped.containsKey(strKey) ||
-            _aoBooleans.containsKey(strKey) ||
-            _aoIntegers.containsKey(strKey) ||
-            _aoReals.containsKey(strKey) ||
-            _aoStrings.containsKey(strKey)) {
-            return(true);
+        if (_aoUntyped.containsKey(strKey)
+                || _aoBooleans.containsKey(strKey)
+                || _aoIntegers.containsKey(strKey)
+                || _aoReals.containsKey(strKey)
+                || _aoStrings.containsKey(strKey)) {
+            return (true);
         }
 
         return (false);

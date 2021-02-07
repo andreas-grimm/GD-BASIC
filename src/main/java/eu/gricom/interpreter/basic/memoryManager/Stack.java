@@ -33,7 +33,7 @@ public class Stack {
      *
      * @param  oValue How far back in the token stream to look.
      */
-    public void push (final Value oValue) {
+    public final void push(final Value oValue) {
         _oStack.push(oValue);
     }
 
@@ -43,14 +43,14 @@ public class Stack {
      * be the token just consumed, last(2) the one before that, etc.
      *
      * @return Value retrieved from the stack
-     * @throws EmptyStackException
+     * @throws EmptyStackException the stack is empty while a pop method is called
      */
-    public Value pop() throws EmptyStackException {
+    public final Value pop() throws EmptyStackException {
         if (!_oStack.isEmpty()) {
-            return ((Value) _oStack.pop());
+            return (Value) _oStack.pop();
         }
 
-        throw (new EmptyStackException("Stack Empty"));
+        throw new EmptyStackException("Stack Empty");
     }
 
 
@@ -58,7 +58,7 @@ public class Stack {
      * Gets a previously consumed token, indexing backwards. last(1) will
      * be the token just consumed, last(2) the one before that, etc.
      */
-    public void reset() {
+    public final void reset() {
         _oStack.empty();
     }
 }

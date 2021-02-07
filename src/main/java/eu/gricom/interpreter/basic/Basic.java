@@ -21,8 +21,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,7 +36,6 @@ import java.util.Locale;
  */
 @SuppressWarnings("SpellCheckingInspection")
 public class Basic {
-    private static BufferedReader _oLineIn;
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strBasicVersion = "basic";
     private LineNumberXRef _oLineNumbers = new LineNumberXRef();
@@ -49,8 +46,6 @@ public class Basic {
      * current statement.
      */
     public Basic() {
-        InputStreamReader oConverter = new InputStreamReader(System.in);
-        _oLineIn = new BufferedReader(oConverter);
     }
 
     /**
@@ -95,7 +90,8 @@ public class Basic {
             if (oToken.getType().toString().contains("LINE")) {
                 _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: []");
             } else {
-                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: [" + oToken.getText() + "]");
+                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: ["
+                        + oToken.getText() + "]");
             }
             iCounter++;
         }
@@ -135,7 +131,7 @@ public class Basic {
 
                     if (_strBasicVersion.contains("jasic")) {
                         _oLogger.debug(
-                                "Current Source Code Line [" + iThisStatement + "/"+ aoStatements.size() + "]: " + aoStatements.get(
+                                "Current Source Code Line [" + iThisStatement + "/" + aoStatements.size() + "]: " + aoStatements.get(
                                         iThisStatement).content());
                     } else {
                         _oLogger.debug(
@@ -169,7 +165,6 @@ public class Basic {
         oLogger.setLogLevel("");
 
         boolean bParseOK = true;
-        String strParseError = null;
         CommandLine oCommandLine = null;
 
         // create Options object
@@ -184,13 +179,14 @@ public class Basic {
 
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(options, args);
-        } catch (ParseException exParseException) {
+        } catch (ParseException eParseException) {
             bParseOK = false;
-            // TODO: This here makes no sense...
-            strParseError = exParseException.getMessage();
+            System.out.println(eParseException.getMessage());
+            System.exit(-1);
         }
 
-        if ((oCommandLine != null) && (!oCommandLine.hasOption("q"))) {
+        if (oCommandLine != null
+                && !oCommandLine.hasOption("q")) {
 
             long lMaxMemory = Runtime.getRuntime().maxMemory();
             Printer.println();
@@ -204,7 +200,8 @@ public class Basic {
             Printer.println();
         }
 
-        if ((oCommandLine != null) && (oCommandLine.hasOption("v"))) {
+        if (oCommandLine != null
+                && oCommandLine.hasOption("v")) {
             String strLogLevel = oCommandLine.getOptionValue("v");
             String strLogLevelList = "trace|debug|info|warning";
 
@@ -215,7 +212,8 @@ public class Basic {
             oLogger.debug("Log Level set:" + strLogLevel + "...");
         }
 
-        if ((oCommandLine != null) && (oCommandLine.hasOption("h"))) {
+        if (oCommandLine != null
+                && oCommandLine.hasOption("h")) {
             // automatically generate the help statement
             oLogger.debug("Display help message...");
 
@@ -229,7 +227,8 @@ public class Basic {
         }
 
         // Just show the usage and quit if a script wasn't provided.
-        if ((oCommandLine != null) && (!oCommandLine.hasOption("i"))) {
+        if (oCommandLine != null
+                && !oCommandLine.hasOption("i")) {
             oLogger.error("Program file name missing...");
             Printer.println("");
             Printer.println("usage: java -jar BASIC-<build-name>.jar -i <filename.bas>");
@@ -237,7 +236,8 @@ public class Basic {
             System.exit(-1);
         }
 
-        if ((oCommandLine != null) && (oCommandLine.hasOption("b"))) {
+        if (oCommandLine != null
+                && oCommandLine.hasOption("b")) {
             // get the Basic Version
             oLogger.debug("Get BASIC version...");
             String strBasicVersion = oCommandLine.getOptionValue("b").toLowerCase(Locale.ROOT);

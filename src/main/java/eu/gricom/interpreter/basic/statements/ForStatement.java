@@ -39,15 +39,19 @@ public final class ForStatement implements Statement {
      * Gets a previously consumed token, indexing backwards. last(1) will
      * be the token just consumed, last(2) the one before that, etc.
      *
+     * @param iTokenNo number of the token that is translated into the FOR statement
      * @param strName Name of the counting variable.
      * @param oStartValueExpression Expression for the calculation of start value.
      * @param oEndValueExpression Expression for the calculation of the end value.
+     * @param oStepSize size of the steps in which the loop is processed
+     * @param iPostLoopStatement location of the next command to be processed after the loop
      */
-
-    public ForStatement(int iTokenNo, final String strName,
+    public ForStatement(final int iTokenNo,
+                        final String strName,
                         final Expression oStartValueExpression,
                         final Value oEndValueExpression,
-                        final Value oStepSize, final int iPostLoopStatement) {
+                        final Value oStepSize,
+                        final int iPostLoopStatement) {
         _iTokenNo = iTokenNo;
         _strName = strName;
         _oStartValue = oStartValueExpression;
@@ -78,8 +82,8 @@ public final class ForStatement implements Statement {
             double dStepSize = _oStepSize.toReal();
             double dCounter = _oVariableManagement.getMap(_strName).toReal();
 
-            if (((dCounter + dStepSize <= dEndValue) && (!_bCountingDown)) ||
-                ((dCounter + dStepSize >= dEndValue) && (_bCountingDown))) {
+            if (((dCounter + dStepSize <= dEndValue) && (!_bCountingDown))
+                || ((dCounter + dStepSize >= dEndValue) && (_bCountingDown))) {
 
                 // if the sum of the current value + step size remains lower than the end value, continue
                 _oVariableManagement.putMap(_strName, new RealValue(RealValue.round(dCounter + dStepSize, 2)));

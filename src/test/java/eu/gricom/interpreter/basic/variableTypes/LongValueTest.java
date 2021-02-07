@@ -1,0 +1,308 @@
+package eu.gricom.interpreter.basic.variableTypes;
+
+import eu.gricom.interpreter.basic.error.DivideByZeroException;
+import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class LongValueTest {
+
+    @Test
+    public void testToString() {LongValue oNumberValue = new LongValue(999);
+
+        String strResult = oNumberValue.toString();
+        assertTrue(strResult.matches("999"));
+    }
+
+    @Test
+    public void testToNumber() {LongValue oNumberValue = new LongValue(999);
+
+        double dResult = oNumberValue.toReal();
+        assertEquals(dResult, 999);
+    }
+
+    @Test
+    public void testEvaluate() {
+        LongValue oNumberValue = new LongValue(999);
+        LongValue oNewValue = (LongValue) oNumberValue.evaluate();
+
+        assertEquals(oNumberValue, oNewValue);
+    }
+
+    @Test
+    public void testEquals() {
+        try {
+            LongValue oFirstValue = new LongValue(1);
+            LongValue oSecondValue = new LongValue(1);
+
+            BooleanValue oResult = (BooleanValue) oFirstValue.equals(oSecondValue);
+            assertTrue(oResult.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testNotEqual() {
+        try {
+            LongValue oFirstValue = new LongValue(1);
+            LongValue oSecondValue = new LongValue(2);
+
+            BooleanValue oResult = (BooleanValue) oFirstValue.notEqual(oSecondValue);
+            assertTrue(oResult.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testPlus() {
+        try {
+            LongValue oFirstValue = new LongValue(1);
+            LongValue oSecondValue = new LongValue(2);
+
+            LongValue oResultValue = (LongValue) oFirstValue.plus(oSecondValue);
+            assertTrue(oResultValue.toLong() == 3);
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testPlusTypeException() {
+        LongValue oFirstValue = new LongValue(1);
+        RealValue oSecondValue = new RealValue(2);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            LongValue oResultValue = (LongValue) oFirstValue.plus(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testMinus() {
+        try {
+            LongValue oFirstValue = new LongValue(1);
+            LongValue oSecondValue = new LongValue(2);
+
+            LongValue oResultValue = (LongValue) oFirstValue.minus(oSecondValue);
+            assertTrue(oResultValue.toLong() == -1);
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testMinusTypeException() {
+        LongValue oFirstValue = new LongValue(1);
+        RealValue oSecondValue = new RealValue(2);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            LongValue oResultValue = (LongValue) oFirstValue.minus(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testMultiply() {
+        try {
+            LongValue oFirstValue = new LongValue(1);
+            LongValue oSecondValue = new LongValue(2);
+
+            LongValue oResultValue = (LongValue) oFirstValue.multiply(oSecondValue);
+            assertTrue(oResultValue.toLong() == 2);
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testMultiplyTypeException() {
+        LongValue oFirstValue = new LongValue(1);
+        RealValue oSecondValue = new RealValue(2);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            LongValue oResultValue = (LongValue) oFirstValue.multiply(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testDivide() {
+        try {
+            LongValue oFirstValue = new LongValue(1);
+            LongValue oSecondValue = new LongValue(2);
+
+            LongValue oResultValue = (LongValue) oFirstValue.divide(oSecondValue);
+            assertTrue(oResultValue.toLong() == 0);
+
+        } catch (SyntaxErrorException | DivideByZeroException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testDivideTypeException() {
+        LongValue oFirstValue = new LongValue(1);
+        RealValue oSecondValue = new RealValue(2);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            LongValue oResultValue = (LongValue) oFirstValue.divide(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testDivideByZero() {
+        LongValue oFirstValue = new LongValue(1);
+        LongValue oSecondValue = new LongValue(0);
+
+        assertThrows(DivideByZeroException.class, () -> {
+            LongValue oResultValue = (LongValue) oFirstValue.divide(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testPower() {
+        try {
+            LongValue oFirstValue = new LongValue(2);
+            LongValue oSecondValue = new LongValue(2);
+
+            LongValue oResultValue = (LongValue)oFirstValue.power(oSecondValue);
+            assertTrue(oResultValue.toLong() == 4);
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testPowerTypeException() {
+        LongValue oFirstValue = new LongValue(2);
+        RealValue oSecondValue = new RealValue(2);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            LongValue oResultValue = (LongValue) oFirstValue.power(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testSmallerThan() {
+        try {
+            LongValue oFirstValue = new LongValue(1);
+            LongValue oSecondValue = new LongValue(2);
+
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerThan(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testSmallerThanTypeException() {
+        LongValue oFirstValue = new LongValue(1);
+        RealValue oSecondValue = new RealValue(2);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testSmallerEqualThan() {
+        try {
+            LongValue oFirstValue = new LongValue(1);
+            LongValue oSecondValue = new LongValue(2);
+
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testSmallerEqualThanTypeException() {
+        LongValue oFirstValue = new LongValue(1);
+        RealValue oSecondValue = new RealValue(2);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testLargerThan() {
+        try {
+            LongValue oFirstValue = new LongValue(2);
+            LongValue oSecondValue = new LongValue(1);
+
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testLargerThanTypeException() {
+        LongValue oFirstValue = new LongValue(2);
+        RealValue oSecondValue = new RealValue(1);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testLargerEqualThan() {
+        try {
+            LongValue oFirstValue = new LongValue(2);
+            LongValue oSecondValue = new LongValue(1);
+
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testLargerEqualThanTypeException() {
+        LongValue oFirstValue = new LongValue(2);
+        RealValue oSecondValue = new RealValue(1);
+
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+        });
+    }
+}
