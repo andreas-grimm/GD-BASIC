@@ -23,9 +23,9 @@ public final class ReservedWords {
      */
     private static String[] _astrReservedWords = {
             "ABS", "AND", "ASC", "ATN",
-            "CALL", "CDBL", "CHR$", "CINT", "CLOSE", "CLS", "CMD", "CONT", "CONTINUE", "COS", "CSNG",
+            "CALL", "CDBL", "CHR$", "CINT", "CLOSE", "CLS", "CMD", "CONT", "COS", "CSNG",
             "DATA", "DEFFN", "DIM",
-            "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT-WHILE", "EXP",
+            "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT", "EXP",
             "FOR", "FRE",
             "GOSUB", "GOTO",
             "IF", "INSTR$", "INT", "INPUT",
@@ -48,10 +48,10 @@ public final class ReservedWords {
     private static TokenType[] _aeTokenTypes = {
         TokenType.ABS, TokenType.AND, TokenType.ASC, TokenType.ATN,
         TokenType.CALL, TokenType.CDBL, TokenType.CHR, TokenType.CINT, TokenType.CLOSE, TokenType.CLS, TokenType.CMD,
-            TokenType.CONT, TokenType.CONTWHILE, TokenType.COS, TokenType.CSNG,
+            TokenType.CONT, TokenType.COS, TokenType.CSNG,
         TokenType.DATA, TokenType.DEFFN, TokenType.DIM,
         TokenType.ELSE, TokenType.END, TokenType.ENDIF, TokenType.ENDWHILE, TokenType.EOF, TokenType.EOL, TokenType.ERL,
-            TokenType.ERR, TokenType.EXITWHILE, TokenType.EXP,
+            TokenType.ERR, TokenType.EXIT, TokenType.EXP,
         TokenType.FOR, TokenType.FRE,
         TokenType.GOSUB, TokenType.GOTO,
         TokenType.IF, TokenType.INSTR, TokenType.INT, TokenType.INPUT,

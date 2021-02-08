@@ -310,6 +310,9 @@ The implementation does only allow
 
 #### Variable Type Integer
 
+#### Variable Type Integer
+supported as of the Q2 release...
+
 #### Variable Type Real
 
 #### Mathematical Functions
@@ -335,13 +338,14 @@ and does not need to be modified in case additional types (like
 
 ##### `DO - UNTIL` Loop Statement
 
-    DO <statements> CONTINUE-DO <statements> EXIT-DO <statements> LOOP-UNTIL <condition>
+The `DO - UNTIL` loop provides the function of a receiving loop (contrary to the `WHILE` loop, which is a )
 
-###### `CONTINUE-DO` Statement
+    DO <statements> EXIT <statements> UNTIL <condition>
 
-###### `EXIT-DO` Statement
 
-###### `LOOP-UNTIL` Statement
+###### `EXIT` Statement
+
+###### `UNTIL` Statement
 
 ##### `FOR` Statement
 A `For` statement counts an integer or real value from a start value to an end value - and with every increase it
@@ -481,9 +485,7 @@ in every string. This function should therefore not change the output.
 
     WHILE <condition> <statements> CONTINUE <statements> EXIT-WHILE <statements> END-WHILE
 
-###### `CONTINUE-WHILE` Statement
-
-###### `EXIT-WHILE` Statement
+###### `EXIT` Statement
 
 ###### `END-WHILE` Statement
 
@@ -514,8 +516,6 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `CLS` | reserved |  | implemented |  |  |
 | `CLR` |  |  |  |  | implemented |
 | `CONT` | reserved |  |  |  |  |  |
-| `CONTINUE-DO` | reserved |  |  |  |  |  |
-| `CONTINUE-WHILE` | reserved |  |  |  |  |  |
 | `CSAVE` |  |  | implemented | | |
 | `CMD` | reserved |  | implemented | | implemented |
 | `COLOR=` |  |  |  | implemented |  |
@@ -549,6 +549,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `ERR` | reserved |  | implemented |  |
 | `ERROR` |  |  | implemented |  |  |
 | `EXP` | reserved |  | implemented | implemented | implemented |
+| `EXIT` | reserved |  |  |  |  |
 | `FIELD` |  |  | implemented |  |  |
 | `FIX` | | not planned | implemented | | |
 | `FLASH` |  |  | implemented |  |  |

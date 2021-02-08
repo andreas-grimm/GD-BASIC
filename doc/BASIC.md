@@ -1,7 +1,7 @@
-This document describes the features and capabilities of the BASIC version
-implemented in this interpreter. The version is very similar to the original 
-BASIC interpreters and additional functions are added to provide even more of
-the original functionality. 
+This document describes the features and capabilities of the BASIC version implemented in this interpreter. The version is 
+very similar to the original BASIC interpreters and additional functions are added to provide even more of the original functionality.
+If the functionality of the interpreter does not match the documentation, refer to the error reporting processing in Github.
+Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
 # GDBasic language syntax
 ---------------------
@@ -24,8 +24,8 @@ the example of `JRUBY` for Ruby or `JYTHON` for Python.
 
 ### General Rules Concerning the Different Dialects
 Every BASIC program consists of different elements:
-* Commands,
-* Variables, and
+* Variables,
+* Statement and Commands, and
 * Controls (which look like commands, but control the execution)
 
 ### JASIC
@@ -209,8 +209,6 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `CLS` | reserved | |
 | `CMD` | reserved | |
 | `CONT` | reserved | |
-| `CONTINUE-DO` | reserved | |
-| `CONTINUE-WHILE` | reserved | |
 | `COS` | reserved | |
 | `CSNG` | reserved | |
 | `DATA` | reserved | |
@@ -220,13 +218,12 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `ELSE` | planned | |
 | `END` | implemented | |
 | `END-IF` | implemented | |
-| `END-WHILE` | planned | |
+| `END-WHILE` | implemented | |
 | `EOF` | reserved | |
 | `EOL` | reserved | |
 | `ERL` | reserved | |
 | `ERR` | reserved | |
-| `EXIT-DO` | planned | |
-| `EXIT-WHILE` | planned | |
+| `EXIT` | planned | |
 | `EXP` | reserved | |
 | `FOR` | implemented | |
 | `FRE` | reserved | |
@@ -334,9 +331,50 @@ operation only the assignment operator can be used. The comparison user is gener
 
 ### Commands
 
+As the previous section described variables and variable types, this section describes commands and command structure. 
+In sequence, this section describes:
+- Loops and Iterations
+- Input and Output Commands
+- Control Structures / Process Control
+- Expressions and Mathematical Functions
+
+Finally, special function of the GD-Basic implementations are discussed, such as the `SYSTEM` interface and the `CALL` function
+Those features will be implemented potentially in the Q2 release.
+
+#### Loops and Iterations
+
+This section of the BASIC programming guide describes the three different loops GD-Basic provides:
+- the `WHILE`-loop, which is a check-first style loop: The condition for the loop is checked before the loop is executed,
+- the `DO`-loop, which is a execute-first loop: The loop body is executed before the repetition of the loop is verified, and
+- the `FOR`-loop, which is a counting loop: the loop counts a value from a start to an end in certain step sizes.
+
+Only the `FOR`-loop can be found in standard BASIC literature, the `WHILE` and the `DO` loops are extensions implemented
+in other BASIC dialects - and proven useful.
+
+##### WHILE Command
+The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
+The following chart describes the loop structure:
+
+![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/While-Loop.jpg)
+
+The syntax of the `WHILE` loop is as follows:
+
+`WHILE <condition> <statement> EXIT <statement> END-WHILE`
+
+###### BASIC Syntax
+
+    210 WHILE X# < 3
+    220 PRINT X#
+    230 X# = X# + 1
+    240 END-WHILE
+
+###### EXIT Command
+The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
+statement.
+
 ##### DO Command
 
-`DO <statement> CONTINUE-DO <statement> EXIT-DO <statement> UNTIL <condition>`
+`DO <statement> EXIT <statement> UNTIL <condition>`
 
 ###### BASIC Syntax
 
@@ -346,9 +384,11 @@ operation only the assignment operator can be used. The comparison user is gener
     40  X# = X# + 1
     50 UNTIL X# >= 10
 
-###### CONTINUE-DO Command
+###### EXIT Command
+The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
+statement.
 
-###### EXIT-DO Command
+###### UNTIL Command
 
 ##### FOR Command
 The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command), 
@@ -412,32 +452,6 @@ Example:
 *NOTE:* In the current version of BASIC, the character behind the comma has to be a white space (" "). A missing white space will
 lead to an error message.
 
-##### WHILE Command
-
-`WHILE <condition> <statement> CONTINUE-WHILE <statement> EXIT-WHILE <statement> END-WHILE`
-
-###### BASIC Syntax
-
-    WHILE X# > 0 
-      PRINT X#
-      X# = X# -1
-    END-WHILE
-
-###### CONTINUE-WHILE Command
-The `CONTINUE-WHILE` command stops the execution of the loop block and jumps back to the `WHILE` statement:
-
-    WHILE X# > 0 
-      PRINT X#
-      X# = X# -1
-      CONTINUE-WHILE
-      PRINT "This line will not be printed."
-    END-WHILE
-
-
-###### EXIT-WHILE Command
-The `EXIT-WHILE` command terminates the `WHILE` loop immediatedly and continues with the first command after the `END-WHILE`
-statement.
-
 ### Process Control
 
 #### Unconditional Process Control (Jump)
@@ -452,7 +466,8 @@ Returns to the next statement past the command.
       100 GOSUB 200
       110 PRINT "Second line output"
       120 END
-      ...
+
+
       200 PRINT "First line output"
       210 RETURN
 
@@ -487,7 +502,9 @@ Jumps to the statement at the given line number. Processes the program from that
       10 PRINT "Hello"
       20 GOTO 10
 
-##### Conditional Process Control
+#### Conditional Process Control
+
+##### IF Command
 
 ###### JASIC Syntax
 
