@@ -52,7 +52,7 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public int getLineNumber() {
-        return (_iLineNumber);
+        return _iLineNumber;
     }
 
     /**
@@ -74,6 +74,6 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public String content() {
-        return ("ASSIGN [" + _strName + ":= " + _oValue.content() + "]");
+        return "ASSIGN [" + _strName + ":= " + _oValue.content() + "]";
     }
 }

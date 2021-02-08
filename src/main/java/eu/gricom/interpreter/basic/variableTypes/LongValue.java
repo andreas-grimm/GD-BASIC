@@ -33,7 +33,7 @@ public class LongValue implements Value {
     @Override
     public final String toString() {
 
-        return (Long.toString(_lValue));
+        return Long.toString(_lValue);
     }
 
     /**
@@ -43,7 +43,7 @@ public class LongValue implements Value {
      */
     public final double toReal() {
 
-        return (_lValue);
+        return _lValue;
     }
 
     /**
@@ -53,7 +53,7 @@ public class LongValue implements Value {
      */
     public final Long toLong() {
 
-        return (_lValue);
+        return _lValue;
     }
 
     /**
@@ -63,7 +63,7 @@ public class LongValue implements Value {
      */
     public final Value evaluate() {
 
-        return (this);
+        return this;
     }
 
 
@@ -71,56 +71,56 @@ public class LongValue implements Value {
     public final Value equals(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof LongValue) {
             if (this.toLong() == ((LongValue) oValue).toLong()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     @Override
     public final Value notEqual(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof LongValue) {
             if (this.toLong() != ((LongValue) oValue).toLong()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof LongValue) {
             LongValue oReturn = new LongValue(_lValue + ((LongValue) oValue).toLong());
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     @Override
     public final Value minus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof LongValue) {
             LongValue oReturn = new LongValue(_lValue - ((LongValue) oValue).toLong());
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     @Override
     public final Value multiply(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof LongValue) {
             LongValue oReturn = new LongValue(_lValue * ((LongValue) oValue).toLong());
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     @Override
@@ -131,79 +131,78 @@ public class LongValue implements Value {
             if (((LongValue) oValue).toLong() != 0) {
                 oReturn = new LongValue(_lValue / ((LongValue) oValue).toLong());
             } else {
-                throw (new DivideByZeroException(this.toLong() + "/" + ((LongValue) oValue).toLong() + " is a "
-                        + "division by zero"));
+                throw new DivideByZeroException(this.toLong() + "/" + ((LongValue) oValue).toLong() + " is a "
+                        + "division by zero");
             }
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     @Override
     public final Value power(final Value oValue) throws SyntaxErrorException {
         LongValue oReturn;
-        RealValue oPower;
 
         if (oValue instanceof LongValue) {
-            oReturn = new LongValue(new RealValue((Math.pow(_lValue, ((LongValue) oValue).toReal()))).toInt());
+            oReturn = new LongValue(new RealValue(Math.pow(_lValue, oValue.toReal())).toInt());
 
             return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a long"));
+        throw new SyntaxErrorException(oValue.content() + " is not a Long");
     }
 
     @Override
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof LongValue) {
             if (this.toLong() < ((LongValue) oValue).toLong()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof LongValue) {
             if (this.toLong() <= ((LongValue) oValue).toLong()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof LongValue) {
             if (this.toLong() > ((LongValue) oValue).toLong()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof LongValue) {
             if (this.toLong() >= ((LongValue) oValue).toLong()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an long"));
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
     /**
@@ -216,6 +215,6 @@ public class LongValue implements Value {
     @Override
     public final String content() {
 
-        return (String.valueOf(_lValue));
+        return String.valueOf(_lValue);
     }
 }

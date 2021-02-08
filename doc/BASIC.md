@@ -228,7 +228,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `EXIT-DO` | planned | |
 | `EXIT-WHILE` | planned | |
 | `EXP` | reserved | |
-| `FOR` | planned | |
+| `FOR` | implemented | |
 | `FRE` | reserved | |
 | `GOSUB` | implemented | |
 | `GOTO` | implemented | implemented |
@@ -242,7 +242,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `LOG` | reserved | |
 | `MEM` | reserved | |
 | `MID$` | reserved | |
-| `NEXT` | planned | |
+| `NEXT` | implemented | |
 | `NOT` | reserved | |
 | `ON` | reserved | |
 | `OR` | reserved | |
@@ -257,7 +257,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `SGN` | reserved | |
 | `SIN` | reserved | |
 | `SQR` | reserved | |
-| `STEP` | planned | |
+| `STEP` | implemented | |
 | `STOP` | planned | |
 | `STRING$` | reserved | |
 | `STR$` | reserved | |
@@ -266,7 +266,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `TAN` | reserved | |
 | `THEN` | implemented | implemented |
 | `TIME$` | reserved | |
-| `TO` | planned | |
+| `TO` | implemented | |
 | `UNTIL` | reserved | |
 | `VAL` | reserved | |
 | `WHILE` | planned | |

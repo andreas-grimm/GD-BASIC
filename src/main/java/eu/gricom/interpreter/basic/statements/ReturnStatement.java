@@ -47,7 +47,7 @@ public class ReturnStatement implements Statement {
         int iTargetLineNumber = ((IntegerValue) oStack.pop()).toInt();
 
         if (iTargetLineNumber == 0) {
-            throw (new SyntaxErrorException("Undefined Jump Target"));
+            throw new SyntaxErrorException("Undefined Jump Target");
         } else {
             oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
                     oLineNumberObject.getNextLineNumber(
@@ -59,6 +59,6 @@ public class ReturnStatement implements Statement {
 
     @Override
     public final String content() {
-        return ("RETURN");
+        return "RETURN";
     }
 }

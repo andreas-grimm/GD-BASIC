@@ -61,10 +61,10 @@ public class BooleanValue implements Value {
     public final String toString() {
 
         if (_bValue) {
-            return ("True");
+            return "True";
         }
 
-        return ("False");
+        return "False";
     }
 
     /**
@@ -73,7 +73,7 @@ public class BooleanValue implements Value {
      * @return the content of the variable as a string
      */
     public final boolean toBoolean() {
-        return (_bValue);
+        return _bValue;
     }
 
     /**
@@ -84,10 +84,10 @@ public class BooleanValue implements Value {
     public final double toReal() {
 
         if (_bValue) {
-            return (1);
+            return 1;
         }
 
-        return (0);
+        return 0;
     }
 
     /**
@@ -97,7 +97,7 @@ public class BooleanValue implements Value {
      */
     public final Value evaluate() {
 
-        return (this);
+        return this;
     }
 
     /**
@@ -107,33 +107,33 @@ public class BooleanValue implements Value {
      */
     public final boolean isTrue() {
 
-        return (_bValue);
+        return _bValue;
     }
 
     @Override
     public final Value equals(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof BooleanValue) {
             if (this.toReal() == oValue.toReal()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a boolean"));
+        throw new SyntaxErrorException(oValue.content() + " is not a boolean");
     }
 
     @Override
     public final Value notEqual(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof BooleanValue) {
             if (this.toReal() != oValue.toReal()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a boolean"));
+        throw new SyntaxErrorException(oValue.content() + " is not a boolean");
     }
 
     @Override
@@ -141,29 +141,29 @@ public class BooleanValue implements Value {
         if (oValue instanceof BooleanValue) {
             // A + A = A
             if (((BooleanValue) oValue).isTrue() == _bValue) {
-                return (this);
+                return this;
             }
 
             // A + (non A) = 1
             if (((BooleanValue) oValue).isTrue() != _bValue) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
             // A + 1 = 1
             if (((BooleanValue) oValue).isTrue()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             } else {
                 // A + 0 = A
-                return (this);
+                return this;
             }
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not of type boolean"));
+        throw new SyntaxErrorException(oValue.content() + " is not of type boolean");
     }
 
     @Override
     public final Value minus(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined");
     }
 
     @Override
@@ -171,25 +171,24 @@ public class BooleanValue implements Value {
         if (oValue instanceof BooleanValue) {
             // 0 * A = 0
             if (!_bValue) {
-                return (new BooleanValue(false));
+                return new BooleanValue(false);
             }
 
             // 1 * A = A
             if (_bValue) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
             // A * A = A: covered above
-
             // A * (non A) = 0 : covered above
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not of type boolean"));
+        throw new SyntaxErrorException(oValue.content() + " is not of type boolean");
     }
 
     @Override
     public final Value divide(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '/' for boolean expression is not defined");
     }
 
     // This one implemented the XOR statement
@@ -199,33 +198,33 @@ public class BooleanValue implements Value {
             BooleanValue oWorkValue = (BooleanValue) oValue;
 
             if (_bValue == oWorkValue.toBoolean()) {
-                return (new BooleanValue(false));
+                return new BooleanValue(false);
             } else {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not of type boolean"));
+        throw new SyntaxErrorException(oValue.content() + " is not of type boolean");
     }
 
     @Override
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '<' for boolean expression is not defined");
     }
 
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '<=' for boolean expression is not defined");
     }
 
     @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '>' for boolean expression is not defined");
     }
 
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '>=' for boolean expression is not defined");
     }
 
     /**
@@ -238,6 +237,6 @@ public class BooleanValue implements Value {
     @Override
     public final String content() {
 
-        return (String.valueOf(_bValue));
+        return String.valueOf(_bValue);
     }
 }

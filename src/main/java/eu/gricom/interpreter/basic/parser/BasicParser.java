@@ -334,18 +334,18 @@ public class BasicParser implements Parser {
                 + "' [" + oToken.getLine() + "]");
 
         // loop while the token inspected is either an operator or an assignment
-        while ((oToken.getType() == TokenType.PLUS)
-                || (oToken.getType() == TokenType.MINUS)
-                || (oToken.getType() == TokenType.MULTIPLY)
-                || (oToken.getType() == TokenType.DIVIDE)
-                || (oToken.getType() == TokenType.POWER)
-                || (oToken.getType() == TokenType.COMPARE_EQUAL)
-                || (oToken.getType() == TokenType.COMPARE_NOT_EQUAL)
-                || (oToken.getType() == TokenType.SMALLER)
-                || (oToken.getType() == TokenType.SMALLER_EQUAL)
-                || (oToken.getType() == TokenType.GREATER)
-                || (oToken.getType() == TokenType.GREATER_EQUAL)
-                || (oToken.getType() == TokenType.ASSIGN_EQUAL)) {
+        while (oToken.getType() == TokenType.PLUS
+                || oToken.getType() == TokenType.MINUS
+                || oToken.getType() == TokenType.MULTIPLY
+                || oToken.getType() == TokenType.DIVIDE
+                || oToken.getType() == TokenType.POWER
+                || oToken.getType() == TokenType.COMPARE_EQUAL
+                || oToken.getType() == TokenType.COMPARE_NOT_EQUAL
+                || oToken.getType() == TokenType.SMALLER
+                || oToken.getType() == TokenType.SMALLER_EQUAL
+                || oToken.getType() == TokenType.GREATER
+                || oToken.getType() == TokenType.GREATER_EQUAL
+                || oToken.getType() == TokenType.ASSIGN_EQUAL) {
             _oLogger.debug("-operator-> token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                     + oToken.getText() + "' [" + oToken.getLine() + "]");
             _iPosition++;
@@ -355,7 +355,7 @@ public class BasicParser implements Parser {
         }
 
         _oLogger.debug("-operator-> expression: [" + oExpression.content() + "]");
-        return (oExpression);
+        return oExpression;
     }
 
     /**
@@ -379,7 +379,7 @@ public class BasicParser implements Parser {
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
                 _iPosition++;
-                return (new VariableExpression(oToken.getText()));
+                return new VariableExpression(oToken.getText());
 
             // If the current token is of type NUMBER, then return the value as a double value
             case NUMBER:
@@ -406,7 +406,7 @@ public class BasicParser implements Parser {
                 _iPosition++;
                 Expression expression = expression();
                 consumeToken(TokenType.RIGHT_PAREN);
-                return (expression);
+                return expression;
 
             default:
                 // OK - here we have a text block that we cannot parse, so we throw an syntax exception
@@ -435,17 +435,17 @@ public class BasicParser implements Parser {
 
         if (getToken(0).getType() != TokenType.WORD) {
             _oLogger.debug("-matchNextToken-> token compare failed");
-            return (false);
+            return false;
         }
 
         if (!getToken(0).getText().equals(strName)) {
             _oLogger.debug("-matchNextToken-> token compare failed");
-            return (false);
+            return false;
         }
 
         _iPosition++;
         _oLogger.debug("-matchNextToken-> token compare success");
-        return (true);
+        return true;
     }
 
     /**
@@ -466,7 +466,7 @@ public class BasicParser implements Parser {
             throw new SyntaxErrorException("Expected " + oType + ".");
         }
 
-        return (_aoTokens.get(_iPosition++));
+        return _aoTokens.get(_iPosition++);
     }
 
     /**
@@ -489,9 +489,9 @@ public class BasicParser implements Parser {
 
             if (oToken.getType() == oType) {
                 _oLogger.debug("-findToken-> found: <" + (iCurrentPosition) + "> [" + oToken.getType() + "]");
-                return (oToken);
+                return oToken;
             } else {
-                _oLogger.debug("-findToken-> failed: <" + (iCurrentPosition) + "> [" + oToken.getType() + "]");
+                _oLogger.debug("-findToken-> failed: <" + iCurrentPosition + "> [" + oToken.getType() + "]");
                 iCurrentPosition++;
             }
         }
@@ -512,11 +512,11 @@ public class BasicParser implements Parser {
         if (_iPosition + iOffset >= _aoTokens.size()) {
             // send an end_of_file token back - this is an unexpected EOP
             // TODO actually this is a syntax error and should throw the syntax error exception
-            return (new Token("", TokenType.EOP, 0));
+            return new Token("", TokenType.EOP, 0);
         }
 
         // get the requested token
-        return (_aoTokens.get(_iPosition + iOffset));
+        return _aoTokens.get(_iPosition + iOffset);
     }
 
     /**

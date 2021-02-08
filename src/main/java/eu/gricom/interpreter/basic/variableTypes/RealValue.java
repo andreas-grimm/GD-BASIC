@@ -36,7 +36,7 @@ public class RealValue implements Value {
     @Override
     public final String toString() {
 
-        return (Double.toString(_fValue));
+        return Double.toString(_fValue);
     }
 
     /**
@@ -46,7 +46,7 @@ public class RealValue implements Value {
      */
     public final double toReal() {
 
-        return (_fValue);
+        return _fValue;
     }
 
     /**
@@ -56,7 +56,7 @@ public class RealValue implements Value {
      */
     public final int toInt() {
 
-        return ((int) _fValue);
+        return (int) _fValue;
     }
 
     /**
@@ -66,63 +66,63 @@ public class RealValue implements Value {
      */
     public final Value evaluate() {
 
-        return (this);
+        return this;
     }
 
     @Override
     public final Value equals(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() == oValue.toReal()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
     public final Value notEqual(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() != oValue.toReal()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             RealValue oReturn = new RealValue(_fValue + oValue.toReal());
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
     public final Value minus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             RealValue oReturn = new RealValue(_fValue - oValue.toReal());
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
     public final Value multiply(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             RealValue oReturn = new RealValue(_fValue * oValue.toReal());
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
@@ -133,12 +133,12 @@ public class RealValue implements Value {
             if (oValue.toReal() != 0) {
                 oReturn = new RealValue(_fValue / oValue.toReal());
             } else {
-                throw (new DivideByZeroException(this.toReal() + "/" + oValue.toReal() + " is a division by zero"));
+                throw new DivideByZeroException(this.toReal() + "/" + oValue.toReal() + " is a division by zero");
             }
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
@@ -151,59 +151,59 @@ public class RealValue implements Value {
             return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() < oValue.toReal()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() <= oValue.toReal()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() > oValue.toReal()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof RealValue) {
             if (this.toReal() >= oValue.toReal()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a number"));
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
     /**
@@ -221,7 +221,7 @@ public class RealValue implements Value {
 
         BigDecimal oBigDecimal = BigDecimal.valueOf(dValue);
         oBigDecimal = oBigDecimal.setScale(iPlaces, RoundingMode.HALF_UP);
-        return (oBigDecimal.doubleValue());
+        return oBigDecimal.doubleValue();
     }
 
     /**
@@ -234,6 +234,6 @@ public class RealValue implements Value {
     @Override
     public final String content() {
 
-        return (String.valueOf(_fValue));
+        return String.valueOf(_fValue);
     }
 }

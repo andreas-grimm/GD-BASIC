@@ -1,7 +1,9 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.helper.Logger;
+
 /**
- * EndStatement.java
+ * RemStatement.java
  * <p>
  * Description:
  * <p>
@@ -9,25 +11,29 @@ package eu.gricom.interpreter.basic.statements;
  * <p>
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
-public class EndStatement implements Statement {
+public class RemStatement implements Statement {
     private final int _iLineNumber;
+    private final String _strRemMessage;
+    private final Logger _oLogger = new Logger(this.getClass().getName());
 
     /**
      * Default constructor.
      *
      * An "END" statement performs the hard termination of the interpreter.
      */
-    public EndStatement() {
+    public RemStatement(final String strRemMessage) {
+        _strRemMessage = strRemMessage;
         _iLineNumber = 0;
     }
 
     /**
      * Default constructor.
      *
-     * An "END" statement performs the hard termination of the interpreter.
+     * An "REM" statement performs the hard termination of the interpreter.
      * @param iLineNumber - number of the command in the basic program
      */
-    public EndStatement(final int iLineNumber) {
+    public RemStatement(final int iLineNumber, final String strRemMessage) {
+        _strRemMessage = strRemMessage;
         _iLineNumber = iLineNumber;
     }
 
@@ -47,7 +53,7 @@ public class EndStatement implements Statement {
      * Terminate the running program.
      */
     public final void execute() {
-        System.exit(0);
+        _oLogger.debug("REM - " + _strRemMessage);
     }
 
     /**
@@ -55,11 +61,11 @@ public class EndStatement implements Statement {
      *
      * Method for JUnit to return the content of the statement.
      *
-     * @return - gives the name of the statement ("END")
+     * @return - gives the name of the statement ("REM")
      */
     @Override
     public final String content() {
 
-        return "END";
+        return "REM";
     }
 }

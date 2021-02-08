@@ -57,7 +57,7 @@ public final class PrintStatement implements Statement {
      */
     @Override
     public int getLineNumber() {
-        return (_iLineNumber);
+        return _iLineNumber;
     }
 
     /**
@@ -91,13 +91,13 @@ public final class PrintStatement implements Statement {
     @Override
     public String content() {
         if (_aoExpression != null) {
-            return ("PRINT (" + _aoExpression.toString() + ")");
+            return "PRINT (" + _aoExpression.toString() + ")";
         }
 
         if (_oExpression != null) {
-            return ("PRINT (" + _oExpression.content() + ")");
+            return "PRINT (" + _oExpression.content() + ")";
         }
 
-        return ("PRINT ()");
+        return "PRINT ()";
     }
 }

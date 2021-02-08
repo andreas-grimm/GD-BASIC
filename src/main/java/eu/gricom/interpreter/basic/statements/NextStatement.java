@@ -45,7 +45,7 @@ public class NextStatement implements Statement {
         int iTargetLineNumber = ((IntegerValue) oStack.pop()).toInt();
 
         if (iTargetLineNumber == 0) {
-            throw (new SyntaxErrorException("Undefined Jump Target"));
+            throw new SyntaxErrorException("Undefined Jump Target");
         } else {
             _oProgramPointer.setCurrentStatement(iTargetLineNumber);
         }
@@ -54,6 +54,6 @@ public class NextStatement implements Statement {
 
     @Override
     public final String content() {
-        return ("NEXT");
+        return "NEXT";
     }
 }

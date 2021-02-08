@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 
@@ -52,7 +53,7 @@ public class InputStatement implements Statement {
      */
     @Override
     public final int getLineNumber() {
-        return (_iLineNumber);
+        return _iLineNumber;
     }
 
     /**
@@ -60,7 +61,7 @@ public class InputStatement implements Statement {
      *
      * Execute the input statement.
      */
-    public final void execute() {
+    public final void execute() throws RuntimeException {
         VariableManagement oVariableManager = new VariableManagement();
         BufferedReader oReader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -75,8 +76,7 @@ public class InputStatement implements Statement {
                 oVariableManager.putMap(_strName, strInput);
             }
         } catch (IOException | SyntaxErrorException e) {
-            // TODO generate a problem error handling process
-            // HACK: Just ignore the problem.
+            throw new RuntimeException("Incorrect input detected...");
         }
     }
 
@@ -90,6 +90,6 @@ public class InputStatement implements Statement {
     @Override
     public final String content() {
 
-        return ("INPUT (" + _strName + ")");
+        return "INPUT (" + _strName + ")";
     }
 }

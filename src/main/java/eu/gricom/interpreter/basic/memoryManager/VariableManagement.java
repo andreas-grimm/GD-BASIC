@@ -140,26 +140,26 @@ public class VariableManagement {
      */
     public final Value getMap(final String strKey) {
         if (_aoUntyped.containsKey(strKey)) {
-            return (_aoUntyped.get(strKey));
+            return _aoUntyped.get(strKey);
         }
 
         if (_aoStrings.containsKey(strKey)) {
-            return (_aoStrings.get(strKey));
+            return _aoStrings.get(strKey);
         }
 
         if (_aoIntegers.containsKey(strKey)) {
-            return (_aoIntegers.get(strKey));
+            return _aoIntegers.get(strKey);
         }
 
         if (_aoReals.containsKey(strKey)) {
-            return (_aoReals.get(strKey));
+            return _aoReals.get(strKey);
         }
 
         if (_aoBooleans.containsKey(strKey)) {
-            return (_aoBooleans.get(strKey));
+            return _aoBooleans.get(strKey);
         }
 
-        return (null);
+        return null;
     }
 
     /**
@@ -174,9 +174,9 @@ public class VariableManagement {
                 || _aoIntegers.containsKey(strKey)
                 || _aoReals.containsKey(strKey)
                 || _aoStrings.containsKey(strKey)) {
-            return (true);
+            return true;
         }
 
-        return (false);
+        return false;
     }
 }

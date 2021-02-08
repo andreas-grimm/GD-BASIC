@@ -90,7 +90,7 @@ public final class ReservedWords {
             iIndex++;
         }
 
-        return (iReturn);
+        return iReturn;
     }
 
     /**
@@ -100,6 +100,6 @@ public final class ReservedWords {
      * @return token type found for the index
      */
     public static TokenType getTokenType(final int iIndex) {
-        return (_aeTokenTypes[iIndex]);
+        return _aeTokenTypes[iIndex];
     }
 }

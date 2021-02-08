@@ -110,7 +110,7 @@ public class JasicParser implements Parser {
                                     }
         }
 
-        return (aoStatements);
+        return aoStatements;
     }
 
     // The following functions each represent one grammatical part of the
@@ -157,13 +157,14 @@ public class JasicParser implements Parser {
         Expression oExpression = atomic();
 
         // Keep building operator expressions as long as we have operators.
-        while ((matchNextToken(TokenType.OPERATOR)) || (matchNextToken(TokenType.EQUALS))) {
+        while (matchNextToken(TokenType.OPERATOR)
+                || matchNextToken(TokenType.EQUALS)) {
             char strOperator = lastToken(1).getText().charAt(0);
             Expression oRight = atomic();
-            oExpression = new OperatorExpression(oExpression, (String.valueOf(strOperator)), oRight);
+            oExpression = new OperatorExpression(oExpression, String.valueOf(strOperator), oRight);
         }
 
-        return (oExpression);
+        return oExpression;
     }
 
     /**
@@ -178,7 +179,7 @@ public class JasicParser implements Parser {
 
         // If the current token is of type WORD, then we assume that the next token is a variable.
         if (matchNextToken(TokenType.WORD)) {
-            return (new VariableExpression(lastToken(1).getText()));
+            return new VariableExpression(lastToken(1).getText());
         }
 
         // If the current token is of type number, then return the value as a double value
@@ -196,7 +197,7 @@ public class JasicParser implements Parser {
         if (matchNextToken(TokenType.LEFT_PAREN)) {
             Expression expression = expression();
             consumeToken(TokenType.RIGHT_PAREN);
-            return (expression);
+            return expression;
         }
 
         // OK - here we have a text block that we cannot parse, so we throw an syntax exception
@@ -221,15 +222,15 @@ public class JasicParser implements Parser {
         Token oOffsetToken1 = getToken(1);
 
         if (oOffsetToken0.getType() != eType1) {
-            return (false);
+            return false;
         }
 
         if (oOffsetToken1.getType() != eType2) {
-            return (false);
+            return false;
         }
 
         _iPosition += 2;
-        return (true);
+        return true;
     }
 
     /**
@@ -241,10 +242,10 @@ public class JasicParser implements Parser {
     public final boolean matchNextToken(final TokenType oType) {
 
         if (getToken(0).getType() != oType) {
-            return (false);
+            return false;
         }
         _iPosition++;
-        return (true);
+        return true;
     }
 
     /**
@@ -256,15 +257,15 @@ public class JasicParser implements Parser {
     public final boolean matchNextToken(final String strName) {
 
         if (getToken(0).getType() != TokenType.WORD) {
-            return (false);
+            return false;
         }
 
         if (!getToken(0).getText().equals(strName)) {
-            return (false);
+            return false;
         }
 
         _iPosition++;
-        return (true);
+        return true;
     }
 
     /**
@@ -282,7 +283,7 @@ public class JasicParser implements Parser {
             throw new Error("Expected " + type + ".");
         }
 
-        return (_aoTokens.get(_iPosition++));
+        return _aoTokens.get(_iPosition++);
     }
 
     /**
@@ -298,7 +299,7 @@ public class JasicParser implements Parser {
         if (!matchNextToken(strName)) {
             throw new SyntaxErrorException("Expected " + strName + ".");
         }
-        return (lastToken(1));
+        return lastToken(1);
     }
 
     /**
@@ -310,7 +311,7 @@ public class JasicParser implements Parser {
      */
     public final Token lastToken(final int iOffset) {
 
-        return (_aoTokens.get(_iPosition - iOffset));
+        return _aoTokens.get(_iPosition - iOffset);
     }
 
     /**
@@ -325,12 +326,11 @@ public class JasicParser implements Parser {
         //check whether the current position in the tokenized program is larger or equal the token size
         if (_iPosition + iOffset >= _aoTokens.size()) {
             // send an end_of_file token back - this is an unexpected EOF
-            // TODO actually this is a syntax error and should throw the syntax error exception
-            return (new Token("", TokenType.EOP, 0));
+            return new Token("", TokenType.EOP, 0);
         }
 
         // get the requested token
-        return (_aoTokens.get(_iPosition + iOffset));
+        return _aoTokens.get(_iPosition + iOffset);
     }
 
     /**

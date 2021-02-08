@@ -121,6 +121,6 @@ public final class JasicLexer implements Tokenizer {
         // HACK: Silently ignore any in-progress token when we run out of
         // characters. This means that, for example, if a script has a string
         // that's missing the closing ", it will just ditch it.
-        return (aoTokens);
+        return aoTokens;
     }
 }

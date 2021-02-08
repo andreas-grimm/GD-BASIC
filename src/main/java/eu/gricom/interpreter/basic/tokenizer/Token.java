@@ -34,7 +34,7 @@ public final class Token {
      * @return Read text of the source code
      */
     public String getText() {
-        return (_strText);
+        return _strText;
     }
 
     /**
@@ -43,7 +43,7 @@ public final class Token {
      * @return Read type of the token found
      */
     public TokenType getType() {
-        return (_oType);
+        return _oType;
     }
 
     /**
@@ -52,7 +52,7 @@ public final class Token {
      * @return Read type of the token found
      */
     public int getLine() {
-        return (_iLineNumber);
+        return _iLineNumber;
     }
 
     /**
@@ -64,7 +64,7 @@ public final class Token {
     public String setText(final String strText) {
         _strText = strText;
 
-        return (_strText);
+        return _strText;
     }
 }
 

@@ -28,21 +28,21 @@ public class StringValue implements Value {
     @Override
     public final String toString() {
 
-        return (_strValue);
+        return _strValue;
     }
 
 
     @Override
     public final double toReal() {
 
-        return (Double.parseDouble(_strValue));
+        return Double.parseDouble(_strValue);
     }
 
 
     @Override
     public final Value evaluate() {
 
-        return (this);
+        return this;
     }
 
 
@@ -50,73 +50,74 @@ public class StringValue implements Value {
     public final Value equals(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof StringValue) {
             if (this.toString().matches(oValue.toString())) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a String"));
+        throw new SyntaxErrorException(oValue.content() + " is not a String");
     }
 
     @Override
     public final Value notEqual(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof StringValue) {
             if (this.toString().matches(oValue.toString())) {
-                return (new BooleanValue(false));
+                return new BooleanValue(false);
             }
 
-            return (new BooleanValue(true));
+            return new BooleanValue(true);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a String"));
+        throw new SyntaxErrorException(oValue.content() + " is not a String");
     }
 
     @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
-        StringValue oReturn = new StringValue((_strValue + oValue.content()));
-        return (oReturn);
+        StringValue oReturn = new StringValue(_strValue + oValue.content());
+        return oReturn;
     }
 
     @Override
     public final Value minus(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '-' for strings, the expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '-' for strings, the expression is not defined");
     }
 
     @Override
     public final Value multiply(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '*' for strings, the expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '*' for strings, the expression is not defined");
     }
 
     @Override
     public final Value divide(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '/' for strings, the expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '/' for strings, the expression is not defined");
     }
 
     @Override
     public final Value power(final Value oValue) throws SyntaxErrorException {
-        throw (new SyntaxErrorException(oValue.content() + " '^' for strings, the expression is not defined"));
+        throw new SyntaxErrorException(oValue.content() + " '^' for strings, the expression is not defined");
     }
 
     @Override
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof StringValue) {
             if (this.toString().compareTo(oValue.toString()) < 0) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             } else {
-                return (new BooleanValue(false));
+                return new BooleanValue(false);
             }
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " value is not a String"));
+        throw new SyntaxErrorException(oValue.content() + " value is not a String");
     }
 
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
-        if ((equals(oValue).toString() == "True") || (smallerThan(oValue).toString() == "True")) {
-            return (new BooleanValue(true));
+        if (equals(oValue).toString() == "True"
+                || smallerThan(oValue).toString() == "True") {
+            return new BooleanValue(true);
         } else {
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
     }
 
@@ -124,27 +125,28 @@ public class StringValue implements Value {
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof StringValue) {
             if (this.toString().compareTo(oValue.toString()) > 0) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             } else {
-                return (new BooleanValue(false));
+                return new BooleanValue(false);
             }
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " value is not a String"));
+        throw new SyntaxErrorException(oValue.content() + " value is not a String");
     }
 
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
-        if ((equals(oValue).toString() == "True") || (largerThan(oValue).toString() == "True")) {
-            return (new BooleanValue(true));
+        if (equals(oValue).toString() == "True"
+                || largerThan(oValue).toString() == "True") {
+            return new BooleanValue(true);
         } else {
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
     }
 
     @Override
     public final String content() {
 
-        return (_strValue);
+        return _strValue;
     }
 }

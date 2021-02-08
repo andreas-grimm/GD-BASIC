@@ -45,7 +45,7 @@ public final class GosubStatement implements Statement {
      */
     @Override
     public int getLineNumber() {
-        return (_iTokenNumber);
+        return _iTokenNumber;
     }
 
     /**
@@ -65,7 +65,7 @@ public final class GosubStatement implements Statement {
             return;
         }
 
-        throw (new SyntaxErrorException("GOSUB [unknown]: Target: " + _strTarget));
+        throw new SyntaxErrorException("GOSUB [unknown]: Target: " + _strTarget);
     }
 
     /**
@@ -76,9 +76,9 @@ public final class GosubStatement implements Statement {
     @Override
     public String content() throws RuntimeException {
         if (_oLabelStatement.containsLabelKey(_strTarget)) {
-            return ("GOSUB [" + _strTarget + "]: Destination: " + _oLabelStatement.getLabelStatement(_strTarget));
+            return "GOSUB [" + _strTarget + "]: Destination: " + _oLabelStatement.getLabelStatement(_strTarget);
         }
 
-       return ("GOSUB [" + _strTarget + "]: Destination: " + _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget)));
+       return "GOSUB [" + _strTarget + "]: Destination: " + _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget));
     }
 }

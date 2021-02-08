@@ -71,9 +71,8 @@ public class BasicLexer implements Tokenizer {
                     // quotation marks ("), the string is closed.
                     if (bIsStringRunning) {
                         if (oToken == null) {
-                            throw (new SyntaxErrorException(
-                                    "Syntax Error: Unrecognized character sequence: " + iLineNumber
-                                            + " " + strProgramLine));
+                            throw new SyntaxErrorException("Syntax Error: Unrecognized character sequence: " + iLineNumber
+                                            + " " + strProgramLine);
                         }
 
                         if (strWord.endsWith("\"")) {
@@ -94,8 +93,8 @@ public class BasicLexer implements Tokenizer {
                             // we found a reserved word...
                             TokenType oTokenType = ReservedWords.getTokenType(iIndex);
 
-                            if ((oTokenType == TokenType.REM)
-                                    || (oTokenType == TokenType.COMMENT))  {
+                            if (oTokenType == TokenType.REM
+                                    || oTokenType == TokenType.COMMENT)  {
                                 aoTokens.add(new Token(strProgramLine, oTokenType, iLineNumber));
 
                                 break;
@@ -145,7 +144,7 @@ public class BasicLexer implements Tokenizer {
             _oLogger.debug(" [" + oToken.getLine() + "]  [" + oToken.getType().toString() + "] " + oToken.getText());
         }
 
-        return (aoTokens);
+        return aoTokens;
     }
 
     /**
@@ -155,11 +154,12 @@ public class BasicLexer implements Tokenizer {
      * @return true if argument is a boolean
      */
     private boolean isBoolean(final String strWord) {
-        if (strWord.toUpperCase(Locale.ROOT).matches("TRUE") || strWord.toUpperCase(Locale.ROOT).matches("FALSE")) {
-            return (true);
+        if (strWord.toUpperCase(Locale.ROOT).matches("TRUE")
+                || strWord.toUpperCase(Locale.ROOT).matches("FALSE")) {
+            return true;
         }
 
-        return (false);
+        return false;
     }
 
     /**
@@ -170,10 +170,10 @@ public class BasicLexer implements Tokenizer {
      */
     private boolean isString(final String strWord) {
         if (strWord.startsWith("\"")) {
-            return (true);
+            return true;
         }
 
-        return (false);
+        return false;
     }
 
     /**
@@ -186,8 +186,8 @@ public class BasicLexer implements Tokenizer {
         Pattern oPattern = Pattern.compile("-?\\d*(\\.\\d+)?");
 
         if (strWord == null) {
-            return (false);
+            return false;
         }
-        return (oPattern.matcher(strWord).matches());
+        return oPattern.matcher(strWord).matches();
     }
 }

@@ -557,7 +557,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `FRE` | reserved |  | implemented | implemented | implemented | 
 | `GET` |  |  | implemented | implemented | implemented |
 | `GO` |  |  |  |  | implemented |
-| `GOSUB` | reserved |  | implemented | implemented | implemented |
+| `GOSUB` | implemented |  | implemented | implemented | implemented |
 | `GOTO` | implemented | implemented | implemented | implemented | implemented |
 | `GR` |  |  |  | implemented |  |
 | `HCOLOR=` |  |  |  | implemented |  |
@@ -627,7 +627,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `REMINDER` | reserved, used token instead of `%` |  |  |  |  |
 | `RESET` |  |  | implemented |  |  |
 | `RESUME` |  |  | implemented | implemented |  |
-| `RETURN` | reserved |  | implemented | implemented | implemented |
+| `RETURN` | implemented |  | implemented | implemented | implemented |
 | `RESTO` |  |  | implemented |  |  |
 | `RESTORE` |  |  |  | implemented | implemented |
 | `RIGHT$` | reserved, used token: `RIGHT` |  | implemented | implemented | implemented |
@@ -657,7 +657,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `TEXT` |  |  |  | implemented |  |
 | `THEN` | implemented | implemented | implemented | implemented | implemented |
 | `TIME$` | reserved, used token: `TIME` |  | implemented |  |  |
-| `TO` | reserved |  | implemented | implemented | implemented |
+| `TO` | implemented |  | implemented | implemented | implemented |
 | `TRACE` |  |  |  | implemented |  |
 | `TRON` |  |  | implemented |  |  |
 | `TROFF` |  |  | implemented |  |  |
@@ -673,7 +673,8 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `-` | implemented, used token: `MINUS` | implemented | implemented | implemented | implemented |
 | `*` | implemented, used token: `MULTIPLY` | implemented | implemented | implemented | implemented |
 | `/` | implemented, used token: `DIVIDE` | implemented | implemented | implemented | implemented |
-| `;` |  |  |  | implemented |  |
+| `;` | implemented |  |  | implemented |  |
+| `,` | implemented |  |  | implemented |  |
 | `:` | reserved, used token: `COLON` | implemented (as part of a label) |  | implemented | implemented |
 | `>` | implemented, used token: `GREATER` | implemented | implemented | implemented | implemented |
 | `>=` | implemented, used token: `GREATER_EQUAL` |  |  |

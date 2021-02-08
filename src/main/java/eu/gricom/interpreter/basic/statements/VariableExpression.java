@@ -39,9 +39,9 @@ public final class VariableExpression implements Expression {
         VariableManagement oVariableManager = new VariableManagement();
 
         if (oVariableManager.mapContainsKey(_strName)) {
-            return (oVariableManager.getMap(_strName));
+            return oVariableManager.getMap(_strName);
         }
-        return (new RealValue(0));
+        return new RealValue(0);
     }
 
     /**
@@ -51,7 +51,7 @@ public final class VariableExpression implements Expression {
      */
     public String getName() {
 
-        return (_strName);
+        return _strName;
     }
 
     /**
@@ -61,6 +61,6 @@ public final class VariableExpression implements Expression {
      */
     public String content() {
 
-        return (getName());
+        return getName();
     }
 }

@@ -53,7 +53,7 @@ public final class GotoStatement implements Statement {
      */
     @Override
     public int getLineNumber() {
-        return (_iLineNumber);
+        return _iLineNumber;
     }
 
     /**
@@ -79,11 +79,11 @@ public final class GotoStatement implements Statement {
                 return;
             }
 
-            throw (new SyntaxErrorException("GOTO [unknown]: Target: " + _strTarget));
+            throw new SyntaxErrorException("GOTO [unknown]: Target: " + _strTarget);
         } catch (NumberFormatException eNumberException) {
-            throw (new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strTarget));
+            throw new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strTarget);
         } catch (RuntimeException e) {
-            throw (new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strTarget));
+            throw new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strTarget);
         }
     }
 
@@ -95,9 +95,9 @@ public final class GotoStatement implements Statement {
     @Override
     public String content() throws RuntimeException {
         if (_oLabelStatement.containsLabelKey(_strTarget)) {
-            return ("GOTO [" + _strTarget + "]: Destination: " + _oLabelStatement.getLabelStatement(_strTarget));
+            return "GOTO [" + _strTarget + "]: Destination: " + _oLabelStatement.getLabelStatement(_strTarget);
         }
 
-        return ("GOTO [" + _strTarget + "]: Destination: " + _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget)));
+        return "GOTO [" + _strTarget + "]: Destination: " + _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget));
     }
 }

@@ -60,7 +60,7 @@ public final class IfThenStatement implements Statement {
      */
     @Override
     public int getLineNumber() {
-        return (_iStatementNumber);
+        return _iStatementNumber;
     }
 
     /**
@@ -98,9 +98,9 @@ public final class IfThenStatement implements Statement {
                     return;
                 }
 
-                throw (new SyntaxErrorException("IF [unknown]: Target: [" + _iEndIfLine + "]"));
+                throw new SyntaxErrorException("IF [unknown]: Target: [" + _iEndIfLine + "]");
             } catch (NumberFormatException eNumberException) {
-                throw (new SyntaxErrorException("IF [incorrect format]: Target: " + _strLabel));
+                throw new SyntaxErrorException("IF [incorrect format]: Target: " + _strLabel);
             }
         }
 
@@ -114,6 +114,6 @@ public final class IfThenStatement implements Statement {
     @Override
     public String content() {
 
-        return ("IF (" + _oCondition.content() + ") THEN " + _strLabel);
+        return "IF (" + _oCondition.content() + ") THEN " + _strLabel;
     }
 }
