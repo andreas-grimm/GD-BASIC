@@ -3,7 +3,7 @@ very similar to the original BASIC interpreters and additional functions are add
 If the functionality of the interpreter does not match the documentation, refer to the error reporting processing in Github.
 Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
-# GDBasic language syntax
+GDBasic language syntax
 ---------------------
 
 ## Introduction
@@ -373,6 +373,10 @@ The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and cont
 statement.
 
 ##### DO Command
+The `DO` - Loop has a different nature. This loop will execute the loop at least once, before verifying the continuation of the loop at the
+end. The structure of the loop can be seen in the following chart:
+
+![Do-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/Do-Loop.jpg)
 
 `DO <statement> EXIT <statement> UNTIL <condition>`
 
@@ -389,6 +393,11 @@ The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and cont
 statement.
 
 ###### UNTIL Command
+
+###### References
+This loop is known in other programming languages or dialects as:
+- `REPEAT-UNTIL` - loop, or
+- `DO - LOOP UNTIL` - loop
 
 ##### FOR Command
 The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command), 
