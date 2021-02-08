@@ -11,6 +11,11 @@
 170 NEXT
 180 PRINT " "
 190 GOSUB 910
+200 X# = 0
+210 WHILE X# < 3
+220 PRINT X#
+230 X# = X# + 1
+240 END-WHILE
 890 PRINT "Last line of the program"
 900 END
 910 PRINT "Subprogram - this line should be print before the end message"

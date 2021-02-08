@@ -1,7 +1,5 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.Logger;
-
 /**
  * RemStatement.java
  * <p>
@@ -13,18 +11,6 @@ import eu.gricom.interpreter.basic.helper.Logger;
  */
 public class RemStatement implements Statement {
     private final int _iLineNumber;
-    private final String _strRemMessage;
-    private final Logger _oLogger = new Logger(this.getClass().getName());
-
-    /**
-     * Default constructor.
-     *
-     * An "END" statement performs the hard termination of the interpreter.
-     */
-    public RemStatement(final String strRemMessage) {
-        _strRemMessage = strRemMessage;
-        _iLineNumber = 0;
-    }
 
     /**
      * Default constructor.
@@ -32,8 +18,7 @@ public class RemStatement implements Statement {
      * An "REM" statement performs the hard termination of the interpreter.
      * @param iLineNumber - number of the command in the basic program
      */
-    public RemStatement(final int iLineNumber, final String strRemMessage) {
-        _strRemMessage = strRemMessage;
+    public RemStatement(final int iLineNumber) {
         _iLineNumber = iLineNumber;
     }
 
@@ -53,7 +38,6 @@ public class RemStatement implements Statement {
      * Terminate the running program.
      */
     public final void execute() {
-        _oLogger.debug("REM - " + _strRemMessage);
     }
 
     /**

@@ -1,6 +1,5 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.memoryManager.Stack;
@@ -73,7 +72,6 @@ public final class ForStatement implements Statement {
 
     @Override
     public void execute() throws Exception {
-        final Logger oLogger = new Logger(this.getClass().getName());
         final LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
         if (_bForStarted) {

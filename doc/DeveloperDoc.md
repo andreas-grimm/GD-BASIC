@@ -553,7 +553,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `FIX` | | not planned | implemented | | |
 | `FLASH` |  |  | implemented |  |  |
 | `FN` |  |  | implemented | implemented | implemented |
-| `FOR` | reserved |  | implemented | implemented | implemented |
+| `FOR` | implemented |  | implemented | implemented | implemented |
 | `FRE` | reserved |  | implemented | implemented | implemented | 
 | `GET` |  |  | implemented | implemented | implemented |
 | `GO` |  |  |  |  | implemented |

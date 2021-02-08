@@ -1,15 +1,11 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
-import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.memoryManager.Stack;
-import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 import eu.gricom.interpreter.basic.variableTypes.BooleanValue;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
-import eu.gricom.interpreter.basic.variableTypes.RealValue;
-import eu.gricom.interpreter.basic.variableTypes.Value;
 
 /**
  * WhileStatement.java
@@ -56,7 +52,6 @@ public final class WhileStatement implements Statement {
 
     @Override
     public void execute() throws Exception {
-        final Logger oLogger = new Logger(this.getClass().getName());
         final LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
         // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
@@ -68,12 +63,11 @@ public final class WhileStatement implements Statement {
             try {
                 if (_iEndWhileLine != 0) {
                     int iStatementNo =
-                            _oLineNumberObject.getStatementFromLineNumber(_oLineNumberObject.getNextLineNumber(_iEndWhileLine));
+                        _oLineNumberObject.getStatementFromLineNumber(_oLineNumberObject.getNextLineNumber(_iEndWhileLine));
                     if (iStatementNo != 0) {
                         _oProgramPointer.setCurrentStatement(iStatementNo);
                         return;
                     }
-
                     return;
                 }
 
@@ -88,6 +82,6 @@ public final class WhileStatement implements Statement {
 
     @Override
     public String content() throws Exception {
-        return "WHILE (" +_oCondition.content() + ")";
+        return "WHILE (" + _oCondition.content() + ")";
     }
 }

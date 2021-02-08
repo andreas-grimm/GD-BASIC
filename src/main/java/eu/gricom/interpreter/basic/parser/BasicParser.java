@@ -15,9 +15,11 @@ import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.statements.NextStatement;
 import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.PrintStatement;
+import eu.gricom.interpreter.basic.statements.RemStatement;
 import eu.gricom.interpreter.basic.statements.ReturnStatement;
 import eu.gricom.interpreter.basic.statements.Statement;
 import eu.gricom.interpreter.basic.statements.VariableExpression;
+import eu.gricom.interpreter.basic.statements.WhileStatement;
 import eu.gricom.interpreter.basic.tokenizer.Token;
 import eu.gricom.interpreter.basic.tokenizer.TokenType;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
@@ -144,6 +146,18 @@ public class BasicParser implements Parser {
                     aoStatements.add(oForStatement);
                     break;
 
+                // WHILE Token: Conditional looping
+                case WHILE:
+                    iOrgPosition = _iPosition;
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    _iPosition++;
+                    Expression oWhileCondition = expression();
+                    _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [WHILE]: <" + oWhileCondition.content() + ">");
+                    Token oEndWhileToken = findToken(TokenType.ENDWHILE);
+                    _oLogger.debug("-parse-> followed Token: <" + oEndWhileToken.getLine() + "> [END-WHILE]");
+                    aoStatements.add(new WhileStatement(iOrgPosition, oWhileCondition, oEndWhileToken.getLine()));
+                    break;
+
                 // GOTO Token: Read the line from terminal for processing
                 case GOTO:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOTO] ");
@@ -207,6 +221,9 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
+                // ENDWHILE Token: Identical to the NEXT functionality:
+                case ENDWHILE:
+
                 // NEXT Token: Start of the FOR-NEXT loop
                 case NEXT:
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
@@ -243,6 +260,8 @@ public class BasicParser implements Parser {
                 // REM Token: contains comments to the program, ignore the rest of the line
                 case REM:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [REM] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    aoStatements.add(new RemStatement(_iPosition));
                     _iPosition++;
                     break;
 

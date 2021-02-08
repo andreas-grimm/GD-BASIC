@@ -60,6 +60,8 @@ public class InputStatement implements Statement {
      * Execute.
      *
      * Execute the input statement.
+     *
+     * @throws RuntimeException if an incorrect input is detected
      */
     public final void execute() throws RuntimeException {
         VariableManagement oVariableManager = new VariableManagement();
