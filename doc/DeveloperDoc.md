@@ -3,17 +3,31 @@ interprester. It duplicates in some areas the language documentation,
 which cannot be avoided.
 
 # Developer Documentation
-
 This documentation has been written as a notebook or scrapbook of the
 developer(s) of the interpreter - mainly to document the ideas and concepts
 used in the implementation. It is a living document, under version control,
 and should be extended as the code growths and needs some additional documentation.
 
-## Markdown
+### Markdown
 All documentation is written using the MarkDown format. The documentation of the
 format can be found here: [www.markdownguide.org](https://www.markdownguide.org/basic-syntax/),
  with the extended syntax documented here [Extended Syntax](https://www.markdownguide.org/extended-syntax/),
 or here: [github.com](https://guides.github.com/features/mastering-markdown/)
+
+### Some Important Concepts
+The GD-Basic Interpreter is not an industrial grade interpeter. The target of this project is to provide a BASIC interpreter
+that allows to run as much as possible the different programs build in the 1970's and 1980's - and at the same time provide
+a bit more functionality. The interpreter is designed to be embedded into JAVA programs. This brings some very basic requirements
+for the development:
+- In order to be portable the interpreter has a very limited number of third party packages. Actually the only one used at this time
+is Apache CLI package.
+- Some functions are build in such a way that heavy weight external packages are avoided (e.g. the `logging`-framework). Rather than
+using the `log4j` package or a similar package, this interpreter uses a very simple own logging function.
+- This interpreter is currently built on Java 8. Development and test are done using version `JDK 1.8.0_131-b11`. The Q2 release
+will upgrade to Java 14 - and use some of the new features of the higher release (see logging framework).
+- The objective of the project is to provide code of high quality and standard. All code has an automated JUnit test attached,
+additionally the code is verified using Checkstyle and PMD static code analysis. Release code will have as limited as possible
+reported issues.  
 
 ## Installing and Using the Interpreter
 The interpreter is delivered source code only. To use it, the package is using Apache Maven to compile.

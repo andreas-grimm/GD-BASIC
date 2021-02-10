@@ -1,0 +1,3 @@
+
+echo "Deploying to external webpage"
+scp -rp target/* gricom.de@ssh.gricom.de:/www/projects/Interpreter/GD-Basic

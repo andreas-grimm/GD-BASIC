@@ -3,6 +3,7 @@ package eu.gricom.interpreter.basic.parser;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.statements.AssignStatement;
+import eu.gricom.interpreter.basic.statements.DoStatement;
 import eu.gricom.interpreter.basic.statements.EndStatement;
 import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.statements.ForStatement;
@@ -18,6 +19,7 @@ import eu.gricom.interpreter.basic.statements.PrintStatement;
 import eu.gricom.interpreter.basic.statements.RemStatement;
 import eu.gricom.interpreter.basic.statements.ReturnStatement;
 import eu.gricom.interpreter.basic.statements.Statement;
+import eu.gricom.interpreter.basic.statements.UntilStatement;
 import eu.gricom.interpreter.basic.statements.VariableExpression;
 import eu.gricom.interpreter.basic.statements.WhileStatement;
 import eu.gricom.interpreter.basic.tokenizer.Token;
@@ -42,7 +44,7 @@ public class BasicParser implements Parser {
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private final List<Token> _aoTokens;
     private int _iPosition;
-    private LineNumberXRef _oLineNumber = new LineNumberXRef();
+    private final LineNumberXRef _oLineNumber = new LineNumberXRef();
 
     /**
      * Default constructor.
@@ -61,7 +63,7 @@ public class BasicParser implements Parser {
         List<Statement> aoStatements = new ArrayList<>();
 
         int iOrgPosition;
-        String strTargetLineNumber = null;
+        String strTargetLineNumber;
 
         _oLogger.debug("Start parsing...");
         boolean bContinue = true;
@@ -74,11 +76,25 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
+                // DO Token: Define the anchor point for the DO - UNTIL loop
+                case DO:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [DO] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    aoStatements.add(new DoStatement(_iPosition));
+                    _iPosition++;
+                    break;
+
                 // END Token: Terminate execution of program
                 case END:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [END] ");
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     aoStatements.add(new EndStatement(_iPosition));
+                    _iPosition++;
+                    break;
+
+                // List of all tokens that are used in a different context (e.g. as part of the IFTHEN token)
+                case ENDIF:
+                    _oLogger.debug("-parse-> ignoring token: <" + _iPosition + "> [" + getToken(0).getType() + "] ");
                     _iPosition++;
                     break;
 
@@ -144,18 +160,6 @@ public class BasicParser implements Parser {
                         e.printStackTrace();
                     }
                     aoStatements.add(oForStatement);
-                    break;
-
-                // WHILE Token: Conditional looping
-                case WHILE:
-                    iOrgPosition = _iPosition;
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    _iPosition++;
-                    Expression oWhileCondition = expression();
-                    _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [WHILE]: <" + oWhileCondition.content() + ">");
-                    Token oEndWhileToken = findToken(TokenType.ENDWHILE);
-                    _oLogger.debug("-parse-> followed Token: <" + oEndWhileToken.getLine() + "> [END-WHILE]");
-                    aoStatements.add(new WhileStatement(iOrgPosition, oWhileCondition, oEndWhileToken.getLine()));
                     break;
 
                 // GOTO Token: Read the line from terminal for processing
@@ -265,7 +269,29 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
-                // WORD Token: This word is a variable, anything following is variable manipulation
+                // UNTIL Token: Conditional processing
+                case UNTIL:
+                    iOrgPosition = _iPosition;
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), iOrgPosition);
+                    _iPosition++;
+                    Expression oUntilCondition = expression();
+                    _oLogger.debug("-parse-> found Token: <" + (iOrgPosition) + "> [UNTIL]: <" + oUntilCondition.content() + ">");
+                    aoStatements.add(new UntilStatement(iOrgPosition, oUntilCondition));
+                    break;
+
+                // WHILE Token: Conditional looping
+                case WHILE:
+                    iOrgPosition = _iPosition;
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    _iPosition++;
+                    Expression oWhileCondition = expression();
+                    _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [WHILE]: <" + oWhileCondition.content() + ">");
+                    Token oEndWhileToken = findToken(TokenType.ENDWHILE);
+                    _oLogger.debug("-parse-> followed Token: <" + oEndWhileToken.getLine() + "> [END-WHILE]");
+                    aoStatements.add(new WhileStatement(iOrgPosition, oWhileCondition, oEndWhileToken.getLine()));
+                    break;
+
+                // WORD Token: This word is a variable or function, anything following is variable manipulation
                 case WORD:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [WORD] ");
                     int iJumpPosition = _iPosition;
@@ -280,13 +306,6 @@ public class BasicParser implements Parser {
                         throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString()
                                 + " in Line [" + getToken(0).getLine() + "]");
                     }
-
-                    break;
-
-                // List of all tokens that are used in a different context (e.g. as part of the IFTHEN token)
-                case ENDIF:
-                    _oLogger.debug("-parse-> ignoring token: <" + _iPosition + "> [" + getToken(0).getType() + "] ");
-                    _iPosition++;
                     break;
 
                 // No Token identified, Syntax Error
@@ -323,7 +342,7 @@ public class BasicParser implements Parser {
 
     /**
      * Parses a series of binary operator expressions into a single
-     * expression. In Basic, all operators have the same predecence and
+     * expression. In Basic, all operators have the same precedence and
      * associate left-to-right. That means it will interpret:
      *    1 + 2 * 3 - 4 / 5
      * like:

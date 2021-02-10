@@ -21,6 +21,7 @@ public enum TokenType {
     DATA,
     DEFFN,
     DIM,
+    DO,
     ELSE,
     END,
     ENDIF,

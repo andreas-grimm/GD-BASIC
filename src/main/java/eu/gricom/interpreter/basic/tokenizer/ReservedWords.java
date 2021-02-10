@@ -24,7 +24,7 @@ public final class ReservedWords {
     private static String[] _astrReservedWords = {
             "ABS", "AND", "ASC", "ATN",
             "CALL", "CDBL", "CHR$", "CINT", "CLOSE", "CLS", "CMD", "CONT", "COS", "CSNG",
-            "DATA", "DEFFN", "DIM",
+            "DATA", "DEFFN", "DIM", "DO",
             "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT", "EXP",
             "FOR", "FRE",
             "GOSUB", "GOTO",
@@ -49,7 +49,7 @@ public final class ReservedWords {
         TokenType.ABS, TokenType.AND, TokenType.ASC, TokenType.ATN,
         TokenType.CALL, TokenType.CDBL, TokenType.CHR, TokenType.CINT, TokenType.CLOSE, TokenType.CLS, TokenType.CMD,
             TokenType.CONT, TokenType.COS, TokenType.CSNG,
-        TokenType.DATA, TokenType.DEFFN, TokenType.DIM,
+        TokenType.DATA, TokenType.DEFFN, TokenType.DIM, TokenType.DO,
         TokenType.ELSE, TokenType.END, TokenType.ENDIF, TokenType.ENDWHILE, TokenType.EOF, TokenType.EOL, TokenType.ERL,
             TokenType.ERR, TokenType.EXIT, TokenType.EXP,
         TokenType.FOR, TokenType.FRE,

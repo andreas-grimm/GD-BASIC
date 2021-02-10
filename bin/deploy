@@ -1,0 +1,2 @@
+echo Deploy to gricom.de
+scp -rp target gricom.de@ssh.gricom.de

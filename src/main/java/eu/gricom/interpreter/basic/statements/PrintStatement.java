@@ -91,7 +91,13 @@ public final class PrintStatement implements Statement {
     @Override
     public String content() {
         if (_aoExpression != null) {
-            return "PRINT (" + _aoExpression.toString() + ")";
+            String strContent = new String();
+
+            for (Expression oExpression : _aoExpression) {
+                strContent += "<" + oExpression.content() + ">";
+            }
+
+            return "PRINT (" + strContent + ")";
         }
 
         if (_oExpression != null) {
