@@ -1,4 +1,4 @@
-10 REM Test for the thrid main development iteration (version 0.0.4 - 0.0.6)
+10 REM Test for the third main development iteration (version 0.0.4 - 0.0.6)
 20 PRINT "Test Series 3"
 40 PRINT "Testing FOR loop counting upwards"
 50 FOR X# = -2 TO 2 STEP 1

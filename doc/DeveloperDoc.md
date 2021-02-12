@@ -95,7 +95,7 @@ When we show the structure of the BASIC code, we follow there document standards
 
 ## General Structure of the Interpreter
 
-![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/master/doc/Process%20Flow.jpg?raw=true)
+![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/master/doc/jpg/Process%20Flow.jpg?raw=true)
 
 ### Tokenizer
 The Tokenizer or Lexer of the interpreter translates the read source code into a list of recognized tokens.
@@ -127,7 +127,7 @@ contain all logic of the different commands, so the runtime part of the interpre
 
 #### Adding New Basic Commands
 New commands, unlike new structures, do not require a change in the Tokenizer. The main part to add new commands
-is in the [BasicParser](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#BasicParser-Class)
+is in the [BasicParser](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/jpg/DeveloperDoc.md#BasicParser-Class)
 class. In this class, the method __parse__ contains the logic to convert the identified token into the sequence of commands
 that will be executed in the interpreter.
 
@@ -177,7 +177,7 @@ Internally the parsed program is stored in a number of data structures:
 #### Relationship between Program Lines, Token, and Object Statements
 
 
-![Line Number Relationship](https://github.com/andreas-grimm/Interpreters/blob/development/doc/LineNumberRelationship.jpg)
+![Line Number Relationship](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/LineNumberRelationship.jpg)
 
 ##### Definitions
 For the navigation between program lines in the BASIC program and the executables, the BASIC interpreter provides a central reference mechanism.

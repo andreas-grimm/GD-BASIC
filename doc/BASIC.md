@@ -355,7 +355,7 @@ in other BASIC dialects - and proven useful.
 The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
 The following chart describes the loop structure:
 
-![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/While-Loop.jpg)
+![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/While-Loop.jpg)
 
 The syntax of the `WHILE` loop is as follows:
 
@@ -376,7 +376,7 @@ statement.
 The `DO` - Loop has a different nature. This loop will execute the loop at least once, before verifying the continuation of the loop at the
 end. The structure of the loop can be seen in the following chart:
 
-![Do-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/Do-Loop.jpg)
+![Do-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/Do-Loop.jpg)
 
 `DO <statement> EXIT <statement> UNTIL <condition>`
 

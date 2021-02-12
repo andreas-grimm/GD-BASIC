@@ -27,8 +27,43 @@ public final class Normalizer {
      * @return normalized string
      */
     public static String normalize(final String strInput) {
-        String strOutput = strInput;
+        String strWork = strInput;
+        String strOutput = new String();
 
+        boolean bQuotationMark = false;
+
+        // replace tabs with spaces
+        strWork = strWork.replace("\t", "    ");
+
+        // ignore anything in quotation marks (") and add it to the string
+        for (int i = 0; i < strWork.length(); i++) {
+            char c = strWork.charAt(i);
+
+            if (c == '"') {
+                if (bQuotationMark == false) {
+                    bQuotationMark = true;
+                } else {
+                    bQuotationMark = false;
+                };
+            }
+
+            // if the quotation mark is not set, then just pass thru...
+            if (bQuotationMark == true) {
+                strOutput += c;
+            } else {
+                // else apply filters
+                switch (c) {
+                    case ',':
+                        strOutput += " " + c;
+                        break;
+                    case ';':
+                        strOutput += " " + c;
+                        break;
+                    default:
+                        strOutput += c;
+                }
+            }
+        }
         return strOutput;
     }
 }
