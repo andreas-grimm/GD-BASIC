@@ -3,17 +3,31 @@ interprester. It duplicates in some areas the language documentation,
 which cannot be avoided.
 
 # Developer Documentation
-
 This documentation has been written as a notebook or scrapbook of the
 developer(s) of the interpreter - mainly to document the ideas and concepts
 used in the implementation. It is a living document, under version control,
 and should be extended as the code growths and needs some additional documentation.
 
-## Markdown
+### Markdown
 All documentation is written using the MarkDown format. The documentation of the
 format can be found here: [www.markdownguide.org](https://www.markdownguide.org/basic-syntax/),
  with the extended syntax documented here [Extended Syntax](https://www.markdownguide.org/extended-syntax/),
 or here: [github.com](https://guides.github.com/features/mastering-markdown/)
+
+### Some Important Concepts
+The GD-Basic Interpreter is not an industrial grade interpeter. The target of this project is to provide a BASIC interpreter
+that allows to run as much as possible the different programs build in the 1970's and 1980's - and at the same time provide
+a bit more functionality. The interpreter is designed to be embedded into JAVA programs. This brings some very basic requirements
+for the development:
+- In order to be portable the interpreter has a very limited number of third party packages. Actually the only one used at this time
+is Apache CLI package.
+- Some functions are build in such a way that heavy weight external packages are avoided (e.g. the `logging`-framework). Rather than
+using the `log4j` package or a similar package, this interpreter uses a very simple own logging function.
+- This interpreter is currently built on Java 8. Development and test are done using version `JDK 1.8.0_131-b11`. The Q2 release
+will upgrade to Java 14 - and use some of the new features of the higher release (see logging framework).
+- The objective of the project is to provide code of high quality and standard. All code has an automated JUnit test attached,
+additionally the code is verified using Checkstyle and PMD static code analysis. Release code will have as limited as possible
+reported issues.  
 
 ## Installing and Using the Interpreter
 The interpreter is delivered source code only. To use it, the package is using Apache Maven to compile.
@@ -28,7 +42,7 @@ any newer version of Maven should work as well. The command line to run Maven is
     mvn clean compile dependency:tree dependency:copy-dependencies package
 
 During the build process, the interpreter is compiled, but the process also runs a number of JUNIT test cases, and performs
-a static code analysis using Checkstyle. The definition of the syntax for Checkstyle is in the `./etc` directory, Checkstyle
+a static code analysis using Checkstyle. The definition ofgi the syntax for Checkstyle is in the `./etc` directory, Checkstyle
 is working with the code style guide of the project. The code style guide is located in the projects root directory, named `STYLEGUIDE.md`.
 If you want to participate, please adopt your contributions to the look and feel of the project. Code submissions not reflecting
 the styleguide will be rejected.
@@ -38,9 +52,13 @@ scripts are added: `bin/test` is running the _JASIC_ test programs, `bin/test2` 
 program. `bin/dev` is used to run the development _BASIC_ program that is used to implement and unit test the _BASIC_
 version of the interpreter.
 
-At this stage, the interpreter is using a command line interface (`CLI`). The syntax of the `CLI` is:
+At this stage, the interpreter is using a command line interface (`CLI`). The syntax of the `CLI` is (setting the link for the `JAVA` libraries up before):
 
     java -jar target/BASIC-<version-SNAPSHOT>.jar <parameter> <program name>.<.bas|.jas>
+
+or (if the `JAVA` libraries are nto in the path):
+
+    java -jar target/BASIC-<version-SNAPSHOT>-jar-with-dependencies.jar  <parameter> <program name>.<.bas|.jas>
 
 Possible optional parameter supported are:
 * "`-h`" - help (This screen), no further arguments
@@ -53,10 +71,10 @@ The only mandatory parameter is:
 
 _Example_:
 
-    java -jar target/BASIC-0.0.2-SNAPSHOT.jar -v"debug|info" -i src/test/resources/testfile_basic.bas
+    java -jar target/BASIC-0.0.5-SNAPSHOT-jar-with-dependencies.jar -v"debug|info" -i src/test/resources/testfile_basic.bas
 
 ## Participation in the Development of the Interpreter
-As of version `0.1.0` (planned) the interpeter is avaialble in a public _GITHUB_ (`github.com`) repository. It is covered by
+As of version `0.1.0` (planned) the interpreter is avaiable in a public _GITHUB_ (`github.com`) repository. It is covered by
 a modified version of the __CDDL 1.0 License__, see `LICENSE.md` in the project root directory.
 
 The project is following open source project standard processes. Anybody with an interest to participate can and may clone or
@@ -68,12 +86,16 @@ and release dates. The _Jira_ project can be found here:
 
 [Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC)
 
-## Before Starting Modifications...
+## Document Standard...
 
+When we show the structure of the BASIC code, we follow there document standards:
+- [mandatory information]: This field is required for the execution of the command
+- <[optional information]>: This field is optional and not needed for the execution
+- ... : Repetition of the content
 
 ## General Structure of the Interpreter
 
-![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/Process%20Flow.jpg?raw=true)
+![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/master/doc/jpg/Process%20Flow.jpg?raw=true)
 
 ### Tokenizer
 The Tokenizer or Lexer of the interpreter translates the read source code into a list of recognized tokens.
@@ -93,24 +115,122 @@ Each token object holds three attributes:
 * __Text__: the program code identified by the token
 * __Line__: the line number of the program code in the original program. This is used i.e. for interpreter error messages.
 
-
-### Parser
-The parser translates the program, representated as a list of token, to a list of statement objects. These statement objects
-contain all logic of the different commands, so the runtime part of the interpreter does barely contain any logic.
-
-### Runtime
-
-## How to add new BASIC Commands to the Interpreter
-New commands, unlike new structures, do not require a change in the Tokenizer. The main part to add new commands
-is in the [BasicParser](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#BasicParser-Class)
-class. In this class, the method __parse__ contains the logic to convert the identified token into the sequence of commands 
-that will be executed in the interpreter.
-
 ### Adding new token to the Tokenizer
 
 - Step 1: Add the new reserved word into the list of reserved words (`eu.gricom.interpreter.basic.tokenizer.ReservedWords.java`)
   and the token file (`eu.gricom.interpeter.basic.tokenizer.TokenType.java`).
 - Step 2: Verify that the BASIC tokenizer (`eu.gricom.interpreter.basic.BasicLexer.java`) can process the added new tokens and reserved word.
+
+### Parser
+The parser translates the program, representated as a list of token, to a list of statement objects. These statement objects
+contain all logic of the different commands, so the runtime part of the interpreter does barely contain any logic.
+
+#### Adding New Basic Commands
+New commands, unlike new structures, do not require a change in the Tokenizer. The main part to add new commands
+is in the [BasicParser](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/jpg/DeveloperDoc.md#BasicParser-Class)
+class. In this class, the method __parse__ contains the logic to convert the identified token into the sequence of commands
+that will be executed in the interpreter.
+
+Before Adding new Basic Commands to the Parser, it is important to prepare and verify that
+1. Both, Keyword and Token Type are generated. The TokenType is in the `TokenType`-file in the `tokenizer` package. The mapping between the keyword and the token type is defined
+   in the `ReservedWords` file in the same package. Note: The sequence of token and keyword defines the relationship. Ensure that the sequence of the two lists in the `ReservedWords`
+   file is always maintained.
+2. Generate the statement (alternative expression where appropriate) in the `statements` package. Every statement is an implementation of the `Statement` interface class and inherits
+   a number of methods that are required for the execution:
+   * `int getLineNumber()`
+   * `void execute() throws Exception`, and
+   * `String content() throws Exception` - this function is mainly need if the program is run in `debug` mode.
+3. Generate the JUnit test cases for the statement classes.
+
+When adding the command into the parser, add the token in the `case` statement of the `parse()` method in the `BasicParser` class in the `parser` package.
+Every `case` block starts with:
+
+    case [Token]:
+      _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [Token] ");
+      iOrgPosition = _iPosition++;
+      oLineNumber.putLineNumber(getToken(0).getLine(), iOrgPosition);
+
+This code is required to map the Basic source code line number with the number of the token and ultimately with the number of the statement in the program execution flow.
+
+4. Generate the parser code to retrieve the parameter for the statement class constructor
+5. Add the instantiation of the statement object into the statement list (aka executable program):
+
+   `aoStatements.add(new GotoStatement(iOrgPosition, strLineNumber));`
+
+Some rules about the implementations of the Statement classes:
+* The statement class does not implement any persistent information, e.g. uses any static variables inside the class. If the statement needs to keep information, the information
+should be managed by the `VariableManagement` class or the `Stack` class in the `memoryManager` package.
+
+### Runtime
+
+Internally the parsed program is stored in a number of data structures:
+- The `parse` method of the Jasic and the Basic parser returns a list of objects (instantiated statement classes) in a processing sequence. This list is defined as `List<Statement> aoStatements`.
+- For Jasic programs: The execute function of the program utilizes the `LabelStatement` class to have a reference for jumps and conditions.
+- For Basic programs: The execute function of the program utilizes the `LineNumberXRef` class to have a reference between the basic line numbers, token number, and statement number.
+
+## Basic Concepts
+
+### Memory Management
+
+### Program Control
+
+#### Relationship between Program Lines, Token, and Object Statements
+
+
+![Line Number Relationship](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/LineNumberRelationship.jpg)
+
+##### Definitions
+For the navigation between program lines in the BASIC program and the executables, the BASIC interpreter provides a central reference mechanism.
+This part of the documentation describes the function of this part of the implementation.
+
+###### Program Lines
+The project lines in this context are the program line numbers of the Dartmouth style BASIC program.
+
+###### Token Numbers
+Every token identified by the lexer is in a strict sequential list. The position of the list is part of the attributes of the token object.
+
+###### Object Statement Numbers
+The instantiated objects for the program execution are in a strict sequential list. As the position is not known at the time of the creation,
+the number is at this version not an attribute of the object. This will change in the next main release, the object will also provide a method
+to retrieve the information.
+
+###### Implementation of the Relationship
+The relationship is implemented by using two in-memory key-value stores. These key-value stores are hidden in the mentioned class below. It is possible to navigate between
+the key-value stores (or program lists). None of the information is accessible from outside the class and all information is stored in the class. In a later version, as the programs can
+be stored in a tokenized and parsed format (called object format) all information in the key-value stores and the program coded processable data will be part of the object file.
+
+##### The Class `LineNumberXRef`
+All functions to retrieve navigational information and manipulate the structure of the program in the different incarnations are located in the class
+`LineNumberXRef` in the package `eu.gricom.interpreter.basic.memoryManager`.
+
+The class has implemented a number of methods that allow the navigation between the different representations of the BASIC program. The following list explains the methods:
+
+Input methods:
+- `public final void putLineNumber(final int iLineNumber, final int iTokenNumber)` - add a BASIC line number with a related token number into the object.
+- `public final void putStatementNumber(final int iTokenNumber, final int iStatementNumber)` - add a token number with the related statement number into the object.
+
+Output methods:
+- `public final int getLineNumberFromToken(final int iTokenNumber) throws RuntimeException` - get the line number related to a token number.
+- `public final int getTokenFromStatement(final int iStatement) throws RuntimeException` - get the token number related to a statement number.
+- `public final int getStatementFromLineNumber(final int iLineNumber) throws RuntimeException` - get the statement number related to a line number.
+- `public final int getStatementFromToken(final int iTokenNumber) throws RuntimeException` - get the statement number related to a token number.
+
+Utility methods:
+- `public final int getNextLineNumber(final int iLineNumber)` - get the next line number following the line number found.
+
+##### Example
+1. Set the program pointer to the next BASIC program line following the BASIC line number defined in `iTargetNumber`:
+
+
+    import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
+    ...
+    private final LineNumberXRef oLineNumberObject = new LineNumberXRef();
+    ...
+    _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
+            oLineNumberObject.getNextLineNumber(
+                    oLineNumberObject.getLineNumberFromToken(
+                            oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
+
 
 ## Main Classes
 
@@ -119,6 +239,41 @@ that will be executed in the interpreter.
 #### JasicParser
 
 #### BasicParser
+
+Available methods in the BasicParser class to navigate the tokenized list and to find the information needed for the population of the statement class constructors are:
+
+###### findToken
+This method is used to scan the list of tokens provided by the lexer to identify the existence and location of a particular token. This function will report the first token 
+fitting a certain token type. If the token is found, the method returns the found token - but does not change the position of the parse process in the list of tokens.
+If the token is not found, the method will throw a `SyntaxErrorException` and terminate the parsing step.
+This is the definition of the method:
+
+    public final Token findToken(final TokenType oType) throws SyntaxErrorException
+
+
+###### getToken
+The `getToken`-Method does return the token found at a location defined by an offset. The offset is calculated by a number of tokens from the current token.
+
+    public final Token getToken(final int iOffset)
+
+###### consumeToken
+
+    public final Token consumeToken(final TokenType oType) throws SyntaxErrorException
+
+##### Expression processing
+
+    private Expression expression() throws SyntaxErrorException
+    public final Expression operator() throws SyntaxErrorException
+    public final Expression atomic() throws SyntaxErrorException
+
+##### Depreciated methods
+
+###### matchNextToken
+The method is used in the Jasic parser, but is not needed in the Basic parser at this time. As a general the Basic parser will not use the
+name in the token, but the token type. In this release, the method is not used and marked as depreciated.
+
+    public final boolean matchNextToken(final String strName)
+
 
 ### Tokenizer Package
 
@@ -138,6 +293,28 @@ The content of the TokenType file is limited to the definition of the available 
 ## Package Structure
 
 ### The MemoryManager Package
+The memory manager functionality, located in the package `eu.gricom.interpreter.basic.memoryManager`, consists of three main
+classes:
+- the program pointer class (`ProgramPointer`), which contains the functionality related with the current place of execution.
+- the stack class (`Stack`), which implements the needed stack functionality for the interpreter
+- the variable management class (`VariableManagement`), which host all variables used in the program
+- the line number cross-reference class (`LineNumberXRef`), replaced the `LineNumberStatement` class of previous versions - build the
+reference between BASIC program lines, token numbers, and statement numbers.
+
+A further planned class is:
+- the array management class (`ArrayManagement`) that handles arrays of variables
+
+#### The `ProgramPointer` Class
+
+#### The `Stack` Class
+
+The `Stack` class (`eu.gricom.interpreter.basic.memoryManager.Stack`) is a wrapper around the standard Java Stack class (`java.util.Stack`).
+In order to make a common stack available in the interpreter, the `Stack` class implements internally a static private stack object
+which can be accessed using the class `push` and `pop` method.
+
+The implementation does only allow 
+
+#### The `VariableManagement` Class
 
 ### The VariableType Package
 
@@ -147,11 +324,26 @@ The content of the TokenType file is limited to the definition of the available 
 
 #### Variable Type Integer
 
+#### Variable Type Integer
+supported as of the Q2 release...
+
 #### Variable Type Real
 
 #### Mathematical Functions
 
 #### Variable Type String
+The String variable type is implemented in the `StringValue` class in the `eu.gricom.interpreter.basic.variableTypes` package. Compared
+to the other BASIC implementation, the String is not already implemented as an array of characters. To address single characters in
+a String, the datatype supports squared brackets (`[` and `]`) rather than round ones, which are reserved for arrays.
+
+The storage of the String value inside the `StringValue` class is done with a `Hashmap` implementation. All values for a
+variable are in a key value storage. The loss of performance is compensated with the flexibility of implementation, allow
+the easy implementation of n-dimensional arrays. Those strings that are not used as arrays are still using the Hashmap structure,
+with a single key value, implemented as a constant: `strNoIndex = "noIndex"`.
+
+To ensure that the array element can be retrieved, all incoming keys are normalized (i.e. all space characters are removed)
+and the key is stored with the value in the Hashmap structure. This implementation allows later versions to use any form of
+index in the use of strings. Refer to the description of the implementation or Arrays.
 
 ### The Statements Package
 
@@ -170,6 +362,46 @@ and does not need to be modified in case additional types (like
 
 ##### Assignment to variables and basic mathematical operators
 
+##### `DO - UNTIL` Loop Statement
+
+The `DO - UNTIL` loop provides the function of a receiving loop (contrary to the `WHILE` loop, which is a )
+
+    DO <statements> EXIT <statements> UNTIL <condition>
+
+
+###### `EXIT` Statement
+
+###### `UNTIL` Statement
+
+##### `FOR` Statement
+A `For` statement counts an integer or real value from a start value to an end value - and with every increase it
+loops through the block from the `For` statement to the next `Next` statement. When the target value is reached, the
+program flow will jump to the statement past the `NEXT` statement.
+
+When the loop command is reached the first time (initial execution), the variable named in the loop command is set with the initial
+value. The current implementation of the `FOR` loop allows this variable to be either of type `real` or `integer`. After 
+this, when the loop is iterating, the variable is incremented, and the result of the increment is compared with the target
+value. As long as the target value is not reached the iteration continues. As the loop exceeds the target value, the loop 
+terminates and processes with the next line after the `NEXT` statement. At this moment, the variable has the value of the last
+increment, e.g. the value exceeds or equals the target value. The target of the new program pointer is defined as a line number
+in the `FOR` loop - and the loop with use the `LineNumberXRef` class to retrieve the actual statement number for the
+jump.
+
+This logic will work the same way for negative loops, e.g. the flow decrements the variable, the loop counts downwards.
+
+The `FOR` statement uses the `STACK` object to store the location of the `FOR` statement, so that the `NEXT` statement
+finds it. Any `STACK` manipulation needs to be aware of this.
+
+###### `NEXT` Statement
+The `NEXT` statement terminates the execution of the `FOR` loop. In the program flow, the command has two functions:
+- when the program flow reaches the `NEXT` command, the command will retrieve the location of the `FOR` command from the
+`STACK` object. This target information is at this moment destroyed (see the description of the `Stack`-class). The program
+flow will then continue at this location.
+- when the `FOR`-loop reaches the end of the processing, the program flow will be adjusted to the first command after the `NEXT`
+statement. *NOTE:* Intentionally the interpreter will always pair the `FOR` statement with the next `NEXT` statement. Overlapping
+  or named `NEXT` statements (e.g. `NEXT X#`) like in other BASIC dialects are not supported. Overlapping loops are seen as an anti-pattern
+  and violating the idea of structured programming.
+
 ##### `GOTO` Statement
 The `GOTO` Statement - or non-conditional jump - moves the execution of the running Basic program
 to a different location in the program. The executable functionality is located in class 
@@ -178,14 +410,14 @@ to a different location in the program. The executable functionality is located 
 
 The implementation of the functionality is realized by using two different classes: 
 `eu.gricom.interpreter.basic.statements.LabelStatement` for the JASIC programs, and 
-`eu.gricom.interpreter.basic.statements.LineNumberStatement` for the BASIC program. These classes are used to identify
+`eu.gricom.interpreter.basic.memoryManagement.LineNumberXRef` for the BASIC program. These classes are used to identify
 the target for the jump, which is either a Label (see `LabelStatement`), or a line number.
 
 When using labels, the actual label is identified by the parsing process and is added to the list of locations in the
 `LabelStatement` class. The class then has a second method to retrieve the location of the label in the program, and the
 program pointer can be set to the location in the program. While the label functionality is relatively simple, the 
-`LineNumberStatement` needs some extra effort to implement the use of line numbers. The class uses two internal hashmaps 
-to build the logical connection between the BASIC source code lines and the executeable statements, using the identified 
+`LineNumberXRef` needs some extra effort to implement the use of line numbers. The class uses two internal hashmaps 
+to build the logical connection between the BASIC source code lines and the executable statements, using the identified 
 token as a link. As the target of the jump is a location, not a command or token, the class has to perform some look-ups
 to determine the target of the jump. The link looks as follows:
 
@@ -193,7 +425,7 @@ Basic Source Code Line -> Token -> Executable Statement
 
 When the `GOTO` command is executed, it will first look whether the argument with the command is located in the list of 
 the labels. If there is no reference in the `Label` object (which will only be populated for JASIC programs), the flow
-will use the `LineNumberStatement` object to determine the target of the jump. For this, the `GOTO` statement
+will use the `LineNumberXRef` object to determine the target of the jump. For this, the `GOTO` statement
 will use the token sequence number (an attribute of the `Statement` classes) to retrieve the line number in the BASIC 
 program.
 
@@ -204,9 +436,34 @@ number - which makes it part of the BASIC implementation.
 Limitations of the current implementation:
 * As the comments commands `REM` and `'` are not reflected in the executables, those commands can not be justed as targets 
   for a jump. The current functionality needs to be extended in such a way that if the target line is not found in the
-  reference list in `LineNumberStatement`, then the flow needs to find the command with the next higher statement / token / 
+  reference list in `LineNumberXRef`, then the flow needs to find the command with the next higher statement / token / 
   source line number. [link](https://gricom.atlassian.net/browse/BASIC-58)
 * The performance of the retrieval of the BASIC source line is non-optimal and should be improved.
+
+##### `GOSUB` Statement
+The `GOSUB` Statement - or non-conditional jump into a subroutine - moves the execution of the running Basic program
+to a different location in the program. The executable functionality is located in class `eu.gricom.interpreter.basic.statements.GosubStatement`. 
+The class is an implementation of the `eu.gricom.interpreter.basic.statements.Statement` interface.
+
+The implementation of the functionality is realized by using two different classes:
+`eu.gricom.interpreter.basic.memoryManagement.LineNumberXRef` to determine the target for the jump and `eu.gricom.interpreter.basic.memoryManager.Stack`
+to store the location of the `GOSUB` command. The later is needed for the calculation of the return to the main program
+using the `RETURN` command.
+
+Limitations of the current implementation:
+* As the comments commands `REM` and `'` are not reflected in the executables, those commands can not be justed as targets
+  for a jump. The current functionality needs to be extended in such a way that if the target line is not found in the
+  reference list in `LineNumberXRef`, then the flow needs to find the command with the next higher statement / token /
+  source line number. [link](https://gricom.atlassian.net/browse/BASIC-58)
+
+###### `RETURN` Statement
+The `RETURN` statement retrieves the location of the `GOSUB` statement from the stack, and calculates the location of the
+next following command. It the performs an un-conditional jump to that location. At this time, the information of the calling 
+`GOSUB` is removed from the stack.
+
+*NOTE:* If a program execution runs into a `RETURN` statement without a prior `GOSUB` call being made, the stack will be empty and the program will terminate with an exception.
+If the `RETURN` statement finds information on the stack - like from a previous `FOR` or `GOSUB` statement on the stack, it will execute on
+this information - which will cause deterministic but incorrect behaviour and will ultimately end in an error situation.
 
 ##### `IF-THEN` Statement
 The `IF-THEN` statement implements the main control statement in the programming language. The main structure of the control
@@ -214,7 +471,7 @@ statement consists of 4 token: `IF`, `THEN`, `ELSE`, `END-IF`. In the JASIC impl
 two token: `IF` and `THEN`.
 
 The structure of the command in BASIC is:
-`IF` [condition] `THEN` [commands] `ELSE` [commands] `END-IF`
+`IF` [condition] `THEN` [commands] <`ELSE` [commands]> `END-IF`
 
 The same structure in JASIC is:
 `IF` [condition] `THEN` [jump target]
@@ -227,9 +484,38 @@ Limitations of the current implementation:
 * Potential change of the logic (to be determined): If the BASIC `IF-THEN` command has no token, but a number following 
   the `THEN` statement, the command could execute a jump to the line number in the statement.
 
+###### `END-IF` Statement
+The `END-IF` statement closes the `IF-THEN` block, It is mainly used from the `IF-THEN` statement as a jump target in case the IF clause
+fails. No other function is implemented for that statement.
+
 ##### `INPUT` Statement
 
 ##### `PRINT` Statement
+The `PRINT` command is the general output command for the BASIC language. This version follows the Dartmouth standard for
+the output, which allows concatenating multiple variables and text fields in a single line by listing them separated by a comma `,`.
+
+The `PRINT` command terminates its output with CRLF (Carriage return / line feed) character, the next output is at the beginning
+of a new line. By ending the `PRINT` command with a semicolon (`;`), the CRLF character sequence is not printed, the next output starts
+after the last output printed.
+
+This behaviour is different from the ECMA version of BASIC, which uses the semicolon to separate different fields and the comma to surpress
+the CRLF characters at the end of the line.
+
+`PRINT` [expression] <`,` [expression]`,` ... [expression]`;`>
+
+The implementation of the `PRINT` command can be found in the statement package (`eu.gricom.interpreter.basic.statements`) in the
+`PrintStatement` class. Adding the comma and semicolon to the `PRINT` command needs some special code in the `BasicLexer` class:
+In order to make sure that the lexer identifies the characters, the lexer adds in the method `tokenize` an extra white space in front of the respective
+character. As this will interfere with the formatting of any string using the characters, the white space will be removed 
+in every string. This function should therefore not change the output.
+
+##### `WHILE` Loop Statement
+
+    WHILE <condition> <statements> CONTINUE <statements> EXIT-WHILE <statements> END-WHILE
+
+###### `EXIT` Statement
+
+###### `END-WHILE` Statement
 
 ## Appendix
 
@@ -257,6 +543,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `CLOAD` |  |  | implemented |  |  |
 | `CLS` | reserved |  | implemented |  |  |
 | `CLR` |  |  |  |  | implemented |
+| `CONT` | reserved |  |  |  |  |  |
 | `CSAVE` |  |  | implemented | | |
 | `CMD` | reserved |  | implemented | | implemented |
 | `COLOR=` |  |  |  | implemented |  |
@@ -276,11 +563,13 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `DEL` |  |  |  | implemented |  |
 | `DELETE` |  |  | implemented |  |  |
 | `DIM` | reserved |  | implemented | implemented | implemented |
+| `DO` | reserved |  |  |  |  |
 | `DRAW` |  |  |  | implemented |  |
 | `EDIT` |  |  | implemented |  |  |
 | `ELSE` | reserved |  | implemented | implemented | implemented |
 | `END` | implemented |  | implemented | implemented | implemented |
 | `END-IF` | implemented |  |  |  |  |
+| `END-WHILE` | implemented |  |  |  |  |
 | `EOF` | reserved |  | implemented |  |  |
 | `EOL` | reserved |  |  |  |  |
 | `EOP` | implemented | implemented |  |  |  | `EOP` is a token used to mark the end of the program. It is not the implementation of a reserved word.
@@ -288,15 +577,16 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `ERR` | reserved |  | implemented |  |
 | `ERROR` |  |  | implemented |  |  |
 | `EXP` | reserved |  | implemented | implemented | implemented |
+| `EXIT` | reserved |  |  |  |  |
 | `FIELD` |  |  | implemented |  |  |
 | `FIX` | | not planned | implemented | | |
 | `FLASH` |  |  | implemented |  |  |
 | `FN` |  |  | implemented | implemented | implemented |
-| `FOR` | reserved |  | implemented | implemented | implemented |
+| `FOR` | implemented |  | implemented | implemented | implemented |
 | `FRE` | reserved |  | implemented | implemented | implemented | 
 | `GET` |  |  | implemented | implemented | implemented |
 | `GO` |  |  |  |  | implemented |
-| `GOSUB` | reserved |  | implemented | implemented | implemented |
+| `GOSUB` | implemented |  | implemented | implemented | implemented |
 | `GOTO` | implemented | implemented | implemented | implemented | implemented |
 | `GR` |  |  |  | implemented |  |
 | `HCOLOR=` |  |  |  | implemented |  |
@@ -328,6 +618,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `LOF` |  |  | implemented |  |  |
 | `LOG` | reserved |  | implemented | implemented | implemented |
 | `LOMEM:` |  |  |  | implemented |  |
+| `LOOP-UNTIL` | reserved |  |  |  |  |
 | `LPRINT` |  |  | implemented |  |  |
 | `LSET` |  |  | implemented |  |  |
 | `MEM` | reserved |  | implemented |  |
@@ -365,7 +656,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `REMINDER` | reserved, used token instead of `%` |  |  |  |  |
 | `RESET` |  |  | implemented |  |  |
 | `RESUME` |  |  | implemented | implemented |  |
-| `RETURN` | reserved |  | implemented | implemented | implemented |
+| `RETURN` | implemented |  | implemented | implemented | implemented |
 | `RESTO` |  |  | implemented |  |  |
 | `RESTORE` |  |  |  | implemented | implemented |
 | `RIGHT$` | reserved, used token: `RIGHT` |  | implemented | implemented | implemented |
@@ -395,7 +686,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `TEXT` |  |  |  | implemented |  |
 | `THEN` | implemented | implemented | implemented | implemented | implemented |
 | `TIME$` | reserved, used token: `TIME` |  | implemented |  |  |
-| `TO` | reserved |  | implemented | implemented | implemented |
+| `TO` | implemented |  | implemented | implemented | implemented |
 | `TRACE` |  |  |  | implemented |  |
 | `TRON` |  |  | implemented |  |  |
 | `TROFF` |  |  | implemented |  |  |
@@ -411,7 +702,8 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `-` | implemented, used token: `MINUS` | implemented | implemented | implemented | implemented |
 | `*` | implemented, used token: `MULTIPLY` | implemented | implemented | implemented | implemented |
 | `/` | implemented, used token: `DIVIDE` | implemented | implemented | implemented | implemented |
-| `;` |  |  |  | implemented |  |
+| `;` | implemented |  |  | implemented |  |
+| `,` | implemented |  |  | implemented |  |
 | `:` | reserved, used token: `COLON` | implemented (as part of a label) |  | implemented | implemented |
 | `>` | implemented, used token: `GREATER` | implemented | implemented | implemented | implemented |
 | `>=` | implemented, used token: `GREATER_EQUAL` |  |  |

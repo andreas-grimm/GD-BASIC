@@ -8,13 +8,13 @@ import java.util.List;
  * <p>
  * Description:
  * <p>
- * The Tokenizer class converts the source code into a list of tokens. Question here is whether we should convert
- * the Tokenizer class not into a Token factory class. The read a source code file and move the content into a single
+ * The Lexer class converts the source code into a list of tokens. Question here is whether we should convert
+ * the Lexer class not into a Token factory class. The read a source code file and move the content into a single
  * string. This might cause problems in case of really big programs, so this needs to be addressed later.
  * <p>
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
-public final class JasicLexer implements Tokenizer {
+public final class JasicLexer implements Lexer {
     private int _iLineNumber = 1;
 
     /**
@@ -121,6 +121,6 @@ public final class JasicLexer implements Tokenizer {
         // HACK: Silently ignore any in-progress token when we run out of
         // characters. This means that, for example, if a script has a string
         // that's missing the closing ", it will just ditch it.
-        return (aoTokens);
+        return aoTokens;
     }
 }

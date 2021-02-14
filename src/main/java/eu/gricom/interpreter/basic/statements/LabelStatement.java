@@ -35,7 +35,7 @@ public class LabelStatement {
      * @return - statement number
      */
     public final int getLabelStatement(final String strLabel) {
-        return (_aoLabels.get(strLabel));
+        return _aoLabels.get(strLabel);
     }
 
     /**
@@ -46,6 +46,6 @@ public class LabelStatement {
      */
     public final boolean containsLabelKey(final String strKey) {
 
-        return (_aoLabels.containsKey(strKey));
+        return _aoLabels.containsKey(strKey);
     }
 }

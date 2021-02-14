@@ -20,6 +20,15 @@ public final class Printer {
     }
 
     /**
+     * print a single empty line output to the console terminal.
+     */
+    public static void println() {
+        if (_strTarget.contains("Console")) {
+            System.out.println();
+        }
+    }
+
+    /**
      * provide output to the console terminal.
      *
      * @param strPrintLine - defined output line

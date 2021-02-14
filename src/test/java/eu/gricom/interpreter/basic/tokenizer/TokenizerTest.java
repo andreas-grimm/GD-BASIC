@@ -20,18 +20,21 @@ public class TokenizerTest {
             _oLogger.setLogLevel("");
 
             String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
-            Tokenizer oTokenizer = new JasicLexer();
+            Lexer oTokenizer = new JasicLexer();
 
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
             //TODO: Compare the expected lists with the generated list...
             int iCounter = 0;
+
+            /*
             for (Token oToken : aoTokens) {
                 System.out.println(iCounter + "-->" + oToken.getText() + "<-->" + oToken.getType().toString());
                 iCounter++;
             }
+            */
 
-            assertEquals(iCounter, 35);
+            assertEquals(aoTokens.size(), 35);
         } catch (SyntaxErrorException e) {
             assertTrue(false);
         }

@@ -21,14 +21,17 @@ public enum TokenType {
     DATA,
     DEFFN,
     DIM,
+    DO,
     ELSE,
     END,
     ENDIF,
+    ENDWHILE,
     EOF,
     EOL,
     EOP,
     ERL,
     ERR,
+    EXIT,
     EXP,
     FOR,
     FRE,
@@ -69,7 +72,9 @@ public enum TokenType {
     THEN,
     TIME, // token for the TIME$ function
     TO,
+    UNTIL,
     VAL,
+    WHILE,
     AMPERSAND, // token for the & operator
     PLUS, // token for the + operator
     MINUS, // token for the - operator
@@ -96,6 +101,7 @@ public enum TokenType {
     OPERATOR, // super-token to cover all operations in JASIC
     LABEL, // JASIC GOTO label, not supported for the Dartmouth BASIC dialects
     LINE, // empty line - white space. Kept to keep the line numbering consistent
-    ASSIGN, // duplication of the ASSIGN_EQUAL and COMPARE_EQUAL token - to be removed
-    EQUALS
+    EQUALS, // used exclusively for the JASIC version
+    COMMA, // used exclusively for the print command
+    SEMICOLON // used exclusively for the print command
 }

@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 
@@ -37,9 +38,10 @@ public class InputStatement implements Statement {
      *
      * An "input" statement reads input from the user and stores it in a variable.
      *
-     * @param strName - the name of the variable to be read.
+     * @param iLineNumber the line number of this command
+     * @param strName the name of the variable to be read.
      */
-    public InputStatement(int iLineNumber, final String strName) {
+    public InputStatement(final int iLineNumber, final String strName) {
         _iLineNumber = iLineNumber;
         _strName = strName;
     }
@@ -47,19 +49,21 @@ public class InputStatement implements Statement {
     /**
      * Get Line Number.
      *
-     * @return iLineNumber - the command line number of the statement
+     * @return the command line number of the statement
      */
     @Override
-    public int getLineNumber() {
-        return (_iLineNumber);
+    public final int getLineNumber() {
+        return _iLineNumber;
     }
 
     /**
      * Execute.
      *
      * Execute the input statement.
+     *
+     * @throws RuntimeException if an incorrect input is detected
      */
-    public final void execute() {
+    public final void execute() throws RuntimeException {
         VariableManagement oVariableManager = new VariableManagement();
         BufferedReader oReader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -74,8 +78,7 @@ public class InputStatement implements Statement {
                 oVariableManager.putMap(_strName, strInput);
             }
         } catch (IOException | SyntaxErrorException e) {
-            // TODO generate a problem error handling process
-            // HACK: Just ignore the problem.
+            throw new RuntimeException("Incorrect input detected...");
         }
     }
 
@@ -89,6 +92,6 @@ public class InputStatement implements Statement {
     @Override
     public final String content() {
 
-        return ("INPUT (" + _strName + ")");
+        return "INPUT (" + _strName + ")";
     }
 }

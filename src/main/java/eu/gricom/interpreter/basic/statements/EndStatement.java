@@ -1,7 +1,5 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.helper.Logger;
-
 /**
  * EndStatement.java
  * <p>
@@ -12,7 +10,6 @@ import eu.gricom.interpreter.basic.helper.Logger;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class EndStatement implements Statement {
-    private final Logger _oLogger = new Logger(this.getClass().getName());
     private final int _iLineNumber;
 
     /**
@@ -40,8 +37,8 @@ public class EndStatement implements Statement {
      * @return iLineNumber - the command line number of the statement
      */
     @Override
-    public int getLineNumber() {
-        return (_iLineNumber);
+    public final int getLineNumber() {
+        return _iLineNumber;
     }
 
     /**
@@ -49,7 +46,7 @@ public class EndStatement implements Statement {
      *
      * Terminate the running program.
      */
-    public final void execute() throws Exception {
+    public final void execute() {
         System.exit(0);
     }
 
@@ -63,6 +60,6 @@ public class EndStatement implements Statement {
     @Override
     public final String content() {
 
-        return ("END");
+        return "END";
     }
 }

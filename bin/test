@@ -1,1 +1,0 @@
-java -jar target/BASIC-0.0.4-RC.jar -v"debug|info" -b=jasic -i src/test/resources/test_jasic_1.jas
