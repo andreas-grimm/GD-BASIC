@@ -1,7 +1,7 @@
 #!/bin/sh
 tput clear
 echo "--- Basic Regresssion Test---"
-VERSION=0.0.5
+VERSION=0.0.6
 
 tput clear
 echo "Test run: src/test/resources/test_basic_jasic_1_recoded.bas"

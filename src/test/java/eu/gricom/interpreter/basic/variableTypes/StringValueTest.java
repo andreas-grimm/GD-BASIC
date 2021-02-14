@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.variableTypes;
 
 import eu.gricom.interpreter.basic.error.DivideByZeroException;
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -220,6 +221,26 @@ public class StringValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testProcessSquareBrackets() {
+        StringValue oValue = new StringValue("abcdef");
+
+        try {
+            assertEquals("b", oValue.process("a$[1]").toString());
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testProcessSquareBracketsOutOfBorder() {
+        StringValue oValue = new StringValue("abcdef");
+
+        assertThrows(RuntimeException.class, () -> {
+            oValue.process("a$[6]").toString();
         });
     }
 }

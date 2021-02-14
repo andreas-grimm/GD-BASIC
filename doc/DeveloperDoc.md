@@ -332,6 +332,18 @@ supported as of the Q2 release...
 #### Mathematical Functions
 
 #### Variable Type String
+The String variable type is implemented in the `StringValue` class in the `eu.gricom.interpreter.basic.variableTypes` package. Compared
+to the other BASIC implementation, the String is not already implemented as an array of characters. To address single characters in
+a String, the datatype supports squared brackets (`[` and `]`) rather than round ones, which are reserved for arrays.
+
+The storage of the String value inside the `StringValue` class is done with a `Hashmap` implementation. All values for a
+variable are in a key value storage. The loss of performance is compensated with the flexibility of implementation, allow
+the easy implementation of n-dimensional arrays. Those strings that are not used as arrays are still using the Hashmap structure,
+with a single key value, implemented as a constant: `strNoIndex = "noIndex"`.
+
+To ensure that the array element can be retrieved, all incoming keys are normalized (i.e. all space characters are removed)
+and the key is stored with the value in the Hashmap structure. This implementation allows later versions to use any form of
+index in the use of strings. Refer to the description of the implementation or Arrays.
 
 ### The Statements Package
 
@@ -473,6 +485,8 @@ Limitations of the current implementation:
   the `THEN` statement, the command could execute a jump to the line number in the statement.
 
 ###### `END-IF` Statement
+The `END-IF` statement closes the `IF-THEN` block, It is mainly used from the `IF-THEN` statement as a jump target in case the IF clause
+fails. No other function is implemented for that statement.
 
 ##### `INPUT` Statement
 

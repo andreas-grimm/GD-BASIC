@@ -1,11 +1,14 @@
 package eu.gricom.interpreter.basic.memoryManager;
 
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.variableTypes.BooleanValue;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
+import eu.gricom.interpreter.basic.variableTypes.VariableType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,20 +44,35 @@ public class VariableManagement {
      * @param oValue value part of the pair, here as an Value object
      */
     public final void putMap(final String strName, final Value oValue) {
+        VariableType eVariableType = VariableType.UNDEFINED;
 
-        switch (strName.substring(strName.length() - 1)) {
-            case "$":
+        if (strName.contains("$")) {
+            eVariableType = VariableType.STRING;
+        } else if (strName.contains("%")) {
+            eVariableType = VariableType.INTEGER;
+        } else if (strName.contains("&")) {
+            eVariableType = VariableType.LONG;
+        } else if (strName.contains("#")) {
+            eVariableType = VariableType.REAL;
+        } else if (strName.contains("!")) {
+            eVariableType = VariableType.DOUBLE;
+        } else if (strName.contains("@")) {
+            eVariableType = VariableType.BOOLEAN;
+        }
+
+        switch (eVariableType) {
+            case STRING:
                 _aoStrings.put(strName, (StringValue) oValue);
                 break;
-            case "%":
-            case "&":
+            case INTEGER:
+            case LONG:
                 _aoIntegers.put(strName, (IntegerValue) oValue);
                 break;
-            case "!":
-            case "#":
+            case REAL:
+            case DOUBLE:
                 _aoReals.put(strName, (RealValue) oValue);
                 break;
-            case "@":
+            case BOOLEAN:
                 _aoBooleans.put(strName, (BooleanValue) oValue);
                 break;
             default:
@@ -70,7 +88,7 @@ public class VariableManagement {
      * @throws SyntaxErrorException variable is not marked as real
      */
     public final void putMap(final String strName, final double dValue) throws SyntaxErrorException {
-        if (strName.endsWith("!") || strName.endsWith("#")) {
+        if (strName.contains("!") || strName.contains("#")) {
             RealValue oValue = new RealValue(dValue);
             _aoReals.put(strName, oValue);
             return;
@@ -87,7 +105,7 @@ public class VariableManagement {
      * @throws SyntaxErrorException variable is not marked as string
      */
     public final void putMap(final String strName, final String strValue) throws SyntaxErrorException {
-        if (strName.endsWith("$")) {
+        if (strName.contains("$")) {
             StringValue oValue = new StringValue(strValue);
             _aoStrings.put(strName, oValue);
             return;
@@ -104,8 +122,7 @@ public class VariableManagement {
      * @throws SyntaxErrorException variable is not marked as integer
      */
     public final void putMap(final String strName, final int iValue) throws SyntaxErrorException {
-        if (strName.substring(strName.length() - 1).matches("%")
-                || strName.substring(strName.length() - 1).matches("&")) {
+        if (strName.contains("%") || strName.contains("&")) {
             IntegerValue oValue = new IntegerValue(iValue);
             _aoIntegers.put(strName, oValue);
             return;
@@ -123,7 +140,7 @@ public class VariableManagement {
      * @throws SyntaxErrorException variable name is not marked as boolean
      */
     public final void putMap(final String strName, final boolean bValue) throws SyntaxErrorException {
-        if (strName.endsWith("@")) {
+        if (strName.contains("@")) {
             BooleanValue oValue = new BooleanValue(bValue);
             _aoBooleans.put(strName, oValue);
             return;
@@ -138,25 +155,53 @@ public class VariableManagement {
      * @param strKey - Key used for retrieval
      * @return Value object to be returned
      */
-    public final Value getMap(final String strKey) {
-        if (_aoUntyped.containsKey(strKey)) {
-            return _aoUntyped.get(strKey);
+    public final Value getMap(final String strKey) throws RuntimeException {
+        Logger oLogger = new Logger(this.getClass().getName());
+        boolean bProcess = false;
+
+        String strWork = strKey;
+
+        int iIndex = strKey.indexOf("[");
+        if (iIndex > 0) {
+            bProcess = true;
+            strWork = strKey.substring(0, iIndex);
         }
 
-        if (_aoStrings.containsKey(strKey)) {
-            return _aoStrings.get(strKey);
+        iIndex = strKey.indexOf("(");
+        if (iIndex > 0) {
+            bProcess = true;
+            strWork = strKey.substring(0, iIndex);
         }
 
-        if (_aoIntegers.containsKey(strKey)) {
-            return _aoIntegers.get(strKey);
+        if (_aoUntyped.containsKey(strWork)) {
+            oLogger.debug("-getMap-> retreiving key: <" + strWork + "> [untyped] ");
+            return _aoUntyped.get(strWork);
         }
 
-        if (_aoReals.containsKey(strKey)) {
-            return _aoReals.get(strKey);
+        if (_aoStrings.containsKey(strWork)) {
+            oLogger.debug("-getMap-> retreiving key: <" + strWork + "> [string] " + _aoStrings.get(strWork));
+            StringValue oString = _aoStrings.get(strWork);
+
+            if (bProcess) {
+                return oString.process(strKey);
+            }
+
+            return _aoStrings.get(strWork);
         }
 
-        if (_aoBooleans.containsKey(strKey)) {
-            return _aoBooleans.get(strKey);
+        if (_aoIntegers.containsKey(strWork)) {
+            oLogger.debug("-getMap-> retreiving key: <" + strWork + "> [integer] ");
+            return _aoIntegers.get(strWork);
+        }
+
+        if (_aoReals.containsKey(strWork)) {
+            oLogger.debug("-getMap-> retreiving key: <" + strWork + "> [real] ");
+            return _aoReals.get(strWork);
+        }
+
+        if (_aoBooleans.containsKey(strWork)) {
+            oLogger.debug("-getMap-> retreiving key: <" + strWork + "> [boolean] ");
+            return _aoBooleans.get(strWork);
         }
 
         return null;
@@ -169,11 +214,23 @@ public class VariableManagement {
      * @return true, if key is in the data structure
      */
     public final boolean mapContainsKey(final String strKey) {
-        if (_aoUntyped.containsKey(strKey)
-                || _aoBooleans.containsKey(strKey)
-                || _aoIntegers.containsKey(strKey)
-                || _aoReals.containsKey(strKey)
-                || _aoStrings.containsKey(strKey)) {
+        String strWork = strKey;
+
+        int iIndex = strKey.indexOf("[");
+        if (iIndex > 0) {
+            strWork = strKey.substring(0, iIndex);
+        }
+
+        iIndex = strKey.indexOf("(");
+        if (iIndex > 0) {
+            strWork = strKey.substring(0, iIndex);
+        }
+
+        if (_aoUntyped.containsKey(strWork)
+                || _aoBooleans.containsKey(strWork)
+                || _aoIntegers.containsKey(strWork)
+                || _aoReals.containsKey(strWork)
+                || _aoStrings.containsKey(strWork)) {
             return true;
         }
 

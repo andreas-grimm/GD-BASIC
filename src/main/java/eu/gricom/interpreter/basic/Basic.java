@@ -11,8 +11,8 @@ import eu.gricom.interpreter.basic.parser.Parser;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.statements.Statement;
 import eu.gricom.interpreter.basic.tokenizer.BasicLexer;
+import eu.gricom.interpreter.basic.tokenizer.Lexer;
 import eu.gricom.interpreter.basic.tokenizer.Token;
-import eu.gricom.interpreter.basic.tokenizer.Tokenizer;
 import eu.gricom.interpreter.basic.tokenizer.JasicLexer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -67,7 +67,7 @@ public class Basic {
         // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
         _oLogger.info("Starting tokenization...");
 
-        Tokenizer oTokenizer;
+        Lexer oTokenizer;
 
         if (_strBasicVersion.contains("jasic")) {
             oTokenizer = new JasicLexer();

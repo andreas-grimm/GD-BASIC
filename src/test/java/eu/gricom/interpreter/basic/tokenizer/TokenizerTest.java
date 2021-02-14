@@ -20,7 +20,7 @@ public class TokenizerTest {
             _oLogger.setLogLevel("");
 
             String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
-            Tokenizer oTokenizer = new JasicLexer();
+            Lexer oTokenizer = new JasicLexer();
 
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 

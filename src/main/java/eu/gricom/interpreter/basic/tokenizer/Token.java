@@ -5,7 +5,7 @@ package eu.gricom.interpreter.basic.tokenizer;
  * <p>
  * Description:
  * <p>
- * The Tokenizer is responsible for translating the source code into a chain of Token. When recognizing a token, this
+ * The Lexer is responsible for translating the source code into a chain of Token. When recognizing a token, this
  * object is created, consisting of the found token and the text in the source code. Using this class wrapper, the
  * parser can identify the token and process it.
  * <p>

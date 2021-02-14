@@ -81,7 +81,7 @@ Implemented Backlog Items:
     [BASIC-34], [BASIC-35], [BASIC-18], [BASIC-29], [BASIC-30], [BASIC-31], [BASIC-44], [BASIC-45], [BASIC-46], [BASIC-59], [BASIC-60], [BASIC-61],
     [BASIC-63]
 
-0.0.5
+0.0.5: Tagged as Loop Release
 * Added the `FOR-NEXT`-loop
 * Added the `DO-UNTIL`-loop  
 * Added `GOSUB`-statement
@@ -93,5 +93,9 @@ Implemented Backlog Items:
 
     [BASIC-24], [BASIC-26], [BASIC-43], [BASIC-48], [BASIC-58], [BASIC-62], [BASIC-66], [BASIC-65], [BASIC-74],
     [BASIC-80], [BASIC-67], [BASIC-68], [BASIC-69], [BASIC-70], [BASIC-71], [BASIC-72], [BASIC-81], [BASIC-84]
+
+0.0.6: Tagged as Array Release
+* Added array function to strings
+* Added the `DiM` function
 
 ** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **

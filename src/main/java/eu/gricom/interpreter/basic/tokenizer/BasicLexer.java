@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * <p>
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
-public class BasicLexer implements Tokenizer {
+public class BasicLexer implements Lexer {
     private final Logger _oLogger = new Logger(this.getClass().getName());
 
     @Override

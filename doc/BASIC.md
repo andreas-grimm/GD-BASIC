@@ -117,7 +117,7 @@ __Example of a BASIC Program__
     120 GOTO 50
     130 END
 
-### Variables and Constants
+### Variables, Arrays, and Constants
 Basic is a strongly typed programming language, which means that type 
 conversion can only be done using conversion functions. These functions 
 will be implemented in one of the next versions of the interpreter.
@@ -130,6 +130,17 @@ be parsed (though numbers are double internally).
 
 Variables are identified by name which must start with a letter and can
 contain letters or numbers. Case is significant for names and keywords.
+
+Arrays are supported as of this version. An array is marked by round brackets directly connected to the variable name: `A$(10)`.
+No whitespace is permitted between the variable and the index. The initial size of the array can be defined with the `DIM` command,
+this is optional (every array is recognized), but has performance advantages. Different from other BASIC versions, this interpreter
+does not limit to the use of the array to the reserved space. If the index is exceeded the current assigned space, additional memory
+is made available, if available.
+
+Example of Arrays:
+
+    A$(10) = "This is the 10th field of the array"
+    A#(5) = a#(4) + 1
 
 Constants are not supported. All variables are globally scoped.
 
@@ -152,6 +163,20 @@ Booleans Variables have two possible results: True or False.
 | A + 1 = 1 | 1A = A |
 | A + A = A | AA = A |
 | A + non A = 1 | A (non)A = 0 |
+
+#### Strings
+Strings are lists of characters. In GD-Basic, even single characters are representated as strings. To mark the border of
+strings, each string is surrounded by quotation marks (`"`).
+
+Allowed operations for strings are:
+- `==` - compares two strings
+- `+` - concatinates two strings
+- `[]` - retrieves a single character in a string:
+
+      10 A$ = "Test"
+      20 PRINT A$[1]
+
+prints the character `e`
 
 ### Naming Conventions and Support
 

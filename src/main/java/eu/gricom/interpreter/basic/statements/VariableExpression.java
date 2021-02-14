@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
@@ -34,8 +35,10 @@ public final class VariableExpression implements Expression {
      * Return the content of the variable in the Memory Management component.
      *
      * @return returns the value of the variable - or if the variable does not exists - returns a 0 as a numerical value
+     * @throws RuntimeException for any errors occuring in the execution of the evaluation. Currently this happens if
+     * the index in an array subscription is larger than the array.
      */
-    public Value evaluate() {
+    public Value evaluate() throws RuntimeException {
         VariableManagement oVariableManager = new VariableManagement();
 
         if (!_strName.endsWith(")")) {
