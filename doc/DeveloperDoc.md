@@ -40,7 +40,7 @@ version of the interpreter.
 
 At this stage, the interpreter is using a command line interface (`CLI`). The syntax of the `CLI` is:
 
-`java -jar target/BASIC-`\<version-SNAPSHOT>`.jar` \<parameter> \<program name>.\<`.bas`|`.jas`>
+    java -jar target/BASIC-<version-SNAPSHOT>.jar <parameter> <program name>.<.bas|.jas>
 
 Possible optional parameter supported are:
 * "`-h`" - help (This screen), no further arguments
@@ -52,11 +52,12 @@ The only mandatory parameter is:
 * "`-i`" - mandatory name of the input file, with the name of the input file as an argument
 
 _Example_:
-`java -jar target/BASIC-0.0.2-SNAPSHOT.jar -v"debug|info" -i src/test/resources/testfile_basic.bas`
+
+    java -jar target/BASIC-0.0.2-SNAPSHOT.jar -v"debug|info" -i src/test/resources/testfile_basic.bas
 
 ## Participation in the Development of the Interpreter
 As of version `0.1.0` (planned) the interpeter is avaialble in a public _GITHUB_ (`github.com`) repository. It is covered by
-a modified version of the CDDL 1.0 License, see `LICENSE.md` in the project root directory.
+a modified version of the __CDDL 1.0 License__, see `LICENSE.md` in the project root directory.
 
 The project is following open source project standard processes. Anybody with an interest to participate can and may clone or
 fork a copy of the project. Deliveries back to the author can be done using pull requests. Refer to the `git` documentation
@@ -66,6 +67,9 @@ A `GIST` space might be opened at a later stage, right now the project is using 
 and release dates. The _Jira_ project can be found here:
 
 [Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC)
+
+## Before Starting Modifications...
+
 
 ## General Structure of the Interpreter
 
@@ -89,206 +93,10 @@ Each token object holds three attributes:
 * __Text__: the program code identified by the token
 * __Line__: the line number of the program code in the original program. This is used i.e. for interpreter error messages.
 
-#### Reserved Words
-
-BASIC uses a number of reserved words for the implementation of the program. The following list provides
-a full list of all reserved words for both dialects, BASIC and Jasic. To help programmers using different
-Basic dialcts, the list also contains the reserved words of three major other Basic dialects. The semantics
-of the keywords can vary - refer to the language manual for the use of the reserved words.
-
-| Reserved Word |  GD-Basic | Jasic | TRS-80 Level II Basic | Applesoft Basic | Commodore Basic | Notes |
-|---------------|-----------|-------|-----------------------|-----------------|-----------------|-------|
-| `ABS` | reserved | not planned | implemented | implemented | implemented |
-| `AND` | reserved | not planned | implemented | implemented | implemented |
-| `ASC` | reserved | not planned | implemented | implemented | implemented |
-| `AT` | not planned | not planned | out of scope | implemented | out of scope |
-| `ATN` | reserved | not planned | implemented | implemented | implemented |
-| `AUTO` | not planned | not planned | implemented | out of scope | out of scope |
-| `CALL` | reserved | not planned | | implemented | |
-| `CDBL` | reserved | not planned | implemented | | |
-| `CHR$` | reserved, used token: `CHR` | not planned | implemented | implemented | implemented |
-| `CINT` | reserved | not planned | implemented | | |
-| `CLEAR` | | not planned | implemented | implemented | |
-| `CLOSE` | reserved | not planned | implemented | implemented | implemented |
-| `CLOAD` | | not planned | implemented | | |
-| `CLS` | reserved | not planned | implemented | | |
-| `CLR` | | not planned | | | implemented |
-| `CSAVE` | not planned | | implemented | | |
-| `CMD` | reserved | not planned | implemented | | implemented |
-| `COLOR=` | | not planned | | implemented | |
-| `CONT` | reserved | not planned | implemented | implemented | implemented |
-| `COS` | reserved | not planned | implemented | implemented | implemented |
-| `CSNG` | reserved | not planned | implemented | | |
-| `CVD` | | not planned | implemented | | |
-| `CVI` | | not planned | implemented | | |
-| `CVS` | | not planned | implemented | | |
-| `DATA` | reserved | not planned | implemented | implemented | implemented |
-| `DEF` | | not planned | implemented | implemented |
-| `DEF FN` | reserved | | | implemented | |
-| `DEFDBL` | | not planned | implemented | | |
-| `DEFINT` | | not planned | implemented | | |
-| `DEFSNG` | | not planned | implemented | | |
-| `DEFSTR` | | not planned | implemented | | |
-| `DEL` | | not planned | | implemented | |
-| `DELETE` | | not planned | implemented | | |
-| `DIM` | reserved | not planned | implemented | implemented | implemented |
-| `DRAW` | | not planned | | implemented | |
-| `EDIT` | | not planned | implemented | | |
-| `ELSE` | reserved | not planned | implemented | implemented | implemented |
-| `END` | implemented | not planned | implemented | implemented | implemented |
-| `END-IF` | reserved | not planned | | | |
-| `EOF` | reserved | not planned | implemented | | |
-| `EOL` | reserved | not planned | | | |
-| `EOP` | implemented | implemented | | | | `EOP` is a token used to mark the end of the program. It is not the implementation of a reserved word.
-| `ERL` | reserved | not planned | implemented | | |
-| `ERR` | reserved | not planned | implemented | |
-| `ERROR` | | not planned | implemented | | |
-| `EXP` | reserved | not planned | implemented | implemented | implemented |
-| `FIELD` | | not planned | implemented | | |
-| `FIX` | | not planned | implemented | | |
-| `FLASH` | | not planned | implemented | | |
-| `FN` | | not planned | implemented | implemented | implemented |
-| `FOR` | reserved | not planned | implemented | implemented | implemented |
-| `FRE` | reserved | not planned | implemented | implemented | implemented | 
-| `GET` | | not planned | implemented | implemented | implemented |
-| `GO` | | not planned | | | implemented |
-| `GOSUB` | reserved | not planned | implemented | implemented | implemented |
-| `GOTO` | implemented | implemented | implemented | implemented | implemented |
-| `GR` | | not planned | | implemented | |
-| `HCOLOR=` | | not planned | | implemented | |
-| `HGR` | | not planned | | implemented | |
-| `HGR2` | | not planned | | implemented | |
-| `HIMEM:` | not planned | | | implemented | |
-| `HLIN` | | not planned | | implemented | |
-| `HOME` | | not planned | | implemented | |
-| `HTAB` | | not planned | | implemented | |
-| `HPLOT` | | not planned | | implemented | |
-| `IF` | reserved | implemented | implemented | implemented | implemented |
-| `IN #` | | not planned | | implemented | |
-| `INKEY$` | | not planned | implemented | | |
-| `INP` | | not planned | implemented | | |
-| `INSTR` | reserved | not planned | implemented | | |
-| `INT` | reserved | not planned | implemented | implemented | implemented |
-| `INVERSE` | | not planned | | implemented | |
-| `INPUT` | reserved | implemented | implemented | implemented | implemented |
-| `INPUT#` | | not planned | | | implemented |
-| `KILL` | | not planned | implemented | | |
-| `LEFT$` | reserved, used token: `LEFT` | not planned | implemented | implemented | implemented |
-| `LEN` | reserved | not planned | implemented | implemented | implemented |
-| `LET` | reserved | not planned | implemented | implemented | implemented |
-| `LINE` | implemented | implemented | implemented (different function) | | | The `LINE` token is used to mark empty program lines, the token has no responding reserved word.
-| `LIST` | | not planned | implemented | implemented | implemented |
-| `LLIST` | | not planned | implemented | | |
-| `LOAD` | | not planned | implemented | | implemented |
-| `LOC` | | not planned | implemented | | |
-| `LOF` | | not planned | implemented | | |
-| `LOG` | reserved | | implemented | implemented | implemented |
-| `LOMEM:` | | not planned | | implemented | |
-| `LPRINT` | | not planned | implemented | | |
-| `LSET` | | not planned | implemented | | |
-| `MEM` | reserved | not planned | implemented | |
-| `MERGE` | | not planned | implemented | | |
-| `MID$` | reserved, used token: `MID` | not planned | implemented | implemented | implemented |
-| `MKD$` | | not planned | implemented | | |
-| `MKI$` | | not planned | implemented | | |
-| `MKS$` | | not planned | implemented | | |
-| `NAME` | | not planned | implemented | | |
-| `NEW` | | not planned | implemented | implemented | implemented |
-| `NEXT` | reserved | not planned | implemented | implemented | implemented |
-| `NORMAL` | | not planned | | implemented | |
-| `NOT` | reserved | not planned | implemented | implemented | implemented |
-| `NOTRACE` | | not planned | | implemented | |
-| `ON` | reserved | not planned | implemented | | implemented |
-| `ONERR` | | not planned | | implemented | |
-| `OPEN` | | not planned | implemented | implemented | implemented |
-| `OR` | reserved | not planned | implemented | implemented | implemented |
-| `OUT` | | not planned | implemented | | |
-| `PDL` | | not planned | | implemented | |
-| `PEEK` | | not planned | implemented | implemented | implemented |
-| `PLOT` | | not planned | | implemented | |
-| `POINT` | | not planned | implemented | | |
-| `POKE` | | not planned | implemented | implemented | implemented |
-| `POP` | | not planned | | implemented | |
-| `POS` | | not planned | implemented | implemented | implemented |
-| `PR #` | | not planned | | implemented | |
-| `PRINT` | implemented | implemented | implemented | implemented | implemented |
-| `PRINT#` | | not planned | | | implemented |
-| `PUT` | | not planned | implemented | | |
-| `RANDOM` | reserved | not planned | implemented | | |
-| `READ` | reserved | not planned | implemented | implemented | implemented |
-| `RECALL` | | not planned | | implemented | |
-| `REM` | implemented | not planned | implemented | implemented | implemented |
-| `REMINDER` | reserved, used token instead of `%` | not planned | | | |
-| `RESET` | | not planned | implemented | | |
-| `RESUME` | | not planned | implemented | implemented | |
-| `RETURN` | reserved | not planned | implemented | implemented | implemented |
-| `RESTO` | not planned | not planned | implemented | | |
-| `RESTORE` | | not planned | | implemented | implemented |
-| `RIGHT$` | reserved, used token: `RIGHT` | | implemented | implemented | implemented |
-| `RND` | reserved | not planned | implemented | implemented | implemented |
-| `ROT=` | | not planned | | implemented | |
-| `RSET` | | not planned | implemented | | |
-| `RUN` | | not planned | implemented | implemented | implemented |
-| `SAVE` | | not planned | implemented | | implemented |
-| `SCALE=` | | not planned | | implemented | |
-| `SET` | | not planned | implemented | | |
-| `SCRN(` | | not planned | | implemented | |
-| `SGN` | reserved | not planned | implemented | implemented | implemented |
-| `SHLOAD` | | not planned | | implemented | |
-| `SIN` | reserved | not planned | implemented | implemented | implemented |
-| `SPC(` | | not planned | | implemented | implemented |
-| `SPEED=` | | not planned | | implemented | |
-| `SQR` | reserved | not planned | implemented | implemented | implemented |
-| `STEP` | reserved | not planned | implemented | implemented | implemented |
-| `STOP` | reserved | not planned | implemented | implemented | implemented |
-| `STORE` | | not planned | | implemented | |
-| `STRING$` | reserved, used token: `TOSTRING` | not planned | implemented | | |
-| `STR$` | reserved, used token: `STR` | not planned | implemented | implemented | implemented |
-| `SYSTEM` | reserved | not planned | implemented | | |
-| `SYS` | | not planned | | | implemented |
-| `TAB` | reserved | not planned | implemented | implemented | implemented |
-| `TAN` | reserved | not planned | implemented | implemented | implemented |
-| `TEXT` | | not planned | | implemented | |
-| `THEN` | reserved | implemented | implemented | implemented | implemented |
-| `TIME$` | reserved, used token: `TIME` | not planned | implemented | | |
-| `TO` | reserved | not planned | implemented | implemented | implemented |
-| `TRACE` | not planned | not planned | | implemented | |
-| `TRON` | not planned | not planned | implemented | | |
-| `TROFF` | not planned | not planned | implemented | | |
-| `USR` | not planned | not planned | | implemented | implemented |
-| `VAL` | reserved | not planned | implemented | implemented | implemented |
-| `VERIFY` | | not planned | | | implemented |
-| `VLIN` | | not planned | | implemented | |
-| `VTAB` | | not planned | | implemented | |
-| `WAIT` | | not planned | | | implemented |
-| `XDRAW` | | not planned | | implemented | |
-| `&` | reserved, used token: `AMPERSAND` | not planned | | implemented | |
-| `+` | implemented, used token: `PLUS` | implemented | implemented | implemented | implemented |
-| `-` | implemented, used token: `MINUS` | implemented | implemented | implemented | implemented |
-| `*` | implemented, used token: `MULTIPLY` | implemented | implemented | implemented | implemented |
-| `/` | implemented, used token: `DIVIDE` | implemented | implemented | implemented | implemented |
-| `;` | not planned | not planned | | implemented | |
-| `:` | reserved, used token: `COLON` | implemented (as part of a label) | | implemented | implemented |
-| `\>` | reserved, used token: `GREATER` | implemented | implemented | implemented | implemented |
-| `=>` | reserved, used token: `GREATER_EQUAL` | not planned | |
-| `\<` | reserved, used token: `SMALLER` | implemented | implemented | implemented | implemented |
-| `=<` | reserved, used token: `SMALLER_EQUAL` | not planned | | |
-| `=` | reserved, used token: `ASSIGN_EQUAL` | implemented | implemented | implemented | implemented |
-| `:=` | reserved, used token: `PASCAL_ASSIGN_EQUAL` | not planned | |
-| `==` | reserved, used token: `COMPARE_EQUAL` | not planned | |
-| `!=` | reserved, used token: `COMPARE_NOT_EQUAL` | not planned | |
-| `^` | implemented, used token: `POWER` | reserved | implemented | | implemented |
-| `\'` (`REM` Quote) | implemented | implemented | implemented | |
-
-### Adding new token to the Tokenizer
-
-- Step 1: Add the new reserved word into the list of reserved words (`eu.gricom.interpreter.basic.tokenizer.ReservedWords.java`) 
-  and the token file (`eu.gricom.interpeter.basic.tokenizer.TokenType.java`).
-- Step 2: Verify that the BASIC tokenizer (`eu.gricom.interpreter.basic.BasicLexer.java`) can process the added new tokens and reserved word.
-
-### References to alternative installations
 
 ### Parser
+The parser translates the program, representated as a list of token, to a list of statement objects. These statement objects
+contain all logic of the different commands, so the runtime part of the interpreter does barely contain any logic.
 
 ### Runtime
 
@@ -298,17 +106,21 @@ is in the [BasicParser](https://github.com/andreas-grimm/Interpreters/blob/featu
 class. In this class, the method __parse__ contains the logic to convert the identified token into the sequence of commands 
 that will be executed in the interpreter.
 
+### Adding new token to the Tokenizer
 
+- Step 1: Add the new reserved word into the list of reserved words (`eu.gricom.interpreter.basic.tokenizer.ReservedWords.java`)
+  and the token file (`eu.gricom.interpeter.basic.tokenizer.TokenType.java`).
+- Step 2: Verify that the BASIC tokenizer (`eu.gricom.interpreter.basic.BasicLexer.java`) can process the added new tokens and reserved word.
 
 ## Main Classes
 
 ### Parser Package
 
-#### JasicParser ####
+#### JasicParser
 
-#### BasicParser ####
+#### BasicParser
 
-### Tokenizer Package ####
+### Tokenizer Package
 
 #### Token.java
 
@@ -316,7 +128,7 @@ that will be executed in the interpreter.
 
 #### JasicLexer.java
 
-##### TokenizeState.java
+#### TokenizeState.java
 
 #### BasicLexer.java
 
@@ -337,7 +149,7 @@ The content of the TokenType file is limited to the definition of the available 
 
 #### Variable Type Real
 
-##### Mathematical Functions
+#### Mathematical Functions
 
 #### Variable Type String
 
@@ -419,11 +231,204 @@ Limitations of the current implementation:
 
 ##### `PRINT` Statement
 
-## Compartibility Guide
+## Appendix
 
-### Tokenization of alternative implementations
+### Reserved Words
 
-#### Token's used in Interpreters
+BASIC uses a number of reserved words for the implementation of the program. The following list provides
+a full list of all reserved words for both dialects, BASIC and Jasic. To help programmers using different
+Basic dialcts, the list also contains the reserved words of three major other Basic dialects. The semantics
+of the keywords can vary - refer to the language manual for the use of the reserved words.
+
+| Reserved Word |  GD-Basic | Jasic | TRS-80 Level II Basic | Applesoft Basic | Commodore Basic | Notes |
+|---------------|-----------|-------|-----------------------|-----------------|-----------------|-------|
+| `ABS` | reserved |  | implemented | implemented | implemented |
+| `AND` | reserved |  | implemented | implemented | implemented |
+| `ASC` | reserved |  | implemented | implemented | implemented |
+| `AT` |  |  |  | implemented |  | 
+| `ATN` | reserved |  | implemented | implemented | implemented |
+| `AUTO` |  |  | implemented |  |  |
+| `CALL` | reserved |  |  | implemented |  |
+| `CDBL` | reserved |  | implemented |  |  |
+| `CHR$` | reserved, used token: `CHR` |  | implemented | implemented | implemented |
+| `CINT` | reserved |  | implemented |  |  |
+| `CLEAR` |  |  | implemented | implemented |  |
+| `CLOSE` | reserved |  | implemented | implemented | implemented |
+| `CLOAD` |  |  | implemented |  |  |
+| `CLS` | reserved |  | implemented |  |  |
+| `CLR` |  |  |  |  | implemented |
+| `CSAVE` |  |  | implemented | | |
+| `CMD` | reserved |  | implemented | | implemented |
+| `COLOR=` |  |  |  | implemented |  |
+| `CONT` | reserved |  | implemented | implemented | implemented |
+| `COS` | reserved |  | implemented | implemented | implemented |
+| `CSNG` | reserved |  | implemented |  |  |
+| `CVD` |  | not planned | implemented |  |  |
+| `CVI` |  |  | implemented |  |  |
+| `CVS` |  |  | implemented |  |  |
+| `DATA` | reserved |  | implemented | implemented | implemented |
+| `DEF` |  |  | implemented | implemented |
+| `DEF FN` | reserved |  |  | implemented |  |
+| `DEFDBL` |  |  | implemented |  |  |
+| `DEFINT` |  |  | implemented |  |  |
+| `DEFSNG` |  |  | implemented |  |  |
+| `DEFSTR` |  |  | implemented |  |  |
+| `DEL` |  |  |  | implemented |  |
+| `DELETE` |  |  | implemented |  |  |
+| `DIM` | reserved |  | implemented | implemented | implemented |
+| `DRAW` |  |  |  | implemented |  |
+| `EDIT` |  |  | implemented |  |  |
+| `ELSE` | reserved |  | implemented | implemented | implemented |
+| `END` | implemented |  | implemented | implemented | implemented |
+| `END-IF` | implemented |  |  |  |  |
+| `EOF` | reserved |  | implemented |  |  |
+| `EOL` | reserved |  |  |  |  |
+| `EOP` | implemented | implemented |  |  |  | `EOP` is a token used to mark the end of the program. It is not the implementation of a reserved word.
+| `ERL` | reserved |  | implemented |  |  |
+| `ERR` | reserved |  | implemented |  |
+| `ERROR` |  |  | implemented |  |  |
+| `EXP` | reserved |  | implemented | implemented | implemented |
+| `FIELD` |  |  | implemented |  |  |
+| `FIX` | | not planned | implemented | | |
+| `FLASH` |  |  | implemented |  |  |
+| `FN` |  |  | implemented | implemented | implemented |
+| `FOR` | reserved |  | implemented | implemented | implemented |
+| `FRE` | reserved |  | implemented | implemented | implemented | 
+| `GET` |  |  | implemented | implemented | implemented |
+| `GO` |  |  |  |  | implemented |
+| `GOSUB` | reserved |  | implemented | implemented | implemented |
+| `GOTO` | implemented | implemented | implemented | implemented | implemented |
+| `GR` |  |  |  | implemented |  |
+| `HCOLOR=` |  |  |  | implemented |  |
+| `HGR` |  |  |  | implemented |  |
+| `HGR2` |  |  |  | implemented |  |
+| `HIMEM:` |  |  |  | implemented |  |
+| `HLIN` |  |  |  | implemented |  |
+| `HOME` |  |  |  | implemented |  |
+| `HTAB` |  |  |  | implemented |  |
+| `HPLOT` |  |  |  | implemented |  |
+| `IF` | implemented | implemented | implemented | implemented | implemented |
+| `IN #` |  |  |  | implemented |  |
+| `INKEY$` |  |  | implemented |  |  |
+| `INP` |  |  | implemented |  |  |
+| `INSTR` | reserved |  | implemented |  |  |
+| `INT` | reserved |  | implemented | implemented | implemented |
+| `INVERSE` |  |  |  | implemented |  |
+| `INPUT` | implemented | implemented | implemented | implemented | implemented |
+| `INPUT#` |  |  |  |  | implemented |
+| `KILL` |  |  | implemented |  |  |
+| `LEFT$` | reserved, used token: `LEFT` |  | implemented | implemented | implemented |
+| `LEN` | reserved |  | implemented | implemented | implemented |
+| `LET` | reserved |  | implemented | implemented | implemented |
+| `LINE` | implemented | implemented | implemented (different function) | | | The `LINE` token is used to mark empty program lines, the token has no responding reserved word.
+| `LIST` |  |  | implemented | implemented | implemented |
+| `LLIST` |  |  | implemented |  |  |
+| `LOAD` |  |  | implemented |  | implemented |
+| `LOC` |  |  | implemented |  |  |
+| `LOF` |  |  | implemented |  |  |
+| `LOG` | reserved |  | implemented | implemented | implemented |
+| `LOMEM:` |  |  |  | implemented |  |
+| `LPRINT` |  |  | implemented |  |  |
+| `LSET` |  |  | implemented |  |  |
+| `MEM` | reserved |  | implemented |  |
+| `MERGE` |  |  | implemented |  |  |
+| `MID$` | reserved, used token: `MID` |  | implemented | implemented | implemented |
+| `MKD$` |  |  | implemented | | |
+| `MKI$` |  |  | implemented | | |
+| `MKS$` |  |  | implemented | | |
+| `NAME` |  |  | implemented | | |
+| `NEW` |  |  | implemented | implemented | implemented |
+| `NEXT` | reserved |  | implemented | implemented | implemented |
+| `NORMAL` |  |  |  | implemented |  |
+| `NOT` | reserved |  | implemented | implemented | implemented |
+| `NOTRACE` |  | not planned |  | implemented |  |
+| `ON` | reserved |  | implemented |  | implemented |
+| `ONERR` |  |  |  | implemented |  |
+| `OPEN` |  |  | implemented | implemented | implemented |
+| `OR` | reserved |  | implemented | implemented | implemented |
+| `OUT` |  |  | implemented |  |  |
+| `PDL` |  |  |  | implemented |  |
+| `PEEK` |  |  | implemented | implemented | implemented |
+| `PLOT` |  |  |  | implemented |  |
+| `POINT` |  | not planned | implemented |  |  |
+| `POKE` |  |  | implemented | implemented | implemented |
+| `POP` |  |  |  | implemented |  |
+| `POS` |  |  | implemented | implemented | implemented |
+| `PR #` |  |  |  | implemented | |
+| `PRINT` | implemented | implemented | implemented | implemented | implemented |
+| `PRINT#` |  |  |  |  | implemented |
+| `PUT` |  |  | implemented |  |  |
+| `RANDOM` | reserved |  | implemented |  |  |
+| `READ` | reserved |  | implemented | implemented | implemented |
+| `RECALL` |  |  |  | implemented |  |
+| `REM` | implemented |  | implemented | implemented | implemented |
+| `REMINDER` | reserved, used token instead of `%` |  |  |  |  |
+| `RESET` |  |  | implemented |  |  |
+| `RESUME` |  |  | implemented | implemented |  |
+| `RETURN` | reserved |  | implemented | implemented | implemented |
+| `RESTO` |  |  | implemented |  |  |
+| `RESTORE` |  |  |  | implemented | implemented |
+| `RIGHT$` | reserved, used token: `RIGHT` |  | implemented | implemented | implemented |
+| `RND` | reserved |  | implemented | implemented | implemented |
+| `ROT=` |  |  |  | implemented |  |
+| `RSET` |  |  | implemented |  |  |
+| `RUN` |  |  | implemented | implemented | implemented |
+| `SAVE` |  |  | implemented |  | implemented |
+| `SCALE=` |  |  |  | implemented |  |
+| `SET` |  |  | implemented |  |  |
+| `SCRN(` |  |  |  | implemented |  |
+| `SGN` | reserved |  | implemented | implemented | implemented |
+| `SHLOAD` |  |  |  | implemented |  |
+| `SIN` | reserved |  | implemented | implemented | implemented |
+| `SPC(` |  |  |  | implemented | implemented |
+| `SPEED=` |  |  |  | implemented |  |
+| `SQR` | reserved |  | implemented | implemented | implemented |
+| `STEP` | reserved |  | implemented | implemented | implemented |
+| `STOP` | reserved |  | implemented | implemented | implemented |
+| `STORE` |  |  |  | implemented |  |
+| `STRING$` | reserved, used token: `TOSTRING` |  | implemented |  |  |
+| `STR$` | reserved, used token: `STR` |  | implemented | implemented | implemented |
+| `SYSTEM` | reserved |  | implemented |  |  |
+| `SYS` |  |  |  |  | implemented |
+| `TAB` | reserved |  | implemented | implemented | implemented |
+| `TAN` | reserved |  | implemented | implemented | implemented |
+| `TEXT` |  |  |  | implemented |  |
+| `THEN` | implemented | implemented | implemented | implemented | implemented |
+| `TIME$` | reserved, used token: `TIME` |  | implemented |  |  |
+| `TO` | reserved |  | implemented | implemented | implemented |
+| `TRACE` |  |  |  | implemented |  |
+| `TRON` |  |  | implemented |  |  |
+| `TROFF` |  |  | implemented |  |  |
+| `USR` |  |  |  | implemented | implemented |
+| `VAL` | reserved |  | implemented | implemented | implemented |
+| `VERIFY` |  |  |  |  | implemented |
+| `VLIN` |  |  |  | implemented |  |
+| `VTAB` |  |  |  | implemented |  |
+| `WAIT` |  |  |  |  | implemented |
+| `XDRAW` |  |  |  | implemented |  |
+| `&` | reserved, used token: `AMPERSAND` |  |  | implemented |  |
+| `+` | implemented, used token: `PLUS` | implemented | implemented | implemented | implemented |
+| `-` | implemented, used token: `MINUS` | implemented | implemented | implemented | implemented |
+| `*` | implemented, used token: `MULTIPLY` | implemented | implemented | implemented | implemented |
+| `/` | implemented, used token: `DIVIDE` | implemented | implemented | implemented | implemented |
+| `;` |  |  |  | implemented |  |
+| `:` | reserved, used token: `COLON` | implemented (as part of a label) |  | implemented | implemented |
+| `>` | implemented, used token: `GREATER` | implemented | implemented | implemented | implemented |
+| `>=` | implemented, used token: `GREATER_EQUAL` |  |  |
+| `<` | implemented, used token: `SMALLER` | implemented | implemented | implemented | implemented |
+| `<=` | implemented, used token: `SMALLER_EQUAL` |  |  |  |
+| `=` | implemented, used token: `ASSIGN_EQUAL` | implemented | implemented | implemented | implemented |
+| `:=` | reserved, used token: `PASCAL_ASSIGN_EQUAL` |  |  |
+| `==` | implemented, used token: `COMPARE_EQUAL` |  |  |
+| `!=` | implemented, used token: `COMPARE_NOT_EQUAL` |  |  |
+| `^` | implemented, used token: `POWER` | reserved | implemented |  | implemented |
+| `\'` (`REM` Quote) | implemented | implemented | implemented |  |
+
+### Compartibility Guide
+
+#### Tokenization of alternative implementations
+
+##### Token's used in Interpreters
 
 This reference table maps the token id's of the other Basic dialects. As the original use of Basic was limited to systems with very reduced
 memory capabilities, the token were stored as HEX values. This interpreter uses a different approach and stores the token internally

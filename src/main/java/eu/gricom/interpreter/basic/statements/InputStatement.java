@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.statements;
 
+import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 
 import java.io.BufferedReader;
@@ -72,7 +73,7 @@ public class InputStatement implements Statement {
             } catch (NumberFormatException e) {
                 oVariableManager.putMap(_strName, strInput);
             }
-        } catch (IOException e1) {
+        } catch (IOException | SyntaxErrorException e) {
             // TODO generate a problem error handling process
             // HACK: Just ignore the problem.
         }

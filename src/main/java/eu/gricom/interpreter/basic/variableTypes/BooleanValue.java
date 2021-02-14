@@ -68,6 +68,15 @@ public class BooleanValue implements Value {
     }
 
     /**
+     * Override the standart toString method.
+     *
+     * @return the content of the variable as a string
+     */
+    public final boolean toBoolean() {
+        return (_bValue);
+    }
+
+    /**
      * Transform the content of the number value into a double.
      *
      * @return the content of the variable as a double
@@ -105,6 +114,19 @@ public class BooleanValue implements Value {
     public final Value equals(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof BooleanValue) {
             if (this.toReal() == oValue.toReal()) {
+                return (new BooleanValue(true));
+            }
+
+            return (new BooleanValue(false));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a boolean"));
+    }
+
+    @Override
+    public Value notEqual(Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BooleanValue) {
+            if (this.toReal() != oValue.toReal()) {
                 return (new BooleanValue(true));
             }
 
@@ -173,8 +195,17 @@ public class BooleanValue implements Value {
     // This one implemented the XOR statement
     @Override
     public Value power(Value oValue) throws SyntaxErrorException {
-        //TODO Implement the XOR method
-        return null;
+        if (oValue instanceof BooleanValue) {
+            BooleanValue oWorkValue = (BooleanValue)oValue;
+
+            if (_bValue == oWorkValue.toBoolean()) {
+                return (new BooleanValue(false));
+            } else {
+                return (new BooleanValue(true));
+            }
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not of type boolean"));
     }
 
     @Override
@@ -183,7 +214,17 @@ public class BooleanValue implements Value {
     }
 
     @Override
+    public Value smallerEqualThan(Value oValue) throws SyntaxErrorException {
+        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+    }
+
+    @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
+        throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
+    }
+
+    @Override
+    public Value largerEqualThan(Value oValue) throws SyntaxErrorException {
         throw (new SyntaxErrorException(oValue.content() + " '-' for boolean expression is not defined"));
     }
 

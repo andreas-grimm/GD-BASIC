@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class IfThenStatementTest {
 
     @Test
-    public void testEvaluate() {
+    public void testEvaluateJasic() {
         ProgramPointer oProgramPointer = new ProgramPointer();
         LabelStatement oLabelStatement = new LabelStatement();
 
@@ -20,7 +20,7 @@ public class IfThenStatementTest {
         RealValue oLeftValue = new RealValue(2);
 
         try {
-            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "=", oLeftValue);
+            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "==", oLeftValue);
 
             IfThenStatement oStatement = new IfThenStatement(oExpression, "TestCase");
 
@@ -35,7 +35,7 @@ public class IfThenStatementTest {
     }
 
     @Test
-    public void testNegativeEvaluate() {
+    public void testNegativeEvaluateJasic() {
         ProgramPointer oProgramPointer = new ProgramPointer();
         LabelStatement oLabelStatement = new LabelStatement();
 
@@ -46,7 +46,7 @@ public class IfThenStatementTest {
         RealValue oRightValue = new RealValue(1);
 
         try {
-            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "=", oRightValue);
+            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "==", oRightValue);
 
             IfThenStatement oStatement = new IfThenStatement(oExpression, "TestCase");
 
@@ -59,4 +59,60 @@ public class IfThenStatementTest {
             fail();
         }
     }
-}
+
+    @Test
+    public void testEvaluateBasic() {
+        ProgramPointer oProgramPointer = new ProgramPointer();
+        LineNumberStatement _oLineNumberObject = new LineNumberStatement();
+
+        _oLineNumberObject.putLineNumber(6, 1);
+        _oLineNumberObject.putStatementNumber(1,6);
+
+        _oLineNumberObject.putLineNumber(7, 2);
+        _oLineNumberObject.putStatementNumber(2,7);
+
+        oProgramPointer.setCurrentStatement(4);
+
+        RealValue oLeftValue = new RealValue(2);
+
+        try {
+            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "==", oLeftValue);
+
+            IfThenStatement oStatement = new IfThenStatement(oExpression, 6,5);
+
+            oStatement.execute();
+
+            int iNewLabel = oProgramPointer.getCurrentStatement();
+
+            assertEquals(iNewLabel, 4);
+        } catch (Exception eException) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testNegativeEvaluateBasic() {
+        ProgramPointer oProgramPointer = new ProgramPointer();
+        LineNumberStatement _oLineNumberObject = new LineNumberStatement();
+
+        _oLineNumberObject.putLineNumber(5, 1);
+        _oLineNumberObject.putStatementNumber(1,6);
+        oProgramPointer.setCurrentStatement(4);
+
+        RealValue oLeftValue = new RealValue(2);
+        RealValue oRightValue = new RealValue(1);
+
+        try {
+            OperatorExpression oExpression = new OperatorExpression(oLeftValue, "==", oRightValue);
+
+            IfThenStatement oStatement = new IfThenStatement(oExpression, 4,6);
+
+            oStatement.execute();
+
+            int iNewLabel = oProgramPointer.getCurrentStatement();
+
+            assertEquals(iNewLabel, 7);
+        } catch (Exception eException) {
+            fail();
+        }
+    }}

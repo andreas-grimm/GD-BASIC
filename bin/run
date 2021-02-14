@@ -1,1 +1,0 @@
-java -jar target/BASIC-0.0.4-SNAPSHOT.jar -i src/test/resources/testfile_basic.bas

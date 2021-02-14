@@ -41,13 +41,22 @@ public interface Value extends Expression {
     double toReal();
 
     /**
-     * Compares of one value object with another one.
+     * Compares of one value object with another one. Returns true if equal.
      *
      * @param oValue second value for the comparison
      * @return BooleanValue(true) if the objects are equal (not identical), BooleanValue(false) otherwise
      * @throws SyntaxErrorException thrown when different types are used
      */
     Value equals(Value oValue) throws SyntaxErrorException;
+
+    /**
+     * Compares of one value object with another one. Returns true if not equal.
+     *
+     * @param oValue second value for the comparison
+     * @return BooleanValue(true) if the objects are equal (not identical), BooleanValue(false) otherwise
+     * @throws SyntaxErrorException thrown when different types are used
+     */
+    Value notEqual(Value oValue) throws SyntaxErrorException;
 
     /**
      * Addition of one value object with another one.
@@ -105,6 +114,15 @@ public interface Value extends Expression {
     Value smallerThan(Value oValue) throws SyntaxErrorException;
 
     /**
+     * smallerEqualThan compares one value object with another one.
+     *
+     * @param oValue comparison value for function
+     * @return BooleanValue(true) if this object is smaller (not equal), BooleanValue(false) otherwise
+     * @throws SyntaxErrorException thrown when different types are used
+     */
+    Value smallerEqualThan(Value oValue) throws SyntaxErrorException;
+
+    /**
      * largerThan of one value object with another one.
      *
      * @param oValue comparison value for function
@@ -112,4 +130,13 @@ public interface Value extends Expression {
      * @throws SyntaxErrorException thrown when different types are used
      */
     Value largerThan(Value oValue) throws SyntaxErrorException;
+
+    /**
+     * largerEqualThan of one value object with another one.
+     *
+     * @param oValue comparison value for function
+     * @return BooleanValue(true) if this object is larger (not equal), BooleanValue(false) otherwise
+     * @throws SyntaxErrorException thrown when different types are used
+     */
+    Value largerEqualThan(Value oValue) throws SyntaxErrorException;
 }

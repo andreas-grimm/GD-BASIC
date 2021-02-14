@@ -3,6 +3,7 @@ package eu.gricom.interpreter.basic.variableTypes;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -78,13 +79,153 @@ public class BooleanValueTest {
     }
 
     @Test
-    public void testLargerThanTypeException() {
+    public void testEqualsTypeException() {
         BooleanValue oFirstValue = new BooleanValue(true);
-        RealValue oSecondValue = new RealValue(1.0);
+        RealValue oSecondValue = new RealValue(1);
 
         assertThrows(SyntaxErrorException.class, () -> {
-            BooleanValue oResult = (BooleanValue) oFirstValue.equals(oSecondValue);
+            BooleanValue oResult = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testNotEqual() {
+        try {
+            BooleanValue oFirstValue = new BooleanValue(true);
+            BooleanValue oSecondValue = new BooleanValue(false);
+
+            BooleanValue oResult = (BooleanValue) oFirstValue.notEqual(oSecondValue);
+            assertTrue(oResult.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testPlus() {
+        try {
+            BooleanValue oFirstValue = new BooleanValue(true);
+            BooleanValue oSecondValue = new BooleanValue(false);
+
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.plus(oFirstValue);
+            assertTrue(oResultValue.isTrue());
+
+            oResultValue = (BooleanValue) oFirstValue.plus(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+
+            oResultValue = (BooleanValue) oSecondValue.plus(oFirstValue);
+            assertTrue(oResultValue.isTrue());
+
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testMinus() {
+        BooleanValue oFirstValue = new BooleanValue(true);
+        BooleanValue oSecondValue = new BooleanValue(true);
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.minus(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testMultiply() {
+        try {
+            BooleanValue oFirstValue = new BooleanValue(true);
+            BooleanValue oSecondValue = new BooleanValue(false);
+
+
+            BooleanValue oResultValue = (BooleanValue) oSecondValue.multiply(oFirstValue);
+            assertFalse(oResultValue.isTrue());
+
+            oResultValue = (BooleanValue) oFirstValue.multiply(oSecondValue);
+            assertTrue(oResultValue.isTrue());
+        }  catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testDivide() {
+        BooleanValue oFirstValue = new BooleanValue(true);
+        BooleanValue oSecondValue = new BooleanValue(true);
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.minus(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testPower() {
+        try {
+            BooleanValue oFirstValue = new BooleanValue(true);
+            BooleanValue oSecondValue = new BooleanValue(false);
+
+            BooleanValue oResult = (BooleanValue) oFirstValue.power(oSecondValue);
+            assertTrue(oResult.isTrue());
+
+            oResult = (BooleanValue) oFirstValue.power(oFirstValue);
+            assertTrue(!oResult.isTrue());
+        }  catch (SyntaxErrorException e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testPowerTypeException() {
+        BooleanValue oFirstValue = new BooleanValue(true);
+        RealValue oSecondValue = new RealValue(1);
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.power(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testSmallerThan() {
+        BooleanValue oFirstValue = new BooleanValue(true);
+        BooleanValue oSecondValue = new BooleanValue(true);
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testSmallerEqualThan() {
+        BooleanValue oFirstValue = new BooleanValue(true);
+        BooleanValue oSecondValue = new BooleanValue(false);
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testLargerThan() {
+        BooleanValue oFirstValue = new BooleanValue(true);
+        BooleanValue oSecondValue = new BooleanValue(true);
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResult = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+        });
+    }
+
+    @Test
+    public void testLargerEqualThan() {
+        BooleanValue oFirstValue = new BooleanValue(true);
+        BooleanValue oSecondValue = new BooleanValue(true);
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResult = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
         });
     }
 }
-

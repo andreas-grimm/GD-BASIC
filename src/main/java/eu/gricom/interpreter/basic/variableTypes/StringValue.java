@@ -60,6 +60,19 @@ public class StringValue implements Value {
     }
 
     @Override
+    public Value notEqual(Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof StringValue) {
+            if (this.toString().matches(oValue.toString())) {
+                return (new BooleanValue(false));
+            }
+
+            return (new BooleanValue(true));
+        }
+
+        throw (new SyntaxErrorException(oValue.content() + " is not a String"));
+    }
+
+    @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
         StringValue oReturn = new StringValue((_strValue + oValue.content()));
         return (oReturn);
@@ -99,6 +112,15 @@ public class StringValue implements Value {
     }
 
     @Override
+    public Value smallerEqualThan(Value oValue) throws SyntaxErrorException {
+        if ((equals(oValue).toString() == "True") || (smallerThan(oValue).toString() == "True")) {
+            return (new BooleanValue(true));
+        } else {
+            return (new BooleanValue(false));
+        }
+    }
+
+    @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof StringValue) {
             if (this.toString().compareTo(oValue.toString()) > 0) {
@@ -109,6 +131,15 @@ public class StringValue implements Value {
         }
 
         throw (new SyntaxErrorException(oValue.content() + " value is not a String"));
+    }
+
+    @Override
+    public Value largerEqualThan(Value oValue) throws SyntaxErrorException {
+        if ((equals(oValue).toString() == "True") || (largerThan(oValue).toString() == "True")) {
+            return (new BooleanValue(true));
+        } else {
+            return (new BooleanValue(false));
+        }
     }
 
     @Override

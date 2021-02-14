@@ -11,7 +11,7 @@ import eu.gricom.interpreter.basic.variableTypes.Value;
  */
 
 public class OperatorExpression implements Expression {
-    private Logger _oLogger = new Logger(this.getClass().getName());
+    private final Logger _oLogger = new Logger(this.getClass().getName());
     private final Expression _oLeft;
     private final String _strOperator;
     private final Expression _oRight;
@@ -41,6 +41,7 @@ public class OperatorExpression implements Expression {
         Value oRightValue = _oRight.evaluate();
 
         switch (_strOperator) {
+            // needed for Jasic
             case "=":
                 return (oLeftValue.equals(oRightValue));
 
@@ -55,10 +56,18 @@ public class OperatorExpression implements Expression {
             case "^":
                 return (oLeftValue.power(oRightValue));
 
+            case "==":
+                return (oLeftValue.equals(oRightValue));
+            case "!=":
+                return (oLeftValue.notEqual(oRightValue));
             case "<":
                 return (oLeftValue.smallerThan(oRightValue));
+            case "<=":
+                return (oLeftValue.smallerEqualThan(oRightValue));
             case ">":
                 return (oLeftValue.largerThan(oRightValue));
+            case ">=":
+                return (oLeftValue.largerEqualThan(oRightValue));
 
             default:
                 throw new SyntaxErrorException("Unknown operator: " + _strOperator);
