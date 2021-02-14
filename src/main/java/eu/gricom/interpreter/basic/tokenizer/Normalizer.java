@@ -109,6 +109,8 @@ public final class Normalizer {
         strWork = strWork.replaceAll("\t", " ");
         strWork = strWork.replaceAll("\\s+","");
 
+        strWork = strInput.substring(0, iIndexStart) + "-" + strWork;
+
         return strWork;
     }
 }

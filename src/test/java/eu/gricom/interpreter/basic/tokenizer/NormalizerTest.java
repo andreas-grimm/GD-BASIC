@@ -54,7 +54,7 @@ public class NormalizerTest {
     @Test
     public void testIndexString() {
         String strTest = "(1, 1, 1, 1,1)";
-        String strTarget = "1,1,1,1,1";
+        String strTarget = "-1,1,1,1,1";
         String strResult = null;
         try {
             strResult = Normalizer.normalizeIndex(strTest);
@@ -75,7 +75,7 @@ public class NormalizerTest {
             e.printStackTrace();
         }
 
-        assertEquals(strTest, strTest);
+        assertEquals(strTest, strResult);
     }
 
     @Test

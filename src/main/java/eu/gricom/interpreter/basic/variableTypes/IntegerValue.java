@@ -26,7 +26,17 @@ public class IntegerValue implements Value {
     }
 
     /**
-     * Override the standart toString method.
+     * Default constructor.
+     *
+     * @param fValue Value to be stored in the container
+     */
+    public IntegerValue(final float fValue) {
+
+        _iValue = (int) fValue;
+    }
+
+    /**
+     * Override the standard toString method.
      *
      * @return the content of the variable as a string
      */

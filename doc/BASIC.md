@@ -376,27 +376,6 @@ This section of the BASIC programming guide describes the three different loops 
 Only the `FOR`-loop can be found in standard BASIC literature, the `WHILE` and the `DO` loops are extensions implemented
 in other BASIC dialects - and proven useful.
 
-##### WHILE Command
-The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
-The following chart describes the loop structure:
-
-![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/While-Loop.jpg)
-
-The syntax of the `WHILE` loop is as follows:
-
-`WHILE <condition> <statement> EXIT <statement> END-WHILE`
-
-###### BASIC Syntax
-
-    210 WHILE X# < 3
-    220 PRINT X#
-    230 X# = X# + 1
-    240 END-WHILE
-
-###### EXIT Command
-The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
-statement.
-
 ##### DO Command
 The `DO` - Loop has a different nature. This loop will execute the loop at least once, before verifying the continuation of the loop at the
 end. The structure of the loop can be seen in the following chart:
@@ -418,6 +397,8 @@ The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and cont
 statement.
 
 ###### UNTIL Command
+The `UNTIL` command closes the `DO` loop. It contains the exit condition, which needs to be true in order to lease the loop. If the
+condition is false, the loop will return back to the `DO` command and will continue from there.
 
 ###### References
 This loop is known in other programming languages or dialects as:
@@ -425,7 +406,7 @@ This loop is known in other programming languages or dialects as:
 - `DO - LOOP UNTIL` - loop
 
 ##### FOR Command
-The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command), 
+The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command),
 using increments defined by the `STEP` command.
 Between the increment number after the step and the `NEXT` command, which triggers the next iteration, the developer can include one or multiple commands.
 The syntax looks as follows:
@@ -447,6 +428,27 @@ Example for a FOR loop counting downwards from 2 to -2 in decrements of -0.2 and
     150 FOR Y# = 2 TO -2 STEP -.2
     160 PRINT Y#
     170 NEXT
+
+##### WHILE Command
+The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
+The following chart describes the loop structure:
+
+![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/While-Loop.jpg)
+
+The syntax of the `WHILE` loop is as follows:
+
+`WHILE <condition> <statement> EXIT <statement> END-WHILE`
+
+###### BASIC Syntax
+
+    210 WHILE X# < 3
+    220 PRINT X#
+    230 X# = X# + 1
+    240 END-WHILE
+
+###### EXIT Command
+The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
+statement.
 
 ##### INPUT Command
 `INPUT <variable>`

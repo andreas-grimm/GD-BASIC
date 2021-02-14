@@ -1,10 +1,13 @@
 package eu.gricom.interpreter.basic.variableTypes;
 
 import eu.gricom.interpreter.basic.error.DivideByZeroException;
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.tokenizer.Normalizer;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 
 /**
  * RealValue.java
@@ -16,7 +19,8 @@ import java.math.RoundingMode;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class RealValue implements Value {
-    private final double _fValue;
+    private double _fValue;
+    private final String strNoIndex = "noIndex";
 
     /**
      * Default constructor.
@@ -26,6 +30,26 @@ public class RealValue implements Value {
     public RealValue(final double fValue) {
 
         _fValue = fValue;
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param strKey to determine the index in the array
+     * @param fValue Value to be stored in the container
+     * @throws RuntimeException in case the parenthesis do not match expectations
+     */
+    public RealValue(String strKey, final double fValue) throws RuntimeException {
+        int iIndex = strKey.indexOf("(");
+        int iEndBracket = strKey.indexOf(")");
+        String strIndex = strNoIndex;
+
+        if (iIndex > 0 && iEndBracket > 0) {
+            strIndex = Normalizer.normalizeIndex(strKey);
+        }
+
+        _fValue = fValue;
+
     }
 
     /**

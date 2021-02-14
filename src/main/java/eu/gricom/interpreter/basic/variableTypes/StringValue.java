@@ -2,9 +2,6 @@ package eu.gricom.interpreter.basic.variableTypes;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
-import eu.gricom.interpreter.basic.tokenizer.Normalizer;
-
-import java.util.HashMap;
 
 /**
  * StringValue.java
@@ -16,8 +13,9 @@ import java.util.HashMap;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class StringValue implements Value {
-    private final HashMap<String, String> _astrValue = new HashMap<>(10);
-    private final String strNoIndex = "noIndex";
+    private final String _strNoIndex = "noIndex";
+    private String _strKey = _strNoIndex;
+    private String _strValue = "noValue";
 
     /**
      * Default constructor.
@@ -25,7 +23,7 @@ public class StringValue implements Value {
      * @param strValue Value to be stored in the container
      */
     public StringValue(final String strValue) {
-        _astrValue.put(strNoIndex, strValue);
+        _strValue = strValue;
     }
 
     /**
@@ -33,31 +31,23 @@ public class StringValue implements Value {
      *
      * @param strKey to determine the index in the array
      * @param strValue Value to be stored in the container
-     * @throws RuntimeException in case the parenthesis do not match expectations
      */
-    public StringValue(String strKey, final String strValue) throws RuntimeException {
-        int iIndex = strKey.indexOf("(");
-        int iEndBracket = strKey.indexOf(")");
-        String strIndex = strNoIndex;
+    public StringValue(String strKey, final String strValue) {
+        _strValue = strValue;
 
-        if (iIndex > 0 && iEndBracket > 0) {
-            strIndex = Normalizer.normalizeIndex(strKey);
-        }
-
-        _astrValue.put(strIndex, strValue);
     }
 
     @Override
     public final String toString() {
 
-        return _astrValue.get(strNoIndex);
+        return _strValue;
     }
 
 
     @Override
     public final double toReal() {
 
-        return Double.parseDouble(_astrValue.get(strNoIndex));
+        return Double.parseDouble(_strValue);
     }
 
 
@@ -95,7 +85,7 @@ public class StringValue implements Value {
 
     @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
-        StringValue oReturn = new StringValue(_astrValue.get(strNoIndex) + oValue.content());
+        StringValue oReturn = new StringValue(_strValue + oValue.toString());
         return oReturn;
     }
 
@@ -168,7 +158,7 @@ public class StringValue implements Value {
     @Override
     public final String content() {
 
-        return _astrValue.get(strNoIndex);
+        return _strValue;
     }
 
     /**
@@ -181,8 +171,9 @@ public class StringValue implements Value {
      * the index in an array subscription is larger than the array.
      */
     public final Value process(final String strKey) throws RuntimeException {
-        String strWork = strKey;
+        //String strWork = strKey;
         int iIndex = -1;
+        /*
         String strIndex = strNoIndex;
 
         iIndex = strKey.indexOf("(");
@@ -193,8 +184,8 @@ public class StringValue implements Value {
                 strIndex = Normalizer.normalizeIndex(strKey);
             }
         }
-
-        String strWorkString = _astrValue.get(strIndex);
+*/
+        String strWorkString = _strValue;
 
         iIndex = strKey.indexOf("[");
         if (iIndex > 0) {

@@ -38,14 +38,31 @@ public final class VariableExpression implements Expression {
      * @throws RuntimeException for any errors occuring in the execution of the evaluation. Currently this happens if
      * the index in an array subscription is larger than the array.
      */
-    public Value evaluate() throws RuntimeException {
+    public Value evaluate() throws Exception {
         VariableManagement oVariableManager = new VariableManagement();
+        String strKey = _strName;
 
-        if (oVariableManager.mapContainsKey(_strName)) {
-            return oVariableManager.getMap(_strName);
+        int iIndexStart = strKey.indexOf("(");
+        int iIndexEnd = strKey.indexOf(")");
+
+        if (iIndexStart > 0 && iIndexEnd > 0) {
+            String strInner = strKey.substring(iIndexStart +1, iIndexEnd);
+
+            if (oVariableManager.mapContainsKey(strInner)) {
+                Expression oExpression = new VariableExpression(strInner);
+
+                strKey = strKey.substring(0, iIndexStart + 1)
+                        + oExpression.evaluate().toString()
+                        + strKey.substring(iIndexEnd);
+
+            }
         }
 
-        return new RealValue(0);
+        if (oVariableManager.mapContainsKey(strKey)) {
+            return oVariableManager.getMap(strKey);
+        }
+
+        throw new RuntimeException("Unknown variable " + strKey);
     }
 
     /**
