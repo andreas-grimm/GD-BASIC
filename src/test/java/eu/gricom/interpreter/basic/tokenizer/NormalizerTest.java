@@ -1,9 +1,11 @@
 package eu.gricom.interpreter.basic.tokenizer;
 
+import eu.gricom.interpreter.basic.error.RuntimeException;
+import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class NormalizerTest {
 
@@ -47,5 +49,50 @@ public class NormalizerTest {
         String strResult = Normalizer.normalize(strTest);
 
         assertEquals(strTarget, strResult);
+    }
+
+    @Test
+    public void testIndexString() {
+        String strTest = "(1, 1, 1, 1,1)";
+        String strTarget = "1,1,1,1,1";
+        String strResult = null;
+        try {
+            strResult = Normalizer.normalizeIndex(strTest);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(strTarget, strResult);
+    }
+
+    @Test
+    public void testIndexStringWithoutParenthesis() {
+        String strTest = "1, 1, 1, 1,1";
+        String strResult = null;
+        try {
+            strResult = Normalizer.normalizeIndex(strTest);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(strTest, strTest);
+    }
+
+    @Test
+    public void testIndexStringWrongParenthesisLeft() {
+        String strTest = "1, 1, 1, 1,1)";
+
+        assertThrows(RuntimeException.class, () -> {
+            Normalizer.normalizeIndex(strTest);
+        });
+    }
+
+    @Test
+    public void testIndexStringWrongParenthesisRight() {
+        String strTest = "(1, 1, 1, 1,1";
+
+        assertThrows(RuntimeException.class, () -> {
+            Normalizer.normalizeIndex(strTest);
+        });
     }
 }

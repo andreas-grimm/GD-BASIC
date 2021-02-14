@@ -55,8 +55,9 @@ public class BasicLexer implements Lexer {
             if (strProgramLine.length() < 1) {
                 aoTokens.add(new Token("empty", TokenType.LINE, iLineNumber));
             } else {
+                System.out.println("--->" + strProgramLine);
                 strProgramLine = Normalizer.normalize(strProgramLine);
-
+                System.out.println("<---" + strProgramLine);
                 // find reserved words
                 String[] astrWords = strProgramLine.split("\\s");
 

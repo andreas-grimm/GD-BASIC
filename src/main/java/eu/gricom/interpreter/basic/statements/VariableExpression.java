@@ -41,10 +41,8 @@ public final class VariableExpression implements Expression {
     public Value evaluate() throws RuntimeException {
         VariableManagement oVariableManager = new VariableManagement();
 
-        if (!_strName.endsWith(")")) {
-            if (oVariableManager.mapContainsKey(_strName)) {
-                return oVariableManager.getMap(_strName);
-            }
+        if (oVariableManager.mapContainsKey(_strName)) {
+            return oVariableManager.getMap(_strName);
         }
 
         return new RealValue(0);

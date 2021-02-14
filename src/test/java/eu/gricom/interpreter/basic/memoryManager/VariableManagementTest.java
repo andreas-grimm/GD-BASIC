@@ -18,7 +18,7 @@ public class VariableManagementTest {
 
     @Test
     @Order(1)
-    public void testVariableStorage() throws SyntaxErrorException {
+    public void testVariableStorage() throws SyntaxErrorException, RuntimeException {
         VariableManagement oVariableManagement = new VariableManagement();
 
         oVariableManagement.putMap("Integer%", 999);

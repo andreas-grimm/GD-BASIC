@@ -63,7 +63,6 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public void execute() throws Exception {
-//        _oVariableManagement.putMap(_strName, _oValue.evaluate().toReal());
         _oVariableManagement.putMap(_strName, _oValue.evaluate());
     }
 

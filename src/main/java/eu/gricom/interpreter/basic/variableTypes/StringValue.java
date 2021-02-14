@@ -2,10 +2,9 @@ package eu.gricom.interpreter.basic.variableTypes;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.tokenizer.Normalizer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * StringValue.java
@@ -34,17 +33,18 @@ public class StringValue implements Value {
      *
      * @param strKey to determine the index in the array
      * @param strValue Value to be stored in the container
+     * @throws RuntimeException in case the parenthesis do not match expectations
      */
-    public StringValue(String strKey, final String strValue) {
+    public StringValue(String strKey, final String strValue) throws RuntimeException {
         int iIndex = strKey.indexOf("(");
         int iEndBracket = strKey.indexOf(")");
+        String strIndex = strNoIndex;
 
-        if (iIndex > 0) {
-            int iPosition = Integer.parseInt(strKey.substring(iIndex + 1, iEndBracket));
-            System.out.println(iPosition);
+        if (iIndex > 0 && iEndBracket > 0) {
+            strIndex = Normalizer.normalizeIndex(strKey);
         }
 
-        _astrValue.put(strKey.substring(iIndex + 1, iEndBracket), strValue);
+        _astrValue.put(strIndex, strValue);
     }
 
     @Override
@@ -183,14 +183,18 @@ public class StringValue implements Value {
     public final Value process(final String strKey) throws RuntimeException {
         String strWork = strKey;
         int iIndex = -1;
-        String strWorkString = _astrValue.get(strNoIndex);
+        String strIndex = strNoIndex;
 
         iIndex = strKey.indexOf("(");
         if (iIndex > 0) {
+
             int iEndBracket = strKey.indexOf(")");
-            int iPosition = Integer.parseInt(strKey.substring(iIndex + 1, iEndBracket));
-            System.out.println(iPosition);
+            if (iIndex > 0 && iEndBracket > 0) {
+                strIndex = Normalizer.normalizeIndex(strKey);
+            }
         }
+
+        String strWorkString = _astrValue.get(strIndex);
 
         iIndex = strKey.indexOf("[");
         if (iIndex > 0) {

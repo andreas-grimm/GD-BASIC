@@ -43,26 +43,33 @@ public class VariableManagement {
      * @param strName key part of the pair
      * @param oValue value part of the pair, here as an Value object
      */
-    public final void putMap(final String strName, final Value oValue) {
+    public final void putMap(final String strName, final Value oValue) throws RuntimeException {
+        Value oWorkValue = oValue;
+        String strWorkName = strName;
+
         VariableType eVariableType = VariableType.UNDEFINED;
 
-        if (strName.contains("$")) {
+        if (strWorkName.contains("$")) {
             eVariableType = VariableType.STRING;
-        } else if (strName.contains("%")) {
+        } else if (strWorkName.contains("%")) {
             eVariableType = VariableType.INTEGER;
-        } else if (strName.contains("&")) {
+        } else if (strWorkName.contains("&")) {
             eVariableType = VariableType.LONG;
-        } else if (strName.contains("#")) {
+        } else if (strWorkName.contains("#")) {
             eVariableType = VariableType.REAL;
-        } else if (strName.contains("!")) {
+        } else if (strWorkName.contains("!")) {
             eVariableType = VariableType.DOUBLE;
-        } else if (strName.contains("@")) {
+        } else if (strWorkName.contains("@")) {
             eVariableType = VariableType.BOOLEAN;
         }
 
         switch (eVariableType) {
             case STRING:
-                _aoStrings.put(strName, (StringValue) oValue);
+                if (strWorkName.contains("(")) {
+                    strWorkName = strWorkName.substring(0, strWorkName.indexOf("("));
+                    oWorkValue = new StringValue(strWorkName, oValue.toString());
+                }
+                _aoStrings.put(strWorkName, (StringValue) oWorkValue);
                 break;
             case INTEGER:
             case LONG:
@@ -103,11 +110,18 @@ public class VariableManagement {
      * @param strName key part of the pair
      * @param strValue value part of the pair, here as a string
      * @throws SyntaxErrorException variable is not marked as string
+     * @throws RuntimeException incorrect format of the parenthesis
      */
-    public final void putMap(final String strName, final String strValue) throws SyntaxErrorException {
+    public final void putMap(final String strName, final String strValue) throws SyntaxErrorException, RuntimeException {
         if (strName.contains("$")) {
-            StringValue oValue = new StringValue(strValue);
-            _aoStrings.put(strName, oValue);
+            if (strName.contains("(")) {
+                StringValue oValue = new StringValue(strName, strValue);
+                _aoStrings.put(strName, oValue);
+            } else {
+                StringValue oValue = new StringValue(strValue);
+                _aoStrings.put(strName, oValue);
+            }
+
             return;
         }
 
