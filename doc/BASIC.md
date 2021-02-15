@@ -213,6 +213,52 @@ names and therefore more variables:
 | `INTEGER` | `AB%` | +/- 32767 |
 | `STRING` | `AB$` | 0 to 256 Characters |
 
+## Converting BASIC Programs to GD-Basic
+Programs written in a BASIC language other than GD-BASIC may require some minor adjustments before they can be run. The following
+sections describe these adjustments.
+
+### String and Array Dimensions
+Delete all statements used to declare the length of strings or arrays. A statement such as the following
+
+    DIM A$(I,J)
+
+which dimensions a string array for `J` elements of length `I`, should be removed. Also removed should be and `DIM` statements:
+
+    DIM A$(J)
+    DIM A(H)
+
+GD-Basic does not require prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
+shrinking.
+
+### String Functions
+Some Basic languages use a comma `,` or ampersand `&` for string concatenation. Each of these must be changed to a plus sign `+`,
+which is the operator for GD-Basic string concatenation.
+
+In GD-Basic, the `MID$`, `RIGHT$`, and `LEFT$` functions will be used in a later release to take substrings of strings. Forms
+such as `A$(I)` to access the `I`th character in `A$` are replaced by `A$[I]`, or `A$(I,J)` to take a substring of `A$` from
+position `I` to position `J` must be replaced by `A$[I,J]` (later supported in a later version).
+
+### Multiple Assignments
+Some Basic languages allow statements of the following to set `B` and `C` equal to zero:
+
+    10 LET B=C=0
+
+GD-Basic does not support this logic. GW-Basic interprets the statement in which the value B is set based on C equal to zero.
+This will be needed to be changed to
+
+    10 B = A == 0
+
+### Multiple Statement
+Some Basic languages use a backslash `\\` or colons `:` to separate statements on a single line. With GD-Basic, make sure all elements on a line 
+only apply to a single command. the use of the colon `:` is not support in the current version.
+
+### MAT Functions
+Programs using the `MAT` functions available in some Basic languages must be rewritten to use `FOR-NEXT` loops to execute properly .
+
+### FOR-NEXT Loops
+Some GD-Basic will always execute a `FOR-NEXT` loop once, regardless of the limits. Other Basic languages checks the limits first 
+and does not execute the loop if past limits.
+
 ## Reserved Words
 The following keywords are reserved and cannot be used for variables. The following list defines the use of the keywords:
 
@@ -603,6 +649,11 @@ The following expressions are supported:
 
 All binary (atomic) operators have the same precedence.
 
+## Depreciated Basic Commands
+The following standard Basic commands are depreciated and should not be used.
+
+- The `LET` command is depreciated and will be ignored
+- The `DIM` command is depreciated and will cause a Syntax Error
 
 ## Alternative Projects and Information
 

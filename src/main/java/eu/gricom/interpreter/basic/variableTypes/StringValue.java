@@ -5,17 +5,15 @@ import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 
 /**
  * StringValue.java
- * <p>
+ *
  * Description:
- * <p>
+ *
  * The StringValue is the container to hold all strings.
- * <p>
+ *
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class StringValue implements Value {
-    private final String _strNoIndex = "noIndex";
-    private String _strKey = _strNoIndex;
-    private String _strValue = "noValue";
+    private String _strValue;
 
     /**
      * Default constructor.
@@ -24,17 +22,6 @@ public class StringValue implements Value {
      */
     public StringValue(final String strValue) {
         _strValue = strValue;
-    }
-
-    /**
-     * Default constructor.
-     *
-     * @param strKey to determine the index in the array
-     * @param strValue Value to be stored in the container
-     */
-    public StringValue(String strKey, final String strValue) {
-        _strValue = strValue;
-
     }
 
     @Override
@@ -171,20 +158,8 @@ public class StringValue implements Value {
      * the index in an array subscription is larger than the array.
      */
     public final Value process(final String strKey) throws RuntimeException {
-        //String strWork = strKey;
-        int iIndex = -1;
-        /*
-        String strIndex = strNoIndex;
+        int iIndex;
 
-        iIndex = strKey.indexOf("(");
-        if (iIndex > 0) {
-
-            int iEndBracket = strKey.indexOf(")");
-            if (iIndex > 0 && iEndBracket > 0) {
-                strIndex = Normalizer.normalizeIndex(strKey);
-            }
-        }
-*/
         String strWorkString = _strValue;
 
         iIndex = strKey.indexOf("[");

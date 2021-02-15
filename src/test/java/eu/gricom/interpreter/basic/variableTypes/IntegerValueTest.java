@@ -80,7 +80,7 @@ public class IntegerValueTest {
     @Test
     public void testPlusTypeException() {
         IntegerValue oFirstValue = new IntegerValue(1);
-        RealValue oSecondValue = new RealValue(2);
+        StringValue oSecondValue = new StringValue("2");
 
 
         assertThrows(SyntaxErrorException.class, () -> {
@@ -106,7 +106,7 @@ public class IntegerValueTest {
     @Test
     public void testMinusTypeException() {
         IntegerValue oFirstValue = new IntegerValue(1);
-        RealValue oSecondValue = new RealValue(2);
+        StringValue oSecondValue = new StringValue("2");
 
 
         assertThrows(SyntaxErrorException.class, () -> {
@@ -132,7 +132,7 @@ public class IntegerValueTest {
     @Test
     public void testMultiplyTypeException() {
         IntegerValue oFirstValue = new IntegerValue(1);
-        RealValue oSecondValue = new RealValue(2);
+        StringValue oSecondValue = new StringValue("2");
 
 
         assertThrows(SyntaxErrorException.class, () -> {
@@ -194,7 +194,7 @@ public class IntegerValueTest {
     @Test
     public void testPowerTypeException() {
         IntegerValue oFirstValue = new IntegerValue(2);
-        RealValue oSecondValue = new RealValue(2);
+        StringValue oSecondValue = new StringValue("2");
 
 
         assertThrows(SyntaxErrorException.class, () -> {
@@ -220,7 +220,7 @@ public class IntegerValueTest {
     @Test
     public void testSmallerThanTypeException() {
         IntegerValue oFirstValue = new IntegerValue(1);
-        RealValue oSecondValue = new RealValue(2);
+        StringValue oSecondValue = new StringValue("2");
 
 
         assertThrows(SyntaxErrorException.class, () -> {
@@ -246,7 +246,7 @@ public class IntegerValueTest {
     @Test
     public void testSmallerEqualThanTypeException() {
         IntegerValue oFirstValue = new IntegerValue(1);
-        RealValue oSecondValue = new RealValue(2);
+        StringValue oSecondValue = new StringValue("2");
 
 
         assertThrows(SyntaxErrorException.class, () -> {
@@ -272,7 +272,7 @@ public class IntegerValueTest {
     @Test
     public void testLargerThanTypeException() {
         IntegerValue oFirstValue = new IntegerValue(2);
-        RealValue oSecondValue = new RealValue(1);
+        StringValue oSecondValue = new StringValue("1");
 
 
         assertThrows(SyntaxErrorException.class, () -> {
@@ -298,7 +298,7 @@ public class IntegerValueTest {
     @Test
     public void testLargerEqualThanTypeException() {
         IntegerValue oFirstValue = new IntegerValue(2);
-        RealValue oSecondValue = new RealValue(1);
+        StringValue oSecondValue = new StringValue("1");
 
 
         assertThrows(SyntaxErrorException.class, () -> {

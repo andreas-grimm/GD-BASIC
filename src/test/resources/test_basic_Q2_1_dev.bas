@@ -26,4 +26,14 @@
 370 A# = A# + A#(D%)
 380 NEXT
 390 PRINT "Sum of above (should be 15): ", A#
+400 PRINT "Testing REAL array with loop: Adding 3 fields - multi-dimensional field"
+410 A# = 0
+420 A#(1,1) = 4
+430 A#(2,1) = 5
+440 A#(3,1) = 6
+450 FOR D% = 1 TO 3 STEP 1
+460 PRINT "In field ", D%, ": ", A#(D%,1)
+470 A# = A# + A#(D%,1)
+480 NEXT
+490 PRINT "Sum of above (should be 15): ", A#
 999 END

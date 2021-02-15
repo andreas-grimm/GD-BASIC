@@ -108,6 +108,9 @@ public class IntegerValue implements Value {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue + ((IntegerValue) oValue).toInt());
             return oReturn;
+        } else if (oValue instanceof RealValue) {
+            IntegerValue oReturn = new IntegerValue(_iValue + ((RealValue) oValue).toInt());
+            return oReturn;
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not an integer");
@@ -118,6 +121,9 @@ public class IntegerValue implements Value {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue - ((IntegerValue) oValue).toInt());
             return oReturn;
+        } else if (oValue instanceof RealValue) {
+            IntegerValue oReturn = new IntegerValue(_iValue - ((RealValue) oValue).toInt());
+            return oReturn;
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not an integer");
@@ -127,6 +133,9 @@ public class IntegerValue implements Value {
     public final Value multiply(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue * ((IntegerValue) oValue).toInt());
+            return oReturn;
+        } else if (oValue instanceof RealValue) {
+            IntegerValue oReturn = new IntegerValue(_iValue * ((RealValue) oValue).toInt());
             return oReturn;
         }
 
@@ -157,6 +166,9 @@ public class IntegerValue implements Value {
             oReturn = new IntegerValue(new RealValue(Math.pow(_iValue, ((IntegerValue) oValue).toInt())).toInt());
 
             return oReturn;
+        } else if (oValue instanceof RealValue) {
+            oReturn = new IntegerValue(new RealValue(Math.pow(_iValue, ((RealValue) oValue).toInt())).toInt());
+            return oReturn;
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not a integer");
@@ -166,6 +178,12 @@ public class IntegerValue implements Value {
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             if (this.toInt() < ((IntegerValue) oValue).toInt()) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
+        } else if (oValue instanceof RealValue) {
+            if (this.toInt() < ((RealValue) oValue).toInt()) {
                 return new BooleanValue(true);
             }
 
@@ -183,6 +201,12 @@ public class IntegerValue implements Value {
             }
 
             return new BooleanValue(false);
+        } else if (oValue instanceof RealValue) {
+            if (this.toInt() <= ((RealValue) oValue).toInt()) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not an integer");
@@ -196,6 +220,12 @@ public class IntegerValue implements Value {
             }
 
             return new BooleanValue(false);
+        } else if (oValue instanceof RealValue) {
+            if (this.toInt() > ((RealValue) oValue).toInt()) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not an integer");
@@ -205,6 +235,12 @@ public class IntegerValue implements Value {
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             if (this.toInt() >= ((IntegerValue) oValue).toInt()) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
+        } else if (oValue instanceof RealValue) {
+            if (this.toInt() >= ((RealValue) oValue).toInt()) {
                 return new BooleanValue(true);
             }
 

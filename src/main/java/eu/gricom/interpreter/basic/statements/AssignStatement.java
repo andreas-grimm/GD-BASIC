@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
+import eu.gricom.interpreter.basic.tokenizer.Normalizer;
 
 /**
  * AssignStatement.java
@@ -63,7 +64,49 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public void execute() throws Exception {
-        _oVariableManagement.putMap(_strName, _oValue.evaluate());
+        VariableManagement oVariableManager = new VariableManagement();
+        String strKey = _strName;
+
+        int iIndexStart = strKey.indexOf("(");
+        int iIndexEnd = strKey.indexOf(")");
+
+        if (iIndexStart > 0 && iIndexEnd > 0) {
+            String strInner = strKey.substring(iIndexStart + 1, iIndexEnd);
+
+            if (strInner.contains(",")) {
+                String[] astrCommaSeperatedList = strInner.split(",");
+                String strCommaSeperatedList = new String();
+
+                for (String strExpression: astrCommaSeperatedList) {
+                    String strValue = strExpression;
+                    if (oVariableManager.mapContainsKey(strExpression)) {
+                        Expression oExpression = new VariableExpression(strExpression);
+
+                        strValue = oExpression.evaluate().toString();
+                    }
+
+                    strCommaSeperatedList += strValue + ",";
+                }
+
+                strKey = strKey.substring(0, iIndexStart + 1)
+                        + strCommaSeperatedList.substring(0, strCommaSeperatedList.length() - 1)
+                        + strKey.substring(iIndexEnd);
+
+            } else {
+                if (oVariableManager.mapContainsKey(strInner)) {
+                    Expression oExpression = new VariableExpression(strInner);
+
+                    strKey = strKey.substring(0, iIndexStart + 1)
+                            + oExpression.evaluate().toString()
+                            + strKey.substring(iIndexEnd);
+
+                }
+            }
+
+            strKey = Normalizer.normalizeIndex(strKey);
+        }
+
+        _oVariableManagement.putMap(strKey, _oValue.evaluate());
     }
 
     /**

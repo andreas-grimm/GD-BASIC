@@ -43,11 +43,9 @@ public class VariableManagement {
      *
      * @param strKey key part of the pair
      * @param oValue value part of the pair, here as an Value object
+     * @throws RuntimeException if the parenthesis are not set correctly
      */
     public final void putMap(final String strKey, final Value oValue) throws RuntimeException {
-        Value oWorkValue = oValue;
-        String strWorkKey = strKey;
-
         VariableType eVariableType = VariableType.UNDEFINED;
 
         if (strKey.contains("$")) {
@@ -71,17 +69,17 @@ public class VariableManagement {
 
             case INTEGER:
             case LONG:
-                _aoIntegers.put(strKey, new IntegerValue((int) oValue.toReal()));
+                _aoIntegers.put(Normalizer.normalizeIndex(strKey), new IntegerValue((int) oValue.toReal()));
                 break;
             case REAL:
             case DOUBLE:
-                _aoReals.put(Normalizer.normalizeIndex(strKey), (RealValue) oWorkValue);
+                _aoReals.put(Normalizer.normalizeIndex(strKey), (RealValue) oValue);
                 break;
             case BOOLEAN:
-                _aoBooleans.put(strKey, (BooleanValue) oValue);
+                _aoBooleans.put(Normalizer.normalizeIndex(strKey), (BooleanValue) oValue);
                 break;
             default:
-                _aoUntyped.put(strKey, oValue);
+                _aoUntyped.put(Normalizer.normalizeIndex(strKey), oValue);
         }
     }
 
@@ -91,6 +89,7 @@ public class VariableManagement {
      * @param strKey - key part of the pair
      * @param dValue - value part of the pair, here as an double
      * @throws SyntaxErrorException variable is not marked as real
+     * @throws RuntimeException incorrect format of the parenthesis
      */
     public final void putMap(final String strKey, final double dValue) throws SyntaxErrorException, RuntimeException {
         if (strKey.contains("!") || strKey.contains("#")) {
@@ -99,8 +98,8 @@ public class VariableManagement {
             return;
         }
 
-        throw new SyntaxErrorException("Syntax Error: Variable name [" + strKey + "] does not end as a Real: '!' or " +
-                "'#'");
+        throw new SyntaxErrorException("Syntax Error: Variable name [" + strKey
+                + "] does not end as a Real: '!' or " + "'#'");
     }
 
     /**
@@ -124,36 +123,38 @@ public class VariableManagement {
     /**
      * Put a key - value pair into the variable map structure.
      *
-     * @param strName - key part of the pair
+     * @param strKey - key part of the pair
      * @param iValue - value part of the pair, here as an integer
      * @throws SyntaxErrorException variable is not marked as integer
+     * @throws RuntimeException incorrect format of the parenthesis
      */
-    public final void putMap(final String strName, final int iValue) throws SyntaxErrorException {
-        if (strName.contains("%") || strName.contains("&")) {
+    public final void putMap(final String strKey, final int iValue) throws SyntaxErrorException, RuntimeException {
+        if (strKey.contains("%") || strKey.contains("&")) {
             IntegerValue oValue = new IntegerValue(iValue);
-            _aoIntegers.put(strName, oValue);
+            _aoIntegers.put(Normalizer.normalizeIndex(strKey), oValue);
             return;
         }
 
-        throw new SyntaxErrorException("Syntax Error: Variable name [" + strName + "] does not end as a Integer: '%' "
+        throw new SyntaxErrorException("Syntax Error: Variable name [" + strKey + "] does not end as a Integer: '%' "
                 + "or '&'");
     }
 
     /**
      * Put a key - value pair into the variable map structure.
      *
-     * @param strName - key part of the pair
+     * @param strKey - key part of the pair
      * @param bValue - value part of the pair, here as a boolean
      * @throws SyntaxErrorException variable name is not marked as boolean
+     * @throws RuntimeException incorrect format of the parenthesis
      */
-    public final void putMap(final String strName, final boolean bValue) throws SyntaxErrorException {
-        if (strName.contains("@")) {
+    public final void putMap(final String strKey, final boolean bValue) throws SyntaxErrorException, RuntimeException {
+        if (strKey.contains("@")) {
             BooleanValue oValue = new BooleanValue(bValue);
-            _aoBooleans.put(strName, oValue);
+            _aoBooleans.put(Normalizer.normalizeIndex(strKey), oValue);
             return;
          }
 
-        throw new SyntaxErrorException("Syntax Error: Variable name [" + strName + "] does not end as a Boolean: '@'");
+        throw new SyntaxErrorException("Syntax Error: Variable name [" + strKey + "] does not end as a Boolean: '@'");
     }
 
     /**
@@ -161,6 +162,7 @@ public class VariableManagement {
      *
      * @param strKey - Key used for retrieval
      * @return Value object to be returned
+     * @throws RuntimeException if the parenthesis are not set correctly
      */
     public final Value getMap(final String strKey) throws RuntimeException {
         Logger oLogger = new Logger(this.getClass().getName());
@@ -215,6 +217,7 @@ public class VariableManagement {
      *
      * @param strKey Key to be verified
      * @return true, if key is in the data structure
+     * @throws RuntimeException if the parenthesis are not set correctly
      */
     public final boolean mapContainsKey(final String strKey) throws RuntimeException {
         String strWork = strKey;

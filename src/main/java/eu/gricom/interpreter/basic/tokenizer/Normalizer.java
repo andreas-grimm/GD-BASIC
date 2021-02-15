@@ -1,16 +1,15 @@
 package eu.gricom.interpreter.basic.tokenizer;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
-import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 
 /**
  * Normalizer.java
- * <p>
+ *
  * Description:
- * <p>
+ *
  * The Normalizer class formats the string received in such a way that the string is prepared for consumption by the
  * Lexer.
- * <p>
+ *
  * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public final class Normalizer {
@@ -52,16 +51,15 @@ public final class Normalizer {
             }
 
             if (c == '"') {
-                if (bQuotationMark == false) {
+                if (!bQuotationMark) {
                     bQuotationMark = true;
                 } else {
                     bQuotationMark = false;
-                };
+                }
             }
 
             // if the quotation mark is not set, then just pass thru...
-            if (bQuotationMark == true
-                || bParenthenes == true) {
+            if (bQuotationMark || bParenthenes) {
                 strOutput += c;
             } else {
                 // else apply filters
@@ -87,7 +85,7 @@ public final class Normalizer {
      *
      * @param strInput string to be adjusted
      * @return normalized string
-     * @throws SyntaxErrorException if the parenthesis are not set correctly
+     * @throws RuntimeException if the parenthesis are not set correctly
      */
     public static String normalizeIndex(final String strInput) throws RuntimeException {
         String strWork = strInput;
@@ -104,10 +102,10 @@ public final class Normalizer {
         }
 
         // replace tabs with spaces
-        strWork = strWork.substring(iIndexStart +1, iIndexEnd);
+        strWork = strWork.substring(iIndexStart + 1, iIndexEnd);
 
         strWork = strWork.replaceAll("\t", " ");
-        strWork = strWork.replaceAll("\\s+","");
+        strWork = strWork.replaceAll("\\s+", "");
 
         strWork = strInput.substring(0, iIndexStart) + "-" + strWork;
 
