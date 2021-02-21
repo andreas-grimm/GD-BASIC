@@ -16,7 +16,7 @@ import eu.gricom.interpreter.basic.tokenizer.Normalizer;
  *
  */
 public final class AssignStatement implements Statement {
-    private final String _strName;
+    private final String _strKey;
     private final Expression _oValue;
     private final int _iLineNumber;
     private final VariableManagement _oVariableManagement = new VariableManagement();
@@ -29,7 +29,7 @@ public final class AssignStatement implements Statement {
      * @param oValue - value of the assignment statement
      */
     public AssignStatement(final int iLineNumber, final String strName, final Expression oValue) {
-        _strName = strName;
+        _strKey = strName;
         _oValue = oValue;
         _iLineNumber = iLineNumber;
     }
@@ -41,7 +41,7 @@ public final class AssignStatement implements Statement {
      * @param oValue - value of the assignment statement
      */
     public AssignStatement(final String strName, final Expression oValue) {
-        _strName = strName;
+        _strKey = strName;
         _oValue = oValue;
         _iLineNumber = 0;
     }
@@ -64,9 +64,10 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public void execute() throws Exception {
-        VariableManagement oVariableManager = new VariableManagement();
-        String strKey = _strName;
+        String strKey = _strKey;
 
+        // here the found word could be an array or a function... first determine the being and the end position of
+        // the bracketed part...
         int iIndexStart = strKey.indexOf("(");
         int iIndexEnd = strKey.indexOf(")");
 
@@ -79,7 +80,7 @@ public final class AssignStatement implements Statement {
 
                 for (String strExpression: astrCommaSeperatedList) {
                     String strValue = strExpression;
-                    if (oVariableManager.mapContainsKey(strExpression)) {
+                    if (_oVariableManagement.mapContainsKey(strExpression)) {
                         Expression oExpression = new VariableExpression(strExpression);
 
                         strValue = oExpression.evaluate().toString();
@@ -93,7 +94,7 @@ public final class AssignStatement implements Statement {
                         + strKey.substring(iIndexEnd);
 
             } else {
-                if (oVariableManager.mapContainsKey(strInner)) {
+                if (_oVariableManagement.mapContainsKey(strInner)) {
                     Expression oExpression = new VariableExpression(strInner);
 
                     strKey = strKey.substring(0, iIndexStart + 1)
@@ -116,6 +117,6 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public String content() {
-        return "ASSIGN [" + _strName + ":= " + _oValue.content() + "]";
+        return "ASSIGN [" + _strKey + ":= " + _oValue.content() + "]";
     }
 }

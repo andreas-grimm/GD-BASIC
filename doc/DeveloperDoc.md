@@ -115,6 +115,26 @@ Each token object holds three attributes:
 * __Text__: the program code identified by the token
 * __Line__: the line number of the program code in the original program. This is used i.e. for interpreter error messages.
 
+### Processing a Program in the Tokenizer
+
+#### BASIC Programs
+The tokenization of a `BASIC` program is performed in the class `BasicLexer.java` in the `tokenizer` package. The tokenizer
+retrieves the program as an array of program lines in string format. The program is then processing the program line by line.
+
+The main function of the tokenizer class is named `tokenize`. It follows this process:
+
+1. Separation of the program in single lines.
+2. Splitting the lines into line numbers and line contents.
+3. For each line:
+- remove empty line and handle lines that only contain the line number
+- retrieve the line number. If the line number is smaller or equal to the previous line number, the lexer will throw an exception.
+- normalize the program line:
+a) Remove whitespaces and tabs from any location outside quotation marks (`"`). 
+b) Separate parenthesis (`(` and `)`) from the keywords. This is only done for keywords, not for arrays.
+- find keywords and generate a list of tokens.    
+
+#### JASIC Programs
+
 ### Adding new token to the Tokenizer
 
 - Step 1: Add the new reserved word into the list of reserved words (`eu.gricom.interpreter.basic.tokenizer.ReservedWords.java`)
@@ -528,15 +548,15 @@ of the keywords can vary - refer to the language manual for the use of the reser
 
 | Reserved Word |  GD-Basic | Jasic | TRS-80 Level II Basic | Applesoft Basic | Commodore Basic | Notes |
 |---------------|-----------|-------|-----------------------|-----------------|-----------------|-------|
-| `ABS` | reserved |  | implemented | implemented | implemented |
+| `ABS` | implemented |  | implemented | implemented | implemented |
 | `AND` | reserved |  | implemented | implemented | implemented |
-| `ASC` | reserved |  | implemented | implemented | implemented |
+| `ASC` | implemented |  | implemented | implemented | implemented |
 | `AT` |  |  |  | implemented |  | 
-| `ATN` | reserved |  | implemented | implemented | implemented |
+| `ATN` | implemented |  | implemented | implemented | implemented |
 | `AUTO` |  |  | implemented |  |  |
 | `CALL` | reserved |  |  | implemented |  |
 | `CDBL` | reserved |  | implemented |  |  |
-| `CHR$` | reserved, used token: `CHR` |  | implemented | implemented | implemented |
+| `CHR` | reserved |  | implemented | implemented | implemented |
 | `CINT` | reserved |  | implemented |  |  |
 | `CLEAR` |  |  | implemented | implemented |  |
 | `CLOSE` | reserved |  | implemented | implemented | implemented |
@@ -546,7 +566,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `CONT` | reserved |  |  |  |  |  |
 | `CSAVE` |  |  | implemented | | |
 | `CMD` | reserved |  | implemented | | implemented |
-| `COLOR=` |  |  |  | implemented |  |
+| `COLOR` |  |  |  | implemented |  |
 | `CONT` | reserved |  | implemented | implemented | implemented |
 | `COS` | reserved |  | implemented | implemented | implemented |
 | `CSNG` | reserved |  | implemented |  |  |
@@ -589,17 +609,17 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `GOSUB` | implemented |  | implemented | implemented | implemented |
 | `GOTO` | implemented | implemented | implemented | implemented | implemented |
 | `GR` |  |  |  | implemented |  |
-| `HCOLOR=` |  |  |  | implemented |  |
+| `HCOLOR` |  |  |  | implemented |  |
 | `HGR` |  |  |  | implemented |  |
 | `HGR2` |  |  |  | implemented |  |
-| `HIMEM:` |  |  |  | implemented |  |
+| `HIMEM` |  |  |  | implemented |  |
 | `HLIN` |  |  |  | implemented |  |
 | `HOME` |  |  |  | implemented |  |
 | `HTAB` |  |  |  | implemented |  |
 | `HPLOT` |  |  |  | implemented |  |
 | `IF` | implemented | implemented | implemented | implemented | implemented |
 | `IN #` |  |  |  | implemented |  |
-| `INKEY$` |  |  | implemented |  |  |
+| `INKEY` |  |  | implemented |  |  |
 | `INP` |  |  | implemented |  |  |
 | `INSTR` | reserved |  | implemented |  |  |
 | `INT` | reserved |  | implemented | implemented | implemented |
@@ -607,7 +627,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `INPUT` | implemented | implemented | implemented | implemented | implemented |
 | `INPUT#` |  |  |  |  | implemented |
 | `KILL` |  |  | implemented |  |  |
-| `LEFT$` | reserved, used token: `LEFT` |  | implemented | implemented | implemented |
+| `LEFT` | reserved |  | implemented | implemented | implemented |
 | `LEN` | reserved |  | implemented | implemented | implemented |
 | `LET` | reserved |  | implemented | implemented | implemented |
 | `LINE` | implemented | implemented | implemented (different function) | | | The `LINE` token is used to mark empty program lines, the token has no responding reserved word.
@@ -617,16 +637,16 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `LOC` |  |  | implemented |  |  |
 | `LOF` |  |  | implemented |  |  |
 | `LOG` | reserved |  | implemented | implemented | implemented |
-| `LOMEM:` |  |  |  | implemented |  |
+| `LOMEM` |  |  |  | implemented |  |
 | `LOOP-UNTIL` | reserved |  |  |  |  |
 | `LPRINT` |  |  | implemented |  |  |
 | `LSET` |  |  | implemented |  |  |
-| `MEM` | reserved |  | implemented |  |
+| `MEM` | implemented |  | implemented |  |
 | `MERGE` |  |  | implemented |  |  |
-| `MID$` | reserved, used token: `MID` |  | implemented | implemented | implemented |
-| `MKD$` |  |  | implemented | | |
-| `MKI$` |  |  | implemented | | |
-| `MKS$` |  |  | implemented | | |
+| `MID` | reserved, used token: `MID` |  | implemented | implemented | implemented |
+| `MKD` |  |  | implemented | | |
+| `MKI` |  |  | implemented | | |
+| `MKS` |  |  | implemented | | |
 | `NAME` |  |  | implemented | | |
 | `NEW` |  |  | implemented | implemented | implemented |
 | `NEXT` | reserved |  | implemented | implemented | implemented |
@@ -659,33 +679,33 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `RETURN` | implemented |  | implemented | implemented | implemented |
 | `RESTO` |  |  | implemented |  |  |
 | `RESTORE` |  |  |  | implemented | implemented |
-| `RIGHT$` | reserved, used token: `RIGHT` |  | implemented | implemented | implemented |
-| `RND` | reserved |  | implemented | implemented | implemented |
-| `ROT=` |  |  |  | implemented |  |
+| `RIGHT` | reserved, used token: `RIGHT` |  | implemented | implemented | implemented |
+| `RND` | implemented |  | implemented | implemented | implemented |
+| `ROT` |  |  |  | implemented |  |
 | `RSET` |  |  | implemented |  |  |
 | `RUN` |  |  | implemented | implemented | implemented |
 | `SAVE` |  |  | implemented |  | implemented |
-| `SCALE=` |  |  |  | implemented |  |
+| `SCALE` |  |  |  | implemented |  |
 | `SET` |  |  | implemented |  |  |
-| `SCRN(` |  |  |  | implemented |  |
+| `SCRN` |  |  |  | implemented |  |
 | `SGN` | reserved |  | implemented | implemented | implemented |
 | `SHLOAD` |  |  |  | implemented |  |
 | `SIN` | reserved |  | implemented | implemented | implemented |
-| `SPC(` |  |  |  | implemented | implemented |
-| `SPEED=` |  |  |  | implemented |  |
+| `SPC` |  |  |  | implemented | implemented |
+| `SPEED` |  |  |  | implemented |  |
 | `SQR` | reserved |  | implemented | implemented | implemented |
 | `STEP` | reserved |  | implemented | implemented | implemented |
 | `STOP` | reserved |  | implemented | implemented | implemented |
 | `STORE` |  |  |  | implemented |  |
-| `STRING$` | reserved, used token: `TOSTRING` |  | implemented |  |  |
-| `STR$` | reserved, used token: `STR` |  | implemented | implemented | implemented |
+| `STRING` | reserved, used token: `TOSTRING` |  | implemented |  |  |
+| `STR` | reserved, used token: `STR` |  | implemented | implemented | implemented |
 | `SYSTEM` | reserved |  | implemented |  |  |
 | `SYS` |  |  |  |  | implemented |
 | `TAB` | reserved |  | implemented | implemented | implemented |
 | `TAN` | reserved |  | implemented | implemented | implemented |
 | `TEXT` |  |  |  | implemented |  |
 | `THEN` | implemented | implemented | implemented | implemented | implemented |
-| `TIME$` | reserved, used token: `TIME` |  | implemented |  |  |
+| `TIME` | reserved, used token: `TIME` |  | implemented |  |  |
 | `TO` | implemented |  | implemented | implemented | implemented |
 | `TRACE` |  |  |  | implemented |  |
 | `TRON` |  |  | implemented |  |  |

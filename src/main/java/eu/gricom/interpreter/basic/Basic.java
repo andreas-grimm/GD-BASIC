@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.functions.Mem;
 import eu.gricom.interpreter.basic.helper.FileHandler;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.helper.Printer;
@@ -195,7 +196,7 @@ public class Basic {
             Printer.println(" #       #     # #     #  #   #  #        #  #          (c) Copyright Andreas Grimm 2020");
             Printer.println(" #  #### #     # ######  #     #  #####   #  #          (c) Copyright Bob Nystrom 2010");
             Printer.println(" #     # #     # #     # #######       #  #  #          Maximum memory (bytes): " + lMaxMemory);
-            Printer.println(" #     # #     # #     # #     # #     #  #  #     #    Free memory (bytes): " + Runtime.getRuntime().freeMemory());
+            Printer.println(" #     # #     # #     # #     # #     #  #  #     #    Free memory (bytes): " + Mem.execute().toString());
             Printer.println("  #####  ######  ######  #     #  #####  ###  #####     ");
             Printer.println();
         }

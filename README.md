@@ -78,8 +78,8 @@ Implemented Backlog Items:
 Implemented Backlog Items: 
 
     [BASIC-15], [BASIC-10], [BASIC-47], [BASIC-40], [BASIC-56], [BASIC-21], [BASIC-20], [BASIC-22], [BASIC-32], [BASIC-33],
-    [BASIC-34], [BASIC-35], [BASIC-18], [BASIC-29], [BASIC-30], [BASIC-31], [BASIC-44], [BASIC-45], [BASIC-46], [BASIC-59], [BASIC-60], [BASIC-61],
-    [BASIC-63]
+    [BASIC-34], [BASIC-35], [BASIC-18], [BASIC-29], [BASIC-30], [BASIC-31], [BASIC-44], [BASIC-45], [BASIC-46], [BASIC-59], 
+    [BASIC-60], [BASIC-61], [BASIC-63]
 
 0.0.5: Tagged as Loop Release
 * Added the `FOR-NEXT`-loop
@@ -95,7 +95,16 @@ Implemented Backlog Items:
     [BASIC-80], [BASIC-67], [BASIC-68], [BASIC-69], [BASIC-70], [BASIC-71], [BASIC-72], [BASIC-81], [BASIC-84]
 
 0.0.6: Tagged as Array Release
-* Added array function to strings
-* Added the `DiM` function
+* Added array function to all data types. The array function allows the use of n-dimensional arrays. The index of the array can be one or
+  more variables itself. The documentation is adjusted to it.
+* Adding functionality to retrieve single characters out of any string. A string's characters can be retrieved by using sqaured brackets:
+  `[` and `]`.
+* Added the `DIM` function
+
+Implemented Backlog Items:
+
+---
+Implemented test and demonstration programs, located at `src/test/resources/GD_Basic_Examples`:
+- `Fibonacci.bas`: translation of the ECMA demonstration `FIBONACCI.BAS` program
 
 ** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **

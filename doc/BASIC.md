@@ -213,52 +213,6 @@ names and therefore more variables:
 | `INTEGER` | `AB%` | +/- 32767 |
 | `STRING` | `AB$` | 0 to 256 Characters |
 
-## Converting BASIC Programs to GD-Basic
-Programs written in a BASIC language other than GD-BASIC may require some minor adjustments before they can be run. The following
-sections describe these adjustments.
-
-### String and Array Dimensions
-Delete all statements used to declare the length of strings or arrays. A statement such as the following
-
-    DIM A$(I,J)
-
-which dimensions a string array for `J` elements of length `I`, should be removed. Also removed should be and `DIM` statements:
-
-    DIM A$(J)
-    DIM A(H)
-
-GD-Basic does not require prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
-shrinking.
-
-### String Functions
-Some Basic languages use a comma `,` or ampersand `&` for string concatenation. Each of these must be changed to a plus sign `+`,
-which is the operator for GD-Basic string concatenation.
-
-In GD-Basic, the `MID$`, `RIGHT$`, and `LEFT$` functions will be used in a later release to take substrings of strings. Forms
-such as `A$(I)` to access the `I`th character in `A$` are replaced by `A$[I]`, or `A$(I,J)` to take a substring of `A$` from
-position `I` to position `J` must be replaced by `A$[I,J]` (later supported in a later version).
-
-### Multiple Assignments
-Some Basic languages allow statements of the following to set `B` and `C` equal to zero:
-
-    10 LET B=C=0
-
-GD-Basic does not support this logic. GW-Basic interprets the statement in which the value B is set based on C equal to zero.
-This will be needed to be changed to
-
-    10 B = A == 0
-
-### Multiple Statement
-Some Basic languages use a backslash `\\` or colons `:` to separate statements on a single line. With GD-Basic, make sure all elements on a line 
-only apply to a single command. the use of the colon `:` is not support in the current version.
-
-### MAT Functions
-Programs using the `MAT` functions available in some Basic languages must be rewritten to use `FOR-NEXT` loops to execute properly .
-
-### FOR-NEXT Loops
-Some GD-Basic will always execute a `FOR-NEXT` loop once, regardless of the limits. Other Basic languages checks the limits first 
-and does not execute the loop if past limits.
-
 ## Reserved Words
 The following keywords are reserved and cannot be used for variables. The following list defines the use of the keywords:
 
@@ -268,24 +222,24 @@ The following keywords are reserved and cannot be used for variables. The follow
 
 | Reserved Word |  GD-Basic | Jasic | 
 |---------------|-----------|-------|
-| `ABS` | reserved | |
+| `ABS` | implemented | |
 | `AND` | reserved | |
-| `ASC` | reserved | |
-| `ATN` | reserved | |
+| `ASC` | implemented | |
+| `ATN` | implemented | |
 | `CALL` | reserved | |
-| `CDBL` | reserved | |
-| `CHR$` | reserved | |
-| `CINT` | reserved | |
+| `CDBL` | planned | |
+| `CHR` | reserved | |
+| `CINT` | planned | |
 | `CLOSE` | reserved | |
 | `CLS` | reserved | |
 | `CMD` | reserved | |
 | `CONT` | reserved | |
-| `COS` | reserved | |
+| `COS` | planned | |
 | `CSNG` | reserved | |
 | `DATA` | reserved | |
 | `DEF FN` | reserved | |
-| `DIM` | reserved | |
-| `DO` | planned | |
+| `DIM` | depreciated | |
+| `DO` | implemented | |
 | `ELSE` | planned | |
 | `END` | implemented | |
 | `END-IF` | implemented | |
@@ -304,12 +258,12 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `INSTR` | reserved | |
 | `INT` | reserved | |
 | `INPUT` | implemented | implemented |
-| `LEFT$` | reserved | |
+| `LEFT` | reserved | |
 | `LEN` | reserved | |
 | `LET` | reserved | |
 | `LOG` | reserved | |
-| `MEM` | reserved | |
-| `MID$` | reserved | |
+| `MEM` | implemented | |
+| `MID` | reserved | |
 | `NEXT` | implemented | |
 | `NOT` | reserved | |
 | `ON` | reserved | |
@@ -320,25 +274,24 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `REM` | implemented | |
 | `REMINDER` | reserved | |
 | `RETURN` | implemented | |
-| `RIGHT$` | reserved | |
-| `RND` | reserved | |
+| `RIGHT` | reserved | |
+| `RND` | implemented | |
 | `SGN` | reserved | |
 | `SIN` | reserved | |
 | `SQR` | reserved | |
 | `STEP` | implemented | |
 | `STOP` | planned | |
-| `STRING$` | reserved | |
-| `STR$` | reserved | |
+| `STRING` | reserved | |
+| `STR` | reserved | |
 | `SYSTEM` | reserved | |
 | `TAB` | reserved | |
 | `TAN` | reserved | |
 | `THEN` | implemented | implemented |
-| `TIME$` | reserved | |
+| `TIME` | reserved | |
 | `TO` | implemented | |
-| `UNTIL` | reserved | |
+| `UNTIL` | implemented | |
 | `VAL` | reserved | |
-| `WHILE` | planned | |
-| `&` | reserved | |
+| `WHILE` | implemented | |
 | `+` | implemented | implemented |
 | `-` | implemented | implemented |
 | `*` | implemented | implemented |
@@ -389,12 +342,20 @@ Assignments are made in the form "\<name\> `=` \<expression\>".
 They evaluate the expression on the right and assigns the result to the given named variable. 
 
 ###### JASIC Syntax
-    
+The implemented JASIC version does not support negative or non-integer numbers in the program code. Even as all numbers
+are represented internally, the need to be programmed as integers:
+
     pi = (314159 / 10000)
 
-###### BASIC Syntax
+and for negative numbers:
 
-    PI# = (314159 / 10000)
+    a = (0 - 1)
+
+###### BASIC Syntax
+The implemented BASIC version supports real numbers and negative numbers:
+
+    PI# = 3.14159
+    A% = -1
 
 *Note*: 
 For the Basic language, the assignment equal (`=`) is different from the comparison equal (`==`). For the assignment 
@@ -648,6 +609,69 @@ The following expressions are supported:
     that name. If the variable was never set, it defaults to 0.
 
 All binary (atomic) operators have the same precedence.
+
+## Converting BASIC Programs to GD-Basic
+Programs written in a BASIC language other than GD-BASIC may require some minor adjustments before they can be run. The following
+sections describe these adjustments.
+
+### String and Array Dimensions
+Delete all statements used to declare the length of strings or arrays. A statement such as the following
+
+    DIM A$(I,J)
+
+which dimensions a string array for `J` elements of length `I`, should be removed. Also removed should be and `DIM` statements:
+
+    DIM A$(J)
+    DIM A(H)
+
+GD-Basic does not require prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
+shrinking.
+
+### String Functions
+Some Basic languages use a comma `,` or ampersand `&` for string concatenation. Each of these must be changed to a plus sign `+`,
+which is the operator for GD-Basic string concatenation.
+
+In GD-Basic, the `MID$`, `RIGHT$`, and `LEFT$` functions will be used in a later release to take substrings of strings. Forms
+such as `A$(I)` to access the `I`th character in `A$` are replaced by `A$[I]`, or `A$(I,J)` to take a substring of `A$` from
+position `I` to position `J` must be replaced by `A$[I,J]` (later supported in a later version).
+
+### Multiple Assignments
+Some Basic languages allow statements of the following to set `B` and `C` equal to zero:
+
+    10 LET B=C=0
+
+GD-Basic does not support this logic. GW-Basic interprets the statement in which the value B is set based on C equal to zero.
+This will be needed to be changed to
+
+    10 B = A == 0
+
+### Multiple Statement
+Some Basic languages use a backslash `\\` or colons `:` to separate statements on a single line. With GD-Basic, make sure all elements on a line
+only apply to a single command. the use of the colon `:` is not support in the current version.
+
+### MAT Functions
+Programs using the `MAT` functions available in some Basic languages must be rewritten to use `FOR-NEXT` loops to execute properly .
+
+### FOR-NEXT Loops
+Some GD-Basic will always execute a `FOR-NEXT` loop once, regardless of the limits. Other Basic languages checks the limits first
+and does not execute the loop if past limits.
+
+## Implemented Functions
+
+### Mathematical Functions
+
+#### `ABS`: Absolute Value
+The `ABS` function returns the absolute (positive) value of the entered parameter. The function allows integer, real, and long values.
+
+#### `RND`: Random Number
+The `RND` function does not require any parameter. It returns a `REAL` value which is pseudo-randomly generated and between `0` and `1`.
+
+### String Processing Functions
+
+### System Functions
+
+#### `MEM`: Available Memory
+The `MEM` function returns the size of the available memory as an integer. The function does not require any parameter.
 
 ## Depreciated Basic Commands
 The following standard Basic commands are depreciated and should not be used.

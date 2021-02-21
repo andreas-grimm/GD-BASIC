@@ -1,6 +1,8 @@
 package eu.gricom.interpreter.basic.parser;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.functions.Function;
+import eu.gricom.interpreter.basic.functions.Mem;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.statements.AssignStatement;
 import eu.gricom.interpreter.basic.statements.DoStatement;
@@ -294,14 +296,16 @@ public class BasicParser implements Parser {
                 // WORD Token: This word is a variable or function, anything following is variable manipulation
                 case WORD:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [WORD] ");
-                    int iJumpPosition = _iPosition;
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+
+                    int iCurrPosition = _iPosition;
+
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), iCurrPosition);
 
                     if (getToken(1).getType() == TokenType.ASSIGN_EQUAL) {
                         String strName = getToken(0).getText();
                         _iPosition = _iPosition + 2;
                         Expression oValue = expression();
-                        aoStatements.add(new AssignStatement(iJumpPosition, strName, oValue));
+                        aoStatements.add(new AssignStatement(iCurrPosition, strName, oValue));
                     } else {
                         throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString()
                                 + " in Line [" + getToken(0).getLine() + "]");
@@ -442,9 +446,28 @@ public class BasicParser implements Parser {
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
                 _iPosition++;
-                Expression expression = expression();
+                Expression oExpression = expression();
                 consumeToken(TokenType.RIGHT_PAREN);
-                return expression;
+                return oExpression;
+
+            case ABS: case ATN: case CDBL: case CINT: case COS:
+                oToken = getToken(0);
+                _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
+                        + oToken.getText() + "' [" + oToken.getLine() + "]");
+                _iPosition++;
+                consumeToken(TokenType.LEFT_PAREN);
+                Expression oFunctionExpression = expression();
+                Expression oParameterFunction = new Function(oToken, oFunctionExpression);
+                consumeToken(TokenType.RIGHT_PAREN);
+                return oParameterFunction;
+
+            case MEM: case RND:
+                oToken = getToken(0);
+                _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
+                        + oToken.getText() + "' [" + oToken.getLine() + "]");
+                _iPosition++;
+                Expression oFunction = new Function(oToken);
+                return oFunction;
 
             default:
                 // OK - here we have a text block that we cannot parse, so we throw an syntax exception

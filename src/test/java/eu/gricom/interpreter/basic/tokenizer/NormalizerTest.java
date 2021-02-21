@@ -58,7 +58,7 @@ public class NormalizerTest {
         String strResult = null;
         try {
             strResult = Normalizer.normalizeIndex(strTest);
-        } catch (RuntimeException e) {
+        } catch (SyntaxErrorException e) {
             e.printStackTrace();
         }
 
@@ -71,7 +71,7 @@ public class NormalizerTest {
         String strResult = null;
         try {
             strResult = Normalizer.normalizeIndex(strTest);
-        } catch (RuntimeException e) {
+        } catch (SyntaxErrorException e) {
             e.printStackTrace();
         }
 
@@ -82,7 +82,7 @@ public class NormalizerTest {
     public void testIndexStringWrongParenthesisLeft() {
         String strTest = "1, 1, 1, 1,1)";
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(SyntaxErrorException.class, () -> {
             Normalizer.normalizeIndex(strTest);
         });
     }
@@ -91,7 +91,7 @@ public class NormalizerTest {
     public void testIndexStringWrongParenthesisRight() {
         String strTest = "(1, 1, 1, 1,1";
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(SyntaxErrorException.class, () -> {
             Normalizer.normalizeIndex(strTest);
         });
     }
