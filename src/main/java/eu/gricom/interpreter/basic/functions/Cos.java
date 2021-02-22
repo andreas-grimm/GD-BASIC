@@ -1,7 +1,5 @@
 package eu.gricom.interpreter.basic.functions;
 
-import eu.gricom.interpreter.basic.statements.Statement;
-import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
 

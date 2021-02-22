@@ -1,6 +1,5 @@
 package eu.gricom.interpreter.basic.tokenizer;
 
-import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 
 /**
@@ -131,7 +130,7 @@ public final class Normalizer {
      *
      * @param strInput string to be adjusted
      * @return normalized string
-     * @throws RuntimeException if the parenthesis are not set correctly
+     * @throws SyntaxErrorException if the parenthesis are not set correctly
      */
     public static String normalizeFunction(final String strInput) throws SyntaxErrorException {
         String strWork = strInput;

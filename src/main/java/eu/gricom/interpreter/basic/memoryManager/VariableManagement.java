@@ -43,7 +43,7 @@ public class VariableManagement {
      *
      * @param strKey key part of the pair
      * @param oValue value part of the pair, here as an Value object
-     * @throws RuntimeException if the parenthesis are not set correctly
+     * @throws SyntaxErrorException if the parenthesis are not set correctly
      */
     public final void putMap(final String strKey, final Value oValue) throws SyntaxErrorException {
         VariableType eVariableType = VariableType.UNDEFINED;
@@ -139,30 +139,13 @@ public class VariableManagement {
                 + "or '&'");
     }
 
-    //TODO: If this method is not needed - remove it...
-    /**
-     * Put a key - value pair into the variable map structure.
-     *
-     * @param strKey - key part of the pair
-     * @param bValue - value part of the pair, here as a boolean
-     * @throws SyntaxErrorException variable name is not marked as boolean
-     */
-    public final void putMap(final String strKey, final boolean bValue) throws SyntaxErrorException {
-        if (strKey.contains("@")) {
-            BooleanValue oValue = new BooleanValue(bValue);
-            _aoBooleans.put(Normalizer.normalizeIndex(strKey), oValue);
-            return;
-         }
-
-        throw new SyntaxErrorException("Syntax Error: Variable name [" + strKey + "] does not end as a Boolean: '@'");
-    }
-
     /**
      * Get variable defined by a given key value.
      *
      * @param strKey - Key used for retrieval
      * @return Value object to be returned
      * @throws SyntaxErrorException if the parenthesis are not set correctly
+     * @throws RuntimeException escalated exception
      */
     public final Value getMap(final String strKey) throws SyntaxErrorException, RuntimeException {
         Logger oLogger = new Logger(this.getClass().getName());

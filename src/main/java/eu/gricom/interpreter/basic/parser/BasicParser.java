@@ -2,7 +2,6 @@ package eu.gricom.interpreter.basic.parser;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.functions.Function;
-import eu.gricom.interpreter.basic.functions.Mem;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.statements.AssignStatement;
 import eu.gricom.interpreter.basic.statements.DoStatement;

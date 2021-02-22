@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.functions;
 
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
@@ -31,8 +32,13 @@ public final class Asc {
      * @throws Exception as any execution error found during execution
      */
     public static Value execute(final Value oValue) throws Exception {
-        if (oValue instanceof StringValue) {
-            return new IntegerValue(oValue.toString().charAt(0));
+        if (oValue instanceof StringValue ) {
+
+            if (oValue.toString().length() > 0) {
+                return new IntegerValue(oValue.toString().charAt(0));
+            } else {
+                throw new RuntimeException("Input value empty");
+            }
         }
 
         throw new RuntimeException("Input value not of type String: " + oValue);

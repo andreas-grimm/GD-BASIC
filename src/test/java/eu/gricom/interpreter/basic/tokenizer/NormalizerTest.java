@@ -95,4 +95,40 @@ public class NormalizerTest {
             Normalizer.normalizeIndex(strTest);
         });
     }
-}
+
+    @Test
+    public void testNormalizeFunctionNoParenthesis() {
+        String strTest = "Test without parenthesis";
+        String strResult = null;
+        try {
+            strResult = Normalizer.normalizeFunction(strTest);
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(strTest, strResult);
+    }
+
+    @Test
+    public void testNormalizeFunctionCorrectParenthesis() {
+        String strTest = "This is a function call: sin(x)";
+        String strResult = "This is a function call: sin (x)";
+        String strExpect = "This is a function call: sin (x)";
+        try {
+            strExpect = Normalizer.normalizeFunction(strTest);
+            System.out.println(strResult);
+        } catch (SyntaxErrorException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(strExpect, strResult);
+    }
+
+    @Test
+    public void testNormailzeFunctionWrongParenthesisRight() {
+        String strTest = "This is a function call with wrong parenthesis: sin(x";
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            Normalizer.normalizeFunction(strTest);
+        });
+    }}
