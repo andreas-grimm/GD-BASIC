@@ -95,7 +95,7 @@ When we show the structure of the BASIC code, we follow there document standards
 
 ## General Structure of the Interpreter
 
-![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/master/doc/jpg/ProcessFlow.jpg)
+![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/ProcessFlow.jpg)
 
 ### Tokenizer
 The Tokenizer or Lexer of the interpreter translates the read source code into a list of recognized tokens.
