@@ -4,20 +4,20 @@ import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
 
 /**
- * COS Function.
+ * SQR Function.
  *
  * Description:
  *
- * The COS function returns the cosinus of an angle. This parameter has to be numeric.
+ * The SQR function returns the square root of a parameter. This parameter has to be numeric.
  *
  * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
  */
-public final class Cos {
+public final class Sqr {
 
     /**
      * Private Constructor.
      */
-    private Cos() {
+    private Sqr() {
     }
 
     /**
@@ -31,7 +31,7 @@ public final class Cos {
      */
     public static Value execute(final Value oValue) throws Exception {
         if (oValue instanceof RealValue) {
-            return new RealValue(Math.cos(oValue.toReal()));
+            return new RealValue(Math.sqrt(oValue.toReal()));
         }
 
         throw new RuntimeException("Input value not of type Real: " + oValue);

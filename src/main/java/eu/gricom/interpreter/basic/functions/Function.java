@@ -16,11 +16,10 @@ import eu.gricom.interpreter.basic.variableTypes.Value;
  * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
  *
  * Created in 2020
- *
  */
 public class Function implements Expression {
-    private Token _oToken;
-    private Expression _oExpression;
+    private final Token _oToken;
+    private final Expression _oExpression;
 
     /**
      * Contructor for functions without parameter.
@@ -35,7 +34,7 @@ public class Function implements Expression {
     /**
      * Contructor for functions with one parameter.
      *
-     * @param oToken token to be executed
+     * @param oToken      token to be executed
      * @param oExpression parameter of the function
      */
     public Function(final Token oToken, final Expression oExpression) {

@@ -4,20 +4,20 @@ import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
 
 /**
- * COS Function.
+ * TAN Function.
  *
  * Description:
  *
- * The COS function returns the cosinus of an angle. This parameter has to be numeric.
+ * The TAN function returns the tangent of an angle. This parameter has to be numeric.
  *
  * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
  */
-public final class Cos {
+public final class Tan {
 
     /**
      * Private Constructor.
      */
-    private Cos() {
+    private Tan() {
     }
 
     /**

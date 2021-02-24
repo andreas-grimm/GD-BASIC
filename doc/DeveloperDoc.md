@@ -254,6 +254,8 @@ Utility methods:
 
 ## Main Classes
 
+![Line Number Relationship](https://github.com/andreas-grimm/Interpreters/blob/development/doc/uml/basic.uml)
+
 ### Parser Package
 
 #### JasicParser
