@@ -254,7 +254,7 @@ Utility methods:
 
 ## Main Classes
 
-![Line Number Relationship](https://github.com/andreas-grimm/Interpreters/blob/development/doc/uml/basic.uml)
+![Line Number Relationship](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/basic.png)
 
 ### Parser Package
 
