@@ -257,6 +257,7 @@ Utility methods:
 ![Main Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/basic.png)
 
 ### Parser Package
+![Parser Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/parser.png)
 
 #### JasicParser
 
@@ -298,6 +299,7 @@ name in the token, but the token type. In this release, the method is not used a
 
 
 ### Tokenizer Package
+![Tokenizer Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer.png)
 
 #### Token.java
 
@@ -312,9 +314,9 @@ name in the token, but the token type. In this release, the method is not used a
 #### TokenType.java
 The content of the TokenType file is limited to the definition of the available token types.
 
-## Package Structure
-
 ### The MemoryManager Package
+![Memory Manager Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/memoryManager.png)
+
 The memory manager functionality, located in the package `eu.gricom.interpreter.basic.memoryManager`, consists of three main
 classes:
 - the program pointer class (`ProgramPointer`), which contains the functionality related with the current place of execution.
