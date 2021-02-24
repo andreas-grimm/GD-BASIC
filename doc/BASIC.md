@@ -671,11 +671,18 @@ The `RND` function does not require any parameter. It returns a `REAL` value whi
 #### `MEM`: Available Memory
 The `MEM` function returns the size of the available memory as an integer. The function does not require any parameter.
 
-## Depreciated Basic Commands
+## Depreciated Basic Commands and Functions
+
 The following standard Basic commands are depreciated and should not be used.
 
 - The `LET` command is depreciated and will be ignored
 - The `DIM` command is depreciated and will cause a Syntax Error
+
+The `SINGLE` data type of the old BASIC implementations does not exist in GD-Basic. The developer is asked to use 
+the simple integer data type. Therefore the conversions functions are not implemented:
+
+- The `CSNG` and `SNG` functions are not implemented
+
 
 ## Alternative Projects and Information
 

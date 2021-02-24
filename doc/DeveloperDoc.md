@@ -301,6 +301,8 @@ name in the token, but the token type. In this release, the method is not used a
 ### Tokenizer Package
 ![Tokenizer Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer.png)
 
+![Referencing Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer_reference.png)
+
 #### Token.java
 
 #### Tokenizer.java
