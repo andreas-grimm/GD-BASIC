@@ -449,7 +449,7 @@ public class BasicParser implements Parser {
                 consumeToken(TokenType.RIGHT_PAREN);
                 return oExpression;
 
-            case ABS: case ATN: case CDBL: case CINT: case COS:
+            case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case SIN: case SQR: case TAN:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
@@ -460,7 +460,7 @@ public class BasicParser implements Parser {
                 consumeToken(TokenType.RIGHT_PAREN);
                 return oParameterFunction;
 
-            case MEM: case RND:
+            case MEM: case RND: case TIME:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");

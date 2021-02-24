@@ -56,12 +56,20 @@ public class Function implements Expression {
                 return Abs.execute(_oExpression.evaluate());
 
             // MEM Token: Return size of available memory
+            case ASC:
+                return Asc.execute(_oExpression.evaluate());
+
+            // MEM Token: Return size of available memory
             case ATN:
                 return Atn.execute(_oExpression.evaluate());
 
             // MEM Token: Return size of available memory
             case CDBL:
                 return Cdbl.execute(_oExpression.evaluate());
+
+            // MEM Token: Return size of available memory
+            case CHR:
+                return Chr.execute(_oExpression.evaluate());
 
             // MEM Token: Return size of available memory
             case CINT:
@@ -78,6 +86,18 @@ public class Function implements Expression {
             // MEM Token: Return size of available memory
             case RND:
                 return Rnd.execute();
+
+            // MEM Token: Return size of available memory
+            case SIN:
+                return Sin.execute(_oExpression.evaluate());
+
+            // MEM Token: Return size of available memory
+            case SQR:
+                return Sqr.execute(_oExpression.evaluate());
+
+            // MEM Token: Return size of available memory
+            case TAN:
+                return Tan.execute(_oExpression.evaluate());
 
             default:
                 throw new RuntimeException("Unknown Function Called: " + _oToken.getText());

@@ -370,6 +370,7 @@ and the key is stored with the value in the Hashmap structure. This implementati
 index in the use of strings. Refer to the description of the implementation or Arrays.
 
 ### The Statements Package
+![Statements Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/statements.png)
 
 #### Expressions
 
