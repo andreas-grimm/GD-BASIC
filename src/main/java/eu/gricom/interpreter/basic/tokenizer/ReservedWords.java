@@ -23,7 +23,7 @@ public final class ReservedWords {
      */
     private static String[] _astrReservedWords = {
             "ABS", "AND", "ASC", "ATN",
-            "CALL", "CDBL", "CHR", "CINT", "CLOSE", "CLS", "CMD", "CONT", "COS", "CSNG",
+            "CALL", "CDBL", "CHR", "CINT", "CLOSE", "CLS", "CMD", "CONT", "COS",
             "DATA", "DEFFN", "DIM", "DO",
             "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT", "EXP",
             "FOR", "FRE",
@@ -35,7 +35,7 @@ public final class ReservedWords {
             "ON", "OR",
             "PRINT",
             "RANDOM", "READ", "REM", "%", "RETURN", "RIGHT$", "RND",
-            "SGN", "SIN", "SQR", "STEP", "STOP", "STRING", "STR", "SYSTEM",
+            "SIN", "SQR", "STEP", "STOP", "STRING", "STR", "SYSTEM",
             "TAB", "TAN", "THEN", "TIME", "TO",
             "UNTIL",
             "VAL",
@@ -48,7 +48,7 @@ public final class ReservedWords {
     private static TokenType[] _aeTokenTypes = {
         TokenType.ABS, TokenType.AND, TokenType.ASC, TokenType.ATN,
         TokenType.CALL, TokenType.CDBL, TokenType.CHR, TokenType.CINT, TokenType.CLOSE, TokenType.CLS, TokenType.CMD,
-            TokenType.CONT, TokenType.COS, TokenType.CSNG,
+            TokenType.CONT, TokenType.COS,
         TokenType.DATA, TokenType.DEFFN, TokenType.DIM, TokenType.DO,
         TokenType.ELSE, TokenType.END, TokenType.ENDIF, TokenType.ENDWHILE, TokenType.EOF, TokenType.EOL, TokenType.ERL,
             TokenType.ERR, TokenType.EXIT, TokenType.EXP,
@@ -61,7 +61,7 @@ public final class ReservedWords {
         TokenType.ON, TokenType.OR,
         TokenType.PRINT,
         TokenType.RANDOM, TokenType.READ, TokenType.REM, TokenType.REMAINDER, TokenType.RETURN, TokenType.RIGHT, TokenType.RND,
-        TokenType.SGN, TokenType.SIN, TokenType.SQR, TokenType.STEP, TokenType.STOP, TokenType.TOSTRING, TokenType.STR, TokenType.SYSTEM,
+        TokenType.SIN, TokenType.SQR, TokenType.STEP, TokenType.STOP, TokenType.TOSTRING, TokenType.STR, TokenType.SYSTEM,
         TokenType.TAB, TokenType.TAN, TokenType.THEN, TokenType.TIME, TokenType.TO,
         TokenType.UNTIL,
         TokenType.VAL,

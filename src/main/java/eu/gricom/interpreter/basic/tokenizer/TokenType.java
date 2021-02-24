@@ -17,7 +17,6 @@ public enum TokenType {
     CMD,
     CONT,
     COS,
-    CSNG,
     DATA,
     DEFFN,
     DIM,
@@ -59,7 +58,6 @@ public enum TokenType {
     RETURN,
     RIGHT, //token for the RIGHT$ function
     RND,
-    SGN,
     SIN,
     SQR,
     STEP,

@@ -227,15 +227,14 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `ASC` | implemented | |
 | `ATN` | implemented | |
 | `CALL` | reserved | |
-| `CDBL` | planned | |
-| `CHR` | reserved | |
-| `CINT` | planned | |
+| `CDBL` | implemented | |
+| `CHR` | implemented | |
+| `CINT` | implemented | |
 | `CLOSE` | reserved | |
 | `CLS` | reserved | |
 | `CMD` | reserved | |
 | `CONT` | reserved | |
-| `COS` | planned | |
-| `CSNG` | reserved | |
+| `COS` | implemented | |
 | `DATA` | reserved | |
 | `DEF FN` | reserved | |
 | `DIM` | depreciated | |
@@ -260,7 +259,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `INPUT` | implemented | implemented |
 | `LEFT` | reserved | |
 | `LEN` | reserved | |
-| `LET` | reserved | |
+| `LET` | depreciated | |
 | `LOG` | reserved | |
 | `MEM` | implemented | |
 | `MID` | reserved | |
@@ -276,18 +275,17 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `RETURN` | implemented | |
 | `RIGHT` | reserved | |
 | `RND` | implemented | |
-| `SGN` | reserved | |
-| `SIN` | reserved | |
-| `SQR` | reserved | |
+| `SIN` | implemented | |
+| `SQR` | implemented | |
 | `STEP` | implemented | |
 | `STOP` | planned | |
 | `STRING` | reserved | |
 | `STR` | reserved | |
 | `SYSTEM` | reserved | |
 | `TAB` | reserved | |
-| `TAN` | reserved | |
+| `TAN` | implemented | |
 | `THEN` | implemented | implemented |
-| `TIME` | reserved | |
+| `TIME` | implemented | |
 | `TO` | implemented | |
 | `UNTIL` | implemented | |
 | `VAL` | reserved | |

@@ -560,9 +560,9 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `ATN` | implemented |  | implemented | implemented | implemented |
 | `AUTO` |  |  | implemented |  |  |
 | `CALL` | reserved |  |  | implemented |  |
-| `CDBL` | reserved |  | implemented |  |  |
-| `CHR` | reserved |  | implemented | implemented | implemented |
-| `CINT` | reserved |  | implemented |  |  |
+| `CDBL` | implemented |  | implemented |  |  |
+| `CHR` | implemented |  | implemented | implemented | implemented |
+| `CINT` | implemented |  | implemented |  |  |
 | `CLEAR` |  |  | implemented | implemented |  |
 | `CLOSE` | reserved |  | implemented | implemented | implemented |
 | `CLOAD` |  |  | implemented |  |  |
@@ -573,8 +573,8 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `CMD` | reserved |  | implemented | | implemented |
 | `COLOR` |  |  |  | implemented |  |
 | `CONT` | reserved |  | implemented | implemented | implemented |
-| `COS` | reserved |  | implemented | implemented | implemented |
-| `CSNG` | reserved |  | implemented |  |  |
+| `COS` | implemented |  | implemented | implemented | implemented |
+| `CSNG` |  |  | implemented |  |  |
 | `CVD` |  | not planned | implemented |  |  |
 | `CVI` |  |  | implemented |  |  |
 | `CVS` |  |  | implemented |  |  |
@@ -587,7 +587,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `DEFSTR` |  |  | implemented |  |  |
 | `DEL` |  |  |  | implemented |  |
 | `DELETE` |  |  | implemented |  |  |
-| `DIM` | reserved |  | implemented | implemented | implemented |
+| `DIM` | depreciated |  | implemented | implemented | implemented |
 | `DO` | reserved |  |  |  |  |
 | `DRAW` |  |  |  | implemented |  |
 | `EDIT` |  |  | implemented |  |  |
@@ -634,7 +634,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `KILL` |  |  | implemented |  |  |
 | `LEFT` | reserved |  | implemented | implemented | implemented |
 | `LEN` | reserved |  | implemented | implemented | implemented |
-| `LET` | reserved |  | implemented | implemented | implemented |
+| `LET` | depreciated |  | implemented | implemented | implemented |
 | `LINE` | implemented | implemented | implemented (different function) | | | The `LINE` token is used to mark empty program lines, the token has no responding reserved word.
 | `LIST` |  |  | implemented | implemented | implemented |
 | `LLIST` |  |  | implemented |  |  |
@@ -643,7 +643,6 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `LOF` |  |  | implemented |  |  |
 | `LOG` | reserved |  | implemented | implemented | implemented |
 | `LOMEM` |  |  |  | implemented |  |
-| `LOOP-UNTIL` | reserved |  |  |  |  |
 | `LPRINT` |  |  | implemented |  |  |
 | `LSET` |  |  | implemented |  |  |
 | `MEM` | implemented |  | implemented |  |
@@ -693,28 +692,29 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `SCALE` |  |  |  | implemented |  |
 | `SET` |  |  | implemented |  |  |
 | `SCRN` |  |  |  | implemented |  |
-| `SGN` | reserved |  | implemented | implemented | implemented |
+| `SGN` |  |  | implemented | implemented | implemented |
 | `SHLOAD` |  |  |  | implemented |  |
-| `SIN` | reserved |  | implemented | implemented | implemented |
+| `SIN` | implemented |  | implemented | implemented | implemented |
 | `SPC` |  |  |  | implemented | implemented |
 | `SPEED` |  |  |  | implemented |  |
-| `SQR` | reserved |  | implemented | implemented | implemented |
+| `SQR` | implemented |  | implemented | implemented | implemented |
 | `STEP` | reserved |  | implemented | implemented | implemented |
 | `STOP` | reserved |  | implemented | implemented | implemented |
 | `STORE` |  |  |  | implemented |  |
 | `STRING` | reserved, used token: `TOSTRING` |  | implemented |  |  |
-| `STR` | reserved, used token: `STR` |  | implemented | implemented | implemented |
+| `STR` | reserved |  | implemented | implemented | implemented |
 | `SYSTEM` | reserved |  | implemented |  |  |
 | `SYS` |  |  |  |  | implemented |
 | `TAB` | reserved |  | implemented | implemented | implemented |
-| `TAN` | reserved |  | implemented | implemented | implemented |
+| `TAN` | implemented |  | implemented | implemented | implemented |
 | `TEXT` |  |  |  | implemented |  |
 | `THEN` | implemented | implemented | implemented | implemented | implemented |
-| `TIME` | reserved, used token: `TIME` |  | implemented |  |  |
+| `TIME` | implemented |  | implemented |  |  |
 | `TO` | implemented |  | implemented | implemented | implemented |
 | `TRACE` |  |  |  | implemented |  |
 | `TRON` |  |  | implemented |  |  |
 | `TROFF` |  |  | implemented |  |  |
+| `UNTIL` | reserved |  |  |  |  |
 | `USR` |  |  |  | implemented | implemented |
 | `VAL` | reserved |  | implemented | implemented | implemented |
 | `VERIFY` |  |  |  |  | implemented |
