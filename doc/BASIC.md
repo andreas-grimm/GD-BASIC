@@ -275,6 +275,8 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `RETURN` | implemented | |
 | `RIGHT` | reserved | |
 | `RND` | implemented | |
+| `SHIFT_LEFT` | planned | |
+| `SHIFT_RIGHT` | planned | |
 | `SIN` | implemented | |
 | `SQR` | implemented | |
 | `STEP` | implemented | |

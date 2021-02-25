@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.variableTypes;
 
+import eu.gricom.interpreter.basic.error.DivideByZeroException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 
 /**
@@ -189,6 +190,16 @@ public class BooleanValue implements Value {
     @Override
     public final Value divide(final Value oValue) throws SyntaxErrorException {
         throw new SyntaxErrorException(oValue.content() + " '/' for boolean expression is not defined");
+    }
+
+    @Override
+    public Value shift_left(final Value oValue) throws SyntaxErrorException {
+        throw new SyntaxErrorException(oValue.content() + " '<<' for boolean expression is not defined");
+    }
+
+    @Override
+    public Value shift_right(final Value oValue) throws SyntaxErrorException {
+        throw new SyntaxErrorException(oValue.content() + " '>>' for boolean expression is not defined");
     }
 
     // This one implemented the XOR statement

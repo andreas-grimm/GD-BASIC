@@ -44,6 +44,7 @@ public enum TokenType {
     LEN,
     LET,
     LOG,
+    LOG10,
     MEM,
     MID, // token for the MID$ function
     NEXT,
@@ -78,6 +79,8 @@ public enum TokenType {
     MINUS, // token for the - operator
     MULTIPLY, // token for the * operator
     DIVIDE, // token for the / operator
+    SHIFT_LEFT, // shift a number / bytes to the left (multiply by 2)
+    SHIFT_RIGHT, // shift a number / bytes to the right (divide by 2)
     COLON, // token for the program line divider ':'
     GREATER, // token for the > operator
     GREATER_EQUAL, // token for the => operator

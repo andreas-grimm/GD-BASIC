@@ -89,11 +89,30 @@ public interface Value extends Expression {
      * Division of one value object with another one.
      *
      * @param oValue divisor for the calculation
-     * @return the result of the divition
+     * @return the result of the division
      * @throws DivideByZeroException thrown for a division by zero
      * @throws SyntaxErrorException thrown when different types are used
      */
     Value divide(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+
+    /**
+     * Multiplication of one value object by 2, parameter times.
+     *
+     * @param oValue second factor for the calculation
+     * @return the result of the multiplication
+     * @throws SyntaxErrorException thrown when different types are used
+     */
+    Value shift_left(Value oValue) throws SyntaxErrorException;
+
+    /**
+     * Division of one value object by 2, parameter times.
+     *
+     * @param oValue divisor for the calculation
+     * @return the result of the division
+     * @throws DivideByZeroException thrown for a division by zero
+     * @throws SyntaxErrorException thrown when different types are used
+     */
+    Value shift_right(Value oValue) throws DivideByZeroException, SyntaxErrorException;
 
     /**
      * Calcualte the power of one value object with another one.

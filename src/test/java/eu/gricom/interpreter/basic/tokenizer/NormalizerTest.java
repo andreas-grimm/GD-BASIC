@@ -116,7 +116,6 @@ public class NormalizerTest {
         String strExpect = "This is a function call: sin (x)";
         try {
             strExpect = Normalizer.normalizeFunction(strTest);
-            System.out.println(strResult);
         } catch (SyntaxErrorException e) {
             e.printStackTrace();
         }

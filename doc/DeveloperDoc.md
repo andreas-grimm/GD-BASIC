@@ -728,6 +728,8 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `+` | implemented, used token: `PLUS` | implemented | implemented | implemented | implemented |
 | `-` | implemented, used token: `MINUS` | implemented | implemented | implemented | implemented |
 | `*` | implemented, used token: `MULTIPLY` | implemented | implemented | implemented | implemented |
+| `>>` | planned, used token: `SHIFT_RIGHT` |  |  |  |  |
+| `<<` | planned, used token: `SHIFT_LEFT` |  |  |  |  |
 | `/` | implemented, used token: `DIVIDE` | implemented | implemented | implemented | implemented |
 | `;` | implemented |  |  | implemented |  |
 | `,` | implemented |  |  | implemented |  |

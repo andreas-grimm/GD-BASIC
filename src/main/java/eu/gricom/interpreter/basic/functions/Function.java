@@ -51,51 +51,63 @@ public class Function implements Expression {
     public final Value evaluate() throws Exception {
 
         switch (_oToken.getType()) {
-            // MEM Token: Return size of available memory
+            // ABS Token: Return the absolute value of the parameter
             case ABS:
                 return Abs.execute(_oExpression.evaluate());
 
-            // MEM Token: Return size of available memory
+            // ASC Token: Return the ASCII value of the parameter
             case ASC:
                 return Asc.execute(_oExpression.evaluate());
 
-            // MEM Token: Return size of available memory
+            // ATN Token: Return the arch tangents of the parameter
             case ATN:
                 return Atn.execute(_oExpression.evaluate());
 
-            // MEM Token: Return size of available memory
+            // CDBL Token: Convert to a DBL (Real)
             case CDBL:
                 return Cdbl.execute(_oExpression.evaluate());
 
-            // MEM Token: Return size of available memory
+            // CHR Token: Return the character of the ASCII value parameter
             case CHR:
                 return Chr.execute(_oExpression.evaluate());
 
-            // MEM Token: Return size of available memory
+            // CINT Token: Convert to a INT (Integer)
             case CINT:
                 return Cint.execute(_oExpression.evaluate());
 
-            // MEM Token: Return size of available memory
+            // COS Token: Return the CoSinus of the value parameter
             case COS:
                 return Cos.execute(_oExpression.evaluate());
+
+            // EXP Token: Return the Exponent to the base e of the value parameter
+            case EXP:
+                return Exp.execute(_oExpression.evaluate());
+
+            // LOG Token: Return the Logarithm Naturalis of the value parameter
+            case LOG:
+                return Log.execute(_oExpression.evaluate());
+
+            // LOG10 Token: Return the Logarithm Decimalis of the value parameter
+            case LOG10:
+                return Log10.execute(_oExpression.evaluate());
 
             // MEM Token: Return size of available memory
             case MEM:
                 return Mem.execute();
 
-            // MEM Token: Return size of available memory
+            // RND Token: Return a pseudo random number between 0 and 1
             case RND:
                 return Rnd.execute();
 
-            // MEM Token: Return size of available memory
+            // SIN Token: Return the Sinus of the value parameter
             case SIN:
                 return Sin.execute(_oExpression.evaluate());
 
-            // MEM Token: Return size of available memory
+            // SQR Token: Return the Square Root of the value parameter
             case SQR:
                 return Sqr.execute(_oExpression.evaluate());
 
-            // MEM Token: Return size of available memory
+            // TAN Token: Return the Tangents of the value parameter
             case TAN:
                 return Tan.execute(_oExpression.evaluate());
 
