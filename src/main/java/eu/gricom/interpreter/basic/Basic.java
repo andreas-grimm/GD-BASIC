@@ -175,7 +175,7 @@ public class Basic {
             options.addOption("h", false, "help (This screen)");
             options.addOption("i", true, "define input file");
             options.addOption("q", false, "quiet mode");
-            options.addOption("v", true, "verbose level: (0 - 3");
+            options.addOption("v", true, "verbose level: (0 - 3)");
             options.addOption("b", true, "BASIC type (J = Jasic, B = Basic");
 
             CommandLineParser parser = new DefaultParser();
