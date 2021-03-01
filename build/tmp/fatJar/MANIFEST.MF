@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: GD-BASIC
-Implementation-Version: 0.1.0-java8
-Main-Class: eu.gricom.interpreter.basic.BASIC
-
