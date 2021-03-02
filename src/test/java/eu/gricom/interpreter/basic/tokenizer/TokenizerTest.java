@@ -9,42 +9,32 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TokenizerTest {
-    private Logger _oLogger = new Logger(this.getClass().getName());
+    private static final Logger LOGGER = new Logger("eu.gricom.interpreter.basic.tokenizer.TokenizerTest");
 
     @Test
     public void testTokenizeForJasic() {
         // disable the logger
         try {
-            _oLogger.setLogLevel("");
+            LOGGER.setLogLevel("");
 
             String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
             Lexer oTokenizer = new JasicLexer();
 
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
-            //TODO: Compare the expected lists with the generated list...
-            int iCounter = 0;
-
-            /*
-            for (Token oToken : aoTokens) {
-                System.out.println(iCounter + "-->" + oToken.getText() + "<-->" + oToken.getType().toString());
-                iCounter++;
-            }
-            */
-
             assertEquals(aoTokens.size(), 35);
         } catch (SyntaxErrorException e) {
-            assertTrue(false);
+            fail();
         }
     }
 
     @Test
     public void testTokenizeForBasicSimpleLine() {
         try {
-            _oLogger.setLogLevel("");
+            LOGGER.setLogLevel("");
 
             String strProgramLine = "10 PRINT A$";
             Lexer oTokenizer = new BasicLexer();
@@ -66,19 +56,20 @@ public class TokenizerTest {
             assertEquals(TokenType.WORD, oToken.getType());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
+            fail();
         }
     }
 
     @Test
     public void testTokenizeForBasicBrokenSequence() {
-        _oLogger.setLogLevel("");
+        LOGGER.setLogLevel("");
 
         String strProgramLine = "20 PRINT A$\n10 REM Error Test";
         Lexer oTokenizer = new BasicLexer();
 
         assertThrows(SyntaxErrorException.class, () -> {
             List<Token> aoTokens = oTokenizer.tokenize(strProgramLine);
+            System.out.println(aoTokens.toString());
         });
     }
 
@@ -86,7 +77,7 @@ public class TokenizerTest {
     public void testTokenizeForBasicAssignmentWithParenthesis() {
         try {
 
-            _oLogger.setLogLevel("");
+            LOGGER.setLogLevel("");
 
             String strProgramLine = "10 A# = 4 * ( 2 + 1 )";
             Lexer oTokenizer = new BasicLexer();
@@ -158,7 +149,7 @@ public class TokenizerTest {
     public void testTokenizeForBasicAssignmentWithOutParenthesis() {
         try {
 
-            _oLogger.setLogLevel("");
+            LOGGER.setLogLevel("");
 
             String strProgramLine = "10 A# = 4 * 2 + 1";
             Lexer oTokenizer = new BasicLexer();
@@ -218,7 +209,7 @@ public class TokenizerTest {
     public void testTokenizeForBasicAssignmentWithFunctionCallNoParam() {
         try {
 
-            _oLogger.setLogLevel("");
+            LOGGER.setLogLevel("");
 
             String strProgramLine = "10 A% = MEM()";
             Lexer oTokenizer = new BasicLexer();
@@ -254,7 +245,7 @@ public class TokenizerTest {
     public void testTokenizeForBasicAssignmentWithFunctionCall() {
         try {
 
-            _oLogger.setLogLevel("");
+            LOGGER.setLogLevel("");
 
             String strProgramLine = "10 A% = ABS(-1)";
             Lexer oTokenizer = new BasicLexer();

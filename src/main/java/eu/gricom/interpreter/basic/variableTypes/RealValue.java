@@ -142,12 +142,12 @@ public class RealValue implements Value {
     }
 
     @Override
-    public Value shift_left(final Value oValue) throws SyntaxErrorException {
+    public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
         throw new SyntaxErrorException(oValue.content() + " '<<' for real type variables is not defined");
     }
 
     @Override
-    public Value shift_right(final Value oValue) throws SyntaxErrorException {
+    public final Value shiftRight(final Value oValue) throws SyntaxErrorException {
         throw new SyntaxErrorException(oValue.content() + " '>>' for real type variables is not defined");
     }
 

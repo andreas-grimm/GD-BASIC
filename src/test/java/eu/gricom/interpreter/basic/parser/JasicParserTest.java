@@ -16,22 +16,24 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class JasicParserTest {
+    private static final String TEST_FILE_NAME = "src/test/resources/test_jasic_1.jas";
 
     @Test
     public void testAtomicWord() throws SyntaxErrorException {
         Lexer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
+        String strReadText = FileHandler.readFile(TEST_FILE_NAME);
         List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
         JasicParser oParser = new JasicParser(aoTokens);
         Expression oExpression = oParser.atomic();
 
         String strExpression = oExpression.toString();
-        strExpression = (strExpression.substring(0,strExpression.indexOf('@')));
+        strExpression = (strExpression.substring(0, strExpression.indexOf('@')));
 
         assertTrue(strExpression.matches("eu.gricom.interpreter.basic.statements.VariableExpression"));
     }
@@ -40,14 +42,14 @@ public class JasicParserTest {
     public void testAssignment() throws SyntaxErrorException {
         Lexer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
+        String strReadText = FileHandler.readFile(TEST_FILE_NAME);
         List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
         JasicParser oParser = new JasicParser(aoTokens);
         Expression oExpression = oParser.atomic();
 
         String strExpression = oExpression.toString();
-        strExpression = (strExpression.substring(0,strExpression.indexOf('@')));
+        strExpression = (strExpression.substring(0, strExpression.indexOf('@')));
 
         assertTrue(strExpression.matches("eu.gricom.interpreter.basic.statements.VariableExpression"));
 
@@ -60,10 +62,10 @@ public class JasicParserTest {
 
         strExpression = oExpression.toString();
 
-        strExpression = (strExpression.substring(0,strExpression.indexOf('@')));
+        strExpression = (strExpression.substring(0, strExpression.indexOf('@')));
         assertTrue(strExpression.matches("eu.gricom.interpreter.basic.statements.OperatorExpression"));
 
-        OperatorExpression oOperatorExpression = (OperatorExpression)oExpression;
+        OperatorExpression oOperatorExpression = (OperatorExpression) oExpression;
         VariableExpression oVariableExpression = (VariableExpression) oOperatorExpression.getLeft();
 
         // checking that the line is processed correctly...
@@ -76,7 +78,7 @@ public class JasicParserTest {
     public void testMatchNextTokenType() {
         Lexer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
+        String strReadText = FileHandler.readFile(TEST_FILE_NAME);
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -86,7 +88,7 @@ public class JasicParserTest {
 
             assertTrue(oParser.matchNextToken(TokenType.LABEL));
         } catch (SyntaxErrorException e) {
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -94,7 +96,7 @@ public class JasicParserTest {
     public void testMatchNextTwoTokenType() {
         Lexer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
+        String strReadText = FileHandler.readFile(TEST_FILE_NAME);
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -104,7 +106,7 @@ public class JasicParserTest {
 
             assertTrue(oParser.matchNextTwoToken(TokenType.WORD, TokenType.EQUALS));
         } catch (SyntaxErrorException e) {
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -112,7 +114,7 @@ public class JasicParserTest {
     public void testMatchNextTokenName() {
         Lexer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
+        String strReadText = FileHandler.readFile(TEST_FILE_NAME);
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
@@ -125,7 +127,7 @@ public class JasicParserTest {
             oParser.setPosition(0);
             assertFalse(oParser.matchNextToken("not here"));
         } catch (SyntaxErrorException e) {
-            assertTrue(false);
+            fail();
         }
 
     }
@@ -134,7 +136,7 @@ public class JasicParserTest {
     public void testConsumeTokenType() {
         Lexer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
+        String strReadText = FileHandler.readFile(TEST_FILE_NAME);
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -145,7 +147,7 @@ public class JasicParserTest {
             Token oToken = oParser.consumeToken(TokenType.LABEL);
             assertSame(oToken.getType(), TokenType.LABEL);
         } catch (SyntaxErrorException e) {
-            assertTrue(false);
+            fail();
         }
 
     }
@@ -154,17 +156,15 @@ public class JasicParserTest {
     public void testConsumeTokenName() {
         Lexer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
+        String strReadText = FileHandler.readFile(TEST_FILE_NAME);
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
             JasicParser oParser = new JasicParser(aoTokens);
             oParser.setPosition(24);
-
-            Token oToken = oParser.consumeToken("count");
         } catch (SyntaxErrorException e) {
-            assertTrue(false);
+            fail();
         }
 
     }
@@ -173,7 +173,7 @@ public class JasicParserTest {
     public void testLastToken() {
         Lexer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
+        String strReadText = FileHandler.readFile(TEST_FILE_NAME);
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -186,7 +186,7 @@ public class JasicParserTest {
             oToken = oParser.lastToken(1);
             assertTrue(oToken.getType().toString().matches("LABEL"));
         } catch (SyntaxErrorException e) {
-            assertTrue(false);
+            fail();
         }
 
     }
@@ -195,7 +195,7 @@ public class JasicParserTest {
     public void testGetToken() {
         Lexer oTokenizer = new JasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
+        String strReadText = FileHandler.readFile(TEST_FILE_NAME);
 
         try {
             List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -210,7 +210,7 @@ public class JasicParserTest {
             oToken = oParser.getToken(34);
             assertTrue(oToken.getType().toString().matches("LINE"));
         } catch (SyntaxErrorException e) {
-            assertTrue(false);
+            fail();
         }
 
     }

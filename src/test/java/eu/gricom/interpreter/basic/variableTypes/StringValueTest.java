@@ -1,12 +1,12 @@
 package eu.gricom.interpreter.basic.variableTypes;
 
-import eu.gricom.interpreter.basic.error.DivideByZeroException;
 import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class StringValueTest {
 
@@ -45,8 +45,7 @@ public class StringValueTest {
             assertTrue(oResult.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -60,8 +59,7 @@ public class StringValueTest {
             assertTrue(oResult.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -75,8 +73,7 @@ public class StringValueTest {
             assertTrue(oResultValue.toString().matches("ab"));
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -87,6 +84,7 @@ public class StringValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             StringValue oResultValue = (StringValue) oFirstValue.minus(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -97,6 +95,7 @@ public class StringValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             StringValue oResultValue = (StringValue) oFirstValue.multiply(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -107,6 +106,7 @@ public class StringValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             StringValue oResultValue = (StringValue) oFirstValue.divide(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -117,6 +117,7 @@ public class StringValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             StringValue oResultValue = (StringValue) oFirstValue.power(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -130,8 +131,7 @@ public class StringValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -143,6 +143,7 @@ public class StringValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -156,8 +157,7 @@ public class StringValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -169,6 +169,7 @@ public class StringValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -182,8 +183,7 @@ public class StringValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -195,6 +195,7 @@ public class StringValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -208,8 +209,7 @@ public class StringValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -221,6 +221,7 @@ public class StringValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -231,7 +232,7 @@ public class StringValueTest {
         try {
             assertEquals("b", oValue.process("a$[1]").toString());
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            fail();
         }
     }
 

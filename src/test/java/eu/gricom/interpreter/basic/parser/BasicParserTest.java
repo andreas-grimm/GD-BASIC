@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -28,7 +26,7 @@ public class BasicParserTest {
         Expression oExpression = oParser.atomic();
 
         String strExpression = oExpression.toString();
-        strExpression = (strExpression.substring(0,strExpression.indexOf('@')));
+        strExpression = (strExpression.substring(0, strExpression.indexOf('@')));
 
         assertTrue(strExpression.matches("eu.gricom.interpreter.basic.statements.VariableExpression"));
     }

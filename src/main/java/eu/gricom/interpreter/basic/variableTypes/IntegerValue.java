@@ -159,7 +159,7 @@ public class IntegerValue implements Value {
     }
 
     @Override
-    public final Value shift_left(final Value oValue) throws SyntaxErrorException {
+    public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue * 2 * ((IntegerValue) oValue).toInt());
             return oReturn;
@@ -172,15 +172,15 @@ public class IntegerValue implements Value {
     }
 
     @Override
-    public final Value shift_right(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    public final Value shiftRight(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
         IntegerValue oReturn;
 
         if (oValue instanceof IntegerValue) {
             if (((IntegerValue) oValue).toInt() != 0) {
                 oReturn = new IntegerValue(_iValue / (2 * ((IntegerValue) oValue).toInt()));
             } else {
-                throw new DivideByZeroException(this.toInt() + ">>" + ((IntegerValue) oValue).toInt() + " is a " +
-                                                        "division by zero");
+                throw new DivideByZeroException(this.toInt() + ">>" + ((IntegerValue) oValue).toInt()
+                                                        + " is a division by zero");
             }
             return oReturn;
         }

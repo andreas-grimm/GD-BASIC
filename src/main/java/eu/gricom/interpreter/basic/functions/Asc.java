@@ -32,7 +32,7 @@ public final class Asc {
      * @throws Exception as any execution error found during execution
      */
     public static Value execute(final Value oValue) throws Exception {
-        if (oValue instanceof StringValue ) {
+        if (oValue instanceof StringValue) {
 
             if (oValue.toString().length() > 0) {
                 return new IntegerValue(oValue.toString().charAt(0));

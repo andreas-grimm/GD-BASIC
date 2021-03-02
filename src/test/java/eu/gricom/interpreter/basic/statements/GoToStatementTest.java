@@ -33,10 +33,10 @@ public class GoToStatementTest {
     @Test
     public void testEvaluateBasic() {
         ProgramPointer oProgramPointer = new ProgramPointer();
-        LineNumberXRef _oLineNumberObject = new LineNumberXRef();
+        LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
-        _oLineNumberObject.putLineNumber(5, 1);
-        _oLineNumberObject.putStatementNumber(1,6);
+        oLineNumberObject.putLineNumber(5, 1);
+        oLineNumberObject.putStatementNumber(1, 6);
 
         try {
             GotoStatement oStatement = new GotoStatement("5");
@@ -52,4 +52,3 @@ public class GoToStatementTest {
         }
     }
 }
-

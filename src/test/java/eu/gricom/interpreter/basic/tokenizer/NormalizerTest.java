@@ -1,11 +1,11 @@
 package eu.gricom.interpreter.basic.tokenizer;
 
-import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class NormalizerTest {
 
@@ -55,27 +55,23 @@ public class NormalizerTest {
     public void testIndexString() {
         String strTest = "(1, 1, 1, 1,1)";
         String strTarget = "-1,1,1,1,1";
-        String strResult = null;
         try {
-            strResult = Normalizer.normalizeIndex(strTest);
+            String strResult = Normalizer.normalizeIndex(strTest);
+            assertEquals(strTarget, strResult);
         } catch (SyntaxErrorException e) {
             e.printStackTrace();
         }
-
-        assertEquals(strTarget, strResult);
     }
 
     @Test
     public void testIndexStringWithoutParenthesis() {
         String strTest = "1, 1, 1, 1,1";
-        String strResult = null;
         try {
-            strResult = Normalizer.normalizeIndex(strTest);
+            String strResult = Normalizer.normalizeIndex(strTest);
+            assertEquals(strTest, strResult);
         } catch (SyntaxErrorException e) {
             e.printStackTrace();
         }
-
-        assertEquals(strTest, strResult);
     }
 
     @Test
@@ -99,28 +95,26 @@ public class NormalizerTest {
     @Test
     public void testNormalizeFunctionNoParenthesis() {
         String strTest = "Test without parenthesis";
-        String strResult = null;
         try {
-            strResult = Normalizer.normalizeFunction(strTest);
+            String strResult = Normalizer.normalizeFunction(strTest);
+            assertEquals(strTest, strResult);
         } catch (SyntaxErrorException e) {
             e.printStackTrace();
         }
 
-        assertEquals(strTest, strResult);
     }
 
     @Test
     public void testNormalizeFunctionCorrectParenthesis() {
         String strTest = "This is a function call: sin(x)";
         String strResult = "This is a function call: sin (x)";
-        String strExpect = "This is a function call: sin (x)";
         try {
-            strExpect = Normalizer.normalizeFunction(strTest);
+            String strExpect = Normalizer.normalizeFunction(strTest);
+            assertEquals(strExpect, strResult);
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
+            fail();
         }
 
-        assertEquals(strExpect, strResult);
     }
 
     @Test
@@ -130,4 +124,5 @@ public class NormalizerTest {
         assertThrows(SyntaxErrorException.class, () -> {
             Normalizer.normalizeFunction(strTest);
         });
-    }}
+    }
+}

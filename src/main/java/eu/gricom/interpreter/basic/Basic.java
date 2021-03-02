@@ -37,9 +37,9 @@ import java.util.Locale;
  */
 @SuppressWarnings("SpellCheckingInspection")
 public class Basic {
-    private final Logger _oLogger = new Logger(this.getClass().getName());
+    private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strBasicVersion = "basic";
-    private LineNumberXRef _oLineNumbers = new LineNumberXRef();
+    private transient LineNumberXRef _oLineNumbers = new LineNumberXRef();
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of
@@ -152,8 +152,8 @@ public class Basic {
     }
 
     // Utility stuff -----------------------------------------------------------
-    
 
+    @SuppressWarnings("PMD")
     /**
      * Runs the interpreter as a command-line app. Takes one argument: a path
      * to a script file to load and run. The script should contain one

@@ -7,18 +7,21 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class IntegerValueTest {
 
     @Test
-    public void testToString() {IntegerValue oNumberValue = new IntegerValue(999);
+    public void testToString() {
+        IntegerValue oNumberValue = new IntegerValue(999);
 
         String strResult = oNumberValue.toString();
         assertTrue(strResult.matches("999"));
     }
 
     @Test
-    public void testToNumber() {IntegerValue oNumberValue = new IntegerValue(999);
+    public void testToNumber() {
+        IntegerValue oNumberValue = new IntegerValue(999);
 
         double dResult = oNumberValue.toReal();
         assertEquals(dResult, 999);
@@ -42,8 +45,7 @@ public class IntegerValueTest {
             assertTrue(oResult.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -57,8 +59,7 @@ public class IntegerValueTest {
             assertTrue(oResult.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -72,8 +73,7 @@ public class IntegerValueTest {
             assertTrue(oResultValue.toInt() == 3);
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -85,6 +85,7 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             IntegerValue oResultValue = (IntegerValue) oFirstValue.plus(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -98,8 +99,7 @@ public class IntegerValueTest {
             assertTrue(oResultValue.toInt() == -1);
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -111,6 +111,7 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             IntegerValue oResultValue = (IntegerValue) oFirstValue.minus(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -124,8 +125,7 @@ public class IntegerValueTest {
             assertTrue(oResultValue.toInt() == 2);
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -137,6 +137,7 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             IntegerValue oResultValue = (IntegerValue) oFirstValue.multiply(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -150,8 +151,7 @@ public class IntegerValueTest {
             assertTrue(oResultValue.toInt() == 0);
 
         } catch (SyntaxErrorException | DivideByZeroException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -163,6 +163,7 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             IntegerValue oResultValue = (IntegerValue) oFirstValue.divide(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -173,6 +174,7 @@ public class IntegerValueTest {
 
         assertThrows(DivideByZeroException.class, () -> {
             IntegerValue oResultValue = (IntegerValue) oFirstValue.divide(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -182,12 +184,11 @@ public class IntegerValueTest {
             IntegerValue oFirstValue = new IntegerValue(2);
             IntegerValue oSecondValue = new IntegerValue(2);
 
-            IntegerValue oResultValue = (IntegerValue)oFirstValue.power(oSecondValue);
+            IntegerValue oResultValue = (IntegerValue) oFirstValue.power(oSecondValue);
             assertTrue(oResultValue.toInt() == 4);
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -199,6 +200,7 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             IntegerValue oResultValue = (IntegerValue) oFirstValue.power(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -212,8 +214,7 @@ public class IntegerValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -225,6 +226,7 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -238,8 +240,7 @@ public class IntegerValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -251,6 +252,7 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -264,8 +266,7 @@ public class IntegerValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -277,6 +278,7 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -290,8 +292,7 @@ public class IntegerValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -303,6 +304,7 @@ public class IntegerValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 }

@@ -102,7 +102,7 @@ public interface Value extends Expression {
      * @return the result of the multiplication
      * @throws SyntaxErrorException thrown when different types are used
      */
-    Value shift_left(Value oValue) throws SyntaxErrorException;
+    Value shiftLeft(Value oValue) throws SyntaxErrorException;
 
     /**
      * Division of one value object by 2, parameter times.
@@ -112,7 +112,7 @@ public interface Value extends Expression {
      * @throws DivideByZeroException thrown for a division by zero
      * @throws SyntaxErrorException thrown when different types are used
      */
-    Value shift_right(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+    Value shiftRight(Value oValue) throws DivideByZeroException, SyntaxErrorException;
 
     /**
      * Calcualte the power of one value object with another one.
