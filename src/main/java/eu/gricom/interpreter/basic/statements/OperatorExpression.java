@@ -43,31 +43,31 @@ public class OperatorExpression implements Expression {
         switch (_strOperator) {
             // needed for Jasic
             case "=":
-                return (oLeftValue.equals(oRightValue));
+                return oLeftValue.equals(oRightValue);
 
             case "+":
-                return (oLeftValue.plus(oRightValue));
+                return oLeftValue.plus(oRightValue);
             case "-":
-                return (oLeftValue.minus(oRightValue));
+                return oLeftValue.minus(oRightValue);
             case "*":
-                return (oLeftValue.multiply(oRightValue));
+                return oLeftValue.multiply(oRightValue);
             case "/":
-                return (oLeftValue.divide(oRightValue));
+                return oLeftValue.divide(oRightValue);
             case "^":
-                return (oLeftValue.power(oRightValue));
+                return oLeftValue.power(oRightValue);
 
             case "==":
-                return (oLeftValue.equals(oRightValue));
+                return oLeftValue.equals(oRightValue);
             case "!=":
-                return (oLeftValue.notEqual(oRightValue));
+                return oLeftValue.notEqual(oRightValue);
             case "<":
-                return (oLeftValue.smallerThan(oRightValue));
+                return oLeftValue.smallerThan(oRightValue);
             case "<=":
-                return (oLeftValue.smallerEqualThan(oRightValue));
+                return oLeftValue.smallerEqualThan(oRightValue);
             case ">":
-                return (oLeftValue.largerThan(oRightValue));
+                return oLeftValue.largerThan(oRightValue);
             case ">=":
-                return (oLeftValue.largerEqualThan(oRightValue));
+                return oLeftValue.largerEqualThan(oRightValue);
 
             default:
                 throw new SyntaxErrorException("Unknown operator: " + _strOperator);
@@ -81,7 +81,7 @@ public class OperatorExpression implements Expression {
      */
     public final Expression getLeft() {
 
-        return (_oLeft);
+        return _oLeft;
     }
 
     /**
@@ -91,7 +91,7 @@ public class OperatorExpression implements Expression {
      */
     public final String getOperator() {
 
-        return (String.valueOf(_strOperator));
+        return String.valueOf(_strOperator);
     }
 
     /**
@@ -101,7 +101,7 @@ public class OperatorExpression implements Expression {
      */
     public final Expression getRight() {
 
-        return (_oRight);
+        return _oRight;
     }
 
     /**
@@ -110,7 +110,7 @@ public class OperatorExpression implements Expression {
      * @return - readable string with the name and the value of the assignment
      */
     public final String content() {
-        return (_oLeft.content() + " " + _strOperator + " " + _oRight.content());
+        return _oLeft.content() + " " + _strOperator + " " + _oRight.content();
 
     }
 }

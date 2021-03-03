@@ -32,7 +32,8 @@ public interface Statement {
      *
      * Method for JUnit to return the content of the statement.
      *
-     * @return - gives the name of the statement ("INPUT") and the variable name
+     * @return gives the name of the statement ("INPUT") and the variable name
+     * @throws Exception based on errors in the implementation classes
      */
-    String content();
+    String content() throws Exception;
 }

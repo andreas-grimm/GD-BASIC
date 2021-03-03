@@ -1,30 +1,44 @@
-This document describes the features and capabilities of the BASIC version
-implemented in this interpreter. The version is very similar to the original 
-BASIC interpreters and additional functions are added to provide even more of
-the original functionality. 
+This document describes the features and capabilities of the BASIC version implemented in this interpreter. The version is 
+very similar to the original BASIC interpreters and additional functions are added to provide even more of the original functionality.
+If the functionality of the interpreter does not match the documentation, refer to the error reporting processing in Github.
+Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
-# GDBasic language syntax
+GDBasic language syntax
 ---------------------
+
+## Introduction
+
+This text starts with a correction. The GDBasic interpreter is not an interpreter in the pure sense of the definition of an interpreter as it does not react on
+entered words as they are entered and changes its state. It actually works more live a `JAVA` compiler, as it performs a lexical analysis of the program, then parses
+the result, and finally generates executable code that is run by a runtime module. In this version all three components are in one project / `JAVA` executable, but as a plan
+the runtime components might end up in a separate component.
+
+GDBasic is also not a compiler as it does not generate machine code, but `JAVA` objects that are executed in sequence. At this time of the work that saves the translation into
+platform dependent code and keeps the platform migrate-able - it shall run on Windows, Linux, and Mac OSX. The change to low level machine code might happen at a later stage.
+It is nit planned, as the performance of a standard laptop or even Raspberry Pi is sufficient to outperform any classical BASIC computer.
+
+The focus at this time of the work is to provide a function complete, extended `JAVA` based interpreter that can work standalone or can be embedded in `JAVA` programs, following
+the example of `JRUBY` for Ruby or `JYTHON` for Python.
 
 ## Standards and supported Basic Implementations
 
 ### General Rules Concerning the Different Dialects
 Every BASIC program consists of different elements:
-* Commands,
-* Variables, and
+* Variables,
+* Statement and Commands, and
 * Controls (which look like commands, but control the execution)
 
 ### JASIC
 Based on the original implementation of the JASIC interpreter, this implementation is regression tested against the JASIC 
 programs. Nevertheless, the interpreter will provide a superset of the programming language. Different to all other BASIC
-diaplects implemented, JASIC does not require line numbers, but uses labels to address jump destinations.
+dialects implemented, JASIC does not require line numbers, but uses labels to address jump destinations.
 
 ### Dartmouth Basic
-This Basic interpreter is targeted to implement the defintion of the BASIC programming language as defined by Thomas Kurtz 
-from [Dartmouth Colleage](https://en.wikipedia.org/wiki/Dartmouth_BASIC).
+This Basic interpreter is targeted to implement the definition of the BASIC programming language as defined by Thomas Kurtz 
+from [Dartmouth College](https://en.wikipedia.org/wiki/Dartmouth_BASIC).
 
 The following [Link](https://www.dartmouth.edu/basicfifty/commands.html) links to the definition of the language. At this 
-moment, the interpreter supports both versions - Jasic, and the Dartmouth Basic format. 
+moment, the interpreter supports both versions - JASIC, and the Dartmouth Basic format. 
 The language support is mightier for the Dartmouth version, no additional language enhancement have been made for the Jasic version.
 Jasic, as a less formatted later version of the programming language, will remain to be supported 
 (why throwing working functions out?). A copy of the Dartmouth Basic programming manual is added to the documentation.
@@ -35,19 +49,34 @@ To ensure that this interpreter is compatible with the ECMA standard, the progra
 added in the test area. A copy of the ECMA Basic standard document has been added to the documentation.
 
 ### Decimal BASIC
-Decimal Basic seems to be an active Japanese BASIC implementation initative that is working also from the 
+Decimal Basic seems to be an active Japanese BASIC implementation initiative that is working also from the 
 Dartmouth and ECMA standard. The project webpage can be found here: [Decimal Basic](http://hp.vector.co.jp/authors/VA008683/english/)
 This link leads to an implementation of a Basic to Pascal translator, written by Shiraishi Kazuo:
 [Basic to Pascal](http://hp.vector.co.jp/authors/VA008683/english/BASICAcc.htm).
 
 ### GDBasic
-GDBasic is a superset of the different basic dialects. This document describes - apart from communalities -
-differences, where GDBasic programs exceed the different dialcts.
+GDBasic is a superset of the different basic dialects. This document describes - apart from commonalities -
+differences, where GDBasic programs exceed the different dialects.
+
+## Document Conventions
+
+In this document, a number of different symbols and placeholders are used. The following list declares these symbols and
+gives a high level overview on their expected use.
+
+| Used Symbol  | Description |
+|--------------|-------------|
+| `<label>` | for `JASIC` only. Labels are defined as character strings terminated by a colon `:`|
+| `<line_number>` | for `BASIC` only. Line numbers are integer values at the beginning of each command line. |
+| `<statement>` | a statement is a command, comment, assignment (which could be understood as a special form of a command), or condition. |
+| `<comment>` | a comment is a command with no function, entered to document the program. |
+| `<assignment>` | an assignment is a command that assigns a value (string, numeric, or boolean) to a variable. |
+| `<command>` | a command is an expression in the program that changes the state of the process. For details, refer to the command section of this document. |
+| `<condition>` | a condition is a comparing statement that ends with a result, either `true` or `false`. For details, refer to the section on control statements in this document.|
+| `<number>` | a number is an integer used for programming purposes. |
+| `<expression>` | an expression is part of an assignment, reflecting the call to a function or a mathematical formula. |
+
 
 ## Language Elements
-
-### Structure of Basic Programs
-
 
 #### Structure of JASIC Programs
 
@@ -70,7 +99,7 @@ __Example of a JASIC Program__
           goto top
     ende:
 
-#### Structure of BASIC Porgrams
+#### Structure of BASIC Programs
 
 __Example of a BASIC Program__
 
@@ -88,7 +117,7 @@ __Example of a BASIC Program__
     120 GOTO 50
     130 END
 
-### Variables and Constants
+### Variables, Arrays, and Constants
 Basic is a strongly typed programming language, which means that type 
 conversion can only be done using conversion functions. These functions 
 will be implemented in one of the next versions of the interpreter.
@@ -102,12 +131,24 @@ be parsed (though numbers are double internally).
 Variables are identified by name which must start with a letter and can
 contain letters or numbers. Case is significant for names and keywords.
 
+Arrays are supported as of this version. An array is marked by round brackets directly connected to the variable name: `A$(10)`.
+No whitespace is permitted between the variable and the index. The initial size of the array can be defined with the `DIM` command,
+this is optional (every array is recognized), but has performance advantages. Different from other BASIC versions, this interpreter
+does not limit to the use of the array to the reserved space. If the index is exceeded the current assigned space, additional memory
+is made available, if available.
+
+Example of Arrays:
+
+    A$(10) = "This is the 10th field of the array"
+    A#(5) = a#(4) + 1
+
 Constants are not supported. All variables are globally scoped.
 
 #### Reals or Numbers
 Named Reals or Numbers, these variable types represent floating-point variables.
 They provide the most coverage of mathematical functions, and the largest number
 range. It is the default representation of variables in the interpreter.
+
 *Note:* This version does only support double length floating-point variables, as 
 this variable type is already implemented using the largest representation.
 
@@ -122,6 +163,20 @@ Booleans Variables have two possible results: True or False.
 | A + 1 = 1 | 1A = A |
 | A + A = A | AA = A |
 | A + non A = 1 | A (non)A = 0 |
+
+#### Strings
+Strings are lists of characters. In GD-Basic, even single characters are representated as strings. To mark the border of
+strings, each string is surrounded by quotation marks (`"`).
+
+Allowed operations for strings are:
+- `==` - compares two strings
+- `+` - concatinates two strings
+- `[]` - retrieves a single character in a string:
+
+      10 A$ = "Test"
+      20 PRINT A$[1]
+
+prints the character `e`
 
 ### Naming Conventions and Support
 
@@ -159,7 +214,11 @@ names and therefore more variables:
 | `STRING` | `AB$` | 0 to 256 Characters |
 
 ## Reserved Words
-The following keywords are reserved and cannot be used for variables:
+The following keywords are reserved and cannot be used for variables. The following list defines the use of the keywords:
+
+- `implemented`: the keyword is actively used in the interpreter
+- `planned`: the keyword is used in the current development and/or released as a beta
+- `reserved`: the keyword might be used in the future or is already on the roadmap. Do not use these keywords in order to be compatible in the future.
 
 | Reserved Word |  GD-Basic | Jasic | 
 |---------------|-----------|-------|
@@ -180,17 +239,20 @@ The following keywords are reserved and cannot be used for variables:
 | `DATA` | reserved | |
 | `DEF FN` | reserved | |
 | `DIM` | reserved | |
+| `DO` | planned | |
 | `ELSE` | planned | |
 | `END` | implemented | |
 | `END-IF` | implemented | |
+| `END-WHILE` | implemented | |
 | `EOF` | reserved | |
 | `EOL` | reserved | |
 | `ERL` | reserved | |
 | `ERR` | reserved | |
+| `EXIT` | planned | |
 | `EXP` | reserved | |
-| `FOR` | planned | |
+| `FOR` | implemented | |
 | `FRE` | reserved | |
-| `GOSUB` | planned | |
+| `GOSUB` | implemented | |
 | `GOTO` | implemented | implemented |
 | `IF` | implemented | implemented |
 | `INSTR` | reserved | |
@@ -202,7 +264,7 @@ The following keywords are reserved and cannot be used for variables:
 | `LOG` | reserved | |
 | `MEM` | reserved | |
 | `MID$` | reserved | |
-| `NEXT` | planned | |
+| `NEXT` | implemented | |
 | `NOT` | reserved | |
 | `ON` | reserved | |
 | `OR` | reserved | |
@@ -211,13 +273,13 @@ The following keywords are reserved and cannot be used for variables:
 | `READ` | reserved | |
 | `REM` | implemented | |
 | `REMINDER` | reserved | |
-| `RETURN` | planned | |
+| `RETURN` | implemented | |
 | `RIGHT$` | reserved | |
 | `RND` | reserved | |
 | `SGN` | reserved | |
 | `SIN` | reserved | |
 | `SQR` | reserved | |
-| `STEP` | planned | |
+| `STEP` | implemented | |
 | `STOP` | planned | |
 | `STRING$` | reserved | |
 | `STR$` | reserved | |
@@ -226,8 +288,10 @@ The following keywords are reserved and cannot be used for variables:
 | `TAN` | reserved | |
 | `THEN` | implemented | implemented |
 | `TIME$` | reserved | |
-| `TO` | planned | |
+| `TO` | implemented | |
+| `UNTIL` | reserved | |
 | `VAL` | reserved | |
+| `WHILE` | planned | |
 | `&` | reserved | |
 | `+` | implemented | implemented |
 | `-` | implemented | implemented |
@@ -261,7 +325,7 @@ Example:
 Each statement is on its own line. It starts with an integer number, which is increasing for each following line. Duplicates 
 of the line numbers is not allowed. The structure of a statement is:
 
-    line_number <comment | assignment | command>
+    <line_number> <comment | assignment | command>
 
 Example:
 
@@ -292,14 +356,100 @@ operation only the assignment operator can be used. The comparison user is gener
 
 ### Commands
 
-##### FOR Command
+As the previous section described variables and variable types, this section describes commands and command structure. 
+In sequence, this section describes:
+- Loops and Iterations
+- Input and Output Commands
+- Control Structures / Process Control
+- Expressions and Mathematical Functions
+
+Finally, special function of the GD-Basic implementations are discussed, such as the `SYSTEM` interface and the `CALL` function
+Those features will be implemented potentially in the Q2 release.
+
+#### Loops and Iterations
+
+This section of the BASIC programming guide describes the three different loops GD-Basic provides:
+- the `WHILE`-loop, which is a check-first style loop: The condition for the loop is checked before the loop is executed,
+- the `DO`-loop, which is a execute-first loop: The loop body is executed before the repetition of the loop is verified, and
+- the `FOR`-loop, which is a counting loop: the loop counts a value from a start to an end in certain step sizes.
+
+Only the `FOR`-loop can be found in standard BASIC literature, the `WHILE` and the `DO` loops are extensions implemented
+in other BASIC dialects - and proven useful.
+
+##### WHILE Command
+The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
+The following chart describes the loop structure:
+
+![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/While-Loop.jpg)
+
+The syntax of the `WHILE` loop is as follows:
+
+`WHILE <condition> <statement> EXIT <statement> END-WHILE`
 
 ###### BASIC Syntax
 
-    FOR X = -2 TO 2 STEP .1
+    210 WHILE X# < 3
+    220 PRINT X#
+    230 X# = X# + 1
+    240 END-WHILE
+
+###### EXIT Command
+The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
+statement.
+
+##### DO Command
+The `DO` - Loop has a different nature. This loop will execute the loop at least once, before verifying the continuation of the loop at the
+end. The structure of the loop can be seen in the following chart:
+
+![Do-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/Do-Loop.jpg)
+
+`DO <statement> EXIT <statement> UNTIL <condition>`
+
+###### BASIC Syntax
+
+    10 X# = 0
+    20 DO
+    30  PRINT X#
+    40  X# = X# + 1
+    50 UNTIL X# >= 10
+
+###### EXIT Command
+The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
+statement.
+
+###### UNTIL Command
+
+###### References
+This loop is known in other programming languages or dialects as:
+- `REPEAT-UNTIL` - loop, or
+- `DO - LOOP UNTIL` - loop
+
+##### FOR Command
+The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command), 
+using increments defined by the `STEP` command.
+Between the increment number after the step and the `NEXT` command, which triggers the next iteration, the developer can include one or multiple commands.
+The syntax looks as follows:
+
+`FOR <variable> = <number> TO <number> STEP <number> <statement> NEXT`
+
+###### BASIC Syntax
+
+Example for a FOR loop counting upwards from -2 to 2 in increments of 0.2 and printing the value of the variable:
+
+    50 FOR X# = -2 TO 2 STEP .2
+    60 PRINT X#
+    70 NEXT
+    80 REM Test2
+
+Example for a FOR loop counting downwards from 2 to -2 in decrements of -0.2 and printing the value of the variable:
+
+    140 PRINT "Downwards..."
+    150 FOR Y# = 2 TO -2 STEP -.2
+    160 PRINT Y#
+    170 NEXT
 
 ##### INPUT Command
-input \<name\>
+`INPUT <variable>`
 
 Reads in a line of input from the user and stores it in the variable with
 the given name.
@@ -314,11 +464,52 @@ Evaluates the expression and prints the result.
 
     PRINT "hello, " + "world"
 
+The `PRINT` command terminates its output with CRLF (Carriage return / line feed) character, the next output is at the beginning
+of a new line. By ending the `PRINT` command with a semicolon (`;`), the CRLF character sequence is not printed, the next output starts
+after the last output printed.
+
+Example:
+
+    10 PRINT "These two commands ";
+    20 PRINT "will print in the same line."
+
+Output:
+
+    These two commands will print in the same line.
+
+The `PRINT` command also allows to print multiple fields in the same command. These fields are seperated by a comma (`,`).
+
+Example:
+
+    160 PRINT a#, " x 2 = ", b#;
+
+*NOTE:* In the current version of BASIC, the character behind the comma has to be a white space (" "). A missing white space will
+lead to an error message.
+
 ### Process Control
 
 #### Unconditional Process Control (Jump)
 
 ##### GOSUB Command
+
+`GOSUB <line_number> <statements> RETURN`
+
+Jumps to the statement at the given line number. Processes the program from that location on until the `RETURN` command is found.
+Returns to the next statement past the command.
+
+      100 GOSUB 200
+      110 PRINT "Second line output"
+      120 END
+
+
+      200 PRINT "First line output"
+      210 RETURN
+
+###### RETURN Command
+
+*NOTE:* The `RETURN` command assumes that a prior `GOSUB` command has been executed. If the `RETURN` is found without a prior `GOSUB` the
+location for further processing is not predicable, if possible an error is thrown.
+
 
 ##### GOTO Command
 
@@ -330,7 +521,7 @@ will move the program pointer to the new location.
 
 `GOTO <label>`
 
-Jumps to the statement after the label with the given name.
+Jumps to the statement after the label in the program. Processes the program from that location on.
 
     loop:
           PRINT "Hello"
@@ -340,16 +531,18 @@ Jumps to the statement after the label with the given name.
 
 `GOTO <line_number>`
 
-Jumps to the statement after the label with the given name.
+Jumps to the statement at the given line number. Processes the program from that location on.
 
       10 PRINT "Hello"
       20 GOTO 10
 
-##### Conditional Process Control
+#### Conditional Process Control
+
+##### IF Command
 
 ###### JASIC Syntax
 
-`IF <expression> THEN <label>`
+`IF <condition> THEN <label>`
 
 Evaluates the expression. If it evaluates to a non-zero number, then jumps to the statement after the given label.
 
@@ -357,14 +550,15 @@ Evaluates the expression. If it evaluates to a non-zero number, then jumps to th
 
 ###### BASIC Syntax
 
-`IF <expression> THEN <commands> END-IF`
+`IF <condition> THEN <statement> END-IF`
 
 Evaluates the expression. If it evaluates to a true value, then the commands in the block between the `THEN` and the `END-IF`
 is executed. If it evaluates to a false value, the flow jumps to the statement past the `END-IF` statement.
 
     10 IF a < b THEN 
-    20   some commands
+    20   PRINT "Inside the IF block"
     30 END-IF 
+    40 PRINT "Outside the IF block"
 
 ## Expressions
 The following expressions are supported:
@@ -381,17 +575,17 @@ The following expressions are supported:
   As of this version, the addition of two variables is supported for all
   data types. If the left-hand expression is a number, integer, or boolean 
   then adds the two expressions; otherwise concatenates the two strings.
-  In this case the second value can be of any type, the vairable will be
+  In this case the second value can be of any type, the variable will be
   converted to a string.
 
 * \<expression\> `-` \<expression\>:
-  The substraction is supported for numbers and integers.
+  The subtraction is supported for numbers and integers.
 
 * \<expression\> `*` \<expression\>:
   Multiplication is supported for numbers, integers, and booleans.
 
 * \<expression\> `/` \<expression\>:
-  Division is supported for numbers and intwgers
+  Division is supported for numbers and integers
 
 * \<expression\> `<` \<expression\>
 
@@ -408,7 +602,7 @@ The following expressions are supported:
 All binary (atomic) operators have the same precedence.
 
 
-## Alternative Projects and Informtion
+## Alternative Projects and Information
 
 * [Wikipedia Article on Basic](https://en.wikipedia.org/wiki/BASIC)
 * [TinyBasic](https://en.wikipedia.org/wiki/Tiny_BASIC) with the related implementation for [Java](http://www.thisiscool.com/tinybasic.htm)

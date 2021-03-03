@@ -1,5 +1,6 @@
 package eu.gricom.interpreter.basic.memoryManager;
 
+import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
@@ -23,10 +24,15 @@ public class VariableManagementTest {
         oVariableManagement.putMap("Integer%", 999);
         oVariableManagement.putMap("String$", "TestValue");
 
-        IntegerValue oResult = (IntegerValue) oVariableManagement.getMap("Integer%");
-        assertEquals(oResult.toInt(), 999);
+        IntegerValue oResult = null;
+        try {
+            oResult = (IntegerValue) oVariableManagement.getMap("Integer%");
+            assertEquals(oResult.toInt(), 999);
 
-        StringValue strResult = (StringValue) oVariableManagement.getMap("String$");
-        assertTrue(strResult.toString().matches("TestValue"));
+            StringValue strResult = (StringValue) oVariableManagement.getMap("String$");
+            assertTrue(strResult.toString().matches("TestValue"));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
     }
 }

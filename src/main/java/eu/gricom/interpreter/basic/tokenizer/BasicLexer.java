@@ -4,7 +4,6 @@ import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -19,16 +18,16 @@ import java.util.regex.Pattern;
  * <p>
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
-public class BasicLexer implements Tokenizer {
+public class BasicLexer implements Lexer {
     private final Logger _oLogger = new Logger(this.getClass().getName());
 
     @Override
-    public List<Token> tokenize(String strSource) throws SyntaxErrorException {
+    public final List<Token> tokenize(final String strSource) throws SyntaxErrorException {
 
         List<Token> aoTokens = new ArrayList<>();
 
         // Convert the program into a list of lines
-        List<String> astrProgramLines = Arrays.asList(strSource.split("\\s*\n\\s*"));
+        String[] astrProgramLines = strSource.split("\\s*\n\\s*");
 
         boolean bIsStringRunning = false;
 
@@ -56,12 +55,10 @@ public class BasicLexer implements Tokenizer {
             if (strProgramLine.length() < 1) {
                 aoTokens.add(new Token("empty", TokenType.LINE, iLineNumber));
             } else {
-
-                // now remove all tabulators and replace them with 4 spaces
-                strProgramLine = strProgramLine.replace("\t", "    ");
+                strProgramLine = Normalizer.normalize(strProgramLine);
 
                 // find reserved words
-                List<String> astrWords = Arrays.asList(strProgramLine.split("\\s"));
+                String[] astrWords = strProgramLine.split("\\s");
 
                 for (String strWord : astrWords) {
                     // this section verifies whether the next word is part of a string (as a string started but did not end yet)
@@ -69,9 +66,8 @@ public class BasicLexer implements Tokenizer {
                     // quotation marks ("), the string is closed.
                     if (bIsStringRunning) {
                         if (oToken == null) {
-                            throw (new SyntaxErrorException(
-                                    "Syntax Error: Unrecognized character sequence: " + iLineNumber +
-                                            " " + strProgramLine));
+                            throw new SyntaxErrorException("Syntax Error: Unrecognized character sequence: " + iLineNumber
+                                            + " " + strProgramLine);
                         }
 
                         if (strWord.endsWith("\"")) {
@@ -88,8 +84,8 @@ public class BasicLexer implements Tokenizer {
                             // we found a reserved word...
                             TokenType oTokenType = ReservedWords.getTokenType(iIndex);
 
-                            if ((oTokenType == TokenType.REM) ||
-                                    (oTokenType == TokenType.COMMENT))  {
+                            if (oTokenType == TokenType.REM
+                                    || oTokenType == TokenType.COMMENT)  {
                                 aoTokens.add(new Token(strProgramLine, oTokenType, iLineNumber));
 
                                 break;
@@ -104,8 +100,17 @@ public class BasicLexer implements Tokenizer {
                         } else if (isString(strWord)) {
                             // now check whether the word is marked as the beginning of a String
                             strWord = strWord.substring(1); // remove the "
-                            oToken = new Token(strWord, TokenType.STRING, iLineNumber);
-                            bIsStringRunning = true;
+
+                            // this section handles single word strings
+                            if (strWord.endsWith("\"")) {
+                                strWord = strWord.substring(0, strWord.length() - 1);
+                                bIsStringRunning = false;
+                                oToken = new Token(strWord, TokenType.STRING, iLineNumber);
+                                aoTokens.add(oToken);
+                            } else {
+                                oToken = new Token(strWord, TokenType.STRING, iLineNumber);
+                                bIsStringRunning = true;
+                            }
 
                         } else if (isBoolean(strWord)) {
                             // now check whether it is a boolean
@@ -130,31 +135,42 @@ public class BasicLexer implements Tokenizer {
             _oLogger.debug(" [" + oToken.getLine() + "]  [" + oToken.getType().toString() + "] " + oToken.getText());
         }
 
-        return (aoTokens);
+        return aoTokens;
     }
 
-    private boolean isBoolean(String strWord) {
-        if (strWord.toUpperCase(Locale.ROOT).matches("TRUE") || strWord.toUpperCase(Locale.ROOT).matches("FALSE")) {
-            return (true);
-        }
-
-        return (false);
+    /**
+     * isBoolean identifies a boolean in the BASIC program by the keywords "TRUE" and "FALSE".
+     *
+     * @param strWord argument for the check
+     * @return true if argument is a boolean
+     */
+    private boolean isBoolean(final String strWord) {
+        return strWord.toUpperCase(Locale.ROOT).matches("TRUE")
+                || strWord.toUpperCase(Locale.ROOT).matches("FALSE");
     }
 
-    private boolean isString(String strWord) {
-        if (strWord.startsWith("\"")) {
-            return (true);
-        }
-
-        return (false);
+    /**
+     * isString identifies a string in the BASIC program by the trailing quotation marks (").
+     *
+     * @param strWord argument for the check
+     * @return true if argument is a string
+     */
+    private boolean isString(final String strWord) {
+        return strWord.startsWith("\"");
     }
 
-    private boolean isNumber(String strWord) {
-        Pattern oPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+    /**
+     * isNumber uses a regular expression to verify that the argument string contains a number.
+     *
+     * @param strWord argument for the check
+     * @return true if argument is a number
+     */
+    private boolean isNumber(final String strWord) {
+        Pattern oPattern = Pattern.compile("-?\\d*(\\.\\d+)?");
 
         if (strWord == null) {
-            return (false);
+            return false;
         }
-        return (oPattern.matcher(strWord).matches());
+        return oPattern.matcher(strWord).matches();
     }
 }

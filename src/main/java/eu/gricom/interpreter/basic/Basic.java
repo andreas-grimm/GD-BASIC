@@ -8,11 +8,11 @@ import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.parser.BasicParser;
 import eu.gricom.interpreter.basic.parser.JasicParser;
 import eu.gricom.interpreter.basic.parser.Parser;
-import eu.gricom.interpreter.basic.statements.LineNumberStatement;
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.statements.Statement;
 import eu.gricom.interpreter.basic.tokenizer.BasicLexer;
+import eu.gricom.interpreter.basic.tokenizer.Lexer;
 import eu.gricom.interpreter.basic.tokenizer.Token;
-import eu.gricom.interpreter.basic.tokenizer.Tokenizer;
 import eu.gricom.interpreter.basic.tokenizer.JasicLexer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -21,8 +21,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,10 +36,9 @@ import java.util.Locale;
  */
 @SuppressWarnings("SpellCheckingInspection")
 public class Basic {
-    private static BufferedReader _oLineIn;
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strBasicVersion = "basic";
-    private LineNumberStatement _oLineNumbers = new LineNumberStatement();
+    private LineNumberXRef _oLineNumbers = new LineNumberXRef();
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of
@@ -49,8 +46,6 @@ public class Basic {
      * current statement.
      */
     public Basic() {
-        InputStreamReader oConverter = new InputStreamReader(System.in);
-        _oLineIn = new BufferedReader(oConverter);
     }
 
     /**
@@ -72,7 +67,7 @@ public class Basic {
         // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
         _oLogger.info("Starting tokenization...");
 
-        Tokenizer oTokenizer;
+        Lexer oTokenizer;
 
         if (_strBasicVersion.contains("jasic")) {
             oTokenizer = new JasicLexer();
@@ -95,7 +90,8 @@ public class Basic {
             if (oToken.getType().toString().contains("LINE")) {
                 _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: []");
             } else {
-                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: [" + oToken.getText() + "]");
+                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: ["
+                        + oToken.getText() + "]");
             }
             iCounter++;
         }
@@ -120,15 +116,22 @@ public class Basic {
         _oLogger.info("Starting execution...");
         try {
             if (aoStatements != null) {
+                int iSourceCodeLineNumber = -1;
+
                 while (oProgramPointer.getCurrentStatement() < aoStatements.size()) {
                     // as long as we have not reached the end of the code
                     int iThisStatement = oProgramPointer.getCurrentStatement();
-                    int iSourceCodeLineNumber = _oLineNumbers.getLineNumber(aoStatements.get(iThisStatement).getLineNumber());
+
+                    // Line numbers are only used in BASIC
+                    if (!_strBasicVersion.contains("jasic")) {
+                        iSourceCodeLineNumber = _oLineNumbers.getLineNumberFromToken(aoStatements.get(iThisStatement).getLineNumber());
+                    }
+
                     oProgramPointer.calcNextStatement();
 
                     if (_strBasicVersion.contains("jasic")) {
                         _oLogger.debug(
-                                "Current Source Code Line [" + iThisStatement + "/"+ aoStatements.size() + "]: " + aoStatements.get(
+                                "Current Source Code Line [" + iThisStatement + "/" + aoStatements.size() + "]: " + aoStatements.get(
                                         iThisStatement).content());
                     } else {
                         _oLogger.debug(
@@ -162,7 +165,6 @@ public class Basic {
         oLogger.setLogLevel("");
 
         boolean bParseOK = true;
-        String strParseError = null;
         CommandLine oCommandLine = null;
 
         // create Options object
@@ -177,24 +179,29 @@ public class Basic {
 
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(options, args);
-        } catch (ParseException exParseException) {
+        } catch (ParseException eParseException) {
             bParseOK = false;
-            // TODO: This here makes no sense...
-            strParseError = exParseException.getMessage();
+            System.out.println(eParseException.getMessage());
+            System.exit(-1);
         }
 
-        if ((oCommandLine != null) && (!oCommandLine.hasOption("q"))) {
-
-            Printer.println("GriCom Basic Interpreter Version 0.1.0");
-            Printer.println("(c) Copyright Bob Nystrom 2010");
-            Printer.println("(c) Copyright Andreas Grimm 2020");
+        if (oCommandLine != null
+                && !oCommandLine.hasOption("q")) {
 
             long lMaxMemory = Runtime.getRuntime().maxMemory();
-            Printer.println("Maximum memory (bytes): " + lMaxMemory + ", ");
-            Printer.println("Free memory (bytes): " + Runtime.getRuntime().freeMemory());
+            Printer.println();
+            Printer.println("  #####  ######  ######     #     #####  ###  #####     ");
+            Printer.println(" #     # #     # #     #   # #   #     #  #  #     #    GriCom Basic Interpreter Version 0.1.0");
+            Printer.println(" #       #     # #     #  #   #  #        #  #          (c) Copyright Andreas Grimm 2020");
+            Printer.println(" #  #### #     # ######  #     #  #####   #  #          (c) Copyright Bob Nystrom 2010");
+            Printer.println(" #     # #     # #     # #######       #  #  #          Maximum memory (bytes): " + lMaxMemory);
+            Printer.println(" #     # #     # #     # #     # #     #  #  #     #    Free memory (bytes): " + Runtime.getRuntime().freeMemory());
+            Printer.println("  #####  ######  ######  #     #  #####  ###  #####     ");
+            Printer.println();
         }
 
-        if ((oCommandLine != null) && (oCommandLine.hasOption("v"))) {
+        if (oCommandLine != null
+                && oCommandLine.hasOption("v")) {
             String strLogLevel = oCommandLine.getOptionValue("v");
             String strLogLevelList = "trace|debug|info|warning";
 
@@ -205,7 +212,8 @@ public class Basic {
             oLogger.debug("Log Level set:" + strLogLevel + "...");
         }
 
-        if ((oCommandLine != null) && (oCommandLine.hasOption("h"))) {
+        if (oCommandLine != null
+                && oCommandLine.hasOption("h")) {
             // automatically generate the help statement
             oLogger.debug("Display help message...");
 
@@ -219,7 +227,8 @@ public class Basic {
         }
 
         // Just show the usage and quit if a script wasn't provided.
-        if ((oCommandLine != null) && (!oCommandLine.hasOption("i"))) {
+        if (oCommandLine != null
+                && !oCommandLine.hasOption("i")) {
             oLogger.error("Program file name missing...");
             Printer.println("");
             Printer.println("usage: java -jar BASIC-<build-name>.jar -i <filename.bas>");
@@ -227,7 +236,8 @@ public class Basic {
             System.exit(-1);
         }
 
-        if ((oCommandLine != null) && (oCommandLine.hasOption("b"))) {
+        if (oCommandLine != null
+                && oCommandLine.hasOption("b")) {
             // get the Basic Version
             oLogger.debug("Get BASIC version...");
             String strBasicVersion = oCommandLine.getOptionValue("b").toLowerCase(Locale.ROOT);

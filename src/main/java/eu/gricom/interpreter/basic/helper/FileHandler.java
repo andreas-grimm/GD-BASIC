@@ -57,7 +57,7 @@ public final class FileHandler {
                 oBuilder.append("\n");
 
                 _oLogger.debug("Read File:\n" + oBuilder.toString());
-                return (oBuilder.toString());
+                return oBuilder.toString();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -67,6 +67,6 @@ public final class FileHandler {
             _oLogger.error("[ERR-IO-EXCEPT] Program file could not be read.");
             System.exit(-1);
         }
-        return (null);
+        return null;
     }
 }

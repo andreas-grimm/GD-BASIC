@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.variableTypes.BooleanValue;
 
@@ -23,7 +24,7 @@ public final class IfThenStatement implements Statement {
     private int _iStatementNumber = 0;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final LabelStatement _oLabelStatement = new LabelStatement();
-    private final LineNumberStatement _oLineNumberObject = new LineNumberStatement();
+    private final LineNumberXRef _oLineNumberObject = new LineNumberXRef();
     private final int _iEndIfLine;
 
     /**
@@ -59,7 +60,7 @@ public final class IfThenStatement implements Statement {
      */
     @Override
     public int getLineNumber() {
-        return (_iStatementNumber);
+        return _iStatementNumber;
     }
 
     /**
@@ -88,7 +89,7 @@ public final class IfThenStatement implements Statement {
 
                 if (_iEndIfLine != 0) {
                     int iStatementNo =
-                            _oLineNumberObject.getStatement(_oLineNumberObject.getNextStatement(_iEndIfLine));
+                            _oLineNumberObject.getStatementFromLineNumber(_oLineNumberObject.getNextLineNumber(_iEndIfLine));
                     if (iStatementNo != 0) {
                         _oProgramPointer.setCurrentStatement(iStatementNo);
                         return;
@@ -97,9 +98,9 @@ public final class IfThenStatement implements Statement {
                     return;
                 }
 
-                throw (new SyntaxErrorException("IF [unknown]: Target: [" + _iEndIfLine + "]"));
+                throw new SyntaxErrorException("IF [unknown]: Target: [" + _iEndIfLine + "]");
             } catch (NumberFormatException eNumberException) {
-                throw (new SyntaxErrorException("IF [incorrect format]: Target: " + _strLabel));
+                throw new SyntaxErrorException("IF [incorrect format]: Target: " + _strLabel);
             }
         }
 
@@ -113,6 +114,6 @@ public final class IfThenStatement implements Statement {
     @Override
     public String content() {
 
-        return ("IF (" + _oCondition.content() + ") THEN " + _strLabel);
+        return "IF (" + _oCondition.content() + ") THEN " + _strLabel;
     }
 }

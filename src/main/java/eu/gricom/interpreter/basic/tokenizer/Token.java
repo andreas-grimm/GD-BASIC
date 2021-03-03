@@ -5,7 +5,7 @@ package eu.gricom.interpreter.basic.tokenizer;
  * <p>
  * Description:
  * <p>
- * The Tokenizer is responsible for translating the source code into a chain of Token. When recognizing a token, this
+ * The Lexer is responsible for translating the source code into a chain of Token. When recognizing a token, this
  * object is created, consisting of the found token and the text in the source code. Using this class wrapper, the
  * parser can identify the token and process it.
  * <p>
@@ -18,11 +18,11 @@ public final class Token {
 
     /**
      * Constructor of the Code Generator object.
-     *  @param strText - read text of the source code
-     * @param oType - type of the token
-     * @param iLineNumber
+     * @param strText read text of the source code
+     * @param oType type of the token
+     * @param iLineNumber number of the line in the BASIC source code
      */
-    public Token(final String strText, final TokenType oType, int iLineNumber) {
+    public Token(final String strText, final TokenType oType, final int iLineNumber) {
         _strText = strText;
         _oType = oType;
         _iLineNumber = iLineNumber;
@@ -34,7 +34,7 @@ public final class Token {
      * @return Read text of the source code
      */
     public String getText() {
-        return (_strText);
+        return _strText;
     }
 
     /**
@@ -43,7 +43,7 @@ public final class Token {
      * @return Read type of the token found
      */
     public TokenType getType() {
-        return (_oType);
+        return _oType;
     }
 
     /**
@@ -52,18 +52,19 @@ public final class Token {
      * @return Read type of the token found
      */
     public int getLine() {
-        return (_iLineNumber);
+        return _iLineNumber;
     }
 
     /**
      * Get method for the TYPE attribute.
      *
+     * @param strText set the content of the token
      * @return Read type of the token found
      */
-    public String setText(String strText) {
+    public String setText(final String strText) {
         _strText = strText;
 
-        return (_strText);
+        return _strText;
     }
 }
 

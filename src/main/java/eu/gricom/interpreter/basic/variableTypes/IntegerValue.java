@@ -33,7 +33,7 @@ public class IntegerValue implements Value {
     @Override
     public final String toString() {
 
-        return (Integer.toString(_iValue));
+        return Integer.toString(_iValue);
     }
 
     /**
@@ -43,7 +43,7 @@ public class IntegerValue implements Value {
      */
     public final double toReal() {
 
-        return (_iValue);
+        return _iValue;
     }
 
     /**
@@ -53,7 +53,7 @@ public class IntegerValue implements Value {
      */
     public final int toInt() {
 
-        return (_iValue);
+        return _iValue;
     }
 
     /**
@@ -63,7 +63,7 @@ public class IntegerValue implements Value {
      */
     public final Value evaluate() {
 
-        return (this);
+        return this;
     }
 
 
@@ -71,56 +71,56 @@ public class IntegerValue implements Value {
     public final Value equals(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             if (this.toInt() == ((IntegerValue) oValue).toInt()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
-    public Value notEqual(Value oValue) throws SyntaxErrorException {
+    public final Value notEqual(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             if (this.toInt() != ((IntegerValue) oValue).toInt()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue + ((IntegerValue) oValue).toInt());
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
     public final Value minus(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue - ((IntegerValue) oValue).toInt());
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
     public final Value multiply(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue * ((IntegerValue) oValue).toInt());
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
@@ -131,78 +131,77 @@ public class IntegerValue implements Value {
             if (((IntegerValue) oValue).toInt() != 0) {
                 oReturn = new IntegerValue(_iValue / ((IntegerValue) oValue).toInt());
             } else {
-                throw (new DivideByZeroException(this.toInt() + "/" + ((IntegerValue) oValue).toInt() + " is a " + "division by zero"));
+                throw new DivideByZeroException(this.toInt() + "/" + ((IntegerValue) oValue).toInt() + " is a " + "division by zero");
             }
-            return (oReturn);
+            return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
-    public Value power(Value oValue) throws SyntaxErrorException {
+    public final Value power(final Value oValue) throws SyntaxErrorException {
         IntegerValue oReturn;
-        RealValue oPower;
 
         if (oValue instanceof IntegerValue) {
-            oReturn = new IntegerValue(new RealValue((Math.pow(_iValue,((IntegerValue) oValue).toInt()))).toInt());
+            oReturn = new IntegerValue(new RealValue(Math.pow(_iValue, ((IntegerValue) oValue).toInt())).toInt());
 
             return oReturn;
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not a integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not a integer");
     }
 
     @Override
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             if (this.toInt() < ((IntegerValue) oValue).toInt()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
-    public Value smallerEqualThan(Value oValue) throws SyntaxErrorException {
+    public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             if (this.toInt() <= ((IntegerValue) oValue).toInt()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             if (this.toInt() > ((IntegerValue) oValue).toInt()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
-    public Value largerEqualThan(Value oValue) throws SyntaxErrorException {
+    public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
             if (this.toInt() >= ((IntegerValue) oValue).toInt()) {
-                return (new BooleanValue(true));
+                return new BooleanValue(true);
             }
 
-            return (new BooleanValue(false));
+            return new BooleanValue(false);
         }
 
-        throw (new SyntaxErrorException(oValue.content() + " is not an integer"));
+        throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     /**
@@ -215,6 +214,6 @@ public class IntegerValue implements Value {
     @Override
     public final String content() {
 
-        return (String.valueOf(_iValue));
+        return String.valueOf(_iValue);
     }
 }

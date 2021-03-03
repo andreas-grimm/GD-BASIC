@@ -2,16 +2,30 @@ package eu.gricom.interpreter.basic.tokenizer;
 
 import java.util.Locale;
 
-public class ReservedWords {
+/**
+ * ReservedWords.java
+ * <p>
+ * Description:
+ * <p>
+ * The list of reserved words and the matching token.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ */
+public final class ReservedWords {
+
+    /**
+     * Default constructor.
+     */
+    private ReservedWords() { }
 
     /**
      * This defines the different kinds of tokens for the Dartmouth BASIC styles.
      */
-    public static String[] astrReservedWords = {
+    private static String[] _astrReservedWords = {
             "ABS", "AND", "ASC", "ATN",
             "CALL", "CDBL", "CHR$", "CINT", "CLOSE", "CLS", "CMD", "CONT", "COS", "CSNG",
-            "DATA", "DEFFN", "DIM",
-            "ELSE", "END", "END-IF","EOF", "EOL", "ERL", "ERR", "EXP",
+            "DATA", "DEFFN", "DIM", "DO",
+            "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT", "EXP",
             "FOR", "FRE",
             "GOSUB", "GOTO",
             "IF", "INSTR$", "INT", "INPUT",
@@ -23,18 +37,21 @@ public class ReservedWords {
             "RANDOM", "READ", "REM", "%", "RETURN", "RIGHT$", "RND",
             "SGN", "SIN", "SQR", "STEP", "STOP", "STRING$", "STR$", "SYSTEM",
             "TAB", "TAN", "THEN", "TIME$", "TO",
+            "UNTIL",
             "VAL",
+            "WHILE",
             "&", "\\+", "\\-", "\\*", "\\/", ":",
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
-            "\\(", "\\)", "\\'"
+            "\\(", "\\)", "\\'", "\\;", "\\,"
     };
 
-    static TokenType[] aeTokenTypes = {
+    private static TokenType[] _aeTokenTypes = {
         TokenType.ABS, TokenType.AND, TokenType.ASC, TokenType.ATN,
-        TokenType.CALL, TokenType.CDBL, TokenType.CHR, TokenType.CINT, TokenType.CLOSE, TokenType.CLS, TokenType.CMD, TokenType.CONT, TokenType.COS, TokenType.CSNG,
-        TokenType.DATA, TokenType.DEFFN, TokenType.DIM,
-        TokenType.ELSE, TokenType.END, TokenType.ENDIF, TokenType.EOF, TokenType.EOL, TokenType.ERL, TokenType.ERR,
-            TokenType.EXP,
+        TokenType.CALL, TokenType.CDBL, TokenType.CHR, TokenType.CINT, TokenType.CLOSE, TokenType.CLS, TokenType.CMD,
+            TokenType.CONT, TokenType.COS, TokenType.CSNG,
+        TokenType.DATA, TokenType.DEFFN, TokenType.DIM, TokenType.DO,
+        TokenType.ELSE, TokenType.END, TokenType.ENDIF, TokenType.ENDWHILE, TokenType.EOF, TokenType.EOL, TokenType.ERL,
+            TokenType.ERR, TokenType.EXIT, TokenType.EXP,
         TokenType.FOR, TokenType.FRE,
         TokenType.GOSUB, TokenType.GOTO,
         TokenType.IF, TokenType.INSTR, TokenType.INT, TokenType.INPUT,
@@ -46,18 +63,26 @@ public class ReservedWords {
         TokenType.RANDOM, TokenType.READ, TokenType.REM, TokenType.REMAINDER, TokenType.RETURN, TokenType.RIGHT, TokenType.RND,
         TokenType.SGN, TokenType.SIN, TokenType.SQR, TokenType.STEP, TokenType.STOP, TokenType.TOSTRING, TokenType.STR, TokenType.SYSTEM,
         TokenType.TAB, TokenType.TAN, TokenType.THEN, TokenType.TIME, TokenType.TO,
+        TokenType.UNTIL,
         TokenType.VAL,
+        TokenType.WHILE,
         TokenType.AMPERSAND, TokenType.PLUS, TokenType.MINUS, TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.COLON,
         TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.SMALLER, TokenType.SMALLER_EQUAL, TokenType.ASSIGN_EQUAL,
             TokenType.PASCAL_ASSIGN_EQUAL, TokenType.COMPARE_EQUAL, TokenType.COMPARE_NOT_EQUAL, TokenType.POWER,
-        TokenType.LEFT_PAREN, TokenType.RIGHT_PAREN, TokenType.COMMENT};
+        TokenType.LEFT_PAREN, TokenType.RIGHT_PAREN, TokenType.COMMENT, TokenType.SEMICOLON, TokenType.COMMA};
 
-    public static int getIndex (final String strSearchRole) {
+    /**
+     * getIndex returns the index of the token based on an entered token type.
+     *
+     * @param strTokenType name of the token
+     * @return index found for the token
+     */
+    public static int getIndex(final String strTokenType) {
         int iReturn = -1;
         int iIndex = 0;
 
-        for (String strReserveWord: astrReservedWords) {
-            if (strSearchRole.toUpperCase(Locale.ROOT).matches(strReserveWord)) {
+        for (String strReserveWord: _astrReservedWords) {
+            if (strTokenType.toUpperCase(Locale.ROOT).matches(strReserveWord)) {
                 iReturn = iIndex;
                 break;
             }
@@ -65,10 +90,16 @@ public class ReservedWords {
             iIndex++;
         }
 
-        return (iReturn);
+        return iReturn;
     }
 
-    public static TokenType getTokenType (int iIndex) {
-        return (aeTokenTypes[iIndex]);
+    /**
+     * getTokenType returns the type of the token based on an entered index value.
+     *
+     * @param iIndex index of the token
+     * @return token type found for the index
+     */
+    public static TokenType getTokenType(final int iIndex) {
+        return _aeTokenTypes[iIndex];
     }
 }

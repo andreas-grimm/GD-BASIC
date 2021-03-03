@@ -7,7 +7,7 @@ import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.VariableExpression;
 import eu.gricom.interpreter.basic.tokenizer.JasicLexer;
 import eu.gricom.interpreter.basic.tokenizer.Token;
-import eu.gricom.interpreter.basic.tokenizer.Tokenizer;
+import eu.gricom.interpreter.basic.tokenizer.Lexer;
 import eu.gricom.interpreter.basic.tokenizer.TokenType;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ public class JasicParserTest {
 
     @Test
     public void testAtomicWord() throws SyntaxErrorException {
-        Tokenizer oTokenizer = new JasicLexer();
+        Lexer oTokenizer = new JasicLexer();
 
         String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
         List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -38,7 +38,7 @@ public class JasicParserTest {
 
     @Test
     public void testAssignment() throws SyntaxErrorException {
-        Tokenizer oTokenizer = new JasicLexer();
+        Lexer oTokenizer = new JasicLexer();
 
         String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
         List<Token> aoTokens = oTokenizer.tokenize(strReadText);
@@ -74,7 +74,7 @@ public class JasicParserTest {
 
     @Test
     public void testMatchNextTokenType() {
-        Tokenizer oTokenizer = new JasicLexer();
+        Lexer oTokenizer = new JasicLexer();
 
         String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
@@ -92,7 +92,7 @@ public class JasicParserTest {
 
     @Test
     public void testMatchNextTwoTokenType() {
-        Tokenizer oTokenizer = new JasicLexer();
+        Lexer oTokenizer = new JasicLexer();
 
         String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
@@ -110,7 +110,7 @@ public class JasicParserTest {
 
     @Test
     public void testMatchNextTokenName() {
-        Tokenizer oTokenizer = new JasicLexer();
+        Lexer oTokenizer = new JasicLexer();
 
         String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
         try {
@@ -132,7 +132,7 @@ public class JasicParserTest {
 
     @Test
     public void testConsumeTokenType() {
-        Tokenizer oTokenizer = new JasicLexer();
+        Lexer oTokenizer = new JasicLexer();
 
         String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
@@ -152,7 +152,7 @@ public class JasicParserTest {
 
     @Test
     public void testConsumeTokenName() {
-        Tokenizer oTokenizer = new JasicLexer();
+        Lexer oTokenizer = new JasicLexer();
 
         String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
@@ -171,7 +171,7 @@ public class JasicParserTest {
 
     @Test
     public void testLastToken() {
-        Tokenizer oTokenizer = new JasicLexer();
+        Lexer oTokenizer = new JasicLexer();
 
         String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
@@ -193,7 +193,7 @@ public class JasicParserTest {
 
     @Test
     public void testGetToken() {
-        Tokenizer oTokenizer = new JasicLexer();
+        Lexer oTokenizer = new JasicLexer();
 
         String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
 
