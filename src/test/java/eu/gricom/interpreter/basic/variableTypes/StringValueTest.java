@@ -244,4 +244,35 @@ public class StringValueTest {
             oValue.process("a$[6]").toString();
         });
     }
+
+    @Test
+    public void testProcessSquareBracketsTwoParams() {
+        StringValue oValue = new StringValue("abcdef");
+
+        try {
+            assertEquals("bc", oValue.process("a$[1,2]").toString());
+        } catch (RuntimeException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testProcessSquareBracketsTwoParamsSecondLarge() {
+        StringValue oValue = new StringValue("abcdef");
+
+        try {
+            assertEquals("bcdef", oValue.process("a$[1,5]").toString());
+        } catch (RuntimeException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testProcessSquareBracketsTwoParamsOutOfBorder() {
+        StringValue oValue = new StringValue("abcdef");
+
+        assertThrows(RuntimeException.class, () -> {
+            oValue.process("a$[1,6]").toString();
+        });
+    }
 }

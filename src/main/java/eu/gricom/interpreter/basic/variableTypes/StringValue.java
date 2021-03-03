@@ -168,22 +168,38 @@ public class StringValue implements Value {
      * the index in an array subscription is larger than the array.
      */
     public final Value process(final String strKey) throws RuntimeException {
-        int iIndex;
 
-        String strWorkString = _strValue;
-
-        iIndex = strKey.indexOf("[");
-        if (iIndex > 0) {
-            int iEndBracket = strKey.indexOf("]");
-            int iPosition = Integer.parseInt(strKey.substring(iIndex + 1, iEndBracket));
-
-            if (iPosition >= strWorkString.length()) {
-                throw new RuntimeException("Index value " + iPosition + " out of bounds");
-            }
-
-            return new StringValue(String.valueOf(strWorkString.charAt(iPosition)));
+        if (strKey.indexOf("[") > 0) {
+            return new StringValue(squareBrackets(strKey));
         }
 
         return this;
+    }
+
+    private String squareBrackets(String strKey) throws RuntimeException {
+        // lets check whether between the brackets is a comma
+        int iComma = strKey.indexOf(",");
+        int iStart = strKey.indexOf("[");
+        int iEnd = strKey.indexOf("]");
+
+        if (iComma > iStart && iComma < iEnd) {
+            int iFirstNo = Integer.parseInt(strKey.substring(iStart + 1, iComma));
+            int iSecondNo = Integer.parseInt(strKey.substring(iComma + 1, iEnd));
+
+            if (iSecondNo >= _strValue.length()) {
+                throw new RuntimeException("Index value " + iSecondNo + " out of bounds");
+            }
+
+            return _strValue.substring(iFirstNo, iSecondNo + 1);
+        }
+
+        // no - no comma, we return the pointed character
+        int iPosition = Integer.parseInt(strKey.substring(iStart + 1, iEnd));
+
+        if (iPosition >= _strValue.length()) {
+            throw new RuntimeException("Index value " + iPosition + " out of bounds");
+        }
+
+        return String.valueOf(_strValue.charAt(iPosition));
     }
 }

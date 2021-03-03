@@ -4,11 +4,12 @@
 100 PRINT "Testing PRINT with square brackets: A$ = TEST, A$[1] = E, Concatenated = TESTE"
 110 A$ = "TEST"
 120 PRINT "Result: Should be TESTE: ", A$, A$[1]
-130 B$(1,1) = "Array Test"
-140 A$(1,1,1) = "3 dimensions"
-150 A$(1,1,1,1) = " or 4?"
-160 PRINT "This is the ", B$(1,1), " in ", A$(1,1,1);
-170 PRINT A$(1,1,1,1)
+130 PRINT "Second Result: Should be TESTES: ", A$, A$[1 , 2]
+140 B$(1,1) = "Array Test"
+150 A$(1,1,1) = "3 dimensions"
+160 A$(1,1,1,1) = " or 4?"
+170 PRINT "This is the ", B$(1,1), " in ", A$(1,1,1);
+180 PRINT A$(1,1,1,1)
 200 D% = 1
 210 C$(1) = "One"
 220 C$(2) = "Two"

@@ -34,6 +34,7 @@ public final class Normalizer {
 
         boolean bQuotationMark = false;
         boolean bArrayParenthenes = false;
+        boolean bSquareBrackets = false;
 
         // replace tabs with spaces
         strWork = strWork.replace("\t", "    ");
@@ -46,6 +47,10 @@ public final class Normalizer {
             cPreviousChar = cCurrentChar;
             cCurrentChar = strWork.charAt(i);
 
+            if (cCurrentChar == '[') {
+                bSquareBrackets = true;
+            }
+
             if (cCurrentChar == '('
                     && (cPreviousChar == '$'
                         || cPreviousChar == '#'
@@ -56,14 +61,24 @@ public final class Normalizer {
                 bArrayParenthenes = true;
             }
 
+            // if the quotation mark is not set, then just pass thru...
             if (cCurrentChar == '"') {
                 bQuotationMark = !bQuotationMark;
             }
 
-            // if the quotation mark is not set, then just pass thru...
-            if (bQuotationMark || bArrayParenthenes) {
+            // now chek whether we are between square brackets [] - here remove all spaces
+            if (bSquareBrackets) {
+                if (cCurrentChar != ' ') {
+                    strOutput += cCurrentChar;
+                }
+
+                if (cCurrentChar == ']') {
+                    bSquareBrackets = false;
+                }
+            } else if (bQuotationMark || bArrayParenthenes) {
                 strOutput += cCurrentChar;
-                if (cCurrentChar == ')' && bArrayParenthenes) {
+                if (cCurrentChar == ')'
+                        && bArrayParenthenes) {
                     bArrayParenthenes = false;
                 }
             } else {
