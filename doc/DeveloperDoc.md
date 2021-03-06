@@ -39,7 +39,15 @@ Windows as well.
 For the compilation, the project is using *Apache Maven* as the build manager tool. The implementation is tested with Maven 3.6.3, but
 any newer version of Maven should work as well. The command line to run Maven is:
 
+```bash
     mvn clean compile dependency:tree dependency:copy-dependencies package
+```
+
+alternatively, a *Gradle* build script is part of the source package
+
+```bash
+    gradle compiled
+```    
 
 During the build process, the interpreter is compiled, but the process also runs a number of JUNIT test cases, and performs
 a static code analysis using Checkstyle. The definition ofgi the syntax for Checkstyle is in the `./etc` directory, Checkstyle
@@ -165,10 +173,12 @@ Before Adding new Basic Commands to the Parser, it is important to prepare and v
 When adding the command into the parser, add the token in the `case` statement of the `parse()` method in the `BasicParser` class in the `parser` package.
 Every `case` block starts with:
 
+```java
     case [Token]:
       _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [Token] ");
       iOrgPosition = _iPosition++;
       oLineNumber.putLineNumber(getToken(0).getLine(), iOrgPosition);
+```
 
 This code is required to map the Basic source code line number with the number of the token and ultimately with the number of the statement in the program execution flow.
 
@@ -241,7 +251,7 @@ Utility methods:
 ##### Example
 1. Set the program pointer to the next BASIC program line following the BASIC line number defined in `iTargetNumber`:
 
-
+```java
     import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
     ...
     private final LineNumberXRef oLineNumberObject = new LineNumberXRef();
@@ -250,7 +260,7 @@ Utility methods:
             oLineNumberObject.getNextLineNumber(
                     oLineNumberObject.getLineNumberFromToken(
                             oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
-
+```
 
 ## Main Classes
 
@@ -271,23 +281,30 @@ fitting a certain token type. If the token is found, the method returns the foun
 If the token is not found, the method will throw a `SyntaxErrorException` and terminate the parsing step.
 This is the definition of the method:
 
+```java
     public final Token findToken(final TokenType oType) throws SyntaxErrorException
-
+```
 
 ###### getToken
 The `getToken`-Method does return the token found at a location defined by an offset. The offset is calculated by a number of tokens from the current token.
 
+```java
     public final Token getToken(final int iOffset)
+```
 
 ###### consumeToken
 
+```java
     public final Token consumeToken(final TokenType oType) throws SyntaxErrorException
+```
 
 ##### Expression processing
 
+```java
     private Expression expression() throws SyntaxErrorException
     public final Expression operator() throws SyntaxErrorException
     public final Expression atomic() throws SyntaxErrorException
+```
 
 ##### Depreciated methods
 
@@ -295,8 +312,9 @@ The `getToken`-Method does return the token found at a location defined by an of
 The method is used in the Jasic parser, but is not needed in the Basic parser at this time. As a general the Basic parser will not use the
 name in the token, but the token type. In this release, the method is not used and marked as depreciated.
 
+```java
     public final boolean matchNextToken(final String strName)
-
+```
 
 ### Tokenizer Package
 ![Tokenizer Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer.png)
