@@ -41,6 +41,7 @@ public enum TokenType {
     INPUT,
     LEFT, // token for the LEFT$ function
     LEN,
+    LENGTH,
     LET,
     LOG,
     LOG10,

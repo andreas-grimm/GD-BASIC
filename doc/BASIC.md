@@ -700,7 +700,12 @@ tbd
 The `MEM` function returns the size of the available memory as an integer. The function does not require any parameter.
 
 #### `SYSTEM`: Call an OS function
-tbd
+The `SYSTEM` executes a command on OS level. The function works is called with two parameters:
+- Command: defines what the function is going to do: `RUN` executes a shell command, `START` executes any program 
+  from the system. The first command returns the result of the execution as a `String` value - while the second 
+  command starts any program, and does not return a result.
+  
+- Program: contains the command line to be executed, as a `String` value.
 
 ## Depreciated Basic Commands and Functions
 

@@ -27,6 +27,6 @@ public final class Time {
      * @return Value the return message of the function
      */
     public static LongValue execute() {
-            return new LongValue(System.currentTimeMillis());
+            return new LongValue(java.lang.System.currentTimeMillis());
     }
 }

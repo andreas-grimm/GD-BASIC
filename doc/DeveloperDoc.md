@@ -544,6 +544,28 @@ in every string. This function should therefore not change the output.
 
 ###### `END-WHILE` Statement
 
+### The Functions Package
+
+#### Mathematical Functions
+
+#### String Functions
+
+#### OS-Related Functions
+
+##### `System` Function
+The `SYSTEM` function executes commands on OS level. The function requires two parameters: a command, and the
+parameter. For the detail of usage out of BASIC, refer to the programming guide.
+
+    RES$ = SYSTEM("RUN", <command> )
+
+or
+
+    RES$ = SYSTEM("START", <command> )
+
+At this stage the `SYSTEM` function is implemented for `Unix` and `Linux` operating systems. The requirement for the 
+execution is the installation of the `BASH` command interpreter. In a later version, the function will support 
+Microsoft and Unix systems without installed `BASH` shell.
+
 ## Appendix
 
 ### Reserved Words
@@ -636,6 +658,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `KILL` |  |  | implemented |  |  |
 | `LEFT` | reserved |  | implemented | implemented | implemented |
 | `LEN` | reserved |  | implemented | implemented | implemented |
+| `LENGTH` | reserved |  | implemented | implemented | implemented |
 | `LET` | depreciated |  | implemented | implemented | implemented |
 | `LINE` | implemented | implemented | implemented (different function) | | | The `LINE` token is used to mark empty program lines, the token has no responding reserved word.
 | `LIST` |  |  | implemented | implemented | implemented |
@@ -745,7 +768,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `^` | implemented, used token: `POWER` | reserved | implemented |  | implemented |
 | `\'` (`REM` Quote) | implemented | implemented | implemented |  |
 
-### Compartibility Guide
+### Compatibility Guide
 
 #### Tokenization of alternative implementations
 
