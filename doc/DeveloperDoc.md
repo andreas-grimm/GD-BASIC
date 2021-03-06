@@ -629,7 +629,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `INKEY` |  |  | implemented |  |  |
 | `INP` |  |  | implemented |  |  |
 | `INSTR` | reserved |  | implemented |  |  |
-| `INT` | reserved |  | implemented | implemented | implemented |
+| `INT` |  |  | implemented | implemented | implemented |
 | `INVERSE` |  |  |  | implemented |  |
 | `INPUT` | implemented | implemented | implemented | implemented | implemented |
 | `INPUT#` |  |  |  |  | implemented |

@@ -8,21 +8,21 @@ import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import org.junit.jupiter.api.Test;
 
-public class SinTest {
+public class ValTest {
 
     @Test
-    public void testSin() {
+    public void testVal() {
 
         try {
-            RealValue oValue = new RealValue(1.0);
+            StringValue oValue = new StringValue("-1.5");
 
-            RealValue oResult = (RealValue) Sin.execute(oValue);
+            RealValue oResult = (RealValue) Val.execute(oValue);
 
-            assertEquals(0.8414709848078965, oResult.toReal());
+            assertEquals(-1.5, oResult.toReal());
 
-            oValue = new RealValue(0.0);
+            oValue = new StringValue("0.0");
 
-            oResult = (RealValue) Sin.execute(oValue);
+            oResult = (RealValue) Val.execute(oValue);
 
             assertEquals(0.0, oResult.toReal());
         } catch (Exception e) {
@@ -31,13 +31,13 @@ public class SinTest {
     }
 
     @Test
-    public void testSinWithException() {
+    public void testValWithException() {
 
         try {
-            StringValue oValue = new StringValue("-1");
+            RealValue oValue = new RealValue(-1);
 
             assertThrows(RuntimeException.class, () -> {
-                Sin.execute(oValue);
+                Val.execute(oValue);
             });
         } catch (Exception e) {
             e.printStackTrace();

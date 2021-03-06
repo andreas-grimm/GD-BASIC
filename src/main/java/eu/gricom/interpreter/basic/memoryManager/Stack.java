@@ -27,6 +27,7 @@ public class Stack {
         }
     }
 
+    @SuppressWarnings("unchecked")
     /**
      * Gets a previously consumed token, indexing backwards. last(1) will
      * be the token just consumed, last(2) the one before that, etc.
@@ -38,6 +39,7 @@ public class Stack {
     }
 
 
+    @SuppressWarnings("unchecked")
     /**
      * Gets a previously consumed token, indexing backwards. last(1) will
      * be the token just consumed, last(2) the one before that, etc.

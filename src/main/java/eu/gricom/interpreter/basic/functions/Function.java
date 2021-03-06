@@ -19,7 +19,9 @@ import eu.gricom.interpreter.basic.variableTypes.Value;
  */
 public class Function implements Expression {
     private final Token _oToken;
-    private final Expression _oExpression;
+    private final Expression _oFirstParam;
+    private final Expression _oSecondParam;
+    private final Expression _oThirdParam;
 
     /**
      * Contructor for functions without parameter.
@@ -28,7 +30,9 @@ public class Function implements Expression {
      */
     public Function(final Token oToken) {
         _oToken = oToken;
-        _oExpression = null;
+        _oFirstParam = null;
+        _oSecondParam = null;
+        _oThirdParam = null;
     }
 
     /**
@@ -37,9 +41,46 @@ public class Function implements Expression {
      * @param oToken      token to be executed
      * @param oExpression parameter of the function
      */
-    public Function(final Token oToken, final Expression oExpression) {
+    public Function(final Token oToken,
+                    final Expression oExpression) {
         _oToken = oToken;
-        _oExpression = oExpression;
+        _oFirstParam = oExpression;
+        _oSecondParam = null;
+        _oThirdParam = null;
+    }
+
+    /**
+     * Contructor for functions with one parameter.
+     *
+     * @param oToken      token to be executed
+     * @param oFirstParam parameter of the function
+     * @param oSecondParam parameter of the function
+     */
+    public Function(final Token oToken,
+                    final Expression oFirstParam,
+                    final Expression oSecondParam) {
+        _oToken = oToken;
+        _oFirstParam = oFirstParam;
+        _oSecondParam = oSecondParam;
+        _oThirdParam = null;
+    }
+
+    /**
+     * Contructor for functions with three parameter.
+     *
+     * @param oToken      token to be executed
+     * @param oFirstParam parameter of the function
+     * @param oSecondParam parameter of the function
+     * @param oThirdParam parameter of the function
+     */
+    public Function(final Token oToken,
+                    final Expression oFirstParam,
+                    final Expression oSecondParam,
+                    final Expression oThirdParam) {
+        _oToken = oToken;
+        _oFirstParam = oFirstParam;
+        _oSecondParam = oSecondParam;
+        _oThirdParam = oThirdParam;
     }
 
     /**
@@ -53,47 +94,65 @@ public class Function implements Expression {
         switch (_oToken.getType()) {
             // ABS Token: Return the absolute value of the parameter
             case ABS:
-                return Abs.execute(_oExpression.evaluate());
+                return Abs.execute(_oFirstParam.evaluate());
 
             // ASC Token: Return the ASCII value of the parameter
             case ASC:
-                return Asc.execute(_oExpression.evaluate());
+                return Asc.execute(_oFirstParam.evaluate());
 
             // ATN Token: Return the arch tangents of the parameter
             case ATN:
-                return Atn.execute(_oExpression.evaluate());
+                return Atn.execute(_oFirstParam.evaluate());
 
             // CDBL Token: Convert to a DBL (Real)
             case CDBL:
-                return Cdbl.execute(_oExpression.evaluate());
+                return Cdbl.execute(_oFirstParam.evaluate());
 
             // CHR Token: Return the character of the ASCII value parameter
             case CHR:
-                return Chr.execute(_oExpression.evaluate());
+                return Chr.execute(_oFirstParam.evaluate());
 
             // CINT Token: Convert to a INT (Integer)
             case CINT:
-                return Cint.execute(_oExpression.evaluate());
+                return Cint.execute(_oFirstParam.evaluate());
 
             // COS Token: Return the CoSinus of the value parameter
             case COS:
-                return Cos.execute(_oExpression.evaluate());
+                return Cos.execute(_oFirstParam.evaluate());
 
             // EXP Token: Return the Exponent to the base e of the value parameter
             case EXP:
-                return Exp.execute(_oExpression.evaluate());
+                return Exp.execute(_oFirstParam.evaluate());
 
-            // LOG Token: Return the Logarithm Naturalis of the value parameter
-            case LOG:
-                return Log.execute(_oExpression.evaluate());
+            // INSTR Token: Return the Index of the location of the second parameter in the first parameter
+            case INSTR:
+                return Instr.execute(_oFirstParam.evaluate(), _oSecondParam.evaluate());
+
+            // LEFT Token: Return the first number of characters from the input string. The first parameter needs
+            // to be a type String, the second parameter has to be part Integer.
+            case LEFT:
+                return Left.execute(_oFirstParam.evaluate(), _oSecondParam.evaluate());
+
+            // LEN Token: Returns the Length of the String in the first parameter
+            case LEN:
+                return Len.execute(_oFirstParam.evaluate());
 
             // LOG10 Token: Return the Logarithm Decimalis of the value parameter
             case LOG10:
-                return Log10.execute(_oExpression.evaluate());
+                return Log10.execute(_oFirstParam.evaluate());
 
             // MEM Token: Return size of available memory
             case MEM:
                 return Mem.execute();
+
+            // MID Token: Returns a substring of an input string with start and end position
+            case MID:
+                return Mid.execute(_oFirstParam.evaluate(), _oSecondParam.evaluate(), _oThirdParam.evaluate());
+
+            // RIGHT Token: Return the last number of characters from the input string. The first parameter needs
+            // to be a type String, the second parameter has to be part Integer.
+            case RIGHT:
+                return Right.execute(_oFirstParam.evaluate(), _oSecondParam.evaluate());
 
             // RND Token: Return a pseudo random number between 0 and 1
             case RND:
@@ -101,15 +160,23 @@ public class Function implements Expression {
 
             // SIN Token: Return the Sinus of the value parameter
             case SIN:
-                return Sin.execute(_oExpression.evaluate());
+                return Sin.execute(_oFirstParam.evaluate());
 
             // SQR Token: Return the Square Root of the value parameter
             case SQR:
-                return Sqr.execute(_oExpression.evaluate());
+                return Sqr.execute(_oFirstParam.evaluate());
+
+            // STR Token: Return the String value to a numeric parameter
+            case STR:
+                return Str.execute(_oFirstParam.evaluate());
 
             // TAN Token: Return the Tangents of the value parameter
             case TAN:
-                return Tan.execute(_oExpression.evaluate());
+                return Tan.execute(_oFirstParam.evaluate());
+
+            // VAL Token: Return the value of the parameter
+            case VAL:
+                return Val.execute(_oFirstParam.evaluate());
 
             default:
                 throw new RuntimeException("Unknown Function Called: " + _oToken.getText());
@@ -122,7 +189,22 @@ public class Function implements Expression {
      * @return - readable string with the name and the value of the assignment
      */
     public final String content() {
+        String strReturn = "Token: " + _oToken.getType().toString() + " Content: <";
 
-        return "Token: " + _oToken.getType().toString() + " Content: <" + _oExpression + ">";
+        if (_oFirstParam != null) {
+            strReturn += _oFirstParam.toString();
+        }
+
+        if (_oSecondParam != null) {
+            strReturn += ", " + _oSecondParam.toString();
+        }
+
+        if (_oThirdParam != null) {
+            strReturn += ", " + _oThirdParam.toString();
+        }
+
+        strReturn += ">";
+
+        return strReturn;
     }
 }

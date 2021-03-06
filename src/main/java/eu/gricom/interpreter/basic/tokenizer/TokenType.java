@@ -38,7 +38,6 @@ public enum TokenType {
     GOTO,
     IF,
     INSTR,
-    INT,
     INPUT,
     LEFT, // token for the LEFT$ function
     LEN,

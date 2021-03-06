@@ -255,7 +255,6 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `GOTO` | implemented | implemented |
 | `IF` | implemented | implemented |
 | `INSTR` | reserved | |
-| `INT` | reserved | |
 | `INPUT` | implemented | implemented |
 | `LEFT` | reserved | |
 | `LEN` | reserved | |
@@ -668,10 +667,40 @@ The `RND` function does not require any parameter. It returns a `REAL` value whi
 
 ### String Processing Functions
 
+#### `ASC`: Convert an integer to a character using the ASCII Code
+tbd
+
+#### `CHR`: Convert a character to an integer using the ASCII Code
+tbd
+
+#### `LEFT`: Get the Left side of a string
+tbd
+
+#### `LEN`: Get the length of a string
+tbd
+
+#### `MID`: Get the middle of a string
+tbd
+
+#### `RIGHT`: Get the right side of a string
+tbd
+
+#### `STR`: Convert a number to the string
+tbd
+
+#### `VAL`: Convert a string to a real number
+tbd
+
 ### System Functions
+
+#### `CALL`: Call an external function
+tbd
 
 #### `MEM`: Available Memory
 The `MEM` function returns the size of the available memory as an integer. The function does not require any parameter.
+
+#### `SYSTEM`: Call an OS function
+tbd
 
 ## Depreciated Basic Commands and Functions
 
@@ -681,9 +710,10 @@ The following standard Basic commands are depreciated and should not be used.
 - The `DIM` command is depreciated and will cause a Syntax Error
 
 The `SINGLE` data type of the old BASIC implementations does not exist in GD-Basic. The developer is asked to use 
-the simple integer data type. Therefore the conversions functions are not implemented:
+the simple integer data type. Therefore, the conversions functions are not implemented:
 
 - The `CSNG` and `SNG` functions are not implemented
+- The `CINT` and `INT` functions are identical, only CINT is implemented
 
 
 ## Alternative Projects and Information
