@@ -563,6 +563,110 @@ in every string. This function should therefore not change the output.
 ###### `END-WHILE` Statement
 
 ### The Functions Package
+All functions in the interpreter are build and linked into the main run-time component the same way. Therefore, all 
+functions have the same code structure and new functions will have to follow this structure.
+
+As of version 0.0.7, the interpreter supports the `CALL` function, which allows the developer to call `JAVA` 
+functions out of the `BASIC` program. Please refer to the description of the function in the following part of this 
+document.
+
+Also as of version 0.0.7, the interpreter supports the `SYSTEM` function, which allows the developer to call `OS` 
+level commands out of the BASIC program. Please refer to the description of the function in the following part of 
+this document.
+
+As of version 0.0.8, the interpreter allow the execution of external defined functions (libraries), which are 
+focussed to allow developers to adopt specific functionality of other dialect, eg. of TRS-DOS, Apple Basic, or 
+Commodore Basic. These functions are not part of the core build and can be extended to limit the effort of the 
+migration of code.
+
+#### General Structure of Functions in the Interpreter
+All functions are implemented as static classes - or static functions in static classes. The function class does not 
+support any internal persistence, the only way persistence in a function can be achieved is by calling a memory 
+management class.
+
+This does imply:
+- a function class does not have a public constructor
+- a function class is always called on class level (no instantiation of the class)
+
+The executable method of each class is called `execute( <parameter> )`. At this moment, the interpreter supports 
+function classes using up to 3 parameters. Even as the functions are strictly typed, all parameter and results are 
+defined with the `Value` superclass. The type check is performed in the logic of the function class. Each function 
+verifies the incoming type and throws a `Runtime` exception if the type is incorrect.
+
+Each function return one return value of type `Value`. Again, the return value is typed, and the developer needs to 
+check that the return value is of the right type.
+
+Finally, each function has a dedicated JUnit test file as part of the project. Function classes without JUnit test 
+should not be added to the core interpreter.
+
+For the documentation, this section is splitting the classes up into 3 categories. The implementation is not 
+different, the classes are all implemented the same way and in the same area. With potential extra classes this 
+might change.
+
+#### Sample Class
+The Sample class here is part of the documentation to describe the structure of a function class:
+
+Note: The coding standard of the interpreter does not allow global class imports (eg. `import eu.gricom.interpreter.
+basic.variableTypes.*`). All imported classes are explicitly mentioned.
+
+```java
+package eu.gricom.interpreter.basic.functions;
+
+import eu.gricom.interpreter.basic.error.RuntimeException;
+import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
+import eu.gricom.interpreter.basic.variableTypes.LongValue;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
+import eu.gricom.interpreter.basic.variableTypes.Value;
+
+/**
+ * SAMPLE Function.
+ *
+ * Description:
+ *
+ ```
+We document the functionality of the function in the class header, not on method level.
+```java
+ * The SAMPLE function is in here for documentation only. The class does not exist in the code-base. For 
+ * documentation this class has one parameter. This parameter has to be numeric.
+ *
+ * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ */
+public final class Sample {
+
+ ```
+The class has only a private constructor, which also does not have any functionality inside. This private 
+constructor has been added to make the code compliant with the used Checkstyle static code analysis.
+```java
+    /**
+     * Private Constructor.
+     */
+    private Sample() {
+    }
+```
+The actual functionality is implemented in the `execute` method. Supporting private methods are permitted, but so 
+far have not been needed.
+```java
+    /**
+     * Functions implemented here are similar to Statements with the difference
+     * that they actually return a result to the caller of type Value. The method execute
+     * triggers the function.
+     *
+     * @param oValue input value
+     * @return Value the return message of the function
+     * @throws Exception as any execution error found during execution
+     */
+    public static Value execute(final Value oValue) throws Exception {
+        if (oValue instanceof IntegerValue) {
+                return oValue;
+        }
+```
+In case the type verification fails, the class is throwing a runtime exception.
+```java
+        throw new RuntimeException("Input value not numeric: " + oValue);
+    }
+}
+
+```
 
 #### Mathematical Functions
 
@@ -570,7 +674,7 @@ in every string. This function should therefore not change the output.
 
 #### OS-Related Functions
 
-##### `System` Function
+##### `SYSTEM` Function
 The `SYSTEM` function executes commands on OS level. The function requires two parameters: a command, and the
 parameter. For the detail of usage out of BASIC, refer to the programming guide.
 
@@ -583,6 +687,10 @@ or
 At this stage the `SYSTEM` function is implemented for `Unix` and `Linux` operating systems. The requirement for the 
 execution is the installation of the `BASH` command interpreter. In a later version, the function will support 
 Microsoft and Unix systems without installed `BASH` shell.
+
+## Program Storage and Loading
+In general, the interpreter reads a plain, ASCII formatted, BASIC program into memory. Due to the speed of the 
+available hardware at this time, it does not seem to be necessary to store the file in any intermediate format.
 
 ## Appendix
 
@@ -794,7 +902,8 @@ of the keywords can vary - refer to the language manual for the use of the reser
 
 This reference table maps the token id's of the other Basic dialects. As the original use of Basic was limited to systems with very reduced
 memory capabilities, the token were stored as HEX values. This interpreter uses a different approach and stores the token internally
-as a list of objects. This reflects also in storing the tokenized and parsed program code.
+as a list of objects, which is then serialized. This reflects also in storing the tokenized and parsed program code. 
+At this stage, it is not planned to export the serialized token to one of the other formats.
 
 | Token No. (Hex) | Token No. (Dec) | TRS-80 Level II Basic | Applesoft Basic | Commodore Basic |
 |-----------------|-----------------|-----------------------|-----------------|-----------------|
