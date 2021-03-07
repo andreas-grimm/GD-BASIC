@@ -267,6 +267,141 @@ Utility methods:
 
 ![Main Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/basic.png)
 
+This part of the documentation describes the main packages in detail and in sequence of the processing in the 
+interpretion process:
+
+- tokenizing,
+- parsing,
+- executing...
+
+### Tokenizer Package
+![Tokenizer Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer.png)
+
+![Referencing Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer_reference.png)
+
+This section of the documentation is detailing the process of tokenizing the BASIC or JASIC source code. The general
+sequence (Tokeinzing (Lexicalic Analysis) -> Parsing -> Executing) has been described already, this section descrbes
+the different classes and functions more in detail.
+
+The two main classes in the package are the two Lexer classes, `JasicLexer.java` and `BasicLexer.java`. These
+transfer the source code into token. The floowing sections describe the functionality of the two Lexer classes.
+
+#### `Lexer.java`
+The `Lexer.java` interface class defines the functions of any lexer in this package. The required function does 
+require a single method:
+
+```java
+    List<Token> tokenize(String strSource) throws SyntaxErrorException;
+```
+
+
+#### `JasicLexer.java`
+
+#### `BasicLexer.java`
+
+The `BasicLexer.java` class is a complete re-write of the original `JasicLexer.java` class. It has significant
+differences, which are covering the extensive extra functionality of the BASIC language.
+
+The `BasicLexer.java` class is using a normalization process. This process replaces tabulator characters by 4 white
+spaces, removes white spaces in areas where they are not needed or are damaging, and is adding spaces around special
+characters, such as the comma ("`,`"). This functionality is in the `Normalizer.java` class.
+
+Once the normalized line is available, the lexer class identifies the token by mapping the found word with the list
+of the reserved words. If there is a mapping between thew lists, then a new token is generated and added to the list
+of found token.
+
+##### Supporting Classes
+
+The `BasicLexer.java` class contains three supporting methods. These are used to identify the type of the string
+found:
+
+```java
+    private boolean isBoolean(final String strWord)
+    private boolean isString(final String strWord)
+    private boolean isNumber(final String strWord)
+```
+
+#### `Token.java`
+The token class is used to code the identified token for the parsing process. The tokenizer process returns a list
+of token to the interpreter process. Each token consists of 3 fields:
+- `text`: the data / text related to the found token
+- `type`: The type of the token, as defined in the `BasicTokenType.java` class
+- `line`: The line number of the BASIC statement that is translated into the token.
+
+```java
+    public Token(final String strText, final BasicTokenType oType, final int iLineNumber)
+    public String getText()
+    public BasicTokenType getType()
+    public int getLine()
+    public String setText(final String strText)
+```    
+
+#### `Normalizer.java`
+This static class exposes two methods:
+- `normalize`, and
+- `normailzeIndex`
+
+Both classes are consuming a String parameter and are returning the normalized input as a String. *Note:* At this
+stage functions and methods are not using the `StringValue` class which is consistently used in a later part of the
+process.
+
+In the lexer class, the call of the normalizer is performed after the input file is separated in single lines. It is
+only executed on lines with contents, so a check for an empty input is not required:
+```java
+            // here we handle all empty lines, e.g. lines that only contain the line number
+            if (strProgramLine.length() < 1) {
+                aoTokens.add(new Token("empty", TokenType.LINE, iLineNumber));
+            } else {
+                // normalize the line: put spaces in places where needed, or remove them
+                strProgramLine = Normalizer.normalize(strProgramLine);
+                strProgramLine = Normalizer.normalizeFunction(strProgramLine);
+```
+*Note:* Even in this code segment the Normalizer is executed in sequence, in other code components only the
+`normalizeIndex` function is needed.
+
+The following section describes the normalization process:
+
+##### `normalize`
+The `normalize` function iterates through the input string by character and performs the following changes in sequence:
+1. Identification of squared brackets ("`[]`") for special treatment. Inside of squarded brackets all white spaces are removed.
+1. Identification of round brackets ("`()`") for special treatment only if the previous character identifies a
+   variable (ie. `$#!%&@`). In this case, the round bracket indicates an array, not the processing order in a
+   mathematical function.
+1. Identification of a quotation mark ("`"`") surrounding a string. For strings and round brackets, the content is
+   taken over as they come.
+
+Outside the special cases above, the function will
+- ensure that the comma character has a leading white space
+- ensure that the semicolon character has a leading white space
+- opening and closing brackets have white spaces respectively.
+
+##### `normalizeIndex`
+This method will
+- between round brackets remove all tabulators and white spaces
+- replace the round brackets for arrays with minus characters ("`-`"). This is due to the way the interpreter stores
+  arrays.
+
+##### `normalizeFunction`
+This method re-formats the incoming string to adjust round brackets indicating parameter in functions. After the
+normalization, the brackets is recognized by the Lexer, and the bracket is replaced by the right token.
+
+#### Supporting Classes
+
+##### `BasicTokenType.java`
+The content of the `BasicTokenType.java` class is limited to the definition of the available token types as an
+enumeration.
+No functionality is implemented in the class. The class is only used for the BASIC programming language.
+
+##### `JasicTokenType.java`
+The content of the `JasicTokenType.java` class is limited to the definition of the available token types as an
+enumeration. No functionality is implemented in the class. The class is only used for the BASIC programming language.
+
+
+##### `ReservedWords.java`
+The `ReservedWords.java` class is the cross-reference or mapping class for the tokenizing process. It contains two
+lists with identical sequence - between all reserved words, and the related `BasicTokenType` entry.
+
+
 ### Parser Package
 ![Parser Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/parser.png)
 
@@ -316,126 +451,6 @@ name in the token, but the token type. In this release, the method is not used a
 ```java
     public final boolean matchNextToken(final String strName)
 ```
-
-### Tokenizer Package
-![Tokenizer Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer.png)
-
-![Referencing Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer_reference.png)
-
-This section of the documentation is detailing the process of tokenizing the BASIC or JASIC source code. The general 
-sequence (Tokeinzing (Lexicalic Analysis) -> Parsing -> Executing) has been described already, this section descrbes 
-the different classes and functions more in detail.
-
-The two main classes in the package are the two Lexer classes, `JasicLexer.java` and `BasicLexer.java`. These 
-transfer the source code into token. The floowing sections describe the functionality of the two Lexer classes.
-
-#### `Lexer.java`
-
-#### `JasicLexer.java`
-
-#### `BasicLexer.java`
-
-The `BasicLexer.java` class is a complete re-write of the original `JasicLexer.java` class. It has significant 
-differences, which are covering the extensive extra functionality of the BASIC language.
-
-The `BasicLexer.java` class is using a normalization process. This process replaces tabulator characters by 4 white 
-spaces, removes white spaces in areas where they are not needed or are damaging, and is adding spaces around special 
-characters, such as the comma ("`,`"). This functionality is in the `Normalizer.java` class.
-
-Once the normalized line is available, the lexer class identifies the token by mapping the found word with the list 
-of the reserved words. If there is a mapping between thew lists, then a new token is generated and added to the list 
-of found token.
-
-##### Supporting Classes
-
-The `BasicLexer.java` class contains three supporting methods. These are used to identify the type of the string 
-found:
-
-```java
-    private boolean isBoolean(final String strWord)
-    private boolean isString(final String strWord)
-    private boolean isNumber(final String strWord)
-```
-
-#### `Token.java`
-The token class is used to code the identified token for the parsing process. The tokenizer process returns a list 
-of token to the interpreter process. Each token consists of 3 fields:
-- `text`: the data / text related to the found token
-- `type`: The type of the token, as defined in the `BasicTokenType.java` class
-- `line`: The line number of the BASIC statement that is translated into the token.
-
-```java
-    public Token(final String strText, final BasicTokenType oType, final int iLineNumber)
-    public String getText()
-    public BasicTokenType getType()
-    public int getLine()
-    public String setText(final String strText)
-```    
-
-#### `Normalizer.java`
-This static class exposes two methods:
-- `normalize`, and
-- `normailzeIndex`
-
-Both classes are consuming a String parameter and are returning the normalized input as a String. *Note:* At this 
-stage functions and methods are not using the `StringValue` class which is consistently used in a later part of the 
-process.
-
-In the lexer class, the call of the normalizer is performed after the input file is separated in single lines. It is 
-only executed on lines with contents, so a check for an empty input is not required:
-```java
-            // here we handle all empty lines, e.g. lines that only contain the line number
-            if (strProgramLine.length() < 1) {
-                aoTokens.add(new Token("empty", TokenType.LINE, iLineNumber));
-            } else {
-                // normalize the line: put spaces in places where needed, or remove them
-                strProgramLine = Normalizer.normalize(strProgramLine);
-                strProgramLine = Normalizer.normalizeFunction(strProgramLine);
-```
-*Note:* Even in this code segment the Normalizer is executed in sequence, in other code components only the 
-`normalizeIndex` function is needed.
-
-The following section describes the normalization process:
-
-##### `normalize`
-The `normalize` function iterates through the input string by character and performs the following changes in sequence:
-1. Identification of squared brackets ("`[]`") for special treatment. Inside of squarded brackets all white spaces are removed.
-1. Identification of round brackets ("`()`") for special treatment only if the previous character identifies a 
-   variable (ie. `$#!%&@`). In this case, the round bracket indicates an array, not the processing order in a 
-   mathematical function.
-1. Identification of a quotation mark ("`"`") surrounding a string. For strings and round brackets, the content is 
-   taken over as they come.
-   
-Outside the special cases above, the function will
-- ensure that the comma character has a leading white space
-- ensure that the semicolon character has a leading white space
-- opening and closing brackets have white spaces respectively.
-
-##### `normalizeIndex`
-This method will
-- between round brackets remove all tabulators and white spaces
-- replace the round brackets for arrays with minus characters ("`-`"). This is due to the way the interpreter stores 
-  arrays.
-
-##### `normalizeFunction`
-This method re-formats the incoming string to adjust round brackets indicating parameter in functions. After the 
-normalization, the brackets is recognized by the Lexer, and the bracket is replaced by the right token.
-
-#### Supporting Classes
-
-##### `BasicTokenType.java`
-The content of the `BasicTokenType.java` class is limited to the definition of the available token types as an 
-enumeration.
-No functionality is implemented in the class. The class is only used for the BASIC programming language.
-
-##### `JasicTokenType.java`
-The content of the `JasicTokenType.java` class is limited to the definition of the available token types as an 
-enumeration. No functionality is implemented in the class. The class is only used for the BASIC programming language.
-
-
-##### `ReservedWords.java`
-The `ReservedWords.java` class is the cross-reference or mapping class for the tokenizing process. It contains two 
-lists with identical sequence - between all reserved words, and the related `BasicTokenType` entry. 
 
 ### The MemoryManager Package
 ![Memory Manager Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/memoryManager.png)
