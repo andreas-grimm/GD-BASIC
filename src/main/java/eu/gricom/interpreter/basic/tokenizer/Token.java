@@ -13,7 +13,7 @@ package eu.gricom.interpreter.basic.tokenizer;
  */
 public final class Token {
     private String _strText;
-    private final TokenType _oType;
+    private final BasicTokenType _oType;
     private final int _iLineNumber;
 
     /**
@@ -22,7 +22,7 @@ public final class Token {
      * @param oType type of the token
      * @param iLineNumber number of the line in the BASIC source code
      */
-    public Token(final String strText, final TokenType oType, final int iLineNumber) {
+    public Token(final String strText, final BasicTokenType oType, final int iLineNumber) {
         _strText = strText;
         _oType = oType;
         _iLineNumber = iLineNumber;
@@ -42,7 +42,7 @@ public final class Token {
      *
      * @return Read type of the token found
      */
-    public TokenType getType() {
+    public BasicTokenType getType() {
         return _oType;
     }
 

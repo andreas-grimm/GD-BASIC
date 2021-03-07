@@ -48,7 +48,7 @@ public class BasicParserTest {
         assertTrue(strExpression.matches("eu.gricom.interpreter.basic.statements.VariableExpression"));
 
         // running the atomic method
-        while ((oParser.matchNextToken(TokenType.OPERATOR)) || (oParser.matchNextToken(TokenType.EQUALS))) {
+        while ((oParser.matchNextToken(BasicTokenType.OPERATOR)) || (oParser.matchNextToken(BasicTokenType.EQUALS))) {
             char strOperator = oParser.lastToken(1).getText().charAt(0);
             Expression oRight = oParser.atomic();
             oExpression = new OperatorExpression(oExpression, (String.valueOf(strOperator)), oRight);
@@ -80,7 +80,7 @@ public class BasicParserTest {
             JasicParser oParser = new JasicParser(aoTokens);
             oParser.setPosition(33);
 
-            assertTrue(oParser.matchNextToken(TokenType.LABEL));
+            assertTrue(oParser.matchNextToken(BasicTokenType.LABEL));
         } catch (SyntaxErrorException e) {
             assertTrue(false);
         }
@@ -98,7 +98,7 @@ public class BasicParserTest {
             JasicParser oParser = new JasicParser(aoTokens);
             oParser.setPosition(5);
 
-            assertTrue(oParser.matchNextTwoToken(TokenType.WORD, TokenType.EQUALS));
+            assertTrue(oParser.matchNextTwoToken(BasicTokenType.WORD, BasicTokenType.EQUALS));
         } catch (SyntaxErrorException e) {
             assertTrue(false);
         }
@@ -138,8 +138,8 @@ public class BasicParserTest {
             JasicParser oParser = new JasicParser(aoTokens);
             oParser.setPosition(33);
 
-            Token oToken = oParser.consumeToken(TokenType.LABEL);
-            assertSame(oToken.getType(), TokenType.LABEL);
+            Token oToken = oParser.consumeToken(BasicTokenType.LABEL);
+            assertSame(oToken.getType(), BasicTokenType.LABEL);
         } catch (SyntaxErrorException e) {
             assertTrue(false);
         }

@@ -63,7 +63,7 @@ public class BasicLexer implements Lexer {
 
             // here we handle all empty lines, e.g. lines that only contain the line number
             if (strProgramLine.length() < 1) {
-                aoTokens.add(new Token("empty", TokenType.LINE, iLineNumber));
+                aoTokens.add(new Token("empty", BasicTokenType.LINE, iLineNumber));
             } else {
                 // normalize the line: put spaces in places where needed, or remove them
                 strProgramLine = Normalizer.normalize(strProgramLine);
@@ -106,11 +106,11 @@ public class BasicLexer implements Lexer {
 
                         if (iIndex != -1) {
                             // we found a reserved word...
-                            TokenType oTokenType = ReservedWords.getTokenType(iIndex);
+                            BasicTokenType oTokenType = ReservedWords.getTokenType(iIndex);
 
                             // this block handles all comments
-                            if (oTokenType == TokenType.REM
-                                    || oTokenType == TokenType.COMMENT)  {
+                            if (oTokenType == BasicTokenType.REM
+                                    || oTokenType == BasicTokenType.COMMENT)  {
                                 aoTokens.add(new Token(strProgramLine, oTokenType, iLineNumber));
 
                                 break;
@@ -120,7 +120,7 @@ public class BasicLexer implements Lexer {
 
                         // ok - this is not reserved word - so maybe it is a number?
                         } else if (isNumber(strWord)) {
-                            oToken = new Token(strWord, TokenType.NUMBER, iLineNumber);
+                            oToken = new Token(strWord, BasicTokenType.NUMBER, iLineNumber);
 
                         // now check whether the word is marked as the beginning of a String
                         } else if (isString(strWord)) {
@@ -130,25 +130,25 @@ public class BasicLexer implements Lexer {
                             if (strWord.endsWith("\"")) {
                                 strWord = strWord.substring(0, strWord.length() - 1);
                                 bIsStringRunning = false;
-                                oToken = new Token(strWord, TokenType.STRING, iLineNumber);
+                                oToken = new Token(strWord, BasicTokenType.STRING, iLineNumber);
                                 aoTokens.add(oToken);
                             } else {
-                                oToken = new Token(strWord, TokenType.STRING, iLineNumber);
+                                oToken = new Token(strWord, BasicTokenType.STRING, iLineNumber);
                                 bIsStringRunning = true;
                             }
 
                         // now check whether the word is marked as a boolean
                         } else if (isBoolean(strWord)) {
-                            oToken = new Token(strWord, TokenType.BOOLEAN, iLineNumber);
+                            oToken = new Token(strWord, BasicTokenType.BOOLEAN, iLineNumber);
 
                         } else {
                             // as it is neither a number, string, or boolean - it has to be a variable / constant...
-                            TokenType oTokenType = TokenType.WORD;
+                            BasicTokenType oTokenType = BasicTokenType.WORD;
 
                             oToken = new Token(strWord, oTokenType, iLineNumber);
                         }
 
-                        if (oToken.getType() != TokenType.STRING) { // Strings are added after they are completed.
+                        if (oToken.getType() != BasicTokenType.STRING) { // Strings are added after they are completed.
                             aoTokens.add(oToken);
                         }
                     }

@@ -23,8 +23,8 @@ import eu.gricom.interpreter.basic.statements.Statement;
 import eu.gricom.interpreter.basic.statements.UntilStatement;
 import eu.gricom.interpreter.basic.statements.VariableExpression;
 import eu.gricom.interpreter.basic.statements.WhileStatement;
+import eu.gricom.interpreter.basic.tokenizer.BasicTokenType;
 import eu.gricom.interpreter.basic.tokenizer.Token;
-import eu.gricom.interpreter.basic.tokenizer.TokenType;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 
@@ -117,38 +117,38 @@ public class BasicParser implements Parser {
                     _oLineNumber.putLineNumber(getToken(0).getLine(), iForPosition);
 
                     // Get start assignment, target value, and step size
-                    String strForVariable = consumeToken(TokenType.WORD).getText();
+                    String strForVariable = consumeToken(BasicTokenType.WORD).getText();
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [WORD] " + strForVariable);
 
-                    if (getToken(0).getType() != TokenType.ASSIGN_EQUAL) {
+                    if (getToken(0).getType() != BasicTokenType.ASSIGN_EQUAL) {
                         throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString() + " in Line ["
                                 + getToken(0).getLine() + "]");
                     } else {
                         _iPosition = _iPosition + 1;
-                        oStartValueExpression = new RealValue(Double.parseDouble(consumeToken(TokenType.NUMBER).getText()));
+                        oStartValueExpression = new RealValue(Double.parseDouble(consumeToken(BasicTokenType.NUMBER).getText()));
                         _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oStartValueExpression.content());
                     }
 
-                    if (getToken(0).getType() != TokenType.TO) {
+                    if (getToken(0).getType() != BasicTokenType.TO) {
                         throw new SyntaxErrorException("Missing TO Operator: " + getToken(0).getType().toString()
                                 + " in Line [" + getToken(0).getLine() + "]");
                     } else {
                         _iPosition = _iPosition + 1;
-                        oEndValueExpression = new RealValue(Double.parseDouble(consumeToken(TokenType.NUMBER).getText()));
+                        oEndValueExpression = new RealValue(Double.parseDouble(consumeToken(BasicTokenType.NUMBER).getText()));
                         _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oEndValueExpression.content());
                     }
 
-                    if (getToken(0).getType() != TokenType.STEP) {
+                    if (getToken(0).getType() != BasicTokenType.STEP) {
                         _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [" + getToken(0).getType().toString() + " ] StepSize set to 1");
                         oStepSize = new RealValue(1); // default step size
                     } else {
                         _iPosition = _iPosition + 1;
-                         oStepSize = new RealValue(Double.parseDouble(consumeToken(TokenType.NUMBER).getText()));
+                         oStepSize = new RealValue(Double.parseDouble(consumeToken(BasicTokenType.NUMBER).getText()));
 
                         _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oStepSize.content());
                     }
 
-                    Token oNextToken = findToken(TokenType.NEXT);
+                    Token oNextToken = findToken(BasicTokenType.NEXT);
                     _oLogger.debug("-parse-> followed Token: <" + oNextToken.getLine() + "> [NEXT]");
 
                     // add FOR statement to statement list
@@ -169,7 +169,7 @@ public class BasicParser implements Parser {
                     iOrgPosition = _iPosition;
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     _iPosition++;
-                    strTargetLineNumber = consumeToken(TokenType.NUMBER).getText();
+                    strTargetLineNumber = consumeToken(BasicTokenType.NUMBER).getText();
                     aoStatements.add(new GotoStatement(iOrgPosition, strTargetLineNumber));
                     break;
 
@@ -179,7 +179,7 @@ public class BasicParser implements Parser {
                     iOrgPosition = _iPosition;
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     _iPosition++;
-                    strTargetLineNumber = consumeToken(TokenType.NUMBER).getText();
+                    strTargetLineNumber = consumeToken(BasicTokenType.NUMBER).getText();
                     aoStatements.add(new GosubStatement(iOrgPosition, strTargetLineNumber));
                     break;
 
@@ -190,9 +190,9 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     Expression oCondition = expression();
                     _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [IF]: <" + oCondition.content() + ">");
-                    String strLabel = consumeToken(TokenType.THEN).getText();
+                    String strLabel = consumeToken(BasicTokenType.THEN).getText();
                     _oLogger.debug("-parse-> followed Token: <" + _iPosition + "> [THEN]: <" + strLabel + ">");
-                    Token oEndIfToken = findToken(TokenType.ENDIF);
+                    Token oEndIfToken = findToken(BasicTokenType.ENDIF);
                     _oLogger.debug("-parse-> followed Token: <" + oEndIfToken.getLine() + "> [END-IF]");
                     aoStatements.add(new IfThenStatement(oCondition, iOrgPosition, oEndIfToken.getLine()));
                     break;
@@ -202,7 +202,7 @@ public class BasicParser implements Parser {
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [INPUT] ");
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     _iPosition++;
-                    aoStatements.add(new InputStatement(_iPosition - 1, consumeToken(TokenType.WORD).getText()));
+                    aoStatements.add(new InputStatement(_iPosition - 1, consumeToken(BasicTokenType.WORD).getText()));
                     break;
 
                 // LABEL Token: tbd
@@ -249,12 +249,12 @@ public class BasicParser implements Parser {
 
                     aoExpression.add(expression());
 
-                    while (getToken(0).getType() == TokenType.COMMA) {
+                    while (getToken(0).getType() == BasicTokenType.COMMA) {
                         _iPosition++;
                         aoExpression.add(expression());
                     }
 
-                    if (getToken(0).getType() == TokenType.SEMICOLON) {
+                    if (getToken(0).getType() == BasicTokenType.SEMICOLON) {
                         _iPosition++;
                         bCRLF = false;
                     }
@@ -287,7 +287,7 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     Expression oWhileCondition = expression();
                     _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [WHILE]: <" + oWhileCondition.content() + ">");
-                    Token oEndWhileToken = findToken(TokenType.ENDWHILE);
+                    Token oEndWhileToken = findToken(BasicTokenType.ENDWHILE);
                     _oLogger.debug("-parse-> followed Token: <" + oEndWhileToken.getLine() + "> [END-WHILE]");
                     aoStatements.add(new WhileStatement(iOrgPosition, oWhileCondition, oEndWhileToken.getLine()));
                     break;
@@ -300,7 +300,7 @@ public class BasicParser implements Parser {
 
                     _oLineNumber.putLineNumber(getToken(0).getLine(), iCurrPosition);
 
-                    if (getToken(1).getType() == TokenType.ASSIGN_EQUAL) {
+                    if (getToken(1).getType() == BasicTokenType.ASSIGN_EQUAL) {
                         String strName = getToken(0).getText();
                         _iPosition = _iPosition + 2;
                         Expression oValue = expression();
@@ -375,18 +375,18 @@ public class BasicParser implements Parser {
                 + "' [" + oToken.getLine() + "]");
 
         // loop while the token inspected is either an operator or an assignment
-        while (oToken.getType() == TokenType.PLUS
-                || oToken.getType() == TokenType.MINUS
-                || oToken.getType() == TokenType.MULTIPLY
-                || oToken.getType() == TokenType.DIVIDE
-                || oToken.getType() == TokenType.POWER
-                || oToken.getType() == TokenType.COMPARE_EQUAL
-                || oToken.getType() == TokenType.COMPARE_NOT_EQUAL
-                || oToken.getType() == TokenType.SMALLER
-                || oToken.getType() == TokenType.SMALLER_EQUAL
-                || oToken.getType() == TokenType.GREATER
-                || oToken.getType() == TokenType.GREATER_EQUAL
-                || oToken.getType() == TokenType.ASSIGN_EQUAL) {
+        while (oToken.getType() == BasicTokenType.PLUS
+                || oToken.getType() == BasicTokenType.MINUS
+                || oToken.getType() == BasicTokenType.MULTIPLY
+                || oToken.getType() == BasicTokenType.DIVIDE
+                || oToken.getType() == BasicTokenType.POWER
+                || oToken.getType() == BasicTokenType.COMPARE_EQUAL
+                || oToken.getType() == BasicTokenType.COMPARE_NOT_EQUAL
+                || oToken.getType() == BasicTokenType.SMALLER
+                || oToken.getType() == BasicTokenType.SMALLER_EQUAL
+                || oToken.getType() == BasicTokenType.GREATER
+                || oToken.getType() == BasicTokenType.GREATER_EQUAL
+                || oToken.getType() == BasicTokenType.ASSIGN_EQUAL) {
             _oLogger.debug("-operator-> token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                     + oToken.getText() + "' [" + oToken.getLine() + "]");
             _iPosition++;
@@ -446,7 +446,7 @@ public class BasicParser implements Parser {
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
                 _iPosition++;
                 Expression oExpression = expression();
-                consumeToken(TokenType.RIGHT_PAREN);
+                consumeToken(BasicTokenType.RIGHT_PAREN);
                 return oExpression;
 
             case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case EXP: case LOG: case LOG10:
@@ -455,10 +455,10 @@ public class BasicParser implements Parser {
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
                 _iPosition++;
-                consumeToken(TokenType.LEFT_PAREN);
+                consumeToken(BasicTokenType.LEFT_PAREN);
                 Expression oFunctionExpression = expression();
                 Expression oParameterFunction = new Function(oToken, oFunctionExpression);
-                consumeToken(TokenType.RIGHT_PAREN);
+                consumeToken(BasicTokenType.RIGHT_PAREN);
                 return oParameterFunction;
 
             case MEM: case RND: case TIME:
@@ -478,9 +478,9 @@ public class BasicParser implements Parser {
 
         // The contents of a parenthesized expression can be any expression. This lets us "restart" the precedence cascade
         // so that you can have a lower precedence expression inside the parentheses.
-        //if (matchNextToken(TokenType.LEFT_PAREN)) {
+        //if (matchNextToken(BasicTokenType.LEFT_PAREN)) {
         //    Expression expression = expression();
-        //    consumeToken(TokenType.RIGHT_PAREN);
+        //    consumeToken(BasicTokenType.RIGHT_PAREN);
         //    return (expression);
         //}
     }
@@ -494,7 +494,7 @@ public class BasicParser implements Parser {
     @Deprecated
     public final boolean matchNextToken(final String strName) {
 
-        if (getToken(0).getType() != TokenType.WORD) {
+        if (getToken(0).getType() != BasicTokenType.WORD) {
             _oLogger.debug("-matchNextToken-> token compare failed");
             return false;
         }
@@ -519,7 +519,7 @@ public class BasicParser implements Parser {
      * @return the consumed token.
      * @throws SyntaxErrorException the next token is not of the expected type
      */
-    public final Token consumeToken(final TokenType oType) throws SyntaxErrorException {
+    public final Token consumeToken(final BasicTokenType oType) throws SyntaxErrorException {
         _oLogger.debug("-consumeToken-> looking for Token: <" + (_iPosition) + "> [" + oType.toString() + "]: <"
                 + getToken(0).getType() + ">");
 
@@ -539,7 +539,7 @@ public class BasicParser implements Parser {
      * @return the found token.
      * @throws SyntaxErrorException the token type cannot be found in the remainder of the BASIC program
      */
-    public final Token findToken(final TokenType oType) throws SyntaxErrorException {
+    public final Token findToken(final BasicTokenType oType) throws SyntaxErrorException {
         _oLogger.debug("-findToken-> looking for Token: <" + (_iPosition) + "> [" + oType.toString() + "]: <"
                 + getToken(0).getType() + ">");
 
@@ -573,7 +573,7 @@ public class BasicParser implements Parser {
         if (_iPosition + iOffset >= _aoTokens.size()) {
             // send an end_of_file token back - this is an unexpected EOP
             // TODO actually this is a syntax error and should throw the syntax error exception
-            return new Token("", TokenType.EOP, 0);
+            return new Token("", BasicTokenType.EOP, 0);
         }
 
         // get the requested token

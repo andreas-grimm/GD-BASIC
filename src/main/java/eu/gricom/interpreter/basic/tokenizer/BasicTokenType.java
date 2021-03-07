@@ -3,7 +3,7 @@ package eu.gricom.interpreter.basic.tokenizer;
 /**
  * This defines the different kinds of tokens for the Dartmouth BASIC styles.
  */
-public enum TokenType {
+public enum BasicTokenType {
     ABS,
     AND,
     ASC,

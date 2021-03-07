@@ -13,8 +13,8 @@ import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.PrintStatement;
 import eu.gricom.interpreter.basic.statements.Statement;
 import eu.gricom.interpreter.basic.statements.VariableExpression;
+import eu.gricom.interpreter.basic.tokenizer.BasicTokenType;
 import eu.gricom.interpreter.basic.tokenizer.Token;
-import eu.gricom.interpreter.basic.tokenizer.TokenType;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 
@@ -61,19 +61,19 @@ public class JasicParser implements Parser {
 
         while (true) {
             // Ignore empty lines.
-            while (matchNextToken(TokenType.LINE)) {
+            while (matchNextToken(BasicTokenType.LINE)) {
 
                 _oLogger.debug("--> empty line ");
             }
 
             // if the current token is of type LABEL, then store the token number in the label list
-            if (matchNextToken(TokenType.LABEL)) {
+            if (matchNextToken(BasicTokenType.LABEL)) {
                 // Mark the index of the statement after the label.
                 _oLogger.debug("--> label: [" + lastToken(1).getText() + "] @ Token List position: " +  _iPosition);
                 oLabelStatement.putLabelStatement(lastToken(1).getText(), aoStatements.size());
             } else
                 // if the first token is of type WORD and the second one is of type EQUAL (e.g. "a =")
-                if (matchNextTwoToken(TokenType.WORD, TokenType.EQUALS)) {
+                if (matchNextTwoToken(BasicTokenType.WORD, BasicTokenType.EQUALS)) {
                     // get the name of the variable
                     String strName = lastToken(2).getText();
                     // get the value from the current expression - this is the right side of the equation
@@ -89,17 +89,17 @@ public class JasicParser implements Parser {
                     } else
                         if (matchNextToken("input")) {
                             _oLogger.debug("--> INPUT: " +  _iPosition);
-                            aoStatements.add(new InputStatement(consumeToken(TokenType.WORD).getText()));
+                            aoStatements.add(new InputStatement(consumeToken(BasicTokenType.WORD).getText()));
                         } else
                             if (matchNextToken("goto")) {
                                 _oLogger.debug("--> GOTO: " +  _iPosition);
-                                aoStatements.add(new GotoStatement(consumeToken(TokenType.WORD).getText()));
+                                aoStatements.add(new GotoStatement(consumeToken(BasicTokenType.WORD).getText()));
                             } else
                                 if (matchNextToken("if")) {
                                     Expression oCondition = expression();
                                     _oLogger.debug("--> IF: [" +  oCondition.content() + "] " +  _iPosition);
                                     consumeToken("then");
-                                    String strLabel = consumeToken(TokenType.WORD).getText();
+                                    String strLabel = consumeToken(BasicTokenType.WORD).getText();
                                     _oLogger.debug("----> THEN: [" +  strLabel + "] " +  _iPosition);
                                     aoStatements.add(new IfThenStatement(oCondition, strLabel));
                                 } else
@@ -157,8 +157,8 @@ public class JasicParser implements Parser {
         Expression oExpression = atomic();
 
         // Keep building operator expressions as long as we have operators.
-        while (matchNextToken(TokenType.OPERATOR)
-                || matchNextToken(TokenType.EQUALS)) {
+        while (matchNextToken(BasicTokenType.OPERATOR)
+                || matchNextToken(BasicTokenType.EQUALS)) {
             char strOperator = lastToken(1).getText().charAt(0);
             Expression oRight = atomic();
             oExpression = new OperatorExpression(oExpression, String.valueOf(strOperator), oRight);
@@ -178,25 +178,25 @@ public class JasicParser implements Parser {
     public final Expression atomic() throws SyntaxErrorException {
 
         // If the current token is of type WORD, then we assume that the next token is a variable.
-        if (matchNextToken(TokenType.WORD)) {
+        if (matchNextToken(BasicTokenType.WORD)) {
             return new VariableExpression(lastToken(1).getText());
         }
 
         // If the current token is of type number, then return the value as a double value
-        if (matchNextToken(TokenType.NUMBER)) {
+        if (matchNextToken(BasicTokenType.NUMBER)) {
               return new RealValue(Double.parseDouble(lastToken(1).getText()));
         }
 
         // If the current token us of type STRING, then return the value as a string value
-        if (matchNextToken(TokenType.STRING)) {
+        if (matchNextToken(BasicTokenType.STRING)) {
             return new StringValue(lastToken(1).getText());
         }
 
         // The contents of a parenthesized expression can be any expression. This lets us "restart" the precedence cascade
         // so that you can have a lower precedence expression inside the parentheses.
-        if (matchNextToken(TokenType.LEFT_PAREN)) {
+        if (matchNextToken(BasicTokenType.LEFT_PAREN)) {
             Expression expression = expression();
-            consumeToken(TokenType.RIGHT_PAREN);
+            consumeToken(BasicTokenType.RIGHT_PAREN);
             return expression;
         }
 
@@ -216,7 +216,7 @@ public class JasicParser implements Parser {
      * @param  eType2 Expected type of the subsequent token.
      * @return       True if tokens were consumed.
      */
-    public final boolean matchNextTwoToken(final TokenType eType1, final TokenType eType2) {
+    public final boolean matchNextTwoToken(final BasicTokenType eType1, final BasicTokenType eType2) {
 
         Token oOffsetToken0 = getToken(0);
         Token oOffsetToken1 = getToken(1);
@@ -239,7 +239,7 @@ public class JasicParser implements Parser {
      * @param  oType Expected type of the next token.
      * @return       True if the token was consumed.
      */
-    public final boolean matchNextToken(final TokenType oType) {
+    public final boolean matchNextToken(final BasicTokenType oType) {
 
         if (getToken(0).getType() != oType) {
             return false;
@@ -256,7 +256,7 @@ public class JasicParser implements Parser {
      */
     public final boolean matchNextToken(final String strName) {
 
-        if (getToken(0).getType() != TokenType.WORD) {
+        if (getToken(0).getType() != BasicTokenType.WORD) {
             return false;
         }
 
@@ -277,7 +277,7 @@ public class JasicParser implements Parser {
      * @param  type  Expected type of the next token.
      * @return       The consumed token.
      */
-    public final Token consumeToken(final TokenType type) {
+    public final Token consumeToken(final BasicTokenType type) {
 
         if (getToken(0).getType() != type) {
             throw new Error("Expected " + type + ".");
@@ -326,7 +326,7 @@ public class JasicParser implements Parser {
         //check whether the current position in the tokenized program is larger or equal the token size
         if (_iPosition + iOffset >= _aoTokens.size()) {
             // send an end_of_file token back - this is an unexpected EOF
-            return new Token("", TokenType.EOP, 0);
+            return new Token("", BasicTokenType.EOP, 0);
         }
 
         // get the requested token

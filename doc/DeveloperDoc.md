@@ -120,7 +120,7 @@ The tokenizers are named after the Basic versions they are implementing:
 
 The result of the tokenization process is a list of objects of type Token (see `eu.gricom.interpreter.basic.tokenizier.Token`). 
 Each token object holds three attributes:
-* __Type__: the token type, as defined in `eu.gricom.interpreter.basic.tokenizer.TokenType.java`.
+* __Type__: the token type, as defined in `eu.gricom.interpreter.basic.tokenizer.BasicTokenType.java`.
 * __Text__: the program code identified by the token
 * __Line__: the line number of the program code in the original program. This is used i.e. for interpreter error messages.
 
@@ -329,15 +329,48 @@ the different classes and functions more in detail.
 The two main classes in the package are the two Lexer classes, `JasicLexer.java` and `BasicLexer.java`. These 
 transfer the source code into token. The floowing sections describe the functionality of the two Lexer classes.
 
-#### JasicLexer.java
+#### `Lexer.java`
+
+#### `JasicLexer.java`
 
 #### `BasicLexer.java`
+
 The `BasicLexer.java` class is a complete re-write of the original `JasicLexer.java` class. It has significant 
 differences, which are covering the extensive extra functionality of the BASIC language.
 
-The `BasicLexer.java` class is using a normailzation process. This process replaces tabulator characters by 4 white 
+The `BasicLexer.java` class is using a normalization process. This process replaces tabulator characters by 4 white 
 spaces, removes white spaces in areas where they are not needed or are damaging, and is adding spaces around special 
 characters, such as the comma ("`,`"). This functionality is in the `Normalizer.java` class.
+
+Once the normalized line is available, the lexer class identifies the token by mapping the found word with the list 
+of the reserved words. If there is a mapping between thew lists, then a new token is generated and added to the list 
+of found token.
+
+##### Supporting Classes
+
+The `BasicLexer.java` class contains three supporting methods. These are used to identify the type of the string 
+found:
+
+```java
+    private boolean isBoolean(final String strWord)
+    private boolean isString(final String strWord)
+    private boolean isNumber(final String strWord)
+```
+
+#### `Token.java`
+The token class is used to code the identified token for the parsing process. The tokenizer process returns a list 
+of token to the interpreter process. Each token consists of 3 fields:
+- `text`: the data / text related to the found token
+- `type`: The type of the token, as defined in the `BasicTokenType.java` class
+- `line`: The line number of the BASIC statement that is translated into the token.
+
+```java
+    public Token(final String strText, final BasicTokenType oType, final int iLineNumber)
+    public String getText()
+    public BasicTokenType getType()
+    public int getLine()
+    public String setText(final String strText)
+```    
 
 #### `Normalizer.java`
 This static class exposes two methods:
@@ -387,14 +420,22 @@ This method will
 ##### `normalizeFunction`
 This method re-formats the incoming string to adjust round brackets indicating parameter in functions. After the 
 normalization, the brackets is recognized by the Lexer, and the bracket is replaced by the right token.
-#### TokenizeState.java
 
-#### Token.java
+#### Supporting Classes
 
-#### Tokenizer.java
+##### `BasicTokenType.java`
+The content of the `BasicTokenType.java` class is limited to the definition of the available token types as an 
+enumeration.
+No functionality is implemented in the class. The class is only used for the BASIC programming language.
 
-#### TokenType.java
-The content of the TokenType file is limited to the definition of the available token types.
+##### `JasicTokenType.java`
+The content of the `JasicTokenType.java` class is limited to the definition of the available token types as an 
+enumeration. No functionality is implemented in the class. The class is only used for the BASIC programming language.
+
+
+##### `ReservedWords.java`
+The `ReservedWords.java` class is the cross-reference or mapping class for the tokenizing process. It contains two 
+lists with identical sequence - between all reserved words, and the related `BasicTokenType` entry. 
 
 ### The MemoryManager Package
 ![Memory Manager Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/memoryManager.png)
@@ -425,17 +466,73 @@ The implementation does only allow
 ### The VariableType Package
 
 #### Value Interface
+All variables in the BASIC programming language are mapped to a variable type in the interpreter. This mapping is 
+performed in thew class `eu.gricom.interpreter.basic.memoryManager.VariableManagerment`:
 
-#### Variable Type Boolean
+```java
+        if (strKey.contains("$")) {
+            eVariableType = VariableType.STRING;
+        } else if (strKey.contains("%")) {
+            eVariableType = VariableType.INTEGER;
+        } else if (strKey.contains("&")) {
+            eVariableType = VariableType.LONG;
+        } else if (strKey.contains("#")) {
+            eVariableType = VariableType.REAL;
+        } else if (strKey.contains("!")) {
+            eVariableType = VariableType.DOUBLE;
+        } else if (strKey.contains("@")) {
+            eVariableType = VariableType.BOOLEAN;
+        }
+```
 
-#### Variable Type Integer
+The following table describes the mapping:
 
-#### Variable Type Integer
-supported as of the Q2 release...
+| Basic Variable Type | Variable Appendix | Interpreter Variable Type |
+|---------------------|-------------------|---------------------------|
+| String | `$` | `eu.gricom.interpreter.basic.variableTypes.StringValue` |
+| Integer | `%` | `eu.gricom.interpreter.basic.variableTypes.IntegerValue` |
+| Long | `&` | `eu.gricom.interpreter.basic.variableTypes.LongValue` |
+| Real | `#` | `eu.gricom.interpreter.basic.variableTypes.RealValue` |
+| Double | `!` | `eu.gricom.interpreter.basic.variableTypes.DoubleValue` |
+| Boolean | `@` | `eu.gricom.interpreter.basic.variableTypes.BooleanValue` |
 
-#### Variable Type Real
+##### Common Functions
 
-#### Mathematical Functions
+The `Value` interface demands each type to implement a number of comparison and conversion functions. The following list 
+defines all the mathematical functions available for the different types:
+
+```java
+    String toString();
+    double toReal();
+
+    Value equals(Value oValue) throws SyntaxErrorException;
+    Value notEqual(Value oValue) throws SyntaxErrorException;
+    Value smallerThan(Value oValue) throws SyntaxErrorException;
+    Value smallerEqualThan(Value oValue) throws SyntaxErrorException;
+    Value largerThan(Value oValue) throws SyntaxErrorException;
+    Value largerEqualThan(Value oValue) throws SyntaxErrorException;
+```
+
+As of version 0.0.7, two additional conversion functions will be added:
+```java
+    String toInt();
+    double toBoolean();
+```
+
+##### Mathematical Functions
+
+The `Value` interface demands each type to implement a number of mathematical functions, which might be honored by the 
+type or not. The following list defines all the mathematical functions available for the different types:
+
+```java
+    Value plus(Value oValue) throws SyntaxErrorException;
+    Value minus(Value oValue) throws SyntaxErrorException;
+    Value multiply(Value oValue) throws SyntaxErrorException;
+    Value divide(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+    Value shiftLeft(Value oValue) throws SyntaxErrorException;
+    Value shiftRight(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+    Value power(Value oValue) throws SyntaxErrorException;
+```
 
 #### Variable Type String
 The String variable type is implemented in the `StringValue` class in the `eu.gricom.interpreter.basic.variableTypes` package. Compared
@@ -732,15 +829,15 @@ The following mathematical functions are implemented:
 
 | Function | Used Java Method | Input Parameter Type | Output Parameter Type |
 |----------|------------------|----------------------|-----------------------|
-| `ABS` | none | `RealValue`, `IntegerValue`, `LongValue` | `RealValue`, `IntegerValue`, `LongValue` |
+| `ABS` | none | `RealValue` or `IntegerValue` or `LongValue` | `RealValue` or `IntegerValue` or `LongValue` |
 | `ATN` | `Java.lang.Math.atan()` | `RealValue` | `RealValue` |
-| `CDBL` | none | `RealValue`, `IntegerValue`, `LongValue` | `RealValue` |
-| `CINT` | none | `RealValue`, `IntegerValue`, `LongValue` | `IntegerValue` |
+| `CDBL` | none | `RealValue` or `IntegerValue` or `LongValue` | `RealValue` |
+| `CINT` | none | `RealValue` or `IntegerValue` or `LongValue` | `IntegerValue` |
 | `COS` | `Java.lang.Math.cos()` | `RealValue` | `RealValue` |
 | `EXP` | `Java.lang.Math.exp()` | `RealValue` | `RealValue` |
 | `LOG` | `Java.lang.Math.log()` | `RealValue` | `RealValue` |
 | `LOG10` | `Java.lang.Math.log10()` | `RealValue` | `RealValue` | 
-| `RND` | `Java.lang.Math.random()` |  | `RealValue` |
+| `RND` | `Java.lang.Math.random()` | n/a | `RealValue` |
 | `SIN` | `Java.lang.Math.sin()` | `RealValue` | `RealValue` |
 | `SQR` | `Java.lang.Math.sqrt()` | `RealValue` | `RealValue` |
 | `TAN` | `Java.lang.Math.tan()` | `RealValue` | `RealValue` |
@@ -765,24 +862,24 @@ These methods are using the internal type conversion methods of the numeric type
 
 | Function | Used Java Method | Input Parameter Type | Output Parameter Type |
 |----------|------------------|----------------------|-----------------------|
-| `ASC` |  |  |
-| `CHR` |  |  |
-| `CDBL` |  |  |
-| `INSTR` |  |  |
-| `LEFT` |  |  |
-| `LEN` |  |  |
-| `MID` |  |  |
-| `RIGHT` |  |  |
-| `STR` |  |  |  | 
-| `VAL` |  |  |  | 
+| `ASC` | `Java.lang.String.charAt()` | `StringValue` | `IntegerValue` |
+| `CHR` | `Java.lang.Character.toString()` | `IntegerValue` | `StringValue` |
+| `INSTR` | `Java.lang.String.indexOf()` | `StringValue`, `StringValue` | `IntegerValue` |
+| `LEFT` | `Java.lang.String.substring(0,x)` | `StringValue`, `IntegerValue` | `StringValue` |
+| `LEN` | `Java.lang.String.length()` | `StringValue` | `IntegerValue` |
+| `MID` | `Java.lang.String.substring(0,x)` | `StringValue`, `IntegerValue`, `IntegerValue` | `StringValue` |
+| `RIGHT` | `Java.lang.String.substring(0,x)` | `StringValue`, `IntegerValue` | `StringValue` |
+| `STR` | none | `RealValue` or `IntegerValue` or `LongValue` | `StringValue` | 
+| `VAL` | `Java.lang.Double.parseDouble()` | `StringValue` | `RealValue` | 
 
 #### OS-Related Functions
 
 | Function | Used Java Method | Input Parameter Type | Output Parameter Type |
 |----------|------------------|----------------------|-----------------------|
-| `MEM` |  |  |
-| `SYSTEM` |  |  |
-| `TIME` |  |  |
+| `MEM` | `Runtime.getRuntime().freeMemory()` | n/a | `IntegerValue` |
+| `SYSTEM` | `Java.lang.ProcessBuilder.command()` | `StringValue`, `StringValue` | `StringValue` |
+| `TIME` | `java.lang.System.currentTimeMillis()` | n/a  | `LongValue` |
+
 
 ##### `SYSTEM` Function
 The `SYSTEM` function executes commands on OS level. The function requires two parameters: a command, and the

@@ -47,13 +47,13 @@ public class TokenizerTest {
 
             assertEquals(10, oToken.getLine());
             assertEquals("PRINT", oToken.getText());
-            assertEquals(TokenType.PRINT, oToken.getType());
+            assertEquals(BasicTokenType.PRINT, oToken.getType());
 
             oToken = aoTokens.get(1);
 
             assertEquals(10, oToken.getLine());
             assertEquals("A$", oToken.getText());
-            assertEquals(TokenType.WORD, oToken.getType());
+            assertEquals(BasicTokenType.WORD, oToken.getType());
 
         } catch (SyntaxErrorException e) {
             fail();
@@ -90,55 +90,55 @@ public class TokenizerTest {
 
             assertEquals(10, oToken.getLine());
             assertEquals("A#", oToken.getText());
-            assertEquals(TokenType.WORD, oToken.getType());
+            assertEquals(BasicTokenType.WORD, oToken.getType());
 
             oToken = aoTokens.get(1);
 
             assertEquals(10, oToken.getLine());
             assertEquals("=", oToken.getText());
-            assertEquals(TokenType.ASSIGN_EQUAL, oToken.getType());
+            assertEquals(BasicTokenType.ASSIGN_EQUAL, oToken.getType());
 
             oToken = aoTokens.get(2);
 
             assertEquals(10, oToken.getLine());
             assertEquals("4", oToken.getText());
-            assertEquals(TokenType.NUMBER, oToken.getType());
+            assertEquals(BasicTokenType.NUMBER, oToken.getType());
 
             oToken = aoTokens.get(3);
 
             assertEquals(10, oToken.getLine());
             assertEquals("*", oToken.getText());
-            assertEquals(TokenType.MULTIPLY, oToken.getType());
+            assertEquals(BasicTokenType.MULTIPLY, oToken.getType());
 
             oToken = aoTokens.get(4);
 
             assertEquals(10, oToken.getLine());
             assertEquals("(", oToken.getText());
-            assertEquals(TokenType.LEFT_PAREN, oToken.getType());
+            assertEquals(BasicTokenType.LEFT_PAREN, oToken.getType());
 
             oToken = aoTokens.get(5);
 
             assertEquals(10, oToken.getLine());
             assertEquals("2", oToken.getText());
-            assertEquals(TokenType.NUMBER, oToken.getType());
+            assertEquals(BasicTokenType.NUMBER, oToken.getType());
 
             oToken = aoTokens.get(6);
 
             assertEquals(10, oToken.getLine());
             assertEquals("+", oToken.getText());
-            assertEquals(TokenType.PLUS, oToken.getType());
+            assertEquals(BasicTokenType.PLUS, oToken.getType());
 
             oToken = aoTokens.get(7);
 
             assertEquals(10, oToken.getLine());
             assertEquals("1", oToken.getText());
-            assertEquals(TokenType.NUMBER, oToken.getType());
+            assertEquals(BasicTokenType.NUMBER, oToken.getType());
 
             oToken = aoTokens.get(8);
 
             assertEquals(10, oToken.getLine());
             assertEquals(")", oToken.getText());
-            assertEquals(TokenType.RIGHT_PAREN, oToken.getType());
+            assertEquals(BasicTokenType.RIGHT_PAREN, oToken.getType());
 
         } catch (SyntaxErrorException e) {
             e.printStackTrace();
@@ -162,43 +162,43 @@ public class TokenizerTest {
 
             assertEquals(10, oToken.getLine());
             assertEquals("A#", oToken.getText());
-            assertEquals(TokenType.WORD, oToken.getType());
+            assertEquals(BasicTokenType.WORD, oToken.getType());
 
             oToken = aoTokens.get(1);
 
             assertEquals(10, oToken.getLine());
             assertEquals("=", oToken.getText());
-            assertEquals(TokenType.ASSIGN_EQUAL, oToken.getType());
+            assertEquals(BasicTokenType.ASSIGN_EQUAL, oToken.getType());
 
             oToken = aoTokens.get(2);
 
             assertEquals(10, oToken.getLine());
             assertEquals("4", oToken.getText());
-            assertEquals(TokenType.NUMBER, oToken.getType());
+            assertEquals(BasicTokenType.NUMBER, oToken.getType());
 
             oToken = aoTokens.get(3);
 
             assertEquals(10, oToken.getLine());
             assertEquals("*", oToken.getText());
-            assertEquals(TokenType.MULTIPLY, oToken.getType());
+            assertEquals(BasicTokenType.MULTIPLY, oToken.getType());
 
             oToken = aoTokens.get(4);
 
             assertEquals(10, oToken.getLine());
             assertEquals("2", oToken.getText());
-            assertEquals(TokenType.NUMBER, oToken.getType());
+            assertEquals(BasicTokenType.NUMBER, oToken.getType());
 
             oToken = aoTokens.get(5);
 
             assertEquals(10, oToken.getLine());
             assertEquals("+", oToken.getText());
-            assertEquals(TokenType.PLUS, oToken.getType());
+            assertEquals(BasicTokenType.PLUS, oToken.getType());
 
             oToken = aoTokens.get(6);
 
             assertEquals(10, oToken.getLine());
             assertEquals("1", oToken.getText());
-            assertEquals(TokenType.NUMBER, oToken.getType());
+            assertEquals(BasicTokenType.NUMBER, oToken.getType());
 
         } catch (SyntaxErrorException e) {
             e.printStackTrace();
@@ -222,19 +222,19 @@ public class TokenizerTest {
 
             assertEquals(10, oToken.getLine());
             assertEquals("A%", oToken.getText());
-            assertEquals(TokenType.WORD, oToken.getType());
+            assertEquals(BasicTokenType.WORD, oToken.getType());
 
             oToken = aoTokens.get(1);
 
             assertEquals(10, oToken.getLine());
             assertEquals("=", oToken.getText());
-            assertEquals(TokenType.ASSIGN_EQUAL, oToken.getType());
+            assertEquals(BasicTokenType.ASSIGN_EQUAL, oToken.getType());
 
             oToken = aoTokens.get(2);
 
             assertEquals(10, oToken.getLine());
             assertEquals("MEM", oToken.getText());
-            assertEquals(TokenType.MEM, oToken.getType());
+            assertEquals(BasicTokenType.MEM, oToken.getType());
 
         } catch (SyntaxErrorException e) {
             e.printStackTrace();
@@ -258,37 +258,37 @@ public class TokenizerTest {
 
             assertEquals(10, oToken.getLine());
             assertEquals("A%", oToken.getText());
-            assertEquals(TokenType.WORD, oToken.getType());
+            assertEquals(BasicTokenType.WORD, oToken.getType());
 
             oToken = aoTokens.get(1);
 
             assertEquals(10, oToken.getLine());
             assertEquals("=", oToken.getText());
-            assertEquals(TokenType.ASSIGN_EQUAL, oToken.getType());
+            assertEquals(BasicTokenType.ASSIGN_EQUAL, oToken.getType());
 
             oToken = aoTokens.get(2);
 
             assertEquals(10, oToken.getLine());
             assertEquals("ABS", oToken.getText());
-            assertEquals(TokenType.ABS, oToken.getType());
+            assertEquals(BasicTokenType.ABS, oToken.getType());
 
             oToken = aoTokens.get(3);
 
             assertEquals(10, oToken.getLine());
             assertEquals("(", oToken.getText());
-            assertEquals(TokenType.LEFT_PAREN, oToken.getType());
+            assertEquals(BasicTokenType.LEFT_PAREN, oToken.getType());
 
             oToken = aoTokens.get(4);
 
             assertEquals(10, oToken.getLine());
             assertEquals("-1", oToken.getText());
-            assertEquals(TokenType.NUMBER, oToken.getType());
+            assertEquals(BasicTokenType.NUMBER, oToken.getType());
 
             oToken = aoTokens.get(5);
 
             assertEquals(10, oToken.getLine());
             assertEquals(")", oToken.getText());
-            assertEquals(TokenType.RIGHT_PAREN, oToken.getType());
+            assertEquals(BasicTokenType.RIGHT_PAREN, oToken.getType());
 
         } catch (SyntaxErrorException e) {
             e.printStackTrace();

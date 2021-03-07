@@ -5,10 +5,10 @@ import eu.gricom.interpreter.basic.helper.FileHandler;
 import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.statements.OperatorExpression;
 import eu.gricom.interpreter.basic.statements.VariableExpression;
+import eu.gricom.interpreter.basic.tokenizer.BasicTokenType;
 import eu.gricom.interpreter.basic.tokenizer.JasicLexer;
 import eu.gricom.interpreter.basic.tokenizer.Token;
 import eu.gricom.interpreter.basic.tokenizer.Lexer;
-import eu.gricom.interpreter.basic.tokenizer.TokenType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class JasicParserTest {
         assertTrue(strExpression.matches("eu.gricom.interpreter.basic.statements.VariableExpression"));
 
         // running the atomic method
-        while ((oParser.matchNextToken(TokenType.OPERATOR)) || (oParser.matchNextToken(TokenType.EQUALS))) {
+        while ((oParser.matchNextToken(BasicTokenType.OPERATOR)) || (oParser.matchNextToken(BasicTokenType.EQUALS))) {
             char strOperator = oParser.lastToken(1).getText().charAt(0);
             Expression oRight = oParser.atomic();
             oExpression = new OperatorExpression(oExpression, (String.valueOf(strOperator)), oRight);
@@ -86,7 +86,7 @@ public class JasicParserTest {
             JasicParser oParser = new JasicParser(aoTokens);
             oParser.setPosition(33);
 
-            assertTrue(oParser.matchNextToken(TokenType.LABEL));
+            assertTrue(oParser.matchNextToken(BasicTokenType.LABEL));
         } catch (SyntaxErrorException e) {
             fail();
         }
@@ -104,7 +104,7 @@ public class JasicParserTest {
             JasicParser oParser = new JasicParser(aoTokens);
             oParser.setPosition(5);
 
-            assertTrue(oParser.matchNextTwoToken(TokenType.WORD, TokenType.EQUALS));
+            assertTrue(oParser.matchNextTwoToken(BasicTokenType.WORD, BasicTokenType.EQUALS));
         } catch (SyntaxErrorException e) {
             fail();
         }
@@ -144,8 +144,8 @@ public class JasicParserTest {
             JasicParser oParser = new JasicParser(aoTokens);
             oParser.setPosition(33);
 
-            Token oToken = oParser.consumeToken(TokenType.LABEL);
-            assertSame(oToken.getType(), TokenType.LABEL);
+            Token oToken = oParser.consumeToken(BasicTokenType.LABEL);
+            assertSame(oToken.getType(), BasicTokenType.LABEL);
         } catch (SyntaxErrorException e) {
             fail();
         }

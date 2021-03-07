@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TokenTest {
 
-    private final transient Token _oToken = new Token("TestToken", TokenType.STRING, 0);
+    private final transient Token _oToken = new Token("TestToken", BasicTokenType.STRING, 0);
 
     @Test
     public void testGetText() {
@@ -15,7 +15,7 @@ public class TokenTest {
 
     @Test
     public void testGetType() {
-        TokenType oReturn = _oToken.getType();
-        assertEquals(oReturn, TokenType.STRING);
+        BasicTokenType oReturn = _oToken.getType();
+        assertEquals(oReturn, BasicTokenType.STRING);
     }
 }
