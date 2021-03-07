@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.functions;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
+import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
@@ -27,11 +28,13 @@ public final class Val {
      * that they actually return a result to the caller of type Value. The method execute
      * triggers the function.
      *
-     * @param oValue input value
+     * @param oExpression input value
      * @return Value the return message of the function
      * @throws Exception as any execution error found during execution
      */
-    public static Value execute(final Value oValue) throws Exception {
+    public static Value execute(final Expression oExpression) throws Exception {
+        Value oValue = oExpression.evaluate();
+
         if (oValue instanceof StringValue) {
             return new RealValue(Double.parseDouble(oValue.toString()));
         }

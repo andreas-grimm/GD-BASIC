@@ -28,6 +28,7 @@ public final class Mem {
      * @throws Exception as any execution error found during execution
      */
     public static IntegerValue execute() {
-            return new IntegerValue((int) Runtime.getRuntime().freeMemory());
+
+        return new IntegerValue((int) Runtime.getRuntime().freeMemory());
     }
 }

@@ -18,4 +18,17 @@
 200 PRINT "Result of test with integer: Should be a number numeric 1: ", A%
 210 A% = ABS(-1)
 220 PRINT "Result of test with integer: Should be a number numeric 1: ", A%
+230 C% = -1
+240 A% = ABS(C%)
+250 PRINT "Result of test with variable: Should be a number numeric 1: ", A%
+260 A% = ABS(-1 - 4)
+270 PRINT "Result of test with variable: Should be a number numeric 1: ", A%
+280 A$ = LEFT("abcde", 2)
+290 PRINT "Left side of the string, first two chars: ", A$
+300 A$ = RIGHT("abcde", 2)
+310 PRINT "Right side of the string, last two chars: ", A$
+320 C$ = "abcde"
+330 A% = 2
+340 A$ = RIGHT(C$, A% - 1)
+350 PRINT "Right side of the string, last two chars: ", A$
 999 END

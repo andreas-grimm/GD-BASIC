@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.functions;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
+import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.LongValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
@@ -29,17 +30,23 @@ public final class Mid {
      * that they actually return a result to the caller of type Value. The method execute
      * triggers the function.
      *
-     * @param oValue input value
+     * @param oExpression input value
      * @return Value the return message of the function
      * @throws Exception as any execution error found during execution
      */
-    public static Value execute(final Value oValue, final Value oStartPosition, final Value oEndPosition) throws Exception {
+    public static Value execute(final Expression oExpression,
+                                final Expression oStartPosition,
+                                final Expression oEndPosition) throws Exception {
+        Value oValue = oExpression.evaluate();
+        Value oStartValue = oStartPosition.evaluate();
+        Value oEndValue = oEndPosition.evaluate();
+
         if (oValue instanceof StringValue
-                && oStartPosition instanceof IntegerValue
-                && oEndPosition instanceof IntegerValue) {
+                && oStartValue instanceof IntegerValue
+                && oEndValue instanceof IntegerValue) {
             String strValue = oValue.toString();
-            int iStart = ((IntegerValue) oStartPosition).toInt();
-            int iEnd = ((IntegerValue) oEndPosition).toInt();
+            int iStart = ((IntegerValue) oStartValue).toInt();
+            int iEnd = ((IntegerValue) oEndValue).toInt();
 
             if (iStart < 0
                 || iEnd < 0

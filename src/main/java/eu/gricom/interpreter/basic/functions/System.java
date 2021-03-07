@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic.functions;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
+import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
 import java.io.BufferedReader;
@@ -31,11 +32,13 @@ public final class System {
      * triggers the function.
      *
      * @param oCommand parameters for the program to execute
-     * @param oProgram name of the program to execute
+     * @param oExpression name of the program to execute
      * @return Value the return message of the function
      * @throws Exception as any execution error found during execution
      */
-    public static Value execute(final Value oCommand, final Value oProgram) throws Exception {
+    public static Value execute(final Value oCommand, final Expression oExpression) throws Exception {
+        Value oProgram = oExpression.evaluate();
+
         String strReturn = new String();
         if (oProgram instanceof StringValue
                 && oCommand instanceof StringValue) {

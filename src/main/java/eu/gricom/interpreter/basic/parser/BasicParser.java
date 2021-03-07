@@ -449,8 +449,23 @@ public class BasicParser implements Parser {
                 consumeToken(BasicTokenType.RIGHT_PAREN);
                 return oExpression;
 
-            case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case EXP: case LOG: case LOG10:
-                case SIN: case SQR: case TAN:
+            // two parameter function calls
+            case LEFT: case RIGHT:
+                oToken = getToken(0);
+                _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
+                                       + oToken.getText() + "' [" + oToken.getLine() + "]");
+                _iPosition++;
+                consumeToken(BasicTokenType.LEFT_PAREN);
+                Expression oParameter1Expression = expression();
+                consumeToken(BasicTokenType.COMMA);
+                Expression oParameter2Expression = expression();
+                Expression oSingleParameterFunction = new Function(oToken, oParameter1Expression, oParameter2Expression);
+                consumeToken(BasicTokenType.RIGHT_PAREN);
+                return oSingleParameterFunction;
+
+            // single parameter function calls
+            case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case EXP: case LEN: case LOG:
+                case LOG10: case SIN: case SQR: case STR: case TAN: case VAL:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
@@ -461,6 +476,7 @@ public class BasicParser implements Parser {
                 consumeToken(BasicTokenType.RIGHT_PAREN);
                 return oParameterFunction;
 
+            // zero parameter function calls
             case MEM: case RND: case TIME:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"

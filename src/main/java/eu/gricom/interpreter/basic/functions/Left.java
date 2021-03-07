@@ -1,7 +1,9 @@
 package eu.gricom.interpreter.basic.functions;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
+import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
 
@@ -28,14 +30,16 @@ public final class Left {
      * that they actually return a result to the caller of type Value. The method execute
      * triggers the function.
      *
-     * @param oValue input string value
-     * @param oLength lenght of the expected substring
+     * @param oExpression input string value
+     * @param oLength length of the expected substring
      * @return Value the return message of the function
      * @throws Exception as any execution error found during execution
      */
-    public static Value execute(final Value oValue, final Value oLength) throws Exception {
-        if (oValue instanceof StringValue && oLength instanceof IntegerValue) {
-            int iLength = ((IntegerValue) oLength).toInt();
+    public static Value execute(final Expression oExpression, final Value oLength) throws Exception {
+        Value oValue = oExpression.evaluate();
+        int iLength = (int) oLength.toReal();
+
+        if (oValue instanceof StringValue) {
 
             if (iLength >= ((IntegerValue) Len.execute(oValue)).toInt()) {
                 throw new RuntimeException("Requested length exceeds size of String");
@@ -45,6 +49,6 @@ public final class Left {
         }
 
         throw new RuntimeException("First Input value not String: " + oValue + " or second value is not integer: "
-            + ((IntegerValue) oLength).toInt());
+            + oLength.toString());
     }
 }
