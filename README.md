@@ -94,12 +94,16 @@ Implemented Backlog Items:
     [BASIC-24], [BASIC-26], [BASIC-43], [BASIC-48], [BASIC-58], [BASIC-62], [BASIC-66], [BASIC-65], [BASIC-74],
     [BASIC-80], [BASIC-67], [BASIC-68], [BASIC-69], [BASIC-70], [BASIC-71], [BASIC-72], [BASIC-81], [BASIC-84]
 
-0.0.6: Tagged as Array Release
+0.0.6: Tagged as Array and Function Release
 * Added array function to all data types. The array function allows the use of n-dimensional arrays. The index of the array can be one or
   more variables itself. The documentation is adjusted to it.
-* Adding functionality to retrieve single characters out of any string. A string's characters can be retrieved by using sqaured brackets:
+* Adding functionality to retrieve single characters out of any string. A string's characters can be retrieved by 
+  using squared brackets:
   `[` and `]`.
-* Added the `DIM` function
+* Added mathematical functions: `ABS`, `ATN`, `CDBL`, `CINT`, `COS`, `EXP`, `LOG`, `LOG10`, `RND`, `SIN`, `SQR`, `TAN`
+* Added string functions: `ASC`, `CHR`, `INSTR`, `LEFT`, `LEN`, `MID`, `RIGHT`, `STR`, `VAL`
+* Added system functions: `MEM`, `SYSTEM`, `TIME`
+* Added `gradle` build script
 
 Implemented Backlog Items:
 

@@ -32,7 +32,7 @@ public final class Tan {
      */
     public static Value execute(final Value oValue) throws Exception {
         if (oValue instanceof RealValue) {
-            return new RealValue(Math.cos(oValue.toReal()));
+            return new RealValue(Math.tan(oValue.toReal()));
         }
 
         throw new RuntimeException("Input value not of type Real: " + oValue);

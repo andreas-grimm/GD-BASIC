@@ -15,8 +15,8 @@ format can be found here: [www.markdownguide.org](https://www.markdownguide.org/
 or here: [github.com](https://guides.github.com/features/mastering-markdown/)
 
 ### Some Important Concepts
-The GD-Basic Interpreter is not an industrial grade interpeter. The target of this project is to provide a BASIC interpreter
-that allows to run as much as possible the different programs build in the 1970's and 1980's - and at the same time provide
+The GD-Basic Interpreter is not an industrial grade interpreter. The target of this project is to provide a BASIC 
+interpreter that allows to run as much as possible the different programs build in the 1970's and 1980's - and at the same time provide
 a bit more functionality. The interpreter is designed to be embedded into JAVA programs. This brings some very basic requirements
 for the development:
 - In order to be portable the interpreter has a very limited number of third party packages. Actually the only one used at this time
@@ -43,7 +43,8 @@ any newer version of Maven should work as well. The command line to run Maven is
     mvn clean compile dependency:tree dependency:copy-dependencies package
 ```
 
-alternatively, a *Gradle* build script is part of the source package
+alternatively, a *Gradle* build script is part of the source package. At this stage, the Maven build script is the 
+preferred one.
 
 ```bash
     gradle compiled
@@ -321,15 +322,76 @@ name in the token, but the token type. In this release, the method is not used a
 
 ![Referencing Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer_reference.png)
 
-#### Token.java
+This section of the documentation is detailing the process of tokenizing the BASIC or JASIC source code. The general 
+sequence (Tokeinzing (Lexicalic Analysis) -> Parsing -> Executing) has been described already, this section descrbes 
+the different classes and functions more in detail.
 
-#### Tokenizer.java
+The two main classes in the package are the two Lexer classes, `JasicLexer.java` and `BasicLexer.java`. These 
+transfer the source code into token. The floowing sections describe the functionality of the two Lexer classes.
 
 #### JasicLexer.java
 
+#### `BasicLexer.java`
+The `BasicLexer.java` class is a complete re-write of the original `JasicLexer.java` class. It has significant 
+differences, which are covering the extensive extra functionality of the BASIC language.
+
+The `BasicLexer.java` class is using a normailzation process. This process replaces tabulator characters by 4 white 
+spaces, removes white spaces in areas where they are not needed or are damaging, and is adding spaces around special 
+characters, such as the comma ("`,`"). This functionality is in the `Normalizer.java` class.
+
+#### `Normalizer.java`
+This static class exposes two methods:
+- `normalize`, and
+- `normailzeIndex`
+
+Both classes are consuming a String parameter and are returning the normalized input as a String. *Note:* At this 
+stage functions and methods are not using the `StringValue` class which is consistently used in a later part of the 
+process.
+
+In the lexer class, the call of the normalizer is performed after the input file is separated in single lines. It is 
+only executed on lines with contents, so a check for an empty input is not required:
+```java
+            // here we handle all empty lines, e.g. lines that only contain the line number
+            if (strProgramLine.length() < 1) {
+                aoTokens.add(new Token("empty", TokenType.LINE, iLineNumber));
+            } else {
+                // normalize the line: put spaces in places where needed, or remove them
+                strProgramLine = Normalizer.normalize(strProgramLine);
+                strProgramLine = Normalizer.normalizeFunction(strProgramLine);
+```
+*Note:* Even in this code segment the Normalizer is executed in sequence, in other code components only the 
+`normalizeIndex` function is needed.
+
+The following section describes the normalization process:
+
+##### `normalize`
+The `normalize` function iterates through the input string by character and performs the following changes in sequence:
+1. Identification of squared brackets ("`[]`") for special treatment. Inside of squarded brackets all white spaces are removed.
+1. Identification of round brackets ("`()`") for special treatment only if the previous character identifies a 
+   variable (ie. `$#!%&@`). In this case, the round bracket indicates an array, not the processing order in a 
+   mathematical function.
+1. Identification of a quotation mark ("`"`") surrounding a string. For strings and round brackets, the content is 
+   taken over as they come.
+   
+Outside the special cases above, the function will
+- ensure that the comma character has a leading white space
+- ensure that the semicolon character has a leading white space
+- opening and closing brackets have white spaces respectively.
+
+##### `normalizeIndex`
+This method will
+- between round brackets remove all tabulators and white spaces
+- replace the round brackets for arrays with minus characters ("`-`"). This is due to the way the interpreter stores 
+  arrays.
+
+##### `normalizeFunction`
+This method re-formats the incoming string to adjust round brackets indicating parameter in functions. After the 
+normalization, the brackets is recognized by the Lexer, and the bracket is replaced by the right token.
 #### TokenizeState.java
 
-#### BasicLexer.java
+#### Token.java
+
+#### Tokenizer.java
 
 #### TokenType.java
 The content of the TokenType file is limited to the definition of the available token types.
@@ -617,23 +679,21 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.LongValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
-
+ ```
+We document the functionality of the function in the class header, not on method level.
+```java
 /**
  * SAMPLE Function.
  *
  * Description:
  *
- ```
-We document the functionality of the function in the class header, not on method level.
-```java
  * The SAMPLE function is in here for documentation only. The class does not exist in the code-base. For 
  * documentation this class has one parameter. This parameter has to be numeric.
  *
  * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public final class Sample {
-
- ```
+```
 The class has only a private constructor, which also does not have any functionality inside. This private 
 constructor has been added to make the code compliant with the used Checkstyle static code analysis.
 ```java
@@ -665,14 +725,64 @@ In case the type verification fails, the class is throwing a runtime exception.
         throw new RuntimeException("Input value not numeric: " + oValue);
     }
 }
-
 ```
 
 #### Mathematical Functions
+The following mathematical functions are implemented:
+
+| Function | Used Java Method | Input Parameter Type | Output Parameter Type |
+|----------|------------------|----------------------|-----------------------|
+| `ABS` | none | `RealValue`, `IntegerValue`, `LongValue` | `RealValue`, `IntegerValue`, `LongValue` |
+| `ATN` | `Java.lang.Math.atan()` | `RealValue` | `RealValue` |
+| `CDBL` | none | `RealValue`, `IntegerValue`, `LongValue` | `RealValue` |
+| `CINT` | none | `RealValue`, `IntegerValue`, `LongValue` | `IntegerValue` |
+| `COS` | `Java.lang.Math.cos()` | `RealValue` | `RealValue` |
+| `EXP` | `Java.lang.Math.exp()` | `RealValue` | `RealValue` |
+| `LOG` | `Java.lang.Math.log()` | `RealValue` | `RealValue` |
+| `LOG10` | `Java.lang.Math.log10()` | `RealValue` | `RealValue` | 
+| `RND` | `Java.lang.Math.random()` |  | `RealValue` |
+| `SIN` | `Java.lang.Math.sin()` | `RealValue` | `RealValue` |
+| `SQR` | `Java.lang.Math.sqrt()` | `RealValue` | `RealValue` |
+| `TAN` | `Java.lang.Math.tan()` | `RealValue` | `RealValue` |
+
+##### `ABS`
+This method multiplies the incoming parameter with `-1` if the parameter is a number less then `0`:
+
+```java
+            if (((IntegerValue) oValue).toInt() < 0) {
+                return oValue.multiply(new IntegerValue(-1));
+            } else {
+                return oValue;
+            }
+```
+
+##### `CDBL` and `CINT`
+These methods are using the internal type conversion methods of the numeric type to return the integer of the real
+(double) value of the parameter
+
 
 #### String Functions
 
+| Function | Used Java Method | Input Parameter Type | Output Parameter Type |
+|----------|------------------|----------------------|-----------------------|
+| `ASC` |  |  |
+| `CHR` |  |  |
+| `CDBL` |  |  |
+| `INSTR` |  |  |
+| `LEFT` |  |  |
+| `LEN` |  |  |
+| `MID` |  |  |
+| `RIGHT` |  |  |
+| `STR` |  |  |  | 
+| `VAL` |  |  |  | 
+
 #### OS-Related Functions
+
+| Function | Used Java Method | Input Parameter Type | Output Parameter Type |
+|----------|------------------|----------------------|-----------------------|
+| `MEM` |  |  |
+| `SYSTEM` |  |  |
+| `TIME` |  |  |
 
 ##### `SYSTEM` Function
 The `SYSTEM` function executes commands on OS level. The function requires two parameters: a command, and the

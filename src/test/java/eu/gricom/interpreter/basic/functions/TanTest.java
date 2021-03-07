@@ -18,13 +18,13 @@ public class TanTest {
 
             RealValue oResult = (RealValue) Tan.execute(oValue);
 
-            assertEquals(0.5403023058681398, oResult.toReal());
+            assertEquals(-1.5574077246549023, oResult.toReal());
 
             oValue = new RealValue(0.0);
 
             oResult = (RealValue) Tan.execute(oValue);
 
-            assertEquals(1.0, oResult.toReal());
+            assertEquals(0.0, oResult.toReal());
         } catch (Exception e) {
             e.printStackTrace();
         }

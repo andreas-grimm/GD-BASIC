@@ -66,7 +66,7 @@ public final class Normalizer {
                 bQuotationMark = !bQuotationMark;
             }
 
-            // now chek whether we are between square brackets [] - here remove all spaces
+            // now check whether we are between square brackets [] - here remove all spaces
             if (bSquareBrackets) {
                 if (cCurrentChar != ' ') {
                     strOutput += cCurrentChar;
