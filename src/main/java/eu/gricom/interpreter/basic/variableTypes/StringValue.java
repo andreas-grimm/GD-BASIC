@@ -176,7 +176,7 @@ public class StringValue implements Value {
         return this;
     }
 
-    private String squareBrackets(String strKey) throws RuntimeException {
+    private String squareBrackets(final String strKey) throws RuntimeException {
         // lets check whether between the brackets is a comma
         int iComma = strKey.indexOf(",");
         int iStart = strKey.indexOf("[");

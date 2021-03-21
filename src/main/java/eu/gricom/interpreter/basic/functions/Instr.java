@@ -1,7 +1,6 @@
 package eu.gricom.interpreter.basic.functions;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
-import eu.gricom.interpreter.basic.statements.Expression;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 import eu.gricom.interpreter.basic.variableTypes.Value;
@@ -37,8 +36,8 @@ public final class Instr {
         if (oValue instanceof StringValue
                 && oSearch instanceof StringValue) {
 
-            if (oValue.toString().length() < 1 ||
-                    oSearch.toString().length() < 1) {
+            if (oValue.toString().length() < 1
+                    || oSearch.toString().length() < 1) {
                 throw new RuntimeException("Input string or search string is empty");
             }
 

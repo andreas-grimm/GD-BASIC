@@ -25,7 +25,6 @@ public final class Rnd {
      * triggers the function.
      *
      * @return Value the return message of the function
-     * @throws Exception as any execution error found during execution
      */
     public static RealValue execute() {
             return new RealValue(Math.random());

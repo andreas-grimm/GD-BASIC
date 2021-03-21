@@ -74,6 +74,7 @@ public enum BasicTokenType {
     UNTIL,
     VAL,
     WHILE,
+    WRITE,
     AMPERSAND, // token for the & operator
     PLUS, // token for the + operator
     MINUS, // token for the - operator

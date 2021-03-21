@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class DataStatement implements Statement {
     private final int _iLineNumber;
-    private List <Value> _aoValues;
+    private List<Value> _aoValues;
 
     /**
      * Default constructor.

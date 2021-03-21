@@ -3,8 +3,28 @@ package eu.gricom.interpreter.basic.parser;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.functions.Function;
 import eu.gricom.interpreter.basic.helper.Logger;
-import eu.gricom.interpreter.basic.statements.*;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
+import eu.gricom.interpreter.basic.statements.AssignStatement;
+import eu.gricom.interpreter.basic.statements.DataStatement;
+import eu.gricom.interpreter.basic.statements.DoStatement;
+import eu.gricom.interpreter.basic.statements.EndStatement;
+import eu.gricom.interpreter.basic.statements.Expression;
+import eu.gricom.interpreter.basic.statements.ForStatement;
+import eu.gricom.interpreter.basic.statements.GosubStatement;
+import eu.gricom.interpreter.basic.statements.GotoStatement;
+import eu.gricom.interpreter.basic.statements.IfThenStatement;
+import eu.gricom.interpreter.basic.statements.InputStatement;
+import eu.gricom.interpreter.basic.statements.LabelStatement;
+import eu.gricom.interpreter.basic.statements.NextStatement;
+import eu.gricom.interpreter.basic.statements.OperatorExpression;
+import eu.gricom.interpreter.basic.statements.PrintStatement;
+import eu.gricom.interpreter.basic.statements.ReadStatement;
+import eu.gricom.interpreter.basic.statements.RemStatement;
+import eu.gricom.interpreter.basic.statements.ReturnStatement;
+import eu.gricom.interpreter.basic.statements.Statement;
+import eu.gricom.interpreter.basic.statements.UntilStatement;
+import eu.gricom.interpreter.basic.statements.VariableExpression;
+import eu.gricom.interpreter.basic.statements.WhileStatement;
 import eu.gricom.interpreter.basic.tokenizer.BasicTokenType;
 import eu.gricom.interpreter.basic.tokenizer.Token;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
@@ -46,6 +66,7 @@ public class BasicParser implements Parser {
      * This parse step catches statements that are executed before the program starts. Typical command is DATA.
      *
      * @return List of pre-run commands that need to be processed.
+     * @throws SyntaxErrorException for incorrect Basic structures
      */
     public final List<Statement> parsePreRun() throws SyntaxErrorException {
         _iPosition = 0;
@@ -239,7 +260,7 @@ public class BasicParser implements Parser {
 
                     // add FOR statement to statement list
                     ForStatement oForStatement = new ForStatement(iForPosition, strForVariable, oStartValueExpression,
-                            oEndValueExpression, oStepSize, oNextToken.getLine());
+                                                                  oEndValueExpression, oStepSize, oNextToken.getLine());
 
                     try {
                         _oLogger.debug("-parse-> build statement: " + oForStatement.content());

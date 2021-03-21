@@ -382,7 +382,7 @@ This section of the BASIC programming guide describes the three different loops 
 Only the `FOR`-loop can be found in standard BASIC literature, the `WHILE` and the `DO` loops are extensions implemented
 in other BASIC dialects - and proven useful.
 
-##### DO Command
+##### `DO` Command
 The `DO` - Loop has a different nature. This loop will execute the loop at least once, before verifying the continuation of the loop at the
 end. The structure of the loop can be seen in the following chart:
 
@@ -398,11 +398,11 @@ end. The structure of the loop can be seen in the following chart:
     40  X# = X# + 1
     50 UNTIL X# >= 10
 
-###### EXIT Command
+###### `EXIT` Command
 The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
 statement.
 
-###### UNTIL Command
+###### `UNTIL` Command
 The `UNTIL` command closes the `DO` loop. It contains the exit condition, which needs to be true in order to lease the loop. If the
 condition is false, the loop will return back to the `DO` command and will continue from there.
 
@@ -411,7 +411,7 @@ This loop is known in other programming languages or dialects as:
 - `REPEAT-UNTIL` - loop, or
 - `DO - LOOP UNTIL` - loop
 
-##### FOR Command
+##### `FOR` Command
 The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command),
 using increments defined by the `STEP` command.
 Between the increment number after the step and the `NEXT` command, which triggers the next iteration, the developer can include one or multiple commands.
@@ -435,7 +435,7 @@ Example for a FOR loop counting downwards from 2 to -2 in decrements of -0.2 and
     160 PRINT Y#
     170 NEXT
 
-##### WHILE Command
+##### `WHILE` Command
 The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
 The following chart describes the loop structure:
 
@@ -452,19 +452,34 @@ The syntax of the `WHILE` loop is as follows:
     230 X# = X# + 1
     240 END-WHILE
 
-###### EXIT Command
+###### `EXIT` Command
 The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
 statement.
 
-##### INPUT Command
+##### `INPUT` Command
 `INPUT <variable>`
 
-Reads in a line of input from the user and stores it in the variable with
-the given name.
+Reads in a line of input from the user and stores it in the variable with the given name.
 
     INPUT guess$
 
-##### PRINT Command  
+##### `READ` Command
+`READ <variable>,... <variable>`
+
+The `READ` command is reading the data in the `DATA` block into a single or multiple variables. The variables are 
+separated by commas `,`. If the number of `READ` requests exceeds the available entries in the `DATA` block, the program 
+will terminate with an Out Of Data Exception. 
+
+    READ guess$
+
+###### `DATA` Command
+`DATA <value>,..., <value>`
+
+The `DATA` command is pre-defining data blocks for the use of the `READ` command.
+
+    DATA "value1", 123, "value2", 456
+
+##### `PRINT` Command  
 
 `PRINT <expression>`
 
@@ -498,7 +513,7 @@ lead to an error message.
 
 #### Unconditional Process Control (Jump)
 
-##### GOSUB Command
+##### `GOSUB` Command
 
 `GOSUB <line_number> <statements> RETURN`
 
@@ -513,13 +528,13 @@ Returns to the next statement past the command.
       200 PRINT "First line output"
       210 RETURN
 
-###### RETURN Command
+###### `RETURN` Command
 
 *NOTE:* The `RETURN` command assumes that a prior `GOSUB` command has been executed. If the `RETURN` is found without a prior `GOSUB` the
 location for further processing is not predicable, if possible an error is thrown.
 
 
-##### GOTO Command
+##### `GOTO` Command
 
 The `GOTO` command represents the unconditional jump to another location in the program without return after completion 
 (different to the `GOSUB` command). The command will not change any variable content or any status of the program, just 
@@ -546,7 +561,7 @@ Jumps to the statement at the given line number. Processes the program from that
 
 #### Conditional Process Control
 
-##### IF Command
+##### `IF` Command
 
 ###### JASIC Syntax
 
@@ -623,7 +638,7 @@ which dimensions a string array for `J` elements of length `I`, should be remove
     DIM A$(J)
     DIM A(H)
 
-GD-Basic does not require prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
+GD-Basic does not support prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
 shrinking.
 
 ### String Functions
@@ -720,6 +735,15 @@ the simple integer data type. Therefore, the conversions functions are not imple
 - The `CSNG` and `SNG` functions are not implemented
 - The `CINT` and `INT` functions are identical, only CINT is implemented
 
+## Known Issues and Workarounds
+
+### `NEXT` before `REM` and `DATA`
+As the `DATA` and `REM` command are not executing a command during the processing of the program, the interpreter 
+will run into a problem if those commands are following directly a `NEXT` or `END-IF` command. This problem can be 
+avoided by having another command (e.g. `PRINT`) following the next command.
+
+As a best practice, put all `DATA` definitions after the `END` command. This way the error can be avoided. 
+Resolution for this issue is not planned at the moment.
 
 ## Alternative Projects and Information
 
