@@ -11,19 +11,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LabelStatementTest {
-    private LabelStatement oLabelStatement = new LabelStatement();
+    private LabelStatement _oLabelStatement = new LabelStatement();
 
     @Test
     @Order(1)
     public void testPutLabelStatement() {
-        oLabelStatement.putLabelStatement("TestCase", 5);
+        _oLabelStatement.putLabelStatement("TestCase", 5);
     }
 
     @Test
     @Order(2)
     public void testContainsKey() {
         boolean bResult;
-        oLabelStatement.putLabelStatement("TestCase", 5);
+        _oLabelStatement.putLabelStatement("TestCase", 5);
 
         LabelStatement oNewLabelStatement = new LabelStatement();
 
@@ -38,9 +38,9 @@ public class LabelStatementTest {
     @Order(3)
     public void testGetLabelStatement() {
         LabelStatement oNewLabelStatement = new LabelStatement();
-        oLabelStatement.putLabelStatement("TestCase", 5);
+        _oLabelStatement.putLabelStatement("TestCase", 5);
 
-        int iResult = oLabelStatement.getLabelStatement("TestCase");
+        int iResult = _oLabelStatement.getLabelStatement("TestCase");
         assertEquals(iResult, 5);
     }
 }

@@ -141,6 +141,33 @@ public class LongValue implements Value {
     }
 
     @Override
+    public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof LongValue) {
+            LongValue oReturn = new LongValue(_lValue * 2 * ((LongValue) oValue).toLong());
+            return oReturn;
+        }
+
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
+    }
+
+    @Override
+    public final Value shiftRight(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        LongValue oReturn;
+
+        if (oValue instanceof LongValue) {
+            if (((LongValue) oValue).toLong() != 0) {
+                oReturn = new LongValue(_lValue / (2 * ((LongValue) oValue).toLong()));
+            } else {
+                throw new DivideByZeroException(this.toLong()
+                    + ">>" + ((LongValue) oValue).toLong() + " is a division by zero");
+            }
+            return oReturn;
+        }
+
+        throw new SyntaxErrorException(oValue.content() + " is not an Long");
+    }
+
+    @Override
     public final Value power(final Value oValue) throws SyntaxErrorException {
         LongValue oReturn;
 

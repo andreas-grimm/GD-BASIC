@@ -222,24 +222,23 @@ The following keywords are reserved and cannot be used for variables. The follow
 
 | Reserved Word |  GD-Basic | Jasic | 
 |---------------|-----------|-------|
-| `ABS` | reserved | |
+| `ABS` | implemented | |
 | `AND` | reserved | |
-| `ASC` | reserved | |
-| `ATN` | reserved | |
+| `ASC` | implemented | |
+| `ATN` | implemented | |
 | `CALL` | reserved | |
-| `CDBL` | reserved | |
-| `CHR$` | reserved | |
-| `CINT` | reserved | |
+| `CDBL` | implemented | |
+| `CHR` | implemented | |
+| `CINT` | implemented | |
 | `CLOSE` | reserved | |
 | `CLS` | reserved | |
 | `CMD` | reserved | |
 | `CONT` | reserved | |
-| `COS` | reserved | |
-| `CSNG` | reserved | |
+| `COS` | implemented | |
 | `DATA` | reserved | |
 | `DEF FN` | reserved | |
-| `DIM` | reserved | |
-| `DO` | planned | |
+| `DIM` | depreciated | |
+| `DO` | implemented | |
 | `ELSE` | planned | |
 | `END` | implemented | |
 | `END-IF` | implemented | |
@@ -256,14 +255,13 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `GOTO` | implemented | implemented |
 | `IF` | implemented | implemented |
 | `INSTR` | reserved | |
-| `INT` | reserved | |
 | `INPUT` | implemented | implemented |
-| `LEFT$` | reserved | |
+| `LEFT` | reserved | |
 | `LEN` | reserved | |
-| `LET` | reserved | |
+| `LET` | depreciated | |
 | `LOG` | reserved | |
-| `MEM` | reserved | |
-| `MID$` | reserved | |
+| `MEM` | implemented | |
+| `MID` | reserved | |
 | `NEXT` | implemented | |
 | `NOT` | reserved | |
 | `ON` | reserved | |
@@ -274,25 +272,25 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `REM` | implemented | |
 | `REMINDER` | reserved | |
 | `RETURN` | implemented | |
-| `RIGHT$` | reserved | |
-| `RND` | reserved | |
-| `SGN` | reserved | |
-| `SIN` | reserved | |
-| `SQR` | reserved | |
+| `RIGHT` | reserved | |
+| `RND` | implemented | |
+| `SHIFT_LEFT` | planned | |
+| `SHIFT_RIGHT` | planned | |
+| `SIN` | implemented | |
+| `SQR` | implemented | |
 | `STEP` | implemented | |
 | `STOP` | planned | |
-| `STRING$` | reserved | |
-| `STR$` | reserved | |
+| `STRING` | reserved | |
+| `STR` | reserved | |
 | `SYSTEM` | reserved | |
 | `TAB` | reserved | |
-| `TAN` | reserved | |
+| `TAN` | implemented | |
 | `THEN` | implemented | implemented |
-| `TIME$` | reserved | |
+| `TIME` | implemented | |
 | `TO` | implemented | |
-| `UNTIL` | reserved | |
+| `UNTIL` | implemented | |
 | `VAL` | reserved | |
-| `WHILE` | planned | |
-| `&` | reserved | |
+| `WHILE` | implemented | |
 | `+` | implemented | implemented |
 | `-` | implemented | implemented |
 | `*` | implemented | implemented |
@@ -343,12 +341,20 @@ Assignments are made in the form "\<name\> `=` \<expression\>".
 They evaluate the expression on the right and assigns the result to the given named variable. 
 
 ###### JASIC Syntax
-    
+The implemented JASIC version does not support negative or non-integer numbers in the program code. Even as all numbers
+are represented internally, the need to be programmed as integers:
+
     pi = (314159 / 10000)
 
-###### BASIC Syntax
+and for negative numbers:
 
-    PI# = (314159 / 10000)
+    a = (0 - 1)
+
+###### BASIC Syntax
+The implemented BASIC version supports real numbers and negative numbers:
+
+    PI# = 3.14159
+    A% = -1
 
 *Note*: 
 For the Basic language, the assignment equal (`=`) is different from the comparison equal (`==`). For the assignment 
@@ -376,28 +382,7 @@ This section of the BASIC programming guide describes the three different loops 
 Only the `FOR`-loop can be found in standard BASIC literature, the `WHILE` and the `DO` loops are extensions implemented
 in other BASIC dialects - and proven useful.
 
-##### WHILE Command
-The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
-The following chart describes the loop structure:
-
-![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/While-Loop.jpg)
-
-The syntax of the `WHILE` loop is as follows:
-
-`WHILE <condition> <statement> EXIT <statement> END-WHILE`
-
-###### BASIC Syntax
-
-    210 WHILE X# < 3
-    220 PRINT X#
-    230 X# = X# + 1
-    240 END-WHILE
-
-###### EXIT Command
-The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
-statement.
-
-##### DO Command
+##### `DO` Command
 The `DO` - Loop has a different nature. This loop will execute the loop at least once, before verifying the continuation of the loop at the
 end. The structure of the loop can be seen in the following chart:
 
@@ -413,19 +398,21 @@ end. The structure of the loop can be seen in the following chart:
     40  X# = X# + 1
     50 UNTIL X# >= 10
 
-###### EXIT Command
+###### `EXIT` Command
 The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
 statement.
 
-###### UNTIL Command
+###### `UNTIL` Command
+The `UNTIL` command closes the `DO` loop. It contains the exit condition, which needs to be true in order to lease the loop. If the
+condition is false, the loop will return back to the `DO` command and will continue from there.
 
 ###### References
 This loop is known in other programming languages or dialects as:
 - `REPEAT-UNTIL` - loop, or
 - `DO - LOOP UNTIL` - loop
 
-##### FOR Command
-The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command), 
+##### `FOR` Command
+The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command),
 using increments defined by the `STEP` command.
 Between the increment number after the step and the `NEXT` command, which triggers the next iteration, the developer can include one or multiple commands.
 The syntax looks as follows:
@@ -448,15 +435,51 @@ Example for a FOR loop counting downwards from 2 to -2 in decrements of -0.2 and
     160 PRINT Y#
     170 NEXT
 
-##### INPUT Command
+##### `WHILE` Command
+The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
+The following chart describes the loop structure:
+
+![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/While-Loop.jpg)
+
+The syntax of the `WHILE` loop is as follows:
+
+`WHILE <condition> <statement> EXIT <statement> END-WHILE`
+
+###### BASIC Syntax
+
+    210 WHILE X# < 3
+    220 PRINT X#
+    230 X# = X# + 1
+    240 END-WHILE
+
+###### `EXIT` Command
+The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
+statement.
+
+##### `INPUT` Command
 `INPUT <variable>`
 
-Reads in a line of input from the user and stores it in the variable with
-the given name.
+Reads in a line of input from the user and stores it in the variable with the given name.
 
     INPUT guess$
 
-##### PRINT Command  
+##### `READ` Command
+`READ <variable>,... <variable>`
+
+The `READ` command is reading the data in the `DATA` block into a single or multiple variables. The variables are 
+separated by commas `,`. If the number of `READ` requests exceeds the available entries in the `DATA` block, the program 
+will terminate with an Out Of Data Exception. 
+
+    READ guess$
+
+###### `DATA` Command
+`DATA <value>,..., <value>`
+
+The `DATA` command is pre-defining data blocks for the use of the `READ` command.
+
+    DATA "value1", 123, "value2", 456
+
+##### `PRINT` Command  
 
 `PRINT <expression>`
 
@@ -490,7 +513,7 @@ lead to an error message.
 
 #### Unconditional Process Control (Jump)
 
-##### GOSUB Command
+##### `GOSUB` Command
 
 `GOSUB <line_number> <statements> RETURN`
 
@@ -505,13 +528,13 @@ Returns to the next statement past the command.
       200 PRINT "First line output"
       210 RETURN
 
-###### RETURN Command
+###### `RETURN` Command
 
 *NOTE:* The `RETURN` command assumes that a prior `GOSUB` command has been executed. If the `RETURN` is found without a prior `GOSUB` the
 location for further processing is not predicable, if possible an error is thrown.
 
 
-##### GOTO Command
+##### `GOTO` Command
 
 The `GOTO` command represents the unconditional jump to another location in the program without return after completion 
 (different to the `GOSUB` command). The command will not change any variable content or any status of the program, just 
@@ -538,7 +561,7 @@ Jumps to the statement at the given line number. Processes the program from that
 
 #### Conditional Process Control
 
-##### IF Command
+##### `IF` Command
 
 ###### JASIC Syntax
 
@@ -601,6 +624,126 @@ The following expressions are supported:
 
 All binary (atomic) operators have the same precedence.
 
+## Converting BASIC Programs to GD-Basic
+Programs written in a BASIC language other than GD-BASIC may require some minor adjustments before they can be run. The following
+sections describe these adjustments.
+
+### String and Array Dimensions
+Delete all statements used to declare the length of strings or arrays. A statement such as the following
+
+    DIM A$(I,J)
+
+which dimensions a string array for `J` elements of length `I`, should be removed. Also removed should be and `DIM` statements:
+
+    DIM A$(J)
+    DIM A(H)
+
+GD-Basic does not support prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
+shrinking.
+
+### String Functions
+Some Basic languages use a comma `,` or ampersand `&` for string concatenation. Each of these must be changed to a plus sign `+`,
+which is the operator for GD-Basic string concatenation.
+
+In GD-Basic, the `MID$`, `RIGHT$`, and `LEFT$` functions will be used in a later release to take substrings of strings. Forms
+such as `A$(I)` to access the `I`th character in `A$` are replaced by `A$[I]`, or `A$(I,J)` to take a substring of `A$` from
+position `I` to position `J` must be replaced by `A$[I,J]` (later supported in a later version).
+
+### Multiple Assignments
+Some Basic languages allow statements of the following to set `B` and `C` equal to zero:
+
+    10 LET B=C=0
+
+GD-Basic does not support this logic. GW-Basic interprets the statement in which the value B is set based on C equal to zero.
+This will be needed to be changed to
+
+    10 B = A == 0
+
+### Multiple Statement
+Some Basic languages use a backslash `\\` or colons `:` to separate statements on a single line. With GD-Basic, make sure all elements on a line
+only apply to a single command. the use of the colon `:` is not support in the current version.
+
+### MAT Functions
+Programs using the `MAT` functions available in some Basic languages must be rewritten to use `FOR-NEXT` loops to execute properly .
+
+### FOR-NEXT Loops
+Some GD-Basic will always execute a `FOR-NEXT` loop once, regardless of the limits. Other Basic languages checks the limits first
+and does not execute the loop if past limits.
+
+## Implemented Functions
+
+### Mathematical Functions
+
+#### `ABS`: Absolute Value
+The `ABS` function returns the absolute (positive) value of the entered parameter. The function allows integer, real, and long values.
+
+#### `RND`: Random Number
+The `RND` function does not require any parameter. It returns a `REAL` value which is pseudo-randomly generated and between `0` and `1`.
+
+### String Processing Functions
+
+#### `ASC`: Convert an integer to a character using the ASCII Code
+tbd
+
+#### `CHR`: Convert a character to an integer using the ASCII Code
+tbd
+
+#### `LEFT`: Get the Left side of a string
+tbd
+
+#### `LEN`: Get the length of a string
+tbd
+
+#### `MID`: Get the middle of a string
+tbd
+
+#### `RIGHT`: Get the right side of a string
+tbd
+
+#### `STR`: Convert a number to the string
+tbd
+
+#### `VAL`: Convert a string to a real number
+tbd
+
+### System Functions
+
+#### `CALL`: Call an external function
+tbd
+
+#### `MEM`: Available Memory
+The `MEM` function returns the size of the available memory as an integer. The function does not require any parameter.
+
+#### `SYSTEM`: Call an OS function
+The `SYSTEM` executes a command on OS level. The function works is called with two parameters:
+- Command: defines what the function is going to do: `RUN` executes a shell command, `START` executes any program 
+  from the system. The first command returns the result of the execution as a `String` value - while the second 
+  command starts any program, and does not return a result.
+  
+- Program: contains the command line to be executed, as a `String` value.
+
+## Depreciated Basic Commands and Functions
+
+The following standard Basic commands are depreciated and should not be used.
+
+- The `LET` command is depreciated and will be ignored
+- The `DIM` command is depreciated and will cause a Syntax Error
+
+The `SINGLE` data type of the old BASIC implementations does not exist in GD-Basic. The developer is asked to use 
+the simple integer data type. Therefore, the conversions functions are not implemented:
+
+- The `CSNG` and `SNG` functions are not implemented
+- The `CINT` and `INT` functions are identical, only CINT is implemented
+
+## Known Issues and Workarounds
+
+### `NEXT` before `REM` and `DATA`
+As the `DATA` and `REM` command are not executing a command during the processing of the program, the interpreter 
+will run into a problem if those commands are following directly a `NEXT` or `END-IF` command. This problem can be 
+avoided by having another command (e.g. `PRINT`) following the next command.
+
+As a best practice, put all `DATA` definitions after the `END` command. This way the error can be avoided. 
+Resolution for this issue is not planned at the moment.
 
 ## Alternative Projects and Information
 

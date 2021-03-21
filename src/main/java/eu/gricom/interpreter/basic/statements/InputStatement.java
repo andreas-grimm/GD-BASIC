@@ -2,8 +2,10 @@ package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
-import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
+import eu.gricom.interpreter.basic.variableTypes.StringValue;
+import eu.gricom.interpreter.basic.variableTypes.Value;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -64,21 +66,26 @@ public class InputStatement implements Statement {
      * @throws RuntimeException if an incorrect input is detected
      */
     public final void execute() throws RuntimeException {
-        VariableManagement oVariableManager = new VariableManagement();
         BufferedReader oReader = new BufferedReader(new InputStreamReader(System.in));
+        AssignStatement oAssignStatement;
+        Value oValue;
 
         try {
             String strInput = oReader.readLine();
 
             // Store it as a number if possible, otherwise use a string.
             try {
-                double iValue = Double.parseDouble(strInput);
-                oVariableManager.putMap(_strName, iValue);
+                oValue = new RealValue(Double.parseDouble(strInput));
             } catch (NumberFormatException e) {
-                oVariableManager.putMap(_strName, strInput);
+                oValue = new StringValue(strInput);
             }
-        } catch (IOException | SyntaxErrorException e) {
-            throw new RuntimeException("Incorrect input detected...");
+
+            oAssignStatement = new AssignStatement(_iLineNumber, _strName, oValue);
+            oAssignStatement.execute();
+        } catch (IOException | SyntaxErrorException eException) {
+            throw new RuntimeException("Incorrect input detected: " + eException.getMessage());
+        } catch (Exception eUnKnownException) {
+            throw new RuntimeException("Unknown Exception: " + eUnKnownException.getMessage());
         }
     }
 

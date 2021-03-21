@@ -3,7 +3,7 @@ package eu.gricom.interpreter.basic.tokenizer;
 /**
  * This defines the different kinds of tokens for the Dartmouth BASIC styles.
  */
-public enum TokenType {
+public enum BasicTokenType {
     ABS,
     AND,
     ASC,
@@ -17,7 +17,6 @@ public enum TokenType {
     CMD,
     CONT,
     COS,
-    CSNG,
     DATA,
     DEFFN,
     DIM,
@@ -39,12 +38,13 @@ public enum TokenType {
     GOTO,
     IF,
     INSTR,
-    INT,
     INPUT,
     LEFT, // token for the LEFT$ function
     LEN,
+    LENGTH,
     LET,
     LOG,
+    LOG10,
     MEM,
     MID, // token for the MID$ function
     NEXT,
@@ -59,7 +59,6 @@ public enum TokenType {
     RETURN,
     RIGHT, //token for the RIGHT$ function
     RND,
-    SGN,
     SIN,
     SQR,
     STEP,
@@ -75,11 +74,14 @@ public enum TokenType {
     UNTIL,
     VAL,
     WHILE,
+    WRITE,
     AMPERSAND, // token for the & operator
     PLUS, // token for the + operator
     MINUS, // token for the - operator
     MULTIPLY, // token for the * operator
     DIVIDE, // token for the / operator
+    SHIFT_LEFT, // shift a number / bytes to the left (multiply by 2)
+    SHIFT_RIGHT, // shift a number / bytes to the right (divide by 2)
     COLON, // token for the program line divider ':'
     GREATER, // token for the > operator
     GREATER_EQUAL, // token for the => operator

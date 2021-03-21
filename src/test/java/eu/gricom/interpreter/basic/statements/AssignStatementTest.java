@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AssignStatementTest {
-    VariableManagement oVariableManagement = new VariableManagement();
+    private final transient VariableManagement _oVariableManagement = new VariableManagement();
 
     @Test
     public void testExecute() {
@@ -16,7 +16,7 @@ public class AssignStatementTest {
             oAssignmentStatement.execute();
 
             assertTrue(oAssignmentStatement.content().contains("ASSIGN [Test#:= 1.0]"));
-            RealValue oTestValue = (RealValue) oVariableManagement.getMap("Test#");
+            RealValue oTestValue = (RealValue) _oVariableManagement.getMap("Test#");
         } catch (Exception eException) {
             System.err.println(eException.getMessage());
         }

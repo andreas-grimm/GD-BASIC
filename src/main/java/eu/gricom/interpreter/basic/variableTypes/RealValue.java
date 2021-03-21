@@ -8,15 +8,15 @@ import java.math.RoundingMode;
 
 /**
  * RealValue.java
- * <p>
+ *
  * Description:
- * <p>
+ *
  * The NumberValue is the container to hold all numeric values.
- * <p>
+ *
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class RealValue implements Value {
-    private final double _fValue;
+    private double _fValue;
 
     /**
      * Default constructor.
@@ -139,6 +139,16 @@ public class RealValue implements Value {
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not a number");
+    }
+
+    @Override
+    public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
+        throw new SyntaxErrorException(oValue.content() + " '<<' for real type variables is not defined");
+    }
+
+    @Override
+    public final Value shiftRight(final Value oValue) throws SyntaxErrorException {
+        throw new SyntaxErrorException(oValue.content() + " '>>' for real type variables is not defined");
     }
 
     @Override

@@ -4,7 +4,6 @@ import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.memoryManager.Stack;
-import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import org.junit.jupiter.api.Test;
@@ -17,11 +16,11 @@ public class UntilStatementTest {
     @Test
     public void testEndLoop() throws SyntaxErrorException {
         ProgramPointer oProgramPointer = new ProgramPointer();
-        LineNumberXRef _oLineNumberObject = new LineNumberXRef();
+        LineNumberXRef oLineNumberObject = new LineNumberXRef();
         Stack oStack = new Stack();
 
         oStack.push(new IntegerValue(5));
-        _oLineNumberObject.putStatementNumber(5,5);
+        oLineNumberObject.putStatementNumber(5, 5);
 
         oProgramPointer.setCurrentStatement(10);
 
@@ -45,11 +44,11 @@ public class UntilStatementTest {
     @Test
     public void testContinueLoop() throws SyntaxErrorException {
         ProgramPointer oProgramPointer = new ProgramPointer();
-        LineNumberXRef _oLineNumberObject = new LineNumberXRef();
+        LineNumberXRef oLineNumberObject = new LineNumberXRef();
         Stack oStack = new Stack();
 
         oStack.push(new IntegerValue(5));
-        _oLineNumberObject.putStatementNumber(5,5);
+        oLineNumberObject.putStatementNumber(5, 5);
 
         oProgramPointer.setCurrentStatement(10);
 
