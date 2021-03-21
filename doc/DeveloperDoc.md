@@ -47,7 +47,7 @@ alternatively, a *Gradle* build script is part of the source package. At this st
 preferred one.
 
 ```bash
-    gradle compiled
+    gradle build
 ```    
 
 During the build process, the interpreter is compiled, but the process also runs a number of JUNIT test cases, and performs
@@ -777,68 +777,6 @@ For the documentation, this section is splitting the classes up into 3 categorie
 different, the classes are all implemented the same way and in the same area. With potential extra classes this 
 might change.
 
-#### Sample Class
-The Sample class here is part of the documentation to describe the structure of a function class:
-
-Note: The coding standard of the interpreter does not allow global class imports (eg. `import eu.gricom.interpreter.
-basic.variableTypes.*`). All imported classes are explicitly mentioned.
-
-```java
-package eu.gricom.interpreter.basic.functions;
-
-import eu.gricom.interpreter.basic.error.RuntimeException;
-import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
-import eu.gricom.interpreter.basic.variableTypes.LongValue;
-import eu.gricom.interpreter.basic.variableTypes.RealValue;
-import eu.gricom.interpreter.basic.variableTypes.Value;
- ```
-We document the functionality of the function in the class header, not on method level.
-```java
-/**
- * SAMPLE Function.
- *
- * Description:
- *
- * The SAMPLE function is in here for documentation only. The class does not exist in the code-base. For 
- * documentation this class has one parameter. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
- */
-public final class Sample {
-```
-The class has only a private constructor, which also does not have any functionality inside. This private 
-constructor has been added to make the code compliant with the used Checkstyle static code analysis.
-```java
-    /**
-     * Private Constructor.
-     */
-    private Sample() {
-    }
-```
-The actual functionality is implemented in the `execute` method. Supporting private methods are permitted, but so 
-far have not been needed.
-```java
-    /**
-     * Functions implemented here are similar to Statements with the difference
-     * that they actually return a result to the caller of type Value. The method execute
-     * triggers the function.
-     *
-     * @param oValue input value
-     * @return Value the return message of the function
-     * @throws Exception as any execution error found during execution
-     */
-    public static Value execute(final Value oValue) throws Exception {
-        if (oValue instanceof IntegerValue) {
-                return oValue;
-        }
-```
-In case the type verification fails, the class is throwing a runtime exception.
-```java
-        throw new RuntimeException("Input value not numeric: " + oValue);
-    }
-}
-```
-
 #### Mathematical Functions
 The following mathematical functions are implemented:
 
@@ -867,11 +805,6 @@ This method multiplies the incoming parameter with `-1` if the parameter is a nu
                 return oValue;
             }
 ```
-
-##### `CDBL` and `CINT`
-These methods are using the internal type conversion methods of the numeric type to return the integer of the real
-(double) value of the parameter
-
 
 #### String Functions
 
@@ -909,6 +842,93 @@ or
 At this stage the `SYSTEM` function is implemented for `Unix` and `Linux` operating systems. The requirement for the 
 execution is the installation of the `BASH` command interpreter. In a later version, the function will support 
 Microsoft and Unix systems without installed `BASH` shell.
+
+### Linking the functions into the Interpreter
+
+The functions are linked to the programming language to a system of files which need to be modified in order to
+generate a new function and add it to the interpreter
+
+#### Step 1: Build a new function
+
+All functions are structured the same way, independent of the number of parameters and type of the parameters. As 
+the class `Value` is inherited from the class `Expression`, the function can be addressed to receive either. The 
+following sample class describes the structure:
+
+##### Sample Class
+The Sample class here is part of the documentation to describe the structure of a function class:
+
+Note: The coding standard of the interpreter does not allow global class imports (eg. `import eu.gricom.interpreter.
+basic.variableTypes.*`). All imported classes are explicitly mentioned.
+
+```java
+package eu.gricom.interpreter.basic.functions;
+
+import eu.gricom.interpreter.basic.error.RuntimeException;
+import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
+import eu.gricom.interpreter.basic.variableTypes.LongValue;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
+import eu.gricom.interpreter.basic.variableTypes.Value;
+import eu.gricom.interpreter.basic.statements.Expression;
+ ```
+We document the functionality of the function in the class header, not on method level.
+```java
+/**
+ * SAMPLE Function.
+ *
+ * Description:
+ *
+ * The SAMPLE function is in here for documentation only. The class does not exist in the code-base. For 
+ * documentation this class has one parameter. This parameter has to be numeric.
+ *
+ * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ */
+public final class Sample {
+```
+The class has only a private constructor, which also does not have any functionality inside. This private
+constructor has been added to make the code compliant with the used Checkstyle static code analysis.
+```java
+    /**
+     * Private Constructor.
+     */
+    private Sample() {
+    }
+```
+The actual functionality is implemented in the `execute` method. Supporting private methods are permitted, but so
+far have not been needed.
+```java
+    /**
+     * Functions implemented here are similar to Statements with the difference
+     * that they actually return a result to the caller of type Value. The method execute
+     * triggers the function.
+     *
+     * @param oExpression input parameter
+     * @return Value the return message of the function
+     * @throws Exception as any execution error found during execution
+     */
+    public static Value execute(final Expression oExpression) throws Exception {
+        Value oValue = oExpression.evaluate();
+        
+        if (oValue instanceof RealValue) {
+                return oValue;
+        }
+```
+In case the type verification fails, the class is throwing a runtime exception.
+```java
+        throw new RuntimeException("Input value not numeric: " + oValue);
+    }
+}
+```
+
+Each function has a corresponding unit test class in the JUnit test section of the code.
+
+#### Step 2: Adding Reserved Word and Token
+
+
+#### Step 3: Adding Functionality into the Parser Class
+
+
+#### Step 4: Adding BASIC Test Function
+
 
 ## Program Storage and Loading
 In general, the interpreter reads a plain, ASCII formatted, BASIC program into memory. Due to the speed of the 

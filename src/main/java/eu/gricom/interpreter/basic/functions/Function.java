@@ -170,6 +170,10 @@ public class Function implements Expression {
             case STR:
                 return Str.execute(_oFirstParam.evaluate());
 
+            // SYSTEM Token: Call operation system function
+            case SYSTEM:
+                return System.execute(_oFirstParam.evaluate(), _oSecondParam.evaluate());
+
             // TAN Token: Return the Tangents of the value parameter
             case TAN:
                 return Tan.execute(_oFirstParam.evaluate());

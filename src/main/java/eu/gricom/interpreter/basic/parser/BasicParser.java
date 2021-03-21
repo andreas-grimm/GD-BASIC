@@ -3,31 +3,14 @@ package eu.gricom.interpreter.basic.parser;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.functions.Function;
 import eu.gricom.interpreter.basic.helper.Logger;
-import eu.gricom.interpreter.basic.statements.AssignStatement;
-import eu.gricom.interpreter.basic.statements.DoStatement;
-import eu.gricom.interpreter.basic.statements.EndStatement;
-import eu.gricom.interpreter.basic.statements.Expression;
-import eu.gricom.interpreter.basic.statements.ForStatement;
-import eu.gricom.interpreter.basic.statements.GosubStatement;
-import eu.gricom.interpreter.basic.statements.GotoStatement;
-import eu.gricom.interpreter.basic.statements.IfThenStatement;
-import eu.gricom.interpreter.basic.statements.InputStatement;
-import eu.gricom.interpreter.basic.statements.LabelStatement;
+import eu.gricom.interpreter.basic.statements.*;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
-import eu.gricom.interpreter.basic.statements.NextStatement;
-import eu.gricom.interpreter.basic.statements.OperatorExpression;
-import eu.gricom.interpreter.basic.statements.PrintStatement;
-import eu.gricom.interpreter.basic.statements.RemStatement;
-import eu.gricom.interpreter.basic.statements.ReturnStatement;
-import eu.gricom.interpreter.basic.statements.Statement;
-import eu.gricom.interpreter.basic.statements.UntilStatement;
-import eu.gricom.interpreter.basic.statements.VariableExpression;
-import eu.gricom.interpreter.basic.statements.WhileStatement;
 import eu.gricom.interpreter.basic.tokenizer.BasicTokenType;
 import eu.gricom.interpreter.basic.tokenizer.Token;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
 import eu.gricom.interpreter.basic.variableTypes.StringValue;
 
+import eu.gricom.interpreter.basic.variableTypes.Value;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,10 +41,87 @@ public class BasicParser implements Parser {
         _iPosition = 0;
     }
 
+
+    /**
+     * This parse step catches statements that are executed before the program starts. Typical command is DATA.
+     *
+     * @return List of pre-run commands that need to be processed.
+     */
+    public final List<Statement> parsePreRun() throws SyntaxErrorException {
+        _iPosition = 0;
+        List<Statement> aoStatements = new ArrayList<>();
+
+        _oLogger.debug("Start parsing for pre-run commands...");
+        boolean bContinue = true;
+
+        while (bContinue) {
+            switch (getToken(0).getType()) {
+                case DATA:
+                    _oLogger.debug("-parsePreRun-> found Token: <" + _iPosition + "> [DATA] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    List<Value> aoValues = new ArrayList<>();
+                    Value oValue;
+
+                    _iPosition++;
+                    Token oToken = getToken(0);
+                    if (oToken.getType() != BasicTokenType.STRING
+                            && oToken.getType() != BasicTokenType.NUMBER) {
+                        throw new SyntaxErrorException("Token not of expected type:" + oToken.getType() + " Value: " + oToken.getText());
+                    }
+
+                    if (oToken.getType() == BasicTokenType.STRING) {
+                        oValue = new StringValue(oToken.getText());
+                    } else {
+                        oValue = new RealValue(Double.parseDouble(oToken.getText()));
+                    }
+
+                    aoValues.add(oValue);
+                    _iPosition++;
+
+                    while (getToken(0).getType() == BasicTokenType.COMMA) {
+                        _iPosition++;
+                        oToken = getToken(0);
+                        if (oToken.getType() != BasicTokenType.STRING
+                                && oToken.getType() != BasicTokenType.NUMBER) {
+                            throw new SyntaxErrorException("Token not of expected type:" + oToken.getType() + " Value: " + oToken.getText());
+                        }
+
+                        if (oToken.getType() == BasicTokenType.STRING) {
+                            oValue = new StringValue(oToken.getText());
+                        } else {
+                            oValue = new RealValue(Double.parseDouble(oToken.getText()));
+                        }
+
+                        aoValues.add(oValue);
+                        _iPosition++;
+                    }
+
+                    aoStatements.add(new DataStatement(_iPosition, aoValues));
+                    break;
+
+                // EOP Token: End of the program found, finishing the loop thru the program
+                case EOP:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [EOP] ");
+                    bContinue = false;
+                    _iPosition++;
+                    break;
+
+                // No Token identified, Syntax Error
+                default:
+                    _oLogger.debug("-parsePreRun-> found Token: <" + _iPosition + "> [" + getToken(0).getType() + "] ");
+                    _iPosition++;
+            }
+        }
+
+        return aoStatements;
+    }
+
+
     @Override
     public final List<Statement> parse() throws SyntaxErrorException {
         LabelStatement oLabelStatement = new LabelStatement();
         List<Statement> aoStatements = new ArrayList<>();
+        _iPosition = 0;
 
         int iOrgPosition;
         String strTargetLineNumber;
@@ -74,6 +134,32 @@ public class BasicParser implements Parser {
                 // COMMENT Token: Ignore any following part of the line, identical to the REM token.
                 case COMMENT:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [COMMENT] ");
+                    _iPosition++;
+                    break;
+
+                // DATA Token: Already processed in the pre-run parse step, still in to ensure stability
+                case DATA:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [DATA] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+
+                    Token oToken = getToken(1);
+                    if (oToken.getType() != BasicTokenType.STRING
+                            && oToken.getType() != BasicTokenType.NUMBER) {
+                        throw new SyntaxErrorException("Token not of expected type:" + oToken.getType() + " Value: " + oToken.getText());
+                    }
+                    _iPosition++;
+
+                    while (getToken(1).getType() == BasicTokenType.COMMA) {
+                        _iPosition++;
+
+                        oToken = getToken(1);
+                        if (oToken.getType() != BasicTokenType.STRING
+                                && oToken.getType() != BasicTokenType.NUMBER) {
+                            throw new SyntaxErrorException("Token not of expected type:" + oToken.getType() + " Value: " + oToken.getText());
+                        }
+                        _iPosition++;
+                    }
+
                     _iPosition++;
                     break;
 
@@ -262,6 +348,38 @@ public class BasicParser implements Parser {
                     aoStatements.add(new PrintStatement(iPrintPosition, aoExpression, bCRLF));
                     break;
 
+                // READ Token: read a data value from a DATA block
+                case READ:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [READ] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    List<String> astrVariables = new ArrayList<>();
+                    String strVariable;
+                    _iPosition++;
+
+                    Token oReadToken = getToken(0);
+                    if (oReadToken.getType() != BasicTokenType.WORD) {
+                        throw new SyntaxErrorException("Token not of expected type:" + oReadToken.getType()
+                                                               + " Value" + ": " + oReadToken.getText());
+                    }
+
+                    astrVariables.add(oReadToken.getText());
+                    _iPosition++;
+
+                    while (getToken(0).getType() == BasicTokenType.COMMA) {
+                        _iPosition++;
+                        oReadToken = getToken(0);
+                        if (oReadToken.getType() != BasicTokenType.WORD) {
+                            throw new SyntaxErrorException("Token not of expected type:" + oReadToken.getType()
+                                                                   + " Value: " + oReadToken.getText());
+                        }
+
+                        astrVariables.add(oReadToken.getText());
+                        _iPosition++;
+                    }
+
+                    aoStatements.add(new ReadStatement(_iPosition, astrVariables));
+                    break;
+
                 // REM Token: contains comments to the program, ignore the rest of the line
                 case REM:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [REM] ");
@@ -303,8 +421,8 @@ public class BasicParser implements Parser {
                     if (getToken(1).getType() == BasicTokenType.ASSIGN_EQUAL) {
                         String strName = getToken(0).getText();
                         _iPosition = _iPosition + 2;
-                        Expression oValue = expression();
-                        aoStatements.add(new AssignStatement(iCurrPosition, strName, oValue));
+                        Expression oExpression = expression();
+                        aoStatements.add(new AssignStatement(iCurrPosition, strName, oExpression));
                     } else {
                         throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString()
                                 + " in Line [" + getToken(0).getLine() + "]");
@@ -449,8 +567,24 @@ public class BasicParser implements Parser {
                 consumeToken(BasicTokenType.RIGHT_PAREN);
                 return oExpression;
 
+            // three parameter function calls
+            case MID:
+                oToken = getToken(0);
+                _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
+                                       + oToken.getText() + "' [" + oToken.getLine() + "]");
+                _iPosition++;
+                consumeToken(BasicTokenType.LEFT_PAREN);
+                Expression oParameter1 = expression();
+                consumeToken(BasicTokenType.COMMA);
+                Expression oParameter2 = expression();
+                consumeToken(BasicTokenType.COMMA);
+                Expression oParameter3 = expression();
+                Expression oThreeParameterFunction = new Function(oToken, oParameter1, oParameter2, oParameter3);
+                consumeToken(BasicTokenType.RIGHT_PAREN);
+                return oThreeParameterFunction;
+
             // two parameter function calls
-            case LEFT: case RIGHT:
+            case INSTR: case LEFT: case RIGHT: case SYSTEM:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                                        + oToken.getText() + "' [" + oToken.getLine() + "]");
@@ -459,9 +593,9 @@ public class BasicParser implements Parser {
                 Expression oParameter1Expression = expression();
                 consumeToken(BasicTokenType.COMMA);
                 Expression oParameter2Expression = expression();
-                Expression oSingleParameterFunction = new Function(oToken, oParameter1Expression, oParameter2Expression);
+                Expression oTwoParameterFunction = new Function(oToken, oParameter1Expression, oParameter2Expression);
                 consumeToken(BasicTokenType.RIGHT_PAREN);
-                return oSingleParameterFunction;
+                return oTwoParameterFunction;
 
             // single parameter function calls
             case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case EXP: case LEN: case LOG:

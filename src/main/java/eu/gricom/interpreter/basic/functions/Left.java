@@ -30,13 +30,12 @@ public final class Left {
      * that they actually return a result to the caller of type Value. The method execute
      * triggers the function.
      *
-     * @param oExpression input string value
+     * @param oValue input string value
      * @param oLength length of the expected substring
      * @return Value the return message of the function
      * @throws Exception as any execution error found during execution
      */
-    public static Value execute(final Expression oExpression, final Value oLength) throws Exception {
-        Value oValue = oExpression.evaluate();
+    public static Value execute(final Value oValue, final Value oLength) throws Exception {
         int iLength = (int) oLength.toReal();
 
         if (oValue instanceof StringValue) {

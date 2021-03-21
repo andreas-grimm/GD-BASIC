@@ -32,21 +32,19 @@ public final class System {
      * triggers the function.
      *
      * @param oCommand parameters for the program to execute
-     * @param oExpression name of the program to execute
+     * @param oValue name of the program to execute
      * @return Value the return message of the function
      * @throws Exception as any execution error found during execution
      */
-    public static Value execute(final Value oCommand, final Expression oExpression) throws Exception {
-        Value oProgram = oExpression.evaluate();
-
+    public static Value execute(final Value oCommand, final Value oValue) throws Exception {
         String strReturn = new String();
-        if (oProgram instanceof StringValue
+        if (oValue instanceof StringValue
                 && oCommand instanceof StringValue) {
 
             ProcessBuilder oProcessBuilder = new ProcessBuilder();
 
             if (oCommand.toString().toUpperCase(Locale.ROOT).matches("RUN")) {
-                oProcessBuilder.command("bash", "-c", oProgram.toString());
+                oProcessBuilder.command("bash", "-c", oValue.toString());
             } else {
                 throw new RuntimeException("Parameter error");
             }

@@ -31,4 +31,6 @@
 330 A% = 2
 340 A$ = RIGHT(C$, A% - 1)
 350 PRINT "Right side of the string, last two chars: ", A$
+980 A$ = SYSTEM("RUN", "/bin/ls -CF /")
+990 PRINT A$
 999 END

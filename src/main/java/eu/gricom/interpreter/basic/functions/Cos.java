@@ -27,13 +27,11 @@ public final class Cos {
      * that they actually return a result to the caller of type Value. The method execute
      * triggers the function.
      *
-     * @param oExpression input value
+     * @param oValue input value
      * @return Value the return message of the function
      * @throws Exception as any execution error found during execution
      */
-    public static Value execute(final Expression oExpression) throws Exception {
-        Value oValue = oExpression.evaluate();
-
+    public static Value execute(final Value oValue) throws Exception {
         if (oValue instanceof RealValue) {
             return new RealValue(Math.cos(oValue.toReal()));
         }

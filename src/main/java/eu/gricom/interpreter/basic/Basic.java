@@ -63,6 +63,7 @@ public class Basic {
      */
     public final void interpret(final String strProgram) {
         ProgramPointer oProgramPointer = new ProgramPointer();
+        List<Statement> aoPreRunStatements = null;
         List<Statement> aoStatements = null;
 
         // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
@@ -106,6 +107,7 @@ public class Basic {
                 oParser = new JasicParser(aoTokens);
             } else {
                 oParser = new BasicParser(aoTokens);
+                aoPreRunStatements = ((BasicParser) oParser).parsePreRun();
             }
 
             aoStatements = oParser.parse();
@@ -114,10 +116,31 @@ public class Basic {
         }
 
         // Run.
+        _oLogger.info("Pre-load environment...");
+        try {
+            if (aoPreRunStatements != null) {
+                oProgramPointer.setCurrentStatement(0);
+                while (oProgramPointer.getCurrentStatement() < aoPreRunStatements.size()) {
+                    // as long as we have not reached the end of the code
+                    int iThisStatement = oProgramPointer.getCurrentStatement();
+
+                    oProgramPointer.calcNextStatement();
+                    _oLogger.debug("PreRun Statement # <" + iThisStatement + ">: [" + aoPreRunStatements.get(iThisStatement).content() + "]");
+
+                    aoPreRunStatements.get(iThisStatement).execute();
+                }
+            } else {
+                _oLogger.error("Parsing delivered empty program");
+            }
+        } catch (Exception eException) {
+            eException.printStackTrace();
+        }
+
         _oLogger.info("Starting execution...");
         try {
             if (aoStatements != null) {
                 int iSourceCodeLineNumber = -1;
+                oProgramPointer.setCurrentStatement(0);
 
                 while (oProgramPointer.getCurrentStatement() < aoStatements.size()) {
                     // as long as we have not reached the end of the code

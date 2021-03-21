@@ -30,23 +30,21 @@ public final class Mid {
      * that they actually return a result to the caller of type Value. The method execute
      * triggers the function.
      *
-     * @param oExpression input value
+     * @param oValue input value
+     * @param oStartPosition Starting position of the substring
+     * @param oEndPosition Ending position of the substring
      * @return Value the return message of the function
      * @throws Exception as any execution error found during execution
      */
-    public static Value execute(final Expression oExpression,
+    public static Value execute(final Expression oValue,
                                 final Expression oStartPosition,
                                 final Expression oEndPosition) throws Exception {
-        Value oValue = oExpression.evaluate();
-        Value oStartValue = oStartPosition.evaluate();
-        Value oEndValue = oEndPosition.evaluate();
-
         if (oValue instanceof StringValue
-                && oStartValue instanceof IntegerValue
-                && oEndValue instanceof IntegerValue) {
+                && oStartPosition instanceof IntegerValue
+                && oEndPosition instanceof IntegerValue) {
             String strValue = oValue.toString();
-            int iStart = ((IntegerValue) oStartValue).toInt();
-            int iEnd = ((IntegerValue) oEndValue).toInt();
+            int iStart = ((IntegerValue) oStartPosition).toInt();
+            int iEnd = ((IntegerValue) oEndPosition).toInt();
 
             if (iStart < 0
                 || iEnd < 0
