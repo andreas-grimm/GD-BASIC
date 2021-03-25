@@ -23,10 +23,10 @@ public final class ReservedWords {
      */
     private static String[] _astrReservedWords = {
             "ABS", "AND", "ASC", "ATN",
-            "CALL", "CDBL", "CHR", "CINT", "CLOSE", "CLS", "CMD", "CONT", "COS",
+            "CALL", "CDBL", "CHR", "CINT", "CLEAN", "CLOSE", "CLS", "CMD", "CONT", "COS",
             "DATA", "DEFFN", "DIM", "DO",
             "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT", "EXP",
-            "FOR", "FRE",
+            "FOR", "FREE",
             "GOSUB", "GOTO",
             "IF", "INSTR", "INPUT",
             "LEFT", "LEN", "LENGTH", "LET", "LOG", "LOG10",
@@ -47,12 +47,12 @@ public final class ReservedWords {
 
     private static BasicTokenType[] _aeTokenTypes = {
         BasicTokenType.ABS, BasicTokenType.AND, BasicTokenType.ASC, BasicTokenType.ATN,
-        BasicTokenType.CALL, BasicTokenType.CDBL, BasicTokenType.CHR, BasicTokenType.CINT, BasicTokenType.CLOSE, BasicTokenType.CLS,
-            BasicTokenType.CMD, BasicTokenType.CONT, BasicTokenType.COS,
+        BasicTokenType.CALL, BasicTokenType.CDBL, BasicTokenType.CHR, BasicTokenType.CINT, BasicTokenType.CLEAN,
+            BasicTokenType.CLOSE, BasicTokenType.CLS, BasicTokenType.CMD, BasicTokenType.CONT, BasicTokenType.COS,
         BasicTokenType.DATA, BasicTokenType.DEFFN, BasicTokenType.DIM, BasicTokenType.DO,
         BasicTokenType.ELSE, BasicTokenType.END, BasicTokenType.ENDIF, BasicTokenType.ENDWHILE, BasicTokenType.EOF, BasicTokenType.EOL,
             BasicTokenType.ERL, BasicTokenType.ERR, BasicTokenType.EXIT, BasicTokenType.EXP,
-        BasicTokenType.FOR, BasicTokenType.FRE,
+        BasicTokenType.FOR, BasicTokenType.FREE,
         BasicTokenType.GOSUB, BasicTokenType.GOTO,
         BasicTokenType.IF, BasicTokenType.INSTR, BasicTokenType.INPUT,
         BasicTokenType.LEFT, BasicTokenType.LEN, BasicTokenType.LENGTH, BasicTokenType.LET, BasicTokenType.LOG, BasicTokenType.LOG10,

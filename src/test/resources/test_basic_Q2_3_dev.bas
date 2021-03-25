@@ -10,7 +10,15 @@
 270 FOR I% = 0 TO 9 STEP 1
 280 PRINT A$(I%), " ";
 290 NEXT
-300 PRINT ""
+300 PRINT " "
+310 PRINT "Testing IF - THEN - ELSE "
+320 FOR D# = 1 TO 3 STEP 1
+330 IF D# == 2 THEN
+340 PRINT D#, " is even"
+350 ELSE
+360 PRINT D#, " is odd"
+370 END-IF
+380 NEXT
 800 PRINT "Test done..."
 810 DATA 123, "Test"
 820 DATA "Test 2", 456
