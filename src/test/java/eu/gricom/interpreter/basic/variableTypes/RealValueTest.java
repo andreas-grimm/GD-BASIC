@@ -6,11 +6,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class RealValueTest {
 
     @Test
-    public void testToString() {RealValue oNumberValue = new RealValue(999);
+    public void testToString() {
+        RealValue oNumberValue = new RealValue(999);
 
         String strResult = oNumberValue.toString();
         assertTrue(strResult.matches("999.0"));
@@ -42,8 +44,7 @@ public class RealValueTest {
             assertTrue(oResult.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -57,8 +58,7 @@ public class RealValueTest {
             assertTrue(oResult.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -72,8 +72,7 @@ public class RealValueTest {
             assertTrue(oResultValue.toReal() == 3.0);
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -87,8 +86,7 @@ public class RealValueTest {
             assertTrue(oResultValue.toReal() == -1.0);
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -102,8 +100,7 @@ public class RealValueTest {
             assertTrue(oResultValue.toReal() == 2.0);
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -117,8 +114,7 @@ public class RealValueTest {
             assertTrue(oResultValue.toReal() == 0.5);
 
         } catch (SyntaxErrorException | DivideByZeroException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -129,6 +125,7 @@ public class RealValueTest {
 
         assertThrows(DivideByZeroException.class, () -> {
             RealValue oResultValue = (RealValue) oFirstValue.divide(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -138,12 +135,11 @@ public class RealValueTest {
             RealValue oFirstValue = new RealValue(2);
             RealValue oSecondValue = new RealValue(2);
 
-            RealValue oResultValue = (RealValue)oFirstValue.power(oSecondValue);
+            RealValue oResultValue = (RealValue) oFirstValue.power(oSecondValue);
             assertTrue(oResultValue.toInt() == 4);
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -155,6 +151,7 @@ public class RealValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             RealValue oResultValue = (RealValue) oFirstValue.power(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -168,8 +165,7 @@ public class RealValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -181,6 +177,7 @@ public class RealValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -194,8 +191,7 @@ public class RealValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -207,6 +203,7 @@ public class RealValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -220,8 +217,7 @@ public class RealValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -233,6 +229,7 @@ public class RealValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -246,8 +243,7 @@ public class RealValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -259,6 +255,7 @@ public class RealValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 }

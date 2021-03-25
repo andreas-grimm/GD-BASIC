@@ -18,8 +18,7 @@ public class Stack {
 
 
     /**
-     * Gets a previously consumed token, indexing backwards. last(1) will
-     * be the token just consumed, last(2) the one before that, etc.
+     * Initializes the stack if it does not exist.
      */
     public Stack() {
         if (_oStack == null) {
@@ -27,20 +26,20 @@ public class Stack {
         }
     }
 
+    @SuppressWarnings("unchecked")
     /**
-     * Gets a previously consumed token, indexing backwards. last(1) will
-     * be the token just consumed, last(2) the one before that, etc.
+     * Pushes a Value object into the Stack.
      *
-     * @param  oValue How far back in the token stream to look.
+     * @param  oValue Value object to be pushed.
      */
     public final void push(final Value oValue) {
         _oStack.push(oValue);
     }
 
 
+    @SuppressWarnings("unchecked")
     /**
-     * Gets a previously consumed token, indexing backwards. last(1) will
-     * be the token just consumed, last(2) the one before that, etc.
+     * Reoves the top Value typed element from the Stack
      *
      * @return Value retrieved from the stack
      * @throws EmptyStackException the stack is empty while a pop method is called
@@ -55,8 +54,7 @@ public class Stack {
 
 
     /**
-     * Gets a previously consumed token, indexing backwards. last(1) will
-     * be the token just consumed, last(2) the one before that, etc.
+     * Clear the Stack.
      */
     public final void reset() {
         _oStack.empty();

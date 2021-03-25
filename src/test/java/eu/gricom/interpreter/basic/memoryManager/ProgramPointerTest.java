@@ -5,19 +5,18 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProgramPointerTest {
-    ProgramPointer oProgramPointer = new ProgramPointer();
+    private final transient ProgramPointer _oProgramPointer = new ProgramPointer();
 
     @Test
     public void testCurrentStatement() {
-        ProgramPointer oProgramPointer = new ProgramPointer();
 
-        oProgramPointer.setCurrentStatement(100);
+        _oProgramPointer.setCurrentStatement(100);
 
-        int iResult = oProgramPointer.getCurrentStatement();
+        int iResult = _oProgramPointer.getCurrentStatement();
         assertEquals(iResult, 100);
 
-        oProgramPointer.calcNextStatement();
-        iResult = oProgramPointer.getCurrentStatement();
+        _oProgramPointer.calcNextStatement();
+        iResult = _oProgramPointer.getCurrentStatement();
         assertEquals(iResult, 101);
     }
 }

@@ -26,5 +26,5 @@ public interface Lexer {
      * @return list of token found in the source code.
      * @throws SyntaxErrorException for any situation in which the tokenizer fails
      */
-    List<Token> tokenize(final String strSource) throws SyntaxErrorException;
+    List<Token> tokenize(String strSource) throws SyntaxErrorException;
 }

@@ -15,8 +15,8 @@ format can be found here: [www.markdownguide.org](https://www.markdownguide.org/
 or here: [github.com](https://guides.github.com/features/mastering-markdown/)
 
 ### Some Important Concepts
-The GD-Basic Interpreter is not an industrial grade interpeter. The target of this project is to provide a BASIC interpreter
-that allows to run as much as possible the different programs build in the 1970's and 1980's - and at the same time provide
+The GD-Basic Interpreter is not an industrial grade interpreter. The target of this project is to provide a BASIC 
+interpreter that allows to run as much as possible the different programs build in the 1970's and 1980's - and at the same time provide
 a bit more functionality. The interpreter is designed to be embedded into JAVA programs. This brings some very basic requirements
 for the development:
 - In order to be portable the interpreter has a very limited number of third party packages. Actually the only one used at this time
@@ -39,7 +39,16 @@ Windows as well.
 For the compilation, the project is using *Apache Maven* as the build manager tool. The implementation is tested with Maven 3.6.3, but
 any newer version of Maven should work as well. The command line to run Maven is:
 
+```bash
     mvn clean compile dependency:tree dependency:copy-dependencies package
+```
+
+alternatively, a *Gradle* build script is part of the source package. At this stage, the Maven build script is the 
+preferred one.
+
+```bash
+    gradle build
+```    
 
 During the build process, the interpreter is compiled, but the process also runs a number of JUNIT test cases, and performs
 a static code analysis using Checkstyle. The definition ofgi the syntax for Checkstyle is in the `./etc` directory, Checkstyle
@@ -95,7 +104,7 @@ When we show the structure of the BASIC code, we follow there document standards
 
 ## General Structure of the Interpreter
 
-![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/master/doc/jpg/Process%20Flow.jpg?raw=true)
+![Interpreter Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/ProcessFlow.jpg)
 
 ### Tokenizer
 The Tokenizer or Lexer of the interpreter translates the read source code into a list of recognized tokens.
@@ -111,9 +120,29 @@ The tokenizers are named after the Basic versions they are implementing:
 
 The result of the tokenization process is a list of objects of type Token (see `eu.gricom.interpreter.basic.tokenizier.Token`). 
 Each token object holds three attributes:
-* __Type__: the token type, as defined in `eu.gricom.interpreter.basic.tokenizer.TokenType.java`.
+* __Type__: the token type, as defined in `eu.gricom.interpreter.basic.tokenizer.BasicTokenType.java`.
 * __Text__: the program code identified by the token
 * __Line__: the line number of the program code in the original program. This is used i.e. for interpreter error messages.
+
+### Processing a Program in the Tokenizer
+
+#### BASIC Programs
+The tokenization of a `BASIC` program is performed in the class `BasicLexer.java` in the `tokenizer` package. The tokenizer
+retrieves the program as an array of program lines in string format. The program is then processing the program line by line.
+
+The main function of the tokenizer class is named `tokenize`. It follows this process:
+
+1. Separation of the program in single lines.
+2. Splitting the lines into line numbers and line contents.
+3. For each line:
+- remove empty line and handle lines that only contain the line number
+- retrieve the line number. If the line number is smaller or equal to the previous line number, the lexer will throw an exception.
+- normalize the program line:
+a) Remove whitespaces and tabs from any location outside quotation marks (`"`). 
+b) Separate parenthesis (`(` and `)`) from the keywords. This is only done for keywords, not for arrays.
+- find keywords and generate a list of tokens.    
+
+#### JASIC Programs
 
 ### Adding new token to the Tokenizer
 
@@ -145,10 +174,12 @@ Before Adding new Basic Commands to the Parser, it is important to prepare and v
 When adding the command into the parser, add the token in the `case` statement of the `parse()` method in the `BasicParser` class in the `parser` package.
 Every `case` block starts with:
 
+```java
     case [Token]:
       _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [Token] ");
       iOrgPosition = _iPosition++;
       oLineNumber.putLineNumber(getToken(0).getLine(), iOrgPosition);
+```
 
 This code is required to map the Basic source code line number with the number of the token and ultimately with the number of the statement in the program execution flow.
 
@@ -221,7 +252,7 @@ Utility methods:
 ##### Example
 1. Set the program pointer to the next BASIC program line following the BASIC line number defined in `iTargetNumber`:
 
-
+```java
     import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
     ...
     private final LineNumberXRef oLineNumberObject = new LineNumberXRef();
@@ -230,11 +261,149 @@ Utility methods:
             oLineNumberObject.getNextLineNumber(
                     oLineNumberObject.getLineNumberFromToken(
                             oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
-
+```
 
 ## Main Classes
 
+![Main Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/basic.png)
+
+This part of the documentation describes the main packages in detail and in sequence of the processing in the 
+interpretion process:
+
+- tokenizing,
+- parsing,
+- executing...
+
+### Tokenizer Package
+![Tokenizer Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer.png)
+
+![Referencing Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer_reference.png)
+
+This section of the documentation is detailing the process of tokenizing the BASIC or JASIC source code. The general
+sequence (Tokeinzing (Lexicalic Analysis) -> Parsing -> Executing) has been described already, this section descrbes
+the different classes and functions more in detail.
+
+The two main classes in the package are the two Lexer classes, `JasicLexer.java` and `BasicLexer.java`. These
+transfer the source code into token. The floowing sections describe the functionality of the two Lexer classes.
+
+#### `Lexer.java`
+The `Lexer.java` interface class defines the functions of any lexer in this package. The required function does 
+require a single method:
+
+```java
+    List<Token> tokenize(String strSource) throws SyntaxErrorException;
+```
+
+
+#### `JasicLexer.java`
+
+#### `BasicLexer.java`
+
+The `BasicLexer.java` class is a complete re-write of the original `JasicLexer.java` class. It has significant
+differences, which are covering the extensive extra functionality of the BASIC language.
+
+The `BasicLexer.java` class is using a normalization process. This process replaces tabulator characters by 4 white
+spaces, removes white spaces in areas where they are not needed or are damaging, and is adding spaces around special
+characters, such as the comma ("`,`"). This functionality is in the `Normalizer.java` class.
+
+Once the normalized line is available, the lexer class identifies the token by mapping the found word with the list
+of the reserved words. If there is a mapping between thew lists, then a new token is generated and added to the list
+of found token.
+
+##### Supporting Classes
+
+The `BasicLexer.java` class contains three supporting methods. These are used to identify the type of the string
+found:
+
+```java
+    private boolean isBoolean(final String strWord)
+    private boolean isString(final String strWord)
+    private boolean isNumber(final String strWord)
+```
+
+#### `Token.java`
+The token class is used to code the identified token for the parsing process. The tokenizer process returns a list
+of token to the interpreter process. Each token consists of 3 fields:
+- `text`: the data / text related to the found token
+- `type`: The type of the token, as defined in the `BasicTokenType.java` class
+- `line`: The line number of the BASIC statement that is translated into the token.
+
+```java
+    public Token(final String strText, final BasicTokenType oType, final int iLineNumber)
+    public String getText()
+    public BasicTokenType getType()
+    public int getLine()
+    public String setText(final String strText)
+```    
+
+#### `Normalizer.java`
+This static class exposes two methods:
+- `normalize`, and
+- `normailzeIndex`
+
+Both classes are consuming a String parameter and are returning the normalized input as a String. *Note:* At this
+stage functions and methods are not using the `StringValue` class which is consistently used in a later part of the
+process.
+
+In the lexer class, the call of the normalizer is performed after the input file is separated in single lines. It is
+only executed on lines with contents, so a check for an empty input is not required:
+```java
+            // here we handle all empty lines, e.g. lines that only contain the line number
+            if (strProgramLine.length() < 1) {
+                aoTokens.add(new Token("empty", TokenType.LINE, iLineNumber));
+            } else {
+                // normalize the line: put spaces in places where needed, or remove them
+                strProgramLine = Normalizer.normalize(strProgramLine);
+                strProgramLine = Normalizer.normalizeFunction(strProgramLine);
+```
+*Note:* Even in this code segment the Normalizer is executed in sequence, in other code components only the
+`normalizeIndex` function is needed.
+
+The following section describes the normalization process:
+
+##### `normalize`
+The `normalize` function iterates through the input string by character and performs the following changes in sequence:
+1. Identification of squared brackets ("`[]`") for special treatment. Inside of squarded brackets all white spaces are removed.
+1. Identification of round brackets ("`()`") for special treatment only if the previous character identifies a
+   variable (ie. `$#!%&@`). In this case, the round bracket indicates an array, not the processing order in a
+   mathematical function.
+1. Identification of a quotation mark ("`"`") surrounding a string. For strings and round brackets, the content is
+   taken over as they come.
+
+Outside the special cases above, the function will
+- ensure that the comma character has a leading white space
+- ensure that the semicolon character has a leading white space
+- opening and closing brackets have white spaces respectively.
+
+##### `normalizeIndex`
+This method will
+- between round brackets remove all tabulators and white spaces
+- replace the round brackets for arrays with minus characters ("`-`"). This is due to the way the interpreter stores
+  arrays.
+
+##### `normalizeFunction`
+This method re-formats the incoming string to adjust round brackets indicating parameter in functions. After the
+normalization, the brackets is recognized by the Lexer, and the bracket is replaced by the right token.
+
+#### Supporting Classes
+
+##### `BasicTokenType.java`
+The content of the `BasicTokenType.java` class is limited to the definition of the available token types as an
+enumeration.
+No functionality is implemented in the class. The class is only used for the BASIC programming language.
+
+##### `JasicTokenType.java`
+The content of the `JasicTokenType.java` class is limited to the definition of the available token types as an
+enumeration. No functionality is implemented in the class. The class is only used for the BASIC programming language.
+
+
+##### `ReservedWords.java`
+The `ReservedWords.java` class is the cross-reference or mapping class for the tokenizing process. It contains two
+lists with identical sequence - between all reserved words, and the related `BasicTokenType` entry.
+
+
 ### Parser Package
+![Parser Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/parser.png)
 
 #### JasicParser
 
@@ -248,23 +417,30 @@ fitting a certain token type. If the token is found, the method returns the foun
 If the token is not found, the method will throw a `SyntaxErrorException` and terminate the parsing step.
 This is the definition of the method:
 
+```java
     public final Token findToken(final TokenType oType) throws SyntaxErrorException
-
+```
 
 ###### getToken
 The `getToken`-Method does return the token found at a location defined by an offset. The offset is calculated by a number of tokens from the current token.
 
+```java
     public final Token getToken(final int iOffset)
+```
 
 ###### consumeToken
 
+```java
     public final Token consumeToken(final TokenType oType) throws SyntaxErrorException
+```
 
 ##### Expression processing
 
+```java
     private Expression expression() throws SyntaxErrorException
     public final Expression operator() throws SyntaxErrorException
     public final Expression atomic() throws SyntaxErrorException
+```
 
 ##### Depreciated methods
 
@@ -272,27 +448,13 @@ The `getToken`-Method does return the token found at a location defined by an of
 The method is used in the Jasic parser, but is not needed in the Basic parser at this time. As a general the Basic parser will not use the
 name in the token, but the token type. In this release, the method is not used and marked as depreciated.
 
+```java
     public final boolean matchNextToken(final String strName)
-
-
-### Tokenizer Package
-
-#### Token.java
-
-#### Tokenizer.java
-
-#### JasicLexer.java
-
-#### TokenizeState.java
-
-#### BasicLexer.java
-
-#### TokenType.java
-The content of the TokenType file is limited to the definition of the available token types.
-
-## Package Structure
+```
 
 ### The MemoryManager Package
+![Memory Manager Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/memoryManager.png)
+
 The memory manager functionality, located in the package `eu.gricom.interpreter.basic.memoryManager`, consists of three main
 classes:
 - the program pointer class (`ProgramPointer`), which contains the functionality related with the current place of execution.
@@ -319,17 +481,73 @@ The implementation does only allow
 ### The VariableType Package
 
 #### Value Interface
+All variables in the BASIC programming language are mapped to a variable type in the interpreter. This mapping is 
+performed in thew class `eu.gricom.interpreter.basic.memoryManager.VariableManagerment`:
 
-#### Variable Type Boolean
+```java
+        if (strKey.contains("$")) {
+            eVariableType = VariableType.STRING;
+        } else if (strKey.contains("%")) {
+            eVariableType = VariableType.INTEGER;
+        } else if (strKey.contains("&")) {
+            eVariableType = VariableType.LONG;
+        } else if (strKey.contains("#")) {
+            eVariableType = VariableType.REAL;
+        } else if (strKey.contains("!")) {
+            eVariableType = VariableType.DOUBLE;
+        } else if (strKey.contains("@")) {
+            eVariableType = VariableType.BOOLEAN;
+        }
+```
 
-#### Variable Type Integer
+The following table describes the mapping:
 
-#### Variable Type Integer
-supported as of the Q2 release...
+| Basic Variable Type | Variable Appendix | Interpreter Variable Type |
+|---------------------|-------------------|---------------------------|
+| String | `$` | `eu.gricom.interpreter.basic.variableTypes.StringValue` |
+| Integer | `%` | `eu.gricom.interpreter.basic.variableTypes.IntegerValue` |
+| Long | `&` | `eu.gricom.interpreter.basic.variableTypes.LongValue` |
+| Real | `#` | `eu.gricom.interpreter.basic.variableTypes.RealValue` |
+| Double | `!` | `eu.gricom.interpreter.basic.variableTypes.DoubleValue` |
+| Boolean | `@` | `eu.gricom.interpreter.basic.variableTypes.BooleanValue` |
 
-#### Variable Type Real
+##### Common Functions
 
-#### Mathematical Functions
+The `Value` interface demands each type to implement a number of comparison and conversion functions. The following list 
+defines all the mathematical functions available for the different types:
+
+```java
+    String toString();
+    double toReal();
+
+    Value equals(Value oValue) throws SyntaxErrorException;
+    Value notEqual(Value oValue) throws SyntaxErrorException;
+    Value smallerThan(Value oValue) throws SyntaxErrorException;
+    Value smallerEqualThan(Value oValue) throws SyntaxErrorException;
+    Value largerThan(Value oValue) throws SyntaxErrorException;
+    Value largerEqualThan(Value oValue) throws SyntaxErrorException;
+```
+
+As of version 0.0.7, two additional conversion functions will be added:
+```java
+    String toInt();
+    double toBoolean();
+```
+
+##### Mathematical Functions
+
+The `Value` interface demands each type to implement a number of mathematical functions, which might be honored by the 
+type or not. The following list defines all the mathematical functions available for the different types:
+
+```java
+    Value plus(Value oValue) throws SyntaxErrorException;
+    Value minus(Value oValue) throws SyntaxErrorException;
+    Value multiply(Value oValue) throws SyntaxErrorException;
+    Value divide(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+    Value shiftLeft(Value oValue) throws SyntaxErrorException;
+    Value shiftRight(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+    Value power(Value oValue) throws SyntaxErrorException;
+```
 
 #### Variable Type String
 The String variable type is implemented in the `StringValue` class in the `eu.gricom.interpreter.basic.variableTypes` package. Compared
@@ -346,6 +564,7 @@ and the key is stored with the value in the Hashmap structure. This implementati
 index in the use of strings. Refer to the description of the implementation or Arrays.
 
 ### The Statements Package
+![Statements Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/statements.png)
 
 #### Expressions
 
@@ -517,6 +736,204 @@ in every string. This function should therefore not change the output.
 
 ###### `END-WHILE` Statement
 
+### The Functions Package
+All functions in the interpreter are build and linked into the main run-time component the same way. Therefore, all 
+functions have the same code structure and new functions will have to follow this structure.
+
+As of version 0.0.7, the interpreter supports the `CALL` function, which allows the developer to call `JAVA` 
+functions out of the `BASIC` program. Please refer to the description of the function in the following part of this 
+document.
+
+Also as of version 0.0.7, the interpreter supports the `SYSTEM` function, which allows the developer to call `OS` 
+level commands out of the BASIC program. Please refer to the description of the function in the following part of 
+this document.
+
+As of version 0.0.8, the interpreter allow the execution of external defined functions (libraries), which are 
+focussed to allow developers to adopt specific functionality of other dialect, eg. of TRS-DOS, Apple Basic, or 
+Commodore Basic. These functions are not part of the core build and can be extended to limit the effort of the 
+migration of code.
+
+#### General Structure of Functions in the Interpreter
+All functions are implemented as static classes - or static functions in static classes. The function class does not 
+support any internal persistence, the only way persistence in a function can be achieved is by calling a memory 
+management class.
+
+This does imply:
+- a function class does not have a public constructor
+- a function class is always called on class level (no instantiation of the class)
+
+The executable method of each class is called `execute( <parameter> )`. At this moment, the interpreter supports 
+function classes using up to 3 parameters. Even as the functions are strictly typed, all parameter and results are 
+defined with the `Value` superclass. The type check is performed in the logic of the function class. Each function 
+verifies the incoming type and throws a `Runtime` exception if the type is incorrect.
+
+Each function return one return value of type `Value`. Again, the return value is typed, and the developer needs to 
+check that the return value is of the right type.
+
+Finally, each function has a dedicated JUnit test file as part of the project. Function classes without JUnit test 
+should not be added to the core interpreter.
+
+For the documentation, this section is splitting the classes up into 3 categories. The implementation is not 
+different, the classes are all implemented the same way and in the same area. With potential extra classes this 
+might change.
+
+#### Mathematical Functions
+The following mathematical functions are implemented:
+
+| Function | Used Java Method | Input Parameter Type | Output Parameter Type |
+|----------|------------------|----------------------|-----------------------|
+| `ABS` | none | `RealValue` or `IntegerValue` or `LongValue` | `RealValue` or `IntegerValue` or `LongValue` |
+| `ATN` | `Java.lang.Math.atan()` | `RealValue` | `RealValue` |
+| `CDBL` | none | `RealValue` or `IntegerValue` or `LongValue` | `RealValue` |
+| `CINT` | none | `RealValue` or `IntegerValue` or `LongValue` | `IntegerValue` |
+| `COS` | `Java.lang.Math.cos()` | `RealValue` | `RealValue` |
+| `EXP` | `Java.lang.Math.exp()` | `RealValue` | `RealValue` |
+| `LOG` | `Java.lang.Math.log()` | `RealValue` | `RealValue` |
+| `LOG10` | `Java.lang.Math.log10()` | `RealValue` | `RealValue` | 
+| `RND` | `Java.lang.Math.random()` | n/a | `RealValue` |
+| `SIN` | `Java.lang.Math.sin()` | `RealValue` | `RealValue` |
+| `SQR` | `Java.lang.Math.sqrt()` | `RealValue` | `RealValue` |
+| `TAN` | `Java.lang.Math.tan()` | `RealValue` | `RealValue` |
+
+##### `ABS`
+This method multiplies the incoming parameter with `-1` if the parameter is a number less then `0`:
+
+```java
+            if (((IntegerValue) oValue).toInt() < 0) {
+                return oValue.multiply(new IntegerValue(-1));
+            } else {
+                return oValue;
+            }
+```
+
+#### String Functions
+
+| Function | Used Java Method | Input Parameter Type | Output Parameter Type |
+|----------|------------------|----------------------|-----------------------|
+| `ASC` | `Java.lang.String.charAt()` | `StringValue` | `IntegerValue` |
+| `CHR` | `Java.lang.Character.toString()` | `IntegerValue` | `StringValue` |
+| `INSTR` | `Java.lang.String.indexOf()` | `StringValue`, `StringValue` | `IntegerValue` |
+| `LEFT` | `Java.lang.String.substring(0,x)` | `StringValue`, `IntegerValue` | `StringValue` |
+| `LEN` | `Java.lang.String.length()` | `StringValue` | `IntegerValue` |
+| `MID` | `Java.lang.String.substring(0,x)` | `StringValue`, `IntegerValue`, `IntegerValue` | `StringValue` |
+| `RIGHT` | `Java.lang.String.substring(0,x)` | `StringValue`, `IntegerValue` | `StringValue` |
+| `STR` | none | `RealValue` or `IntegerValue` or `LongValue` | `StringValue` | 
+| `VAL` | `Java.lang.Double.parseDouble()` | `StringValue` | `RealValue` | 
+
+#### OS-Related Functions
+
+| Function | Used Java Method | Input Parameter Type | Output Parameter Type |
+|----------|------------------|----------------------|-----------------------|
+| `MEM` | `Runtime.getRuntime().freeMemory()` | n/a | `IntegerValue` |
+| `SYSTEM` | `Java.lang.ProcessBuilder.command()` | `StringValue`, `StringValue` | `StringValue` |
+| `TIME` | `java.lang.System.currentTimeMillis()` | n/a  | `LongValue` |
+
+
+##### `SYSTEM` Function
+The `SYSTEM` function executes commands on OS level. The function requires two parameters: a command, and the
+parameter. For the detail of usage out of BASIC, refer to the programming guide.
+
+    RES$ = SYSTEM("RUN", <command> )
+
+or
+
+    RES$ = SYSTEM("START", <command> )
+
+At this stage the `SYSTEM` function is implemented for `Unix` and `Linux` operating systems. The requirement for the 
+execution is the installation of the `BASH` command interpreter. In a later version, the function will support 
+Microsoft and Unix systems without installed `BASH` shell.
+
+### Linking the functions into the Interpreter
+
+The functions are linked to the programming language to a system of files which need to be modified in order to
+generate a new function and add it to the interpreter
+
+#### Step 1: Build a new function
+
+All functions are structured the same way, independent of the number of parameters and type of the parameters. As 
+the class `Value` is inherited from the class `Expression`, the function can be addressed to receive either. The 
+following sample class describes the structure:
+
+##### Sample Class
+The Sample class here is part of the documentation to describe the structure of a function class:
+
+Note: The coding standard of the interpreter does not allow global class imports (eg. `import eu.gricom.interpreter.
+basic.variableTypes.*`). All imported classes are explicitly mentioned.
+
+```java
+package eu.gricom.interpreter.basic.functions;
+
+import eu.gricom.interpreter.basic.error.RuntimeException;
+import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
+import eu.gricom.interpreter.basic.variableTypes.LongValue;
+import eu.gricom.interpreter.basic.variableTypes.RealValue;
+import eu.gricom.interpreter.basic.variableTypes.Value;
+import eu.gricom.interpreter.basic.statements.Expression;
+ ```
+We document the functionality of the function in the class header, not on method level.
+```java
+/**
+ * SAMPLE Function.
+ *
+ * Description:
+ *
+ * The SAMPLE function is in here for documentation only. The class does not exist in the code-base. For 
+ * documentation this class has one parameter. This parameter has to be numeric.
+ *
+ * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ */
+public final class Sample {
+```
+The class has only a private constructor, which also does not have any functionality inside. This private
+constructor has been added to make the code compliant with the used Checkstyle static code analysis.
+```java
+    /**
+     * Private Constructor.
+     */
+    private Sample() {
+    }
+```
+The actual functionality is implemented in the `execute` method. Supporting private methods are permitted, but so
+far have not been needed.
+```java
+    /**
+     * Functions implemented here are similar to Statements with the difference
+     * that they actually return a result to the caller of type Value. The method execute
+     * triggers the function.
+     *
+     * @param oExpression input parameter
+     * @return Value the return message of the function
+     * @throws Exception as any execution error found during execution
+     */
+    public static Value execute(final Expression oExpression) throws Exception {
+        Value oValue = oExpression.evaluate();
+        
+        if (oValue instanceof RealValue) {
+                return oValue;
+        }
+```
+In case the type verification fails, the class is throwing a runtime exception.
+```java
+        throw new RuntimeException("Input value not numeric: " + oValue);
+    }
+}
+```
+
+Each function has a corresponding unit test class in the JUnit test section of the code.
+
+#### Step 2: Adding Reserved Word and Token
+
+
+#### Step 3: Adding Functionality into the Parser Class
+
+
+#### Step 4: Adding BASIC Test Function
+
+
+## Program Storage and Loading
+In general, the interpreter reads a plain, ASCII formatted, BASIC program into memory. Due to the speed of the 
+available hardware at this time, it does not seem to be necessary to store the file in any intermediate format.
+
 ## Appendix
 
 ### Reserved Words
@@ -528,16 +945,16 @@ of the keywords can vary - refer to the language manual for the use of the reser
 
 | Reserved Word |  GD-Basic | Jasic | TRS-80 Level II Basic | Applesoft Basic | Commodore Basic | Notes |
 |---------------|-----------|-------|-----------------------|-----------------|-----------------|-------|
-| `ABS` | reserved |  | implemented | implemented | implemented |
+| `ABS` | implemented |  | implemented | implemented | implemented |
 | `AND` | reserved |  | implemented | implemented | implemented |
-| `ASC` | reserved |  | implemented | implemented | implemented |
+| `ASC` | implemented |  | implemented | implemented | implemented |
 | `AT` |  |  |  | implemented |  | 
-| `ATN` | reserved |  | implemented | implemented | implemented |
+| `ATN` | implemented |  | implemented | implemented | implemented |
 | `AUTO` |  |  | implemented |  |  |
 | `CALL` | reserved |  |  | implemented |  |
-| `CDBL` | reserved |  | implemented |  |  |
-| `CHR$` | reserved, used token: `CHR` |  | implemented | implemented | implemented |
-| `CINT` | reserved |  | implemented |  |  |
+| `CDBL` | implemented |  | implemented |  |  |
+| `CHR` | implemented |  | implemented | implemented | implemented |
+| `CINT` | implemented |  | implemented |  |  |
 | `CLEAR` |  |  | implemented | implemented |  |
 | `CLOSE` | reserved |  | implemented | implemented | implemented |
 | `CLOAD` |  |  | implemented |  |  |
@@ -546,10 +963,10 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `CONT` | reserved |  |  |  |  |  |
 | `CSAVE` |  |  | implemented | | |
 | `CMD` | reserved |  | implemented | | implemented |
-| `COLOR=` |  |  |  | implemented |  |
+| `COLOR` |  |  |  | implemented |  |
 | `CONT` | reserved |  | implemented | implemented | implemented |
-| `COS` | reserved |  | implemented | implemented | implemented |
-| `CSNG` | reserved |  | implemented |  |  |
+| `COS` | implemented |  | implemented | implemented | implemented |
+| `CSNG` |  |  | implemented |  |  |
 | `CVD` |  | not planned | implemented |  |  |
 | `CVI` |  |  | implemented |  |  |
 | `CVS` |  |  | implemented |  |  |
@@ -562,7 +979,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `DEFSTR` |  |  | implemented |  |  |
 | `DEL` |  |  |  | implemented |  |
 | `DELETE` |  |  | implemented |  |  |
-| `DIM` | reserved |  | implemented | implemented | implemented |
+| `DIM` | depreciated |  | implemented | implemented | implemented |
 | `DO` | reserved |  |  |  |  |
 | `DRAW` |  |  |  | implemented |  |
 | `EDIT` |  |  | implemented |  |  |
@@ -589,27 +1006,28 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `GOSUB` | implemented |  | implemented | implemented | implemented |
 | `GOTO` | implemented | implemented | implemented | implemented | implemented |
 | `GR` |  |  |  | implemented |  |
-| `HCOLOR=` |  |  |  | implemented |  |
+| `HCOLOR` |  |  |  | implemented |  |
 | `HGR` |  |  |  | implemented |  |
 | `HGR2` |  |  |  | implemented |  |
-| `HIMEM:` |  |  |  | implemented |  |
+| `HIMEM` |  |  |  | implemented |  |
 | `HLIN` |  |  |  | implemented |  |
 | `HOME` |  |  |  | implemented |  |
 | `HTAB` |  |  |  | implemented |  |
 | `HPLOT` |  |  |  | implemented |  |
 | `IF` | implemented | implemented | implemented | implemented | implemented |
 | `IN #` |  |  |  | implemented |  |
-| `INKEY$` |  |  | implemented |  |  |
+| `INKEY` |  |  | implemented |  |  |
 | `INP` |  |  | implemented |  |  |
 | `INSTR` | reserved |  | implemented |  |  |
-| `INT` | reserved |  | implemented | implemented | implemented |
+| `INT` |  |  | implemented | implemented | implemented |
 | `INVERSE` |  |  |  | implemented |  |
 | `INPUT` | implemented | implemented | implemented | implemented | implemented |
 | `INPUT#` |  |  |  |  | implemented |
 | `KILL` |  |  | implemented |  |  |
-| `LEFT$` | reserved, used token: `LEFT` |  | implemented | implemented | implemented |
+| `LEFT` | reserved |  | implemented | implemented | implemented |
 | `LEN` | reserved |  | implemented | implemented | implemented |
-| `LET` | reserved |  | implemented | implemented | implemented |
+| `LENGTH` | reserved |  | implemented | implemented | implemented |
+| `LET` | depreciated |  | implemented | implemented | implemented |
 | `LINE` | implemented | implemented | implemented (different function) | | | The `LINE` token is used to mark empty program lines, the token has no responding reserved word.
 | `LIST` |  |  | implemented | implemented | implemented |
 | `LLIST` |  |  | implemented |  |  |
@@ -617,16 +1035,15 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `LOC` |  |  | implemented |  |  |
 | `LOF` |  |  | implemented |  |  |
 | `LOG` | reserved |  | implemented | implemented | implemented |
-| `LOMEM:` |  |  |  | implemented |  |
-| `LOOP-UNTIL` | reserved |  |  |  |  |
+| `LOMEM` |  |  |  | implemented |  |
 | `LPRINT` |  |  | implemented |  |  |
 | `LSET` |  |  | implemented |  |  |
-| `MEM` | reserved |  | implemented |  |
+| `MEM` | implemented |  | implemented |  |
 | `MERGE` |  |  | implemented |  |  |
-| `MID$` | reserved, used token: `MID` |  | implemented | implemented | implemented |
-| `MKD$` |  |  | implemented | | |
-| `MKI$` |  |  | implemented | | |
-| `MKS$` |  |  | implemented | | |
+| `MID` | reserved, used token: `MID` |  | implemented | implemented | implemented |
+| `MKD` |  |  | implemented | | |
+| `MKI` |  |  | implemented | | |
+| `MKS` |  |  | implemented | | |
 | `NAME` |  |  | implemented | | |
 | `NEW` |  |  | implemented | implemented | implemented |
 | `NEXT` | reserved |  | implemented | implemented | implemented |
@@ -659,37 +1076,38 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `RETURN` | implemented |  | implemented | implemented | implemented |
 | `RESTO` |  |  | implemented |  |  |
 | `RESTORE` |  |  |  | implemented | implemented |
-| `RIGHT$` | reserved, used token: `RIGHT` |  | implemented | implemented | implemented |
-| `RND` | reserved |  | implemented | implemented | implemented |
-| `ROT=` |  |  |  | implemented |  |
+| `RIGHT` | reserved, used token: `RIGHT` |  | implemented | implemented | implemented |
+| `RND` | implemented |  | implemented | implemented | implemented |
+| `ROT` |  |  |  | implemented |  |
 | `RSET` |  |  | implemented |  |  |
 | `RUN` |  |  | implemented | implemented | implemented |
 | `SAVE` |  |  | implemented |  | implemented |
-| `SCALE=` |  |  |  | implemented |  |
+| `SCALE` |  |  |  | implemented |  |
 | `SET` |  |  | implemented |  |  |
-| `SCRN(` |  |  |  | implemented |  |
-| `SGN` | reserved |  | implemented | implemented | implemented |
+| `SCRN` |  |  |  | implemented |  |
+| `SGN` |  |  | implemented | implemented | implemented |
 | `SHLOAD` |  |  |  | implemented |  |
-| `SIN` | reserved |  | implemented | implemented | implemented |
-| `SPC(` |  |  |  | implemented | implemented |
-| `SPEED=` |  |  |  | implemented |  |
-| `SQR` | reserved |  | implemented | implemented | implemented |
+| `SIN` | implemented |  | implemented | implemented | implemented |
+| `SPC` |  |  |  | implemented | implemented |
+| `SPEED` |  |  |  | implemented |  |
+| `SQR` | implemented |  | implemented | implemented | implemented |
 | `STEP` | reserved |  | implemented | implemented | implemented |
 | `STOP` | reserved |  | implemented | implemented | implemented |
 | `STORE` |  |  |  | implemented |  |
-| `STRING$` | reserved, used token: `TOSTRING` |  | implemented |  |  |
-| `STR$` | reserved, used token: `STR` |  | implemented | implemented | implemented |
+| `STRING` | reserved, used token: `TOSTRING` |  | implemented |  |  |
+| `STR` | reserved |  | implemented | implemented | implemented |
 | `SYSTEM` | reserved |  | implemented |  |  |
 | `SYS` |  |  |  |  | implemented |
 | `TAB` | reserved |  | implemented | implemented | implemented |
-| `TAN` | reserved |  | implemented | implemented | implemented |
+| `TAN` | implemented |  | implemented | implemented | implemented |
 | `TEXT` |  |  |  | implemented |  |
 | `THEN` | implemented | implemented | implemented | implemented | implemented |
-| `TIME$` | reserved, used token: `TIME` |  | implemented |  |  |
+| `TIME` | implemented |  | implemented |  |  |
 | `TO` | implemented |  | implemented | implemented | implemented |
 | `TRACE` |  |  |  | implemented |  |
 | `TRON` |  |  | implemented |  |  |
 | `TROFF` |  |  | implemented |  |  |
+| `UNTIL` | reserved |  |  |  |  |
 | `USR` |  |  |  | implemented | implemented |
 | `VAL` | reserved |  | implemented | implemented | implemented |
 | `VERIFY` |  |  |  |  | implemented |
@@ -701,6 +1119,8 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `+` | implemented, used token: `PLUS` | implemented | implemented | implemented | implemented |
 | `-` | implemented, used token: `MINUS` | implemented | implemented | implemented | implemented |
 | `*` | implemented, used token: `MULTIPLY` | implemented | implemented | implemented | implemented |
+| `>>` | planned, used token: `SHIFT_RIGHT` |  |  |  |  |
+| `<<` | planned, used token: `SHIFT_LEFT` |  |  |  |  |
 | `/` | implemented, used token: `DIVIDE` | implemented | implemented | implemented | implemented |
 | `;` | implemented |  |  | implemented |  |
 | `,` | implemented |  |  | implemented |  |
@@ -716,7 +1136,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `^` | implemented, used token: `POWER` | reserved | implemented |  | implemented |
 | `\'` (`REM` Quote) | implemented | implemented | implemented |  |
 
-### Compartibility Guide
+### Compatibility Guide
 
 #### Tokenization of alternative implementations
 
@@ -724,7 +1144,8 @@ of the keywords can vary - refer to the language manual for the use of the reser
 
 This reference table maps the token id's of the other Basic dialects. As the original use of Basic was limited to systems with very reduced
 memory capabilities, the token were stored as HEX values. This interpreter uses a different approach and stores the token internally
-as a list of objects. This reflects also in storing the tokenized and parsed program code.
+as a list of objects, which is then serialized. This reflects also in storing the tokenized and parsed program code. 
+At this stage, it is not planned to export the serialized token to one of the other formats.
 
 | Token No. (Hex) | Token No. (Dec) | TRS-80 Level II Basic | Applesoft Basic | Commodore Basic |
 |-----------------|-----------------|-----------------------|-----------------|-----------------|

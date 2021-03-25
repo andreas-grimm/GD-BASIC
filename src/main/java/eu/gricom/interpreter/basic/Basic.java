@@ -1,6 +1,7 @@
 package eu.gricom.interpreter.basic;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import eu.gricom.interpreter.basic.functions.Mem;
 import eu.gricom.interpreter.basic.helper.FileHandler;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.helper.Printer;
@@ -36,9 +37,9 @@ import java.util.Locale;
  */
 @SuppressWarnings("SpellCheckingInspection")
 public class Basic {
-    private final Logger _oLogger = new Logger(this.getClass().getName());
+    private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strBasicVersion = "basic";
-    private LineNumberXRef _oLineNumbers = new LineNumberXRef();
+    private transient LineNumberXRef _oLineNumbers = new LineNumberXRef();
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of
@@ -62,6 +63,7 @@ public class Basic {
      */
     public final void interpret(final String strProgram) {
         ProgramPointer oProgramPointer = new ProgramPointer();
+        List<Statement> aoPreRunStatements = null;
         List<Statement> aoStatements = null;
 
         // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
@@ -105,6 +107,7 @@ public class Basic {
                 oParser = new JasicParser(aoTokens);
             } else {
                 oParser = new BasicParser(aoTokens);
+                aoPreRunStatements = ((BasicParser) oParser).parsePreRun();
             }
 
             aoStatements = oParser.parse();
@@ -113,10 +116,31 @@ public class Basic {
         }
 
         // Run.
+        _oLogger.info("Pre-load environment...");
+        try {
+            if (aoPreRunStatements != null) {
+                oProgramPointer.setCurrentStatement(0);
+                while (oProgramPointer.getCurrentStatement() < aoPreRunStatements.size()) {
+                    // as long as we have not reached the end of the code
+                    int iThisStatement = oProgramPointer.getCurrentStatement();
+
+                    oProgramPointer.calcNextStatement();
+                    _oLogger.debug("PreRun Statement # <" + iThisStatement + ">: [" + aoPreRunStatements.get(iThisStatement).content() + "]");
+
+                    aoPreRunStatements.get(iThisStatement).execute();
+                }
+            } else {
+                _oLogger.error("Parsing delivered empty program");
+            }
+        } catch (Exception eException) {
+            eException.printStackTrace();
+        }
+
         _oLogger.info("Starting execution...");
         try {
             if (aoStatements != null) {
                 int iSourceCodeLineNumber = -1;
+                oProgramPointer.setCurrentStatement(0);
 
                 while (oProgramPointer.getCurrentStatement() < aoStatements.size()) {
                     // as long as we have not reached the end of the code
@@ -151,8 +175,8 @@ public class Basic {
     }
 
     // Utility stuff -----------------------------------------------------------
-    
 
+    @SuppressWarnings("PMD")
     /**
      * Runs the interpreter as a command-line app. Takes one argument: a path
      * to a script file to load and run. The script should contain one
@@ -174,7 +198,7 @@ public class Basic {
             options.addOption("h", false, "help (This screen)");
             options.addOption("i", true, "define input file");
             options.addOption("q", false, "quiet mode");
-            options.addOption("v", true, "verbose level: (0 - 3");
+            options.addOption("v", true, "verbose level: (0 - 3)");
             options.addOption("b", true, "BASIC type (J = Jasic, B = Basic");
 
             CommandLineParser parser = new DefaultParser();
@@ -195,7 +219,7 @@ public class Basic {
             Printer.println(" #       #     # #     #  #   #  #        #  #          (c) Copyright Andreas Grimm 2020");
             Printer.println(" #  #### #     # ######  #     #  #####   #  #          (c) Copyright Bob Nystrom 2010");
             Printer.println(" #     # #     # #     # #######       #  #  #          Maximum memory (bytes): " + lMaxMemory);
-            Printer.println(" #     # #     # #     # #     # #     #  #  #     #    Free memory (bytes): " + Runtime.getRuntime().freeMemory());
+            Printer.println(" #     # #     # #     # #     # #     #  #  #     #    Free memory (bytes): " + Mem.execute().toString());
             Printer.println("  #####  ######  ######  #     #  #####  ###  #####     ");
             Printer.println();
         }

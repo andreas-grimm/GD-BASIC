@@ -11,6 +11,6 @@ package eu.gricom.interpreter.basic.tokenizer;
  * can't handle nesting (which would require also storing a number to
  * identify how deeply nested you are). The parser is able to handle that.
  */
-public enum TokenizeState {
+public enum JasicTokenType {
     DEFAULT, WORD, NUMBER, STRING, COMMENT
 }

@@ -7,7 +7,6 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class GosubStatementTest {
@@ -15,17 +14,17 @@ public class GosubStatementTest {
     @Test
     public void testEvaluate() {
         ProgramPointer oProgramPointer = new ProgramPointer();
-        LineNumberXRef _oLineNumberObject = new LineNumberXRef();
+        LineNumberXRef oLineNumberObject = new LineNumberXRef();
         Stack oStack = new Stack();
 
         // setting the line number object for the actual jump:
         // Jump to line "5" -> which is token no. 1 -> statement no. 5
-        _oLineNumberObject.putLineNumber(5, 1);
-        _oLineNumberObject.putStatementNumber(1,5);
+        oLineNumberObject.putLineNumber(5, 1);
+        oLineNumberObject.putStatementNumber(1, 5);
 
         // this here is used to reference the current token number, which is translated into a statement and then
         // pushed onto the stack...
-        _oLineNumberObject.putStatementNumber(10,5);
+        oLineNumberObject.putStatementNumber(10, 5);
 
         try {
             GosubStatement oStatement = new GosubStatement(10, "5");

@@ -30,12 +30,14 @@ public class BasicLexer implements Lexer {
         String[] astrProgramLines = strSource.split("\\s*\n\\s*");
 
         boolean bIsStringRunning = false;
+        int iLastLineNumber = -1;
 
         for (String strProgramLine: astrProgramLines) {
             Token oToken = null;
 
             // split the line number from the program line... make sure that the numbers are in ascending order...
             int iLineNumber;
+
             if (strProgramLine.length() <= 0) {
                 // line is empty - we continue
                 continue;
@@ -44,6 +46,7 @@ public class BasicLexer implements Lexer {
                 iLineNumber = Integer.parseInt(strProgramLine);
                 strProgramLine = "";
             } else {
+                // isolate line number and the program line
                 iLineNumber = Integer.parseInt(
                         strProgramLine.substring(0,
                                 strProgramLine.indexOf(" ")));
@@ -51,16 +54,32 @@ public class BasicLexer implements Lexer {
                 strProgramLine = strProgramLine.substring(strProgramLine.indexOf(" ") + 1);
             }
 
+            // check whether the line number is smaller or equal to the previous number. If so - throw an syntax error
+            if (iLineNumber <= iLastLineNumber) {
+                throw new SyntaxErrorException("Line Number sequence not correct...:" + iLastLineNumber + " to " + iLineNumber);
+            } else {
+                iLastLineNumber = iLineNumber;
+            }
+
             // here we handle all empty lines, e.g. lines that only contain the line number
             if (strProgramLine.length() < 1) {
-                aoTokens.add(new Token("empty", TokenType.LINE, iLineNumber));
+                aoTokens.add(new Token("empty", BasicTokenType.LINE, iLineNumber));
             } else {
+                // normalize the line: put spaces in places where needed, or remove them
                 strProgramLine = Normalizer.normalize(strProgramLine);
+                strProgramLine = Normalizer.normalizeFunction(strProgramLine);
 
-                // find reserved words
+                // find reserved words: divide the string in an array of words
                 String[] astrWords = strProgramLine.split("\\s");
 
+                // and iterate over them
                 for (String strWord : astrWords) {
+
+                    // eliminate all empty strings
+                    if (strWord.length() <= 0) {
+                        continue;
+                    }
+
                     // this section verifies whether the next word is part of a string (as a string started but did not end yet)
                     // if a string started (bIsStringRunning == true) then the word is added to the string, if the word contains
                     // quotation marks ("), the string is closed.
@@ -70,22 +89,28 @@ public class BasicLexer implements Lexer {
                                             + " " + strProgramLine);
                         }
 
+                        // if the word ends with a ", then we stop any running string and remove the last character "
                         if (strWord.endsWith("\"")) {
                             strWord = strWord.substring(0, strWord.length() - 1);
                             bIsStringRunning = false;
                             aoTokens.add(oToken);
                         }
 
+                        // add the word to the string in the token
                         oToken.setText(oToken.getText() + " " + strWord);
                     } else {
+                        // ok - we know this is not part of a string.
+
+                        // compare the word with the list of reserved words
                         int iIndex = ReservedWords.getIndex(strWord);
 
                         if (iIndex != -1) {
                             // we found a reserved word...
-                            TokenType oTokenType = ReservedWords.getTokenType(iIndex);
+                            BasicTokenType oTokenType = ReservedWords.getTokenType(iIndex);
 
-                            if (oTokenType == TokenType.REM
-                                    || oTokenType == TokenType.COMMENT)  {
+                            // this block handles all comments
+                            if (oTokenType == BasicTokenType.REM
+                                    || oTokenType == BasicTokenType.COMMENT)  {
                                 aoTokens.add(new Token(strProgramLine, oTokenType, iLineNumber));
 
                                 break;
@@ -93,37 +118,37 @@ public class BasicLexer implements Lexer {
 
                             oToken = new Token(strWord, oTokenType, iLineNumber);
 
+                        // ok - this is not reserved word - so maybe it is a number?
                         } else if (isNumber(strWord)) {
-                            // ok - this is not reserved word - so maybe it is a number?
-                            oToken = new Token(strWord, TokenType.NUMBER, iLineNumber);
+                            oToken = new Token(strWord, BasicTokenType.NUMBER, iLineNumber);
 
+                        // now check whether the word is marked as the beginning of a String
                         } else if (isString(strWord)) {
-                            // now check whether the word is marked as the beginning of a String
                             strWord = strWord.substring(1); // remove the "
 
                             // this section handles single word strings
                             if (strWord.endsWith("\"")) {
                                 strWord = strWord.substring(0, strWord.length() - 1);
                                 bIsStringRunning = false;
-                                oToken = new Token(strWord, TokenType.STRING, iLineNumber);
+                                oToken = new Token(strWord, BasicTokenType.STRING, iLineNumber);
                                 aoTokens.add(oToken);
                             } else {
-                                oToken = new Token(strWord, TokenType.STRING, iLineNumber);
+                                oToken = new Token(strWord, BasicTokenType.STRING, iLineNumber);
                                 bIsStringRunning = true;
                             }
 
+                        // now check whether the word is marked as a boolean
                         } else if (isBoolean(strWord)) {
-                            // now check whether it is a boolean
-                            oToken = new Token(strWord, TokenType.BOOLEAN, iLineNumber);
+                            oToken = new Token(strWord, BasicTokenType.BOOLEAN, iLineNumber);
 
                         } else {
-                            // as it is neither a number, string, or boolean - it has to be a varible / constant...
-                            TokenType oTokenType = TokenType.WORD;
+                            // as it is neither a number, string, or boolean - it has to be a variable / constant...
+                            BasicTokenType oTokenType = BasicTokenType.WORD;
 
                             oToken = new Token(strWord, oTokenType, iLineNumber);
                         }
 
-                        if (oToken.getType() != TokenType.STRING) { // Strings are added after they are completed.
+                        if (oToken.getType() != BasicTokenType.STRING) { // Strings are added after they are completed.
                             aoTokens.add(oToken);
                         }
                     }

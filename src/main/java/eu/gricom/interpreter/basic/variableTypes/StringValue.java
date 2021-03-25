@@ -3,22 +3,17 @@ package eu.gricom.interpreter.basic.variableTypes;
 import eu.gricom.interpreter.basic.error.RuntimeException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 /**
  * StringValue.java
- * <p>
+ *
  * Description:
- * <p>
+ *
  * The StringValue is the container to hold all strings.
- * <p>
+ *
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class StringValue implements Value {
-    private final HashMap<String, String> _astrValue = new HashMap<>(10);
-    private final String strNoIndex = "noIndex";
+    private String _strValue;
 
     /**
      * Default constructor.
@@ -26,38 +21,20 @@ public class StringValue implements Value {
      * @param strValue Value to be stored in the container
      */
     public StringValue(final String strValue) {
-        _astrValue.put(strNoIndex, strValue);
-    }
-
-    /**
-     * Default constructor.
-     *
-     * @param strKey to determine the index in the array
-     * @param strValue Value to be stored in the container
-     */
-    public StringValue(String strKey, final String strValue) {
-        int iIndex = strKey.indexOf("(");
-        int iEndBracket = strKey.indexOf(")");
-
-        if (iIndex > 0) {
-            int iPosition = Integer.parseInt(strKey.substring(iIndex + 1, iEndBracket));
-            System.out.println(iPosition);
-        }
-
-        _astrValue.put(strKey.substring(iIndex + 1, iEndBracket), strValue);
+        _strValue = strValue;
     }
 
     @Override
     public final String toString() {
 
-        return _astrValue.get(strNoIndex);
+        return _strValue;
     }
 
 
     @Override
     public final double toReal() {
 
-        return Double.parseDouble(_astrValue.get(strNoIndex));
+        return Double.parseDouble(_strValue);
     }
 
 
@@ -95,7 +72,7 @@ public class StringValue implements Value {
 
     @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
-        StringValue oReturn = new StringValue(_astrValue.get(strNoIndex) + oValue.content());
+        StringValue oReturn = new StringValue(_strValue + oValue.toString());
         return oReturn;
     }
 
@@ -112,6 +89,16 @@ public class StringValue implements Value {
     @Override
     public final Value divide(final Value oValue) throws SyntaxErrorException {
         throw new SyntaxErrorException(oValue.content() + " '/' for strings, the expression is not defined");
+    }
+
+    @Override
+    public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
+        throw new SyntaxErrorException(oValue.content() + " '<<' for strings, the expression is not defined");
+    }
+
+    @Override
+    public final Value shiftRight(final Value oValue) throws SyntaxErrorException {
+        throw new SyntaxErrorException(oValue.content() + " '>>' for strings, the expression is not defined");
     }
 
     @Override
@@ -168,7 +155,7 @@ public class StringValue implements Value {
     @Override
     public final String content() {
 
-        return _astrValue.get(strNoIndex);
+        return _strValue;
     }
 
     /**
@@ -181,29 +168,38 @@ public class StringValue implements Value {
      * the index in an array subscription is larger than the array.
      */
     public final Value process(final String strKey) throws RuntimeException {
-        String strWork = strKey;
-        int iIndex = -1;
-        String strWorkString = _astrValue.get(strNoIndex);
 
-        iIndex = strKey.indexOf("(");
-        if (iIndex > 0) {
-            int iEndBracket = strKey.indexOf(")");
-            int iPosition = Integer.parseInt(strKey.substring(iIndex + 1, iEndBracket));
-            System.out.println(iPosition);
-        }
-
-        iIndex = strKey.indexOf("[");
-        if (iIndex > 0) {
-            int iEndBracket = strKey.indexOf("]");
-            int iPosition = Integer.parseInt(strKey.substring(iIndex + 1, iEndBracket));
-
-            if (iPosition >= strWorkString.length()) {
-                throw new RuntimeException("Index value " + iPosition + " out of bounds");
-            }
-
-            return new StringValue(String.valueOf(strWorkString.charAt(iPosition)));
+        if (strKey.indexOf("[") > 0) {
+            return new StringValue(squareBrackets(strKey));
         }
 
         return this;
+    }
+
+    private String squareBrackets(final String strKey) throws RuntimeException {
+        // lets check whether between the brackets is a comma
+        int iComma = strKey.indexOf(",");
+        int iStart = strKey.indexOf("[");
+        int iEnd = strKey.indexOf("]");
+
+        if (iComma > iStart && iComma < iEnd) {
+            int iFirstNo = Integer.parseInt(strKey.substring(iStart + 1, iComma));
+            int iSecondNo = Integer.parseInt(strKey.substring(iComma + 1, iEnd));
+
+            if (iSecondNo >= _strValue.length()) {
+                throw new RuntimeException("Index value " + iSecondNo + " out of bounds");
+            }
+
+            return _strValue.substring(iFirstNo, iSecondNo + 1);
+        }
+
+        // no - no comma, we return the pointed character
+        int iPosition = Integer.parseInt(strKey.substring(iStart + 1, iEnd));
+
+        if (iPosition >= _strValue.length()) {
+            throw new RuntimeException("Index value " + iPosition + " out of bounds");
+        }
+
+        return String.valueOf(_strValue.charAt(iPosition));
     }
 }

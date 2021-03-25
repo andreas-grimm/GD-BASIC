@@ -1,11 +1,13 @@
 package eu.gricom.interpreter.basic.variableTypes;
 
-import eu.gricom.interpreter.basic.error.SyntaxErrorException;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+import org.junit.jupiter.api.Test;
 
 public class BooleanValueTest {
 
@@ -73,8 +75,7 @@ public class BooleanValueTest {
             assertTrue(oResult.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -84,7 +85,8 @@ public class BooleanValueTest {
         RealValue oSecondValue = new RealValue(1);
 
         assertThrows(SyntaxErrorException.class, () -> {
-            BooleanValue oResult = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -98,8 +100,7 @@ public class BooleanValueTest {
             assertTrue(oResult.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -119,8 +120,7 @@ public class BooleanValueTest {
             assertTrue(oResultValue.isTrue());
 
         } catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -131,6 +131,7 @@ public class BooleanValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.minus(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -147,8 +148,7 @@ public class BooleanValueTest {
             oResultValue = (BooleanValue) oFirstValue.multiply(oSecondValue);
             assertTrue(oResultValue.isTrue());
         }  catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -159,6 +159,7 @@ public class BooleanValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.minus(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -174,8 +175,7 @@ public class BooleanValueTest {
             oResult = (BooleanValue) oFirstValue.power(oFirstValue);
             assertTrue(!oResult.isTrue());
         }  catch (SyntaxErrorException e) {
-            e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -186,6 +186,7 @@ public class BooleanValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.power(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -196,6 +197,7 @@ public class BooleanValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -206,6 +208,7 @@ public class BooleanValueTest {
 
         assertThrows(SyntaxErrorException.class, () -> {
             BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -215,7 +218,8 @@ public class BooleanValueTest {
         BooleanValue oSecondValue = new BooleanValue(true);
 
         assertThrows(SyntaxErrorException.class, () -> {
-            BooleanValue oResult = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 
@@ -225,7 +229,8 @@ public class BooleanValueTest {
         BooleanValue oSecondValue = new BooleanValue(true);
 
         assertThrows(SyntaxErrorException.class, () -> {
-            BooleanValue oResult = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+            System.out.println(oResultValue.toString());
         });
     }
 }

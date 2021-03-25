@@ -78,8 +78,8 @@ Implemented Backlog Items:
 Implemented Backlog Items: 
 
     [BASIC-15], [BASIC-10], [BASIC-47], [BASIC-40], [BASIC-56], [BASIC-21], [BASIC-20], [BASIC-22], [BASIC-32], [BASIC-33],
-    [BASIC-34], [BASIC-35], [BASIC-18], [BASIC-29], [BASIC-30], [BASIC-31], [BASIC-44], [BASIC-45], [BASIC-46], [BASIC-59], [BASIC-60], [BASIC-61],
-    [BASIC-63]
+    [BASIC-34], [BASIC-35], [BASIC-18], [BASIC-29], [BASIC-30], [BASIC-31], [BASIC-44], [BASIC-45], [BASIC-46], [BASIC-59], 
+    [BASIC-60], [BASIC-61], [BASIC-63]
 
 0.0.5: Tagged as Loop Release
 * Added the `FOR-NEXT`-loop
@@ -94,8 +94,21 @@ Implemented Backlog Items:
     [BASIC-24], [BASIC-26], [BASIC-43], [BASIC-48], [BASIC-58], [BASIC-62], [BASIC-66], [BASIC-65], [BASIC-74],
     [BASIC-80], [BASIC-67], [BASIC-68], [BASIC-69], [BASIC-70], [BASIC-71], [BASIC-72], [BASIC-81], [BASIC-84]
 
-0.0.6: Tagged as Array Release
-* Added array function to strings
-* Added the `DiM` function
+0.0.6: Tagged as Array and Function Release
+* Added array function to all data types. The array function allows the use of n-dimensional arrays. The index of the array can be one or
+  more variables itself. The documentation is adjusted to it.
+* Adding functionality to retrieve single characters out of any string. A string's characters can be retrieved by 
+  using squared brackets:
+  `[` and `]`.
+* Added mathematical functions: `ABS`, `ATN`, `CDBL`, `CINT`, `COS`, `EXP`, `LOG`, `LOG10`, `RND`, `SIN`, `SQR`, `TAN`
+* Added string functions: `ASC`, `CHR`, `INSTR`, `LEFT`, `LEN`, `MID`, `RIGHT`, `STR`, `VAL`
+* Added system functions: `MEM`, `SYSTEM`, `TIME`
+* Added `gradle` build script
+
+Implemented Backlog Items:
+
+---
+Implemented test and demonstration programs, located at `src/test/resources/GD_Basic_Examples`:
+- `Fibonacci.bas`: translation of the ECMA demonstration `FIBONACCI.BAS` program
 
 ** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **

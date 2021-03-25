@@ -28,21 +28,21 @@ public final class JasicLexer implements Lexer {
         List<Token> aoTokens = new ArrayList<>();
 
         String strToken = "";
-        TokenizeState oState = TokenizeState.DEFAULT; //The token has not been identified - so the token type is default
+        JasicTokenType oState = JasicTokenType.DEFAULT; //The token has not been identified - so the token type is default
 
         // Many tokens are a single character, like operators and ().
         String charTokens = "\n=+-*/<>()";
-        TokenType[] eTokenTypes = {
-                TokenType.LINE,
-                TokenType.EQUALS,
-                TokenType.OPERATOR,
-                TokenType.OPERATOR,
-                TokenType.OPERATOR,
-                TokenType.OPERATOR,
-                TokenType.OPERATOR,
-                TokenType.OPERATOR,
-                TokenType.LEFT_PAREN,
-                TokenType.RIGHT_PAREN};
+        BasicTokenType[] eTokenTypes = {
+                BasicTokenType.LINE,
+                BasicTokenType.EQUALS,
+                BasicTokenType.OPERATOR,
+                BasicTokenType.OPERATOR,
+                BasicTokenType.OPERATOR,
+                BasicTokenType.OPERATOR,
+                BasicTokenType.OPERATOR,
+                BasicTokenType.OPERATOR,
+                BasicTokenType.LEFT_PAREN,
+                BasicTokenType.RIGHT_PAREN};
 
         // Scan through the code one character at a time, building up the list of tokens.
         for (int i = 0; i < strSource.length(); i++) {
@@ -51,20 +51,20 @@ public final class JasicLexer implements Lexer {
                 case DEFAULT:
                     if (charTokens.indexOf(c) != -1) {
                         aoTokens.add(new Token(Character.toString(c), eTokenTypes[charTokens.indexOf(c)], _iLineNumber));
-                        if (eTokenTypes[charTokens.indexOf(c)] == TokenType.LINE) {
+                        if (eTokenTypes[charTokens.indexOf(c)] == BasicTokenType.LINE) {
                             // if the found character is a 'new line' then increase the line number.
                             _iLineNumber++;
                         }
                     } else if (Character.isLetter(c)) {
                         strToken += String.valueOf(c);
-                        oState = TokenizeState.WORD;
+                        oState = JasicTokenType.WORD;
                     } else if (Character.isDigit(c)) {
                         strToken += String.valueOf(c);
-                        oState = TokenizeState.NUMBER;
+                        oState = JasicTokenType.NUMBER;
                     } else if (c == '"') {
-                        oState = TokenizeState.STRING;
+                        oState = JasicTokenType.STRING;
                     } else if (c == '\'') {
-                        oState = TokenizeState.COMMENT;
+                        oState = JasicTokenType.COMMENT;
                     }
                     break;
 
@@ -72,13 +72,13 @@ public final class JasicLexer implements Lexer {
                     if (Character.isLetterOrDigit(c)) {
                         strToken += String.valueOf(c);
                     } else if (c == ':') {
-                        aoTokens.add(new Token(strToken, TokenType.LABEL, _iLineNumber));
+                        aoTokens.add(new Token(strToken, BasicTokenType.LABEL, _iLineNumber));
                         strToken = "";
-                        oState = TokenizeState.DEFAULT;
+                        oState = JasicTokenType.DEFAULT;
                     } else {
-                        aoTokens.add(new Token(strToken, TokenType.WORD, _iLineNumber));
+                        aoTokens.add(new Token(strToken, BasicTokenType.WORD, _iLineNumber));
                         strToken = "";
-                        oState = TokenizeState.DEFAULT;
+                        oState = JasicTokenType.DEFAULT;
                         i--; // Reprocess this character in the default state.
                     }
                     break;
@@ -90,18 +90,18 @@ public final class JasicLexer implements Lexer {
                     if (Character.isDigit(c)) {
                         strToken += String.valueOf(c);
                     } else {
-                        aoTokens.add(new Token(strToken, TokenType.NUMBER, _iLineNumber));
+                        aoTokens.add(new Token(strToken, BasicTokenType.NUMBER, _iLineNumber));
                         strToken = "";
-                        oState = TokenizeState.DEFAULT;
+                        oState = JasicTokenType.DEFAULT;
                         i--; // Reprocess this character in the default state.
                     }
                     break;
 
                 case STRING:
                     if (c == '"') {
-                        aoTokens.add(new Token(strToken, TokenType.STRING, _iLineNumber));
+                        aoTokens.add(new Token(strToken, BasicTokenType.STRING, _iLineNumber));
                         strToken = "";
-                        oState = TokenizeState.DEFAULT;
+                        oState = JasicTokenType.DEFAULT;
                     } else {
                         strToken += String.valueOf(c);
                     }
@@ -109,7 +109,7 @@ public final class JasicLexer implements Lexer {
 
                 case COMMENT:
                     if (c == '\n') {
-                        oState = TokenizeState.DEFAULT;
+                        oState = JasicTokenType.DEFAULT;
                     }
                     break;
 

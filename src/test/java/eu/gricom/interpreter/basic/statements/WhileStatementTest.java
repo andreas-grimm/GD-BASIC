@@ -17,13 +17,13 @@ public class WhileStatementTest {
         Stack oStack = new Stack();
 
         ProgramPointer oProgramPointer = new ProgramPointer();
-        LineNumberXRef _oLineNumberObject = new LineNumberXRef();
+        LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
-        _oLineNumberObject.putLineNumber(6, 1);
-        _oLineNumberObject.putStatementNumber(1,6);
+        oLineNumberObject.putLineNumber(6, 1);
+        oLineNumberObject.putStatementNumber(1, 6);
 
-        _oLineNumberObject.putLineNumber(7, 2);
-        _oLineNumberObject.putStatementNumber(2,7);
+        oLineNumberObject.putLineNumber(7, 2);
+        oLineNumberObject.putStatementNumber(2, 7);
 
         oProgramPointer.setCurrentStatement(4);
 
@@ -32,7 +32,7 @@ public class WhileStatementTest {
         try {
             OperatorExpression oExpression = new OperatorExpression(oLeftValue, "==", oLeftValue);
 
-            WhileStatement oStatement = new WhileStatement( 1, oExpression, 6);
+            WhileStatement oStatement = new WhileStatement(1, oExpression, 6);
 
             oStatement.execute();
 
@@ -52,13 +52,13 @@ public class WhileStatementTest {
         Stack oStack = new Stack();
 
         ProgramPointer oProgramPointer = new ProgramPointer();
-        LineNumberXRef _oLineNumberObject = new LineNumberXRef();
+        LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
-        _oLineNumberObject.putLineNumber(6, 1);
-        _oLineNumberObject.putStatementNumber(1,6);
+        oLineNumberObject.putLineNumber(6, 1);
+        oLineNumberObject.putStatementNumber(1, 6);
 
-        _oLineNumberObject.putLineNumber(7, 2);
-        _oLineNumberObject.putStatementNumber(2,7);
+        oLineNumberObject.putLineNumber(7, 2);
+        oLineNumberObject.putStatementNumber(2, 7);
 
         oProgramPointer.setCurrentStatement(4);
 
@@ -67,7 +67,7 @@ public class WhileStatementTest {
         try {
             OperatorExpression oExpression = new OperatorExpression(oLeftValue, ">", oLeftValue);
 
-            WhileStatement oStatement = new WhileStatement( 1, oExpression, 6);
+            WhileStatement oStatement = new WhileStatement(1, oExpression, 6);
 
             oStatement.execute();
 
