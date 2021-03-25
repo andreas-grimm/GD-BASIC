@@ -689,23 +689,24 @@ The `IF-THEN` statement implements the main control statement in the programming
 statement consists of 4 token: `IF`, `THEN`, `ELSE`, `END-IF`. In the JASIC implementation the structure only consist of
 two token: `IF` and `THEN`.
 
-The structure of the command in BASIC is:
-`IF` [condition] `THEN` [commands] <`ELSE` [commands]> `END-IF`
+The two possible command structures in BASIC are:
+`IF` [condition] `THEN` [commands] <`ELSE` [commands]> `END-IF`, and
+`IF` [condition] `THEN` [line_number]
 
 The same structure in JASIC is:
 `IF` [condition] `THEN` [jump target]
 
-The implementation of the structure for BASIC is similar to the JASIC implementation. 
-
-Limitations of the current implementation:
-* With this version of the interpreter, the negative case of the control statement (`ELSE`) is not yet implemented 
-  [link](https://gricom.atlassian.net/browse/BASIC-64)
-* Potential change of the logic (to be determined): If the BASIC `IF-THEN` command has no token, but a number following 
-  the `THEN` statement, the command could execute a jump to the line number in the statement.
+The implementation of the structure for BASIC is therefore similar to the JASIC implementation. 
 
 ###### `END-IF` Statement
 The `END-IF` statement closes the `IF-THEN` block, It is mainly used from the `IF-THEN` statement as a jump target in case the IF clause
 fails. No other function is implemented for that statement.
+
+###### Good and Bad Coding
+
+Using the `GOTO` command inside the `IF` / `END-IF` block is considered bad practice. It forces the interpreter to
+jump out of a non-finished block, and the stack entries for the last command have not been cleansed. This might lead 
+to a reduction of the space available for the stack, in the worst case a memory leak that causes the program to break.
 
 ##### `INPUT` Statement
 

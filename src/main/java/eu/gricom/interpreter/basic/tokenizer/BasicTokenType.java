@@ -12,6 +12,7 @@ public enum BasicTokenType {
     CDBL,
     CHR, // token for the CHR$ function
     CINT,
+    CLEAN,
     CLOSE,
     CLS,
     CMD,
@@ -33,7 +34,7 @@ public enum BasicTokenType {
     EXIT,
     EXP,
     FOR,
-    FRE,
+    FREE,
     GOSUB,
     GOTO,
     IF,

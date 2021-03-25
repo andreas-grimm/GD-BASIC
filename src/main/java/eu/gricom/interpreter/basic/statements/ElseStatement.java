@@ -6,30 +6,32 @@ import eu.gricom.interpreter.basic.memoryManager.Stack;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 
 /**
- * NextStatement.java
+ * ElseStatement.java
  *
  * Description:
  *
- * A For statement counts an integer or real value from a start value to an end value - and with every increase it
- * loops thru the block from the For statement to the next Next statement. When the target value is reached, the
- * program flow will jump to the statement past the next statement.
+ * A ELSE statement only appears in connection with the IF command. It has two functions: the IF command will use the
+ * location of the ELSE command in case the condition is not met. The second function is for the program flow. When
+ * the program flow, after successful evaluation of the IF command, hits the ELSE function, the program flow jumps to
+ * the command past the END-IF command.
  *
  * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
  *
  * Created in 2021
  */
-public class EndWhileStatement implements Statement {
+public class ElseStatement implements Statement {
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final int _iLineNumber;
 
     /**
      * Default constructor.
      *
-     * An "end-while" statement returns to the "while" loop start.
+     * An "ELSE" statement jumps to the command past the "END-IF" command.
      *
      * @param iLineNumber the line number of this command
      */
-    public EndWhileStatement(final int iLineNumber) {
+    public ElseStatement(final int iLineNumber) {
+
         _iLineNumber = iLineNumber;
     }
 
@@ -54,6 +56,6 @@ public class EndWhileStatement implements Statement {
 
     @Override
     public final String content() {
-        return "NEXT";
+        return "ELSE";
     }
 }

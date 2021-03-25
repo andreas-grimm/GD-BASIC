@@ -22,41 +22,16 @@ the example of `JRUBY` for Ruby or `JYTHON` for Python.
 
 ## Standards and supported Basic Implementations
 
-### General Rules Concerning the Different Dialects
-Every BASIC program consists of different elements:
-* Variables,
-* Statement and Commands, and
-* Controls (which look like commands, but control the execution)
+#### GD Basic
 
-### JASIC
-Based on the original implementation of the JASIC interpreter, this implementation is regression tested against the JASIC 
-programs. Nevertheless, the interpreter will provide a superset of the programming language. Different to all other BASIC
-dialects implemented, JASIC does not require line numbers, but uses labels to address jump destinations.
+| Type | Variable Name Structure | Values |
+|------|-------------------------|--------|
+| `REAL` | `AB#` or `AB!` | not defined |
+| `INTEGER` | `AB%` or `AB&` | not defined |
+| `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | not defined |
+| `BOOLEAN` | `AB@` | `true` or `false` |
+| undefined | `AB` | not defined |
 
-### Dartmouth Basic
-This Basic interpreter is targeted to implement the definition of the BASIC programming language as defined by Thomas Kurtz 
-from [Dartmouth College](https://en.wikipedia.org/wiki/Dartmouth_BASIC).
-
-The following [Link](https://www.dartmouth.edu/basicfifty/commands.html) links to the definition of the language. At this 
-moment, the interpreter supports both versions - JASIC, and the Dartmouth Basic format. 
-The language support is mightier for the Dartmouth version, no additional language enhancement have been made for the Jasic version.
-Jasic, as a less formatted later version of the programming language, will remain to be supported 
-(why throwing working functions out?). A copy of the Dartmouth Basic programming manual is added to the documentation.
-
-### ECMA Minimal Basic
-The following link point to a [C Compiler for ECMA Minimal Basic](https://buraphakit.sourceforge.io/BASIC.shtml).
-To ensure that this interpreter is compatible with the ECMA standard, the programs of the implementation are
-added in the test area. A copy of the ECMA Basic standard document has been added to the documentation.
-
-### Decimal BASIC
-Decimal Basic seems to be an active Japanese BASIC implementation initiative that is working also from the 
-Dartmouth and ECMA standard. The project webpage can be found here: [Decimal Basic](http://hp.vector.co.jp/authors/VA008683/english/)
-This link leads to an implementation of a Basic to Pascal translator, written by Shiraishi Kazuo:
-[Basic to Pascal](http://hp.vector.co.jp/authors/VA008683/english/BASICAcc.htm).
-
-### GDBasic
-GDBasic is a superset of the different basic dialects. This document describes - apart from commonalities -
-differences, where GDBasic programs exceed the different dialects.
 
 ## Document Conventions
 
@@ -118,18 +93,14 @@ __Example of a BASIC Program__
     130 END
 
 ### Variables, Arrays, and Constants
-Basic is a strongly typed programming language, which means that type 
-conversion can only be done using conversion functions. These functions 
+Basic is a strongly typed programming language, which means that type conversion can only be done using conversion functions. These functions 
 will be implemented in one of the next versions of the interpreter.
 
-Currently, implemented are Numbers (as double floats in Java), Strings, 
-Integers, and Booleans. The code base supports positive integers and strings,
-which will change in the next version when the other types will be supported,
-too. Strings should be in "double quotes", and only positive integers can 
+Currently, implemented are Numbers (as double floats in Java), Strings, Integers, and Booleans. The code base supports positive integers and strings,
+which will change in the next version when the other types will be supported,too. Strings should be in "double quotes", and only positive integers can 
 be parsed (though numbers are double internally).
 
-Variables are identified by name which must start with a letter and can
-contain letters or numbers. Case is significant for names and keywords.
+Variables are identified by name which must start with a letter and can contain letters or numbers. Case is significant for names and keywords.
 
 Arrays are supported as of this version. An array is marked by round brackets directly connected to the variable name: `A$(10)`.
 No whitespace is permitted between the variable and the index. The initial size of the array can be defined with the `DIM` command,
@@ -143,6 +114,8 @@ Example of Arrays:
     A#(5) = a#(4) + 1
 
 Constants are not supported. All variables are globally scoped.
+
+Variables are case-sensitive, so the variables `A%` and `a%` are different.
 
 #### Reals or Numbers
 Named Reals or Numbers, these variable types represent floating-point variables.
@@ -180,39 +153,6 @@ prints the character `e`
 
 ### Naming Conventions and Support
 
-
-#### GD Basic
-
-| Type | Variable Name Structure | Values |
-|------|-------------------------|--------|
-| `REAL` | `AB#` or `AB!` | not defined |
-| `INTEGER` | `AB%` or `AB&` | not defined |
-| `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | not defined |
-| `BOOLEAN` | `AB@` | `true` or `false` |
-| undefined | `AB` | not defined |
-
-#### Dartmouth Basic
-Variable names can be a single letter, or a single letter followed by a 
-single digit. This provides for 286 possible variable names.
-
-#### JASIC
-JASIC supports the same types as the Dartmouth Basic, but it allows longer variable
-names and therefore more variables:
-
-| Type | Variable Name Structure | Values |
-|------|-------------------------|--------|
-| `REAL` | `AB` | est. 9.9999999 E+37 |
-| `STRING` | `AB` | est. 0 to 256 Characters |
-
-
-#### Applesoft Basic
-
-| Type | Variable Name Structure | Values |
-|------|-------------------------|--------|
-| `REAL` | `AB` | +/- 9.9999999 E+37 |
-| `INTEGER` | `AB%` | +/- 32767 |
-| `STRING` | `AB$` | 0 to 256 Characters |
-
 ## Reserved Words
 The following keywords are reserved and cannot be used for variables. The following list defines the use of the keywords:
 
@@ -235,11 +175,11 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `CMD` | reserved | |
 | `CONT` | reserved | |
 | `COS` | implemented | |
-| `DATA` | reserved | |
+| `DATA` | implemented | |
 | `DEF FN` | reserved | |
 | `DIM` | depreciated | |
 | `DO` | implemented | |
-| `ELSE` | planned | |
+| `ELSE` | implemented | |
 | `END` | implemented | |
 | `END-IF` | implemented | |
 | `END-WHILE` | implemented | |
@@ -248,31 +188,32 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `ERL` | reserved | |
 | `ERR` | reserved | |
 | `EXIT` | planned | |
-| `EXP` | reserved | |
+| `EXP` | implemented | |
 | `FOR` | implemented | |
 | `FRE` | reserved | |
 | `GOSUB` | implemented | |
 | `GOTO` | implemented | implemented |
 | `IF` | implemented | implemented |
-| `INSTR` | reserved | |
+| `INSTR` | implemented | |
 | `INPUT` | implemented | implemented |
-| `LEFT` | reserved | |
-| `LEN` | reserved | |
+| `LEFT` | implemented | |
+| `LEN` | implemented | |
 | `LET` | depreciated | |
-| `LOG` | reserved | |
+| `LOG` | implemented | |
 | `MEM` | implemented | |
-| `MID` | reserved | |
+| `MID` | implemented | |
 | `NEXT` | implemented | |
 | `NOT` | reserved | |
 | `ON` | reserved | |
+| `OPEN` | reserved | |
 | `OR` | reserved | |
 | `PRINT` | implemented | implemented |
 | `RANDOM` | reserved | |
-| `READ` | reserved | |
+| `READ` | implemented | |
 | `REM` | implemented | |
 | `REMINDER` | reserved | |
 | `RETURN` | implemented | |
-| `RIGHT` | reserved | |
+| `RIGHT` | implemented | |
 | `RND` | implemented | |
 | `SHIFT_LEFT` | planned | |
 | `SHIFT_RIGHT` | planned | |
@@ -281,15 +222,15 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `STEP` | implemented | |
 | `STOP` | planned | |
 | `STRING` | reserved | |
-| `STR` | reserved | |
-| `SYSTEM` | reserved | |
+| `STR` | implemented | |
+| `SYSTEM` | implemented | |
 | `TAB` | reserved | |
 | `TAN` | implemented | |
 | `THEN` | implemented | implemented |
 | `TIME` | implemented | |
 | `TO` | implemented | |
 | `UNTIL` | implemented | |
-| `VAL` | reserved | |
+| `VAL` | implemented | |
 | `WHILE` | implemented | |
 | `+` | implemented | implemented |
 | `-` | implemented | implemented |
@@ -572,16 +513,50 @@ Evaluates the expression. If it evaluates to a non-zero number, then jumps to th
     IF a < b THEN jump_location
 
 ###### BASIC Syntax
+The BASIC version of the `IF` command supports to coding versions:
 
-`IF <condition> THEN <statement> END-IF`
+`IF <condition> THEN <statements> ELSE <statements> END-IF` and
+`IF <condition> THEN <line_number>`
 
-Evaluates the expression. If it evaluates to a true value, then the commands in the block between the `THEN` and the `END-IF`
-is executed. If it evaluates to a false value, the flow jumps to the statement past the `END-IF` statement.
+When the `IF` command is used, it evaluates the condition in the command. If this condition evaluates to a true 
+value, then either the commands in the block between the `THEN` and the `END-IF` is executed, or the program jumps to 
+the target line number. If it evaluates to a false value, the flow jumps to the block following the `ELSE` statement,
+or if no `ELSE` block is available - it moves to the statement past the `END-IF` statement.
+
+Examples:
+
+a) using the `IF` block:
+
+Without `ELSE` statement:
 
     10 IF a < b THEN 
     20   PRINT "Inside the IF block"
     30 END-IF 
     40 PRINT "Outside the IF block"
+
+
+With `ELSE` statement:
+
+    10 IF a < b THEN 
+    20 PRINT "a is smaller than b"
+    30 ELSE
+    40 PRINT "a is larger or equal than b"
+    30 END-IF 
+    40 PRINT "Alwayas printed"
+
+or
+
+b) jumping directly to a target:
+
+    10 IF a < b THEN 30
+    20   PRINT "Only printed if a >= b"
+    30 PRINT "Always printed"
+
+###### Good and Bad Coding
+
+Using the `GOTO` command inside the `IF` / `ELSE` / `END-IF` block is considered bad practice. It forces the interpreter to 
+jump out of a non-finished block, and this can use to unwanted program behaviour. In this case, use the non-blocked 
+version of the command.
 
 ## Expressions
 The following expressions are supported:
@@ -674,47 +649,77 @@ and does not execute the loop if past limits.
 
 ### Mathematical Functions
 
-#### `ABS`: Absolute Value
+#### `ABS`
 The `ABS` function returns the absolute (positive) value of the entered parameter. The function allows integer, real, and long values.
 
-#### `RND`: Random Number
+#### `ATN`
+The function `ATN` returns the arch-tangens of the parameter given.  The parameter needs to be of type `real`.
+
+#### `CDBL`
+The function `CDBL` converts an `integer` value into the type `real`.  The parameter needs to be of type `integer`.
+
+#### `CINT`
+The function `CINT` converts a `real` value into the type `integer`.  The parameter needs to be of type `real`.
+
+#### `COS`
+The function `COS` returns the co-sinus of the parameter given. The parameter needs to be of type `real`.
+
+#### `EXP`
+The function `EXP` gives the exponential value or the parameter to the base e. The parameter needs to be of type `real`.
+
+#### `LOG`
+The function `LOG` returns the logarithm naturalis of the parameter given. The parameter needs to be of type `real`.
+
+#### `LOG10`
+The function `LOG10` returns the logarithm decimalis of the parameter given. The parameter needs to be of type `real`.
+
+#### `RND`
 The `RND` function does not require any parameter. It returns a `REAL` value which is pseudo-randomly generated and between `0` and `1`.
+
+#### `SIN`
+The function `SIN` returns the sinus of the parameter given. The parameter needs to be of type `real`.
+
+#### `SQR`
+The function `SQR` returns the square root to the parameter given. The parameter needs to be of type `real`.
+
+#### `TAN`
+The function `TAN` returns the tangents of the parameter given. The parameter needs to be of type `real`.
 
 ### String Processing Functions
 
-#### `ASC`: Convert an integer to a character using the ASCII Code
-tbd
+#### `ASC`
+Convert an integer to a character using the ASCII Code
 
-#### `CHR`: Convert a character to an integer using the ASCII Code
-tbd
+#### `CHR`
+Convert a character to an integer using the ASCII Code
 
-#### `LEFT`: Get the Left side of a string
-tbd
+#### `LEFT`
+Get the Left side of a string
 
-#### `LEN`: Get the length of a string
-tbd
+#### `LEN`
+Get the length of a string
 
-#### `MID`: Get the middle of a string
-tbd
+#### `MID`
+Get the middle of a string
 
-#### `RIGHT`: Get the right side of a string
-tbd
+#### `RIGHT`
+Get the right side of a string
 
-#### `STR`: Convert a number to the string
-tbd
+#### `STR`
+Convert a number to the string
 
-#### `VAL`: Convert a string to a real number
-tbd
+#### `VAL`
+Convert a string to a real number
 
 ### System Functions
 
-#### `CALL`: Call an external function
-tbd
+#### `CALL`
+Call an external function
 
-#### `MEM`: Available Memory
+#### `MEM`
 The `MEM` function returns the size of the available memory as an integer. The function does not require any parameter.
 
-#### `SYSTEM`: Call an OS function
+#### `SYSTEM`
 The `SYSTEM` executes a command on OS level. The function works is called with two parameters:
 - Command: defines what the function is going to do: `RUN` executes a shell command, `START` executes any program 
   from the system. The first command returns the result of the execution as a `String` value - while the second 
@@ -735,6 +740,76 @@ the simple integer data type. Therefore, the conversions functions are not imple
 - The `CSNG` and `SNG` functions are not implemented
 - The `CINT` and `INT` functions are identical, only CINT is implemented
 
+## Compatibility To Other Implementations
+
+### General Rules Concerning the Different Dialects
+Every BASIC program consists of different elements:
+* Variables,
+* Statement and Commands, and
+* Controls (which look like commands, but control the execution)
+
+### JASIC
+Based on the original implementation of the JASIC interpreter, this implementation is regression tested against the JASIC
+programs. Nevertheless, the interpreter will provide a superset of the programming language. Different to all other BASIC
+dialects implemented, JASIC does not require line numbers, but uses labels to address jump destinations.
+
+### Dartmouth Basic
+This Basic interpreter is targeted to implement the definition of the BASIC programming language as defined by Thomas Kurtz
+from [Dartmouth College](https://en.wikipedia.org/wiki/Dartmouth_BASIC).
+
+The following [Link](https://www.dartmouth.edu/basicfifty/commands.html) links to the definition of the language. At this
+moment, the interpreter supports both versions - JASIC, and the Dartmouth Basic format.
+The language support is mightier for the Dartmouth version, no additional language enhancement have been made for the Jasic version.
+Jasic, as a less formatted later version of the programming language, will remain to be supported
+(why throwing working functions out?). A copy of the Dartmouth Basic programming manual is added to the documentation.
+
+### ECMA Minimal Basic
+The following link point to a [C Compiler for ECMA Minimal Basic](https://buraphakit.sourceforge.io/BASIC.shtml).
+To ensure that this interpreter is compatible with the ECMA standard, the programs of the implementation are
+added in the test area. A copy of the ECMA Basic standard document has been added to the documentation.
+
+### Decimal BASIC
+Decimal Basic seems to be an active Japanese BASIC implementation initiative that is working also from the
+Dartmouth and ECMA standard. The project webpage can be found here: [Decimal Basic](http://hp.vector.co.jp/authors/VA008683/english/)
+This link leads to an implementation of a Basic to Pascal translator, written by Shiraishi Kazuo:
+[Basic to Pascal](http://hp.vector.co.jp/authors/VA008683/english/BASICAcc.htm).
+
+### GDBasic
+GDBasic is a superset of the different basic dialects. This document describes - apart from commonalities -
+differences, where GDBasic programs exceed the different dialects.
+
+### Types and Naming Standards
+
+#### Dartmouth Basic
+Variable names can be a single letter, or a single letter followed by a
+single digit. This provides for 286 possible variable names.
+
+#### JASIC
+JASIC supports the same types as the Dartmouth Basic, but it allows longer variable
+names and therefore more variables:
+
+| Type | Variable Name Structure | Values |
+|------|-------------------------|--------|
+| `REAL` | `AB` | est. 9.9999999 E+37 |
+| `STRING` | `AB` | est. 0 to 256 Characters |
+
+#### Applesoft Basic
+
+| Type | Variable Name Structure | Values |
+|------|-------------------------|--------|
+| `REAL` | `AB` | +/- 9.9999999 E+37 |
+| `INTEGER` | `AB%` | +/- 32767 |
+| `STRING` | `AB$` | 0 to 256 Characters |
+
+### Detailed Changes To The Existing Standards
+
+### Differences to GW-Basic
+
+#### `IF` Statement
+Different to GW-Basic, this interpreter allows the use of a command block following the `IF` command. In GW-Basic, 
+the `IF` command is followed by a single command, followed by a potential `ELSE` command. GD-Basic allows a block of 
+commands, with the blocks terminating in an `ELSE` and `END-IF` statement.
+
 ## Known Issues and Workarounds
 
 ### `NEXT` before `REM` and `DATA`
@@ -749,3 +824,5 @@ Resolution for this issue is not planned at the moment.
 
 * [Wikipedia Article on Basic](https://en.wikipedia.org/wiki/BASIC)
 * [TinyBasic](https://en.wikipedia.org/wiki/Tiny_BASIC) with the related implementation for [Java](http://www.thisiscool.com/tinybasic.htm)
+* [GW-Basic](https://en.wikipedia.org/wiki/GW-BASIC) is the Microsoft reference implementation of the BASIC 
+  programming language

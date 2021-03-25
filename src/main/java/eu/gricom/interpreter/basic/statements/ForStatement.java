@@ -6,7 +6,6 @@ import eu.gricom.interpreter.basic.memoryManager.Stack;
 import eu.gricom.interpreter.basic.memoryManager.VariableManagement;
 import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 import eu.gricom.interpreter.basic.variableTypes.RealValue;
-import eu.gricom.interpreter.basic.variableTypes.Value;
 
 /**
  * ForStatement.java
@@ -25,14 +24,13 @@ public final class ForStatement implements Statement {
     private boolean _bForStarted = false;
     private final String _strName;
     private final Expression _oStartValue;
-    private final Value _oEndValue;
-    private final Value _oStepSize;
-    private final int _iPostLoopStatement;
+    private final Expression _oEndValue;
+    private final Expression _oStepSize;
+    private final int _iEndIfStatement;
     private final int _iTokenNo;
     private final VariableManagement _oVariableManagement = new VariableManagement();
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final Stack _oStack = new Stack();
-    private final boolean _bCountingDown;
 
     /**
      * Gets a previously consumed token, indexing backwards. last(1) will
@@ -43,27 +41,21 @@ public final class ForStatement implements Statement {
      * @param oStartValueExpression Expression for the calculation of start value.
      * @param oEndValueExpression Expression for the calculation of the end value.
      * @param oStepSize size of the steps in which the loop is processed
-     * @param iPostLoopStatement location of the next command to be processed after the loop
+     * @param iEndIfStatement location of the next command to be processed after the loop
      */
     public ForStatement(final int iTokenNo,
                         final String strName,
                         final Expression oStartValueExpression,
-                        final Value oEndValueExpression,
-                        final Value oStepSize,
-                        final int iPostLoopStatement) {
+                        final Expression oEndValueExpression,
+                        final Expression oStepSize,
+                        final int iEndIfStatement) throws Exception {
         _iTokenNo = iTokenNo;
         _strName = strName;
         _oStartValue = oStartValueExpression;
         _oEndValue = oEndValueExpression;
         _oStepSize = oStepSize;
-        _iPostLoopStatement = iPostLoopStatement;
-
-        if (oStepSize.toReal() < 0) {
-            _bCountingDown = true;
-        } else {
-            _bCountingDown = false;
-        }
-    }
+        _iEndIfStatement = iEndIfStatement;
+   }
 
     @Override
     public int getLineNumber() {
@@ -72,16 +64,23 @@ public final class ForStatement implements Statement {
 
     @Override
     public void execute() throws Exception {
+        boolean bCountingDown = true;
+        if (_oStepSize.evaluate().toReal() < 0) {
+            bCountingDown = true;
+        } else {
+            bCountingDown = false;
+        }
+
         final LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
         if (_bForStarted) {
             // if the FOR loop is already started - ie. this is the second iteration then process here
             double dEndValue = _oEndValue.evaluate().toReal();
-            double dStepSize = _oStepSize.toReal();
+            double dStepSize = _oStepSize.evaluate().toReal();
             double dCounter = _oVariableManagement.getMap(_strName).toReal();
 
-            if (dCounter + dStepSize <= dEndValue && !_bCountingDown
-                || dCounter + dStepSize >= dEndValue && _bCountingDown) {
+            if (dCounter + dStepSize <= dEndValue && !bCountingDown
+                || dCounter + dStepSize >= dEndValue && bCountingDown) {
 
                 // if the sum of the current value + step size remains lower than the end value, continue
                 _oVariableManagement.putMap(_strName, new RealValue(RealValue.round(dCounter + dStepSize, 2)));
@@ -91,7 +90,7 @@ public final class ForStatement implements Statement {
                 // calculate the final sum of the current value and leave the loop
                 _oProgramPointer.setCurrentStatement(
                         oLineNumberObject.getStatementFromLineNumber(
-                                oLineNumberObject.getNextLineNumber(_iPostLoopStatement)));
+                                oLineNumberObject.getNextLineNumber(_iEndIfStatement)));
             }
             return;
         } else {
@@ -105,8 +104,9 @@ public final class ForStatement implements Statement {
     @Override
     public String content() throws Exception {
         double dCounter;
-        double dEndValue = _oEndValue.evaluate().toReal();
-        double dStepSize = _oStepSize.toReal();
+        String strStartValue = _oEndValue.content();
+        String strEndValue = _oEndValue.content();
+        String strStepSize = _oStepSize.content();
         if (_oVariableManagement.getMap(_strName) != null) {
             dCounter = _oVariableManagement.getMap(_strName).toReal();
         } else {
@@ -114,7 +114,8 @@ public final class ForStatement implements Statement {
         }
 
         String strReturn =
-                "FOR (" + _strName + " = " + _oStartValue.evaluate().toString() + " TO " + dEndValue + " STEP " + dStepSize + "): [" + dCounter + "]";
+                "FOR (" + _strName + " = " + strStartValue + " TO " + strEndValue + " STEP " + strStepSize + "): ["
+                        + dCounter + "]";
         return strReturn;
     }
 }

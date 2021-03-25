@@ -43,7 +43,6 @@ public class NextStatement implements Statement {
         final Stack oStack = new Stack();
 
         int iTargetLineNumber = ((IntegerValue) oStack.pop()).toInt();
-
         if (iTargetLineNumber == 0) {
             throw new SyntaxErrorException("Undefined Jump Target");
         } else {

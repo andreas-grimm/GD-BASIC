@@ -85,7 +85,7 @@ public final class VariableExpression implements Expression {
             return oVariableManager.getMap(strKey);
         }
 
-        throw new RuntimeException("Unknown variable " + strKey);
+        throw new RuntimeException("Unknown variable <" + strKey + ">");
     }
 
     /**

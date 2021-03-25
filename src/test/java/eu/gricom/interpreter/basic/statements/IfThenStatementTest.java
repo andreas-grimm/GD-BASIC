@@ -79,7 +79,7 @@ public class IfThenStatementTest {
         try {
             OperatorExpression oExpression = new OperatorExpression(oLeftValue, "==", oLeftValue);
 
-            IfThenStatement oStatement = new IfThenStatement(oExpression, 6, 5);
+            IfThenStatement oStatement = new IfThenStatement(oExpression, 6, 0, 5, 0);
 
             oStatement.execute();
 
@@ -106,7 +106,7 @@ public class IfThenStatementTest {
         try {
             OperatorExpression oExpression = new OperatorExpression(oLeftValue, "==", oRightValue);
 
-            IfThenStatement oStatement = new IfThenStatement(oExpression, 4, 6);
+            IfThenStatement oStatement = new IfThenStatement(oExpression, 4, 0, 6, 0);
 
             oStatement.execute();
 

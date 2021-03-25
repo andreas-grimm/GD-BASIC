@@ -22,7 +22,7 @@
 240 A% = ABS(C%)
 250 PRINT "Result of test with variable: Should be a number numeric 1: ", A%
 260 A% = ABS(-1 - 4)
-270 PRINT "Result of test with variable: Should be a number numeric 1: ", A%
+270 PRINT "Result of test with variable: Should be a number numeric 5: ", A%
 280 A$ = LEFT("abcde", 2)
 290 PRINT "Left side of the string, first two chars: ", A$
 300 A$ = RIGHT("abcde", 2)
