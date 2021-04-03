@@ -195,13 +195,24 @@ should be managed by the `VariableManagement` class or the `Stack` class in the 
 ### Runtime
 
 Internally the parsed program is stored in a number of data structures:
-- The `parse` method of the Jasic and the Basic parser returns a list of objects (instantiated statement classes) in a processing sequence. This list is defined as `List<Statement> aoStatements`.
-- For Jasic programs: The execute function of the program utilizes the `LabelStatement` class to have a reference for jumps and conditions.
-- For Basic programs: The execute function of the program utilizes the `LineNumberXRef` class to have a reference between the basic line numbers, token number, and statement number.
+- The `parse` method of the Jasic and the Basic parser returns a list of objects (instantiated statement classes) in a 
+  processing sequence. This list is defined as `List<Statement> aoStatements`.
+- For Jasic programs: The execute function of the program utilizes the `LabelStatement` class to have a reference for 
+  jumps and conditions.
+- For Basic programs: The execute function of the program utilizes the `LineNumberXRef` class to have a reference 
+  between the basic line numbers, token number, and statement number.
 
 ## Basic Concepts
 
 ### Memory Management
+As a very important basic rule for the Parser and the Runtime components: The only place the interpreter stores and 
+keeps values during the execution if the `memoryManager` package. No other component is allowed to keep any 
+information longer than the execution of a function or method needs it, no class has any static variables, no class 
+except the `Logger` class keeps static values. This way the location of the variables can be adjusted to the needs 
+of the user of the interpreter. At this moment all variables are static variables in memory, but if the need arises 
+it would be possible to use a relational, non-relational, or in-memory database (eg. using the Hazelcast package) to 
+store those values, even achieve programming language supported high-availability. Note: non of this is currently 
+planned.
 
 ### Program Control
 
@@ -947,7 +958,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | Reserved Word |  GD-Basic | Jasic | TRS-80 Level II Basic | Applesoft Basic | Commodore Basic | Notes |
 |---------------|-----------|-------|-----------------------|-----------------|-----------------|-------|
 | `ABS` | implemented |  | implemented | implemented | implemented |
-| `AND` | reserved |  | implemented | implemented | implemented |
+| `AND` | implemented |  | implemented | implemented | implemented |
 | `ASC` | implemented |  | implemented | implemented | implemented |
 | `AT` |  |  |  | implemented |  | 
 | `ATN` | implemented |  | implemented | implemented | implemented |
@@ -981,10 +992,10 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `DEL` |  |  |  | implemented |  |
 | `DELETE` |  |  | implemented |  |  |
 | `DIM` | depreciated |  | implemented | implemented | implemented |
-| `DO` | reserved |  |  |  |  |
+| `DO` | implemented |  |  |  |  |
 | `DRAW` |  |  |  | implemented |  |
 | `EDIT` |  |  | implemented |  |  |
-| `ELSE` | reserved |  | implemented | implemented | implemented |
+| `ELSE` | implemented |  | implemented | implemented | implemented |
 | `END` | implemented |  | implemented | implemented | implemented |
 | `END-IF` | implemented |  |  |  |  |
 | `END-WHILE` | implemented |  |  |  |  |
@@ -994,7 +1005,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `ERL` | reserved |  | implemented |  |  |
 | `ERR` | reserved |  | implemented |  |
 | `ERROR` |  |  | implemented |  |  |
-| `EXP` | reserved |  | implemented | implemented | implemented |
+| `EXP` | implemented |  | implemented | implemented | implemented |
 | `EXIT` | reserved |  |  |  |  |
 | `FIELD` |  |  | implemented |  |  |
 | `FIX` | | not planned | implemented | | |
@@ -1025,9 +1036,9 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `INPUT` | implemented | implemented | implemented | implemented | implemented |
 | `INPUT#` |  |  |  |  | implemented |
 | `KILL` |  |  | implemented |  |  |
-| `LEFT` | reserved |  | implemented | implemented | implemented |
-| `LEN` | reserved |  | implemented | implemented | implemented |
-| `LENGTH` | reserved |  | implemented | implemented | implemented |
+| `LEFT` | implemented |  | implemented | implemented | implemented |
+| `LEN` | implemented |  | implemented | implemented | implemented |
+| `LENGTH` | implemented |  | implemented | implemented | implemented |
 | `LET` | depreciated |  | implemented | implemented | implemented |
 | `LINE` | implemented | implemented | implemented (different function) | | | The `LINE` token is used to mark empty program lines, the token has no responding reserved word.
 | `LIST` |  |  | implemented | implemented | implemented |
@@ -1035,26 +1046,26 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `LOAD` |  |  | implemented |  | implemented |
 | `LOC` |  |  | implemented |  |  |
 | `LOF` |  |  | implemented |  |  |
-| `LOG` | reserved |  | implemented | implemented | implemented |
+| `LOG` | implemented |  | implemented | implemented | implemented |
 | `LOMEM` |  |  |  | implemented |  |
 | `LPRINT` |  |  | implemented |  |  |
 | `LSET` |  |  | implemented |  |  |
 | `MEM` | implemented |  | implemented |  |
 | `MERGE` |  |  | implemented |  |  |
-| `MID` | reserved, used token: `MID` |  | implemented | implemented | implemented |
+| `MID` | implemented |  | implemented | implemented | implemented |
 | `MKD` |  |  | implemented | | |
 | `MKI` |  |  | implemented | | |
 | `MKS` |  |  | implemented | | |
 | `NAME` |  |  | implemented | | |
 | `NEW` |  |  | implemented | implemented | implemented |
-| `NEXT` | reserved |  | implemented | implemented | implemented |
+| `NEXT` | implemented |  | implemented | implemented | implemented |
 | `NORMAL` |  |  |  | implemented |  |
-| `NOT` | reserved |  | implemented | implemented | implemented |
+| `NOT` | implemented |  | implemented | implemented | implemented |
 | `NOTRACE` |  | not planned |  | implemented |  |
 | `ON` | reserved |  | implemented |  | implemented |
 | `ONERR` |  |  |  | implemented |  |
 | `OPEN` |  |  | implemented | implemented | implemented |
-| `OR` | reserved |  | implemented | implemented | implemented |
+| `OR` | implemented |  | implemented | implemented | implemented |
 | `OUT` |  |  | implemented |  |  |
 | `PDL` |  |  |  | implemented |  |
 | `PEEK` |  |  | implemented | implemented | implemented |
@@ -1068,7 +1079,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `PRINT#` |  |  |  |  | implemented |
 | `PUT` |  |  | implemented |  |  |
 | `RANDOM` | reserved |  | implemented |  |  |
-| `READ` | reserved |  | implemented | implemented | implemented |
+| `READ` | implemented |  | implemented | implemented | implemented |
 | `RECALL` |  |  |  | implemented |  |
 | `REM` | implemented |  | implemented | implemented | implemented |
 | `REMINDER` | reserved, used token instead of `%` |  |  |  |  |
@@ -1092,11 +1103,11 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `SPC` |  |  |  | implemented | implemented |
 | `SPEED` |  |  |  | implemented |  |
 | `SQR` | implemented |  | implemented | implemented | implemented |
-| `STEP` | reserved |  | implemented | implemented | implemented |
+| `STEP` | implemented |  | implemented | implemented | implemented |
 | `STOP` | reserved |  | implemented | implemented | implemented |
 | `STORE` |  |  |  | implemented |  |
 | `STRING` | reserved, used token: `TOSTRING` |  | implemented |  |  |
-| `STR` | reserved |  | implemented | implemented | implemented |
+| `STR` | implemented |  | implemented | implemented | implemented |
 | `SYSTEM` | reserved |  | implemented |  |  |
 | `SYS` |  |  |  |  | implemented |
 | `TAB` | reserved |  | implemented | implemented | implemented |
@@ -1108,15 +1119,15 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `TRACE` |  |  |  | implemented |  |
 | `TRON` |  |  | implemented |  |  |
 | `TROFF` |  |  | implemented |  |  |
-| `UNTIL` | reserved |  |  |  |  |
+| `UNTIL` | implemented |  |  |  |  |
 | `USR` |  |  |  | implemented | implemented |
-| `VAL` | reserved |  | implemented | implemented | implemented |
+| `VAL` | implemented |  | implemented | implemented | implemented |
 | `VERIFY` |  |  |  |  | implemented |
 | `VLIN` |  |  |  | implemented |  |
 | `VTAB` |  |  |  | implemented |  |
 | `WAIT` |  |  |  |  | implemented |
 | `XDRAW` |  |  |  | implemented |  |
-| `&` | reserved, used token: `AMPERSAND` |  |  | implemented |  |
+| `&` | implemented, equivalent to: `AND` |  |  | implemented |  |
 | `+` | implemented, used token: `PLUS` | implemented | implemented | implemented | implemented |
 | `-` | implemented, used token: `MINUS` | implemented | implemented | implemented | implemented |
 | `*` | implemented, used token: `MULTIPLY` | implemented | implemented | implemented | implemented |
@@ -1136,6 +1147,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `!=` | implemented, used token: `COMPARE_NOT_EQUAL` |  |  |
 | `^` | implemented, used token: `POWER` | reserved | implemented |  | implemented |
 | `\'` (`REM` Quote) | implemented | implemented | implemented |  |
+| `|` | implemented, equivalent to: `OR` |  |  |  |  |
 
 ### Compatibility Guide
 

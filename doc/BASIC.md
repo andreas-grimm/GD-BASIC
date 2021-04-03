@@ -163,7 +163,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | Reserved Word |  GD-Basic | Jasic | 
 |---------------|-----------|-------|
 | `ABS` | implemented | |
-| `AND` | reserved | |
+| `AND` | implemented | |
 | `ASC` | implemented | |
 | `ATN` | implemented | |
 | `CALL` | reserved | |
@@ -176,7 +176,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `CONT` | reserved | |
 | `COS` | implemented | |
 | `DATA` | implemented | |
-| `DEF FN` | reserved | |
+| `DEF FN` | planned | |
 | `DIM` | depreciated | |
 | `DO` | implemented | |
 | `ELSE` | implemented | |
@@ -203,10 +203,10 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `MEM` | implemented | |
 | `MID` | implemented | |
 | `NEXT` | implemented | |
-| `NOT` | reserved | |
+| `NOT` | implemented | |
 | `ON` | reserved | |
 | `OPEN` | reserved | |
-| `OR` | reserved | |
+| `OR` | implemented | |
 | `PRINT` | implemented | implemented |
 | `RANDOM` | reserved | |
 | `READ` | implemented | |
@@ -247,6 +247,8 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `!=` | implemented | |
 | `^` | implemented | |
 | `'` | implemented | |
+| `&` | implemented | |
+| `|` | implemented | |
 
 ## Statements
 
@@ -558,7 +560,7 @@ Using the `GOTO` command inside the `IF` / `ELSE` / `END-IF` block is considered
 jump out of a non-finished block, and this can use to unwanted program behaviour. In this case, use the non-blocked 
 version of the command.
 
-## Expressions
+## Expressions and Operators
 The following expressions are supported:
 
 * \<expression\> `=` \<expression\>: (for JASIC, but works for BASIC)
@@ -592,6 +594,12 @@ The following expressions are supported:
 * \<expression\> `>` \<expression\>
 
 * \<expression\> `>` \<expression\>
+
+* \<expression\> `&` \<expression\> (or \<expression\> `AND` \<expression\>): Implements the logical `AND` operator. 
+  The result is `true` only if both expressions provide a result that is interpreted as `true`.
+
+* \<expression\> `|` \<expression\> (or \<expression\> `OR` \<expression\>): Implements the logical `OR` operator.
+  The result is `true` only if one of the two expressions provides a result that is interpreted as `true`.
 
 * \<name\>:
     A name in an expression simply returns the value of the variable with
@@ -672,6 +680,11 @@ The function `LOG` returns the logarithm naturalis of the parameter given. The p
 
 #### `LOG10`
 The function `LOG10` returns the logarithm decimalis of the parameter given. The parameter needs to be of type `real`.
+
+#### `NOT`
+The function `NOT` reverses the logical or boolean content of a variable and returns that content: `true` becomes 
+`false` and vice versa. For numerical values, any value smaller or equal to `0` becomes `1`, and all values larger 
+than `0` become `0`.
 
 #### `RND`
 The `RND` function does not require any parameter. It returns a `REAL` value which is pseudo-randomly generated and between `0` and `1`.

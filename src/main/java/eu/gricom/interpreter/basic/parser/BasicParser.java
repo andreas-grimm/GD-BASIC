@@ -292,6 +292,7 @@ public class BasicParser implements Parser {
 
                 // IF Token: Conditional processing
                 case IF:
+                    int iElsePosition = 0; // initialize the variable that holds the location of the ELSE token
                     iOrgPosition = _iPosition;
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     _iPosition++;
@@ -314,8 +315,9 @@ public class BasicParser implements Parser {
                         try {
                             oElseToken = findToken(BasicTokenType.ELSE);
                             _oLogger.debug("-parse-> followed Token: <" + oElseToken.getLine() + "> [ELSE]");
+                            iElsePosition = oElseToken.getLine();
                         } catch (SyntaxErrorException eException) {
-
+                            iElsePosition = 0;
                         }
 
                         Token oEndIfToken = findToken(BasicTokenType.ENDIF);
@@ -332,7 +334,7 @@ public class BasicParser implements Parser {
                             }
                         }
 
-                        aoStatements.add(new IfThenStatement(oCondition, iOrgPosition, oElseToken.getLine(), oEndIfToken.getLine(),
+                        aoStatements.add(new IfThenStatement(oCondition, iOrgPosition, iElsePosition, oEndIfToken.getLine(),
                                                              0));
                     }
 
@@ -568,6 +570,8 @@ public class BasicParser implements Parser {
                 || oToken.getType() == BasicTokenType.MULTIPLY
                 || oToken.getType() == BasicTokenType.DIVIDE
                 || oToken.getType() == BasicTokenType.POWER
+                || oToken.getType() == BasicTokenType.AND
+                || oToken.getType() == BasicTokenType.OR
                 || oToken.getType() == BasicTokenType.COMPARE_EQUAL
                 || oToken.getType() == BasicTokenType.COMPARE_NOT_EQUAL
                 || oToken.getType() == BasicTokenType.SMALLER
@@ -669,7 +673,7 @@ public class BasicParser implements Parser {
 
             // single parameter function calls
             case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case EXP: case LEN: case LOG:
-                case LOG10: case SIN: case SQR: case STR: case TAN: case VAL:
+                case LOG10: case NOT: case SIN: case SQR: case STR: case TAN: case VAL:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");

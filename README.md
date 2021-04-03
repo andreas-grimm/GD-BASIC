@@ -100,7 +100,9 @@ Implemented Backlog Items:
 * Adding functionality to retrieve single characters out of any string. A string's characters can be retrieved by 
   using squared brackets:
   `[` and `]`.
-* Added mathematical functions: `ABS`, `ATN`, `CDBL`, `CINT`, `COS`, `EXP`, `LOG`, `LOG10`, `RND`, `SIN`, `SQR`, `TAN`
+* Added mathematical operators: `AND`, and `OR`  
+* Added mathematical functions: `ABS`, `ATN`, `CDBL`, `CINT`, `COS`, `EXP`, `LOG`, `LOG10`, `NOT`, `RND`, `SIN`, `SQR`, 
+  `TAN`
 * Added string functions: `ASC`, `CHR`, `INSTR`, `LEFT`, `LEN`, `MID`, `RIGHT`, `STR`, `VAL`
 * Added system functions: `MEM`, `SYSTEM`, `TIME`
 * Added `gradle` build script
@@ -117,12 +119,12 @@ Implemented Backlog Items:
 
 Implemented Backlog Items:
 
-    [BASIC-53][BASIC-64][BASIC-73][BASIC-89][BASIC-102][BASIC-104][BASIC-105][BASIC-108][BASIC-110][BASIC-117]
+    [BASIC-53][BASIC-64][BASIC-73][BASIC-89][BASIC-102][BASIC-104][BASIC-105][BASIC-108][BASIC-109][BASIC-110][BASIC-117]
     [BASIC-120]
 
 Under Development:
 
-    [BASIC-19][BASIC-37][BASIC-48][BASIC-75][BASIC-79][BASIC-82][BASIC-83][BASIC-88][BASIC-109][BASIC-115][BASIC-121]
+    [BASIC-19][BASIC-37][BASIC-48][BASIC-75][BASIC-79][BASIC-82][BASIC-83][BASIC-88][BASIC-115][BASIC-121]
     [BASIC-124]
 
 ---

@@ -42,7 +42,7 @@ public final class ReservedWords {
             "WHILE", "WRITE",
             "&", "\\+", "\\-", "\\*", "\\/", ":",
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
-            "\\(", "\\)", "\\'", "\\;", "\\,"
+            "\\(", "\\)", "\\'", "\\;", "\\,", "\\|", "\\?"
     };
 
     private static BasicTokenType[] _aeTokenTypes = {
@@ -68,10 +68,12 @@ public final class ReservedWords {
         BasicTokenType.UNTIL,
         BasicTokenType.VAL,
         BasicTokenType.WHILE, BasicTokenType.WRITE,
-        BasicTokenType.AMPERSAND, BasicTokenType.PLUS, BasicTokenType.MINUS, BasicTokenType.MULTIPLY, BasicTokenType.DIVIDE, BasicTokenType.COLON,
+        BasicTokenType.AND, BasicTokenType.PLUS, BasicTokenType.MINUS, BasicTokenType.MULTIPLY, BasicTokenType.DIVIDE,
+            BasicTokenType.COLON,
         BasicTokenType.GREATER, BasicTokenType.GREATER_EQUAL, BasicTokenType.SMALLER, BasicTokenType.SMALLER_EQUAL, BasicTokenType.ASSIGN_EQUAL,
             BasicTokenType.PASCAL_ASSIGN_EQUAL, BasicTokenType.COMPARE_EQUAL, BasicTokenType.COMPARE_NOT_EQUAL, BasicTokenType.POWER,
-        BasicTokenType.LEFT_PAREN, BasicTokenType.RIGHT_PAREN, BasicTokenType.COMMENT, BasicTokenType.SEMICOLON, BasicTokenType.COMMA};
+        BasicTokenType.LEFT_PAREN, BasicTokenType.RIGHT_PAREN, BasicTokenType.COMMENT, BasicTokenType.SEMICOLON,
+            BasicTokenType.COMMA, BasicTokenType.OR, BasicTokenType.PRINT};
 
     /**
      * getIndex returns the index of the token based on an entered token type.

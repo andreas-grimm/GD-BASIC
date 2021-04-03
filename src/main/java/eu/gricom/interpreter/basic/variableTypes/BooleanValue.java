@@ -201,6 +201,34 @@ public class BooleanValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " '>>' for boolean expression is not defined");
     }
 
+    @Override
+    public final Value and(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BooleanValue) {
+
+            if (_bValue && ((BooleanValue) oValue).isTrue()) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
+        }
+
+        throw new SyntaxErrorException(oValue.content() + " is not of type boolean");
+    }
+
+    @Override
+    public final Value or(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BooleanValue) {
+
+            if (_bValue || ((BooleanValue) oValue).isTrue()) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
+        }
+
+        throw new SyntaxErrorException(oValue.content() + " is not of type boolean");
+    }
+
     // This one implemented the XOR statement
     @Override
     public final Value power(final Value oValue) throws SyntaxErrorException {

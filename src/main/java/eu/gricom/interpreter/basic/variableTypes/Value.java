@@ -105,6 +105,24 @@ public interface Value extends Expression {
     Value shiftLeft(Value oValue) throws SyntaxErrorException;
 
     /**
+     * Execution of the logical AND function.
+     *
+     * @param oValue second statement to compare
+     * @return the result of the function
+     * @throws SyntaxErrorException thrown when different or non-compatible types are used
+     */
+    Value and(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+
+    /**
+     * Execution of the logical OR function.
+     *
+     * @param oValue second statement to compare
+     * @return the result of the function
+     * @throws SyntaxErrorException thrown when different or non-compatible types are used
+     */
+    Value or(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+
+    /**
      * Division of one value object by 2, parameter times.
      *
      * @param oValue divisor for the calculation

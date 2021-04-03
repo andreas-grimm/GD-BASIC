@@ -45,6 +45,7 @@ sourceSets {
     test {
         java {
             srcDir 'src/test/java'
+            exclude 'src/test/resources'
         }
     }
 }
