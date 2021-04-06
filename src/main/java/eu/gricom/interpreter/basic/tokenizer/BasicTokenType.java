@@ -52,6 +52,7 @@ public enum BasicTokenType {
     NOT,
     ON,
     OR,
+    PRAGMA,
     PRINT,
     RANDOM,
     READ,

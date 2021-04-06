@@ -196,7 +196,10 @@ public class Logger {
           _oLogFile.flush();
       } else {
           System.out.println();
-          System.err.println(strTime + " " + _strClassName + " [ERROR] " + strMessage);
+          System.err.println(ConsoleColors.BLUE + strTime + ConsoleColors.RESET + " "
+                                     + _strClassName
+                                     + " [" + ConsoleColors.RED + "ERROR" + ConsoleColors.RESET + "] "
+                                     + strMessage);
       }
   }
   
@@ -218,7 +221,10 @@ public class Logger {
           _oLogFile.flush();
         } else {
         // I/O error writing to log file
-            System.out.println(strTime + " " + _strClassName + " [" + strMessageType.toUpperCase() + "] " + strMessage);
+            System.err.println(ConsoleColors.BLUE + strTime + ConsoleColors.RESET + " "
+                                       + _strClassName
+                                       + " [" + ConsoleColors.GREEN + strMessageType.toUpperCase() + ConsoleColors.RESET
+                                       + "] " + strMessage);
         }
     }
   

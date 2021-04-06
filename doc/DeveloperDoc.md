@@ -590,6 +590,35 @@ and does not need to be modified in case additional types (like
 
 #### Statements
 
+##### `@PRAGMA` Statement
+
+The `@PRAGMA` directive does not change any of the BASIC program internal settings, changes any variables, or 
+executes any BASIC feature. This directive is used to change the settings of the interpreter itself, and allows the 
+developer to modify the behaviour of the interpreter at run-time. It is therefore not documented in the BASIC 
+language guide.
+
+The directive is added in the BASIC program test, but cannot be used as a jump target. 
+
+    @PRAGMA( <paramter> = <value> )
+
+At this moment the following parameter are implemented:
+* `LOG`: modifies the logging behaviour. Can be set to `TRACE`, `INFO`, `WARN`, `DEBUG`, and `OFF`. Note: This 
+  directive only applies to the logging feature of the interpreter itself, it is not usable for the logging of the 
+  BASIC program.
+
+   ```  
+    @PRAGMA("Log" = "Debug")
+   ```
+  
+* `TRACE`: prints the BASIC line numbers during the processing of the program. This function is similar to the 
+  `TRON` or `TROFF` function in TRS-80 Basic Level II.
+  
+   ```  
+    @PRAGMA("Trace" = "on")
+   ```
+
+
+  
 ##### Assignment to variables and basic mathematical operators
 
 ##### `DO - UNTIL` Loop Statement
@@ -957,6 +986,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 
 | Reserved Word |  GD-Basic | Jasic | TRS-80 Level II Basic | Applesoft Basic | Commodore Basic | Notes |
 |---------------|-----------|-------|-----------------------|-----------------|-----------------|-------|
+| `@PRAGMA` | implemented |  |  |  |  |
 | `ABS` | implemented |  | implemented | implemented | implemented |
 | `AND` | implemented |  | implemented | implemented | implemented |
 | `ASC` | implemented |  | implemented | implemented | implemented |
@@ -1117,8 +1147,8 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `TIME` | implemented |  | implemented |  |  |
 | `TO` | implemented |  | implemented | implemented | implemented |
 | `TRACE` |  |  |  | implemented |  |
-| `TRON` |  |  | implemented |  |  |
-| `TROFF` |  |  | implemented |  |  |
+| `TRON` |  |  | implemented |  |  | GD-Basic provides this function via the `@PRAGMA` command
+| `TROFF` |  |  | implemented |  |  | GD-Basic provides this function via the `@PRAGMA` command
 | `UNTIL` | implemented |  |  |  |  |
 | `USR` |  |  |  | implemented | implemented |
 | `VAL` | implemented |  | implemented | implemented | implemented |

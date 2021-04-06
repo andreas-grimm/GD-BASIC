@@ -22,7 +22,7 @@ public final class ReservedWords {
      * This defines the different kinds of tokens for the Dartmouth BASIC styles.
      */
     private static String[] _astrReservedWords = {
-            "ABS", "AND", "ASC", "ATN",
+            "@PRAGMA", "ABS", "AND", "ASC", "ATN",
             "CALL", "CDBL", "CHR", "CINT", "CLEAN", "CLOSE", "CLS", "CMD", "CONT", "COS",
             "DATA", "DEFFN", "DIM", "DO",
             "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT", "EXP",
@@ -40,12 +40,13 @@ public final class ReservedWords {
             "UNTIL",
             "VAL",
             "WHILE", "WRITE",
-            "&", "\\+", "\\-", "\\*", "\\/", ":",
+            "&&", "\\+", "\\-", "\\*", "\\/", ":",
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
-            "\\(", "\\)", "\\'", "\\;", "\\,", "\\|", "\\?"
+            "\\(", "\\)", "\\'", "\\;", "\\,", "||", "\\?"
     };
 
     private static BasicTokenType[] _aeTokenTypes = {
+        BasicTokenType.PRAGMA,
         BasicTokenType.ABS, BasicTokenType.AND, BasicTokenType.ASC, BasicTokenType.ATN,
         BasicTokenType.CALL, BasicTokenType.CDBL, BasicTokenType.CHR, BasicTokenType.CINT, BasicTokenType.CLEAN,
             BasicTokenType.CLOSE, BasicTokenType.CLS, BasicTokenType.CMD, BasicTokenType.CONT, BasicTokenType.COS,

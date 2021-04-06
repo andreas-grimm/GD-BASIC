@@ -1,10 +1,11 @@
-package eu.gricom.interpreter.basic;
+    package eu.gricom.interpreter.basic;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.functions.Mem;
 import eu.gricom.interpreter.basic.helper.FileHandler;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.helper.Printer;
+import eu.gricom.interpreter.basic.helper.Trace;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.parser.BasicParser;
 import eu.gricom.interpreter.basic.parser.JasicParser;
@@ -39,7 +40,7 @@ import java.util.Locale;
 public class Basic {
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strBasicVersion = "basic";
-    private transient LineNumberXRef _oLineNumbers = new LineNumberXRef();
+    private final transient LineNumberXRef _oLineNumbers = new LineNumberXRef();
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of
@@ -65,6 +66,7 @@ public class Basic {
         ProgramPointer oProgramPointer = new ProgramPointer();
         List<Statement> aoPreRunStatements = null;
         List<Statement> aoStatements = null;
+        Trace oTrace = new Trace(false);
 
         // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
         _oLogger.info("Starting tokenization...");
@@ -130,7 +132,10 @@ public class Basic {
                     aoPreRunStatements.get(iThisStatement).execute();
                 }
             } else {
-                _oLogger.error("Parsing delivered empty program");
+                if (!_strBasicVersion.contains("jasic")) {
+                    _oLogger.error("Parsing delivered empty program");
+                    System.exit(-1);
+                }
             }
         } catch (Exception eException) {
             eException.printStackTrace();
@@ -162,21 +167,24 @@ public class Basic {
                                 "Basic Source Code Line [" + iSourceCodeLineNumber + "] Statement [ " + aoStatements.get(
                                         iThisStatement).getLineNumber() + "]: " + aoStatements.get(
                                         iThisStatement).content());
+                        oTrace.trace(iSourceCodeLineNumber);
                     }
 
                     aoStatements.get(iThisStatement).execute();
                 }
             } else {
                 _oLogger.error("Parsing delivered empty program");
+                System.exit(-1);
             }
         } catch (Exception eException) {
             eException.printStackTrace();
         }
+
+        System.exit(0);
     }
 
     // Utility stuff -----------------------------------------------------------
 
-    @SuppressWarnings("PMD")
     /**
      * Runs the interpreter as a command-line app. Takes one argument: a path
      * to a script file to load and run. The script should contain one
@@ -188,7 +196,6 @@ public class Basic {
         Logger oLogger = new Logger("main");
         oLogger.setLogLevel("");
 
-        boolean bParseOK = true;
         CommandLine oCommandLine = null;
 
         // create Options object
@@ -204,7 +211,6 @@ public class Basic {
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(options, args);
         } catch (ParseException eParseException) {
-            bParseOK = false;
             System.out.println(eParseException.getMessage());
             System.exit(-1);
         }
@@ -212,15 +218,16 @@ public class Basic {
         if (oCommandLine != null
                 && !oCommandLine.hasOption("q")) {
 
-            long lMaxMemory = Runtime.getRuntime().maxMemory();
+            long lMaxMemory = Runtime.getRuntime().maxMemory() / 1024;
+            long lFreeMem = Mem.execute().toInt() / 1024;
             Printer.println();
-            Printer.println("  #####  ######  ######     #     #####  ###  #####     ");
-            Printer.println(" #     # #     # #     #   # #   #     #  #  #     #    GriCom Basic Interpreter Version 0.1.0");
-            Printer.println(" #       #     # #     #  #   #  #        #  #          (c) Copyright Andreas Grimm 2020");
-            Printer.println(" #  #### #     # ######  #     #  #####   #  #          (c) Copyright Bob Nystrom 2010");
-            Printer.println(" #     # #     # #     # #######       #  #  #          Maximum memory (bytes): " + lMaxMemory);
-            Printer.println(" #     # #     # #     # #     # #     #  #  #     #    Free memory (bytes): " + Mem.execute().toString());
-            Printer.println("  #####  ######  ######  #     #  #####  ###  #####     ");
+            Printer.println("  #####  ######      ######     #     #####  ###  #####     ");
+            Printer.println(" #     # #     #     #     #   # #   #     #  #  #     #    GriCom Basic Interpreter Version 0.1.0");
+            Printer.println(" #       #     #     #     #  #   #  #        #  #          (c) Copyright A.Grimm 2020");
+            Printer.println(" #  #### #     # ### ######  #     #  #####   #  #          (c) Copyright B.Nystrom 2010");
+            Printer.println(" #     # #     #     #     # #######       #  #  #          Maximum memory (KBytes): " + lMaxMemory);
+            Printer.println(" #     # #     #     #     # #     # #     #  #  #     #    Free memory (KBytes): " + lFreeMem);
+            Printer.println("  #####  ######      ######  #     #  #####  ###  #####     ");
             Printer.println();
         }
 
@@ -243,11 +250,6 @@ public class Basic {
 
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("java -jar BASIC-<build-name>.jar -i <filename.bas>", options);
-        }
-
-        if (!bParseOK) {
-            oLogger.error("Unknown command line parameter...");
-            System.exit(-1);
         }
 
         // Just show the usage and quit if a script wasn't provided.
@@ -274,15 +276,18 @@ public class Basic {
             oLogger.debug("Basic version set: " + _strBasicVersion + "...");
         }
 
-        String strProgram = oCommandLine.getOptionValue("i");
+        if (oCommandLine != null
+                && oCommandLine.hasOption("i")) {
+            String strProgram = oCommandLine.getOptionValue("i");
 
-        // Read the file.
-        oLogger.info("Read file: " + strProgram + "...");
-        String strContents = FileHandler.readFile(strProgram);
+            // Read the file.
+            oLogger.info("Read file: " + strProgram + "...");
+            String strContents = FileHandler.readFile(strProgram);
 
-        // Run it.
-        oLogger.info("Run the interpreter...");
-        Basic oBasic = new Basic();
-        oBasic.interpret(strContents);
+            // Run it.
+            oLogger.info("Run the interpreter...");
+            Basic oBasic = new Basic();
+            oBasic.interpret(strContents);
+        }
     }
 }

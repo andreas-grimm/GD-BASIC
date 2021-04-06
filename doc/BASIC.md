@@ -247,8 +247,8 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `!=` | implemented | |
 | `^` | implemented | |
 | `'` | implemented | |
-| `&` | implemented | |
-| `|` | implemented | |
+| `&&` | implemented | |
+| `||` | implemented | |
 
 ## Statements
 
