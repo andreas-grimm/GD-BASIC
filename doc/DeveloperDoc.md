@@ -1012,7 +1012,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `CVD` |  | not planned | implemented |  |  |
 | `CVI` |  |  | implemented |  |  |
 | `CVS` |  |  | implemented |  |  |
-| `DATA` | reserved |  | implemented | implemented | implemented |
+| `DATA` | implemented |  | implemented | implemented | implemented |
 | `DEF` |  |  | implemented | implemented |
 | `DEF FN` | reserved |  |  | implemented |  |
 | `DEFDBL` |  |  | implemented |  |  |
@@ -1094,7 +1094,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `NOTRACE` |  | not planned |  | implemented |  |
 | `ON` | reserved |  | implemented |  | implemented |
 | `ONERR` |  |  |  | implemented |  |
-| `OPEN` |  |  | implemented | implemented | implemented |
+| `OPEN` | reserved |  | implemented | implemented | implemented |
 | `OR` | implemented |  | implemented | implemented | implemented |
 | `OUT` |  |  | implemented |  |  |
 | `PDL` |  |  |  | implemented |  |

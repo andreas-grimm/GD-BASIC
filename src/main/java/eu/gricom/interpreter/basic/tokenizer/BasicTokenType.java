@@ -51,6 +51,7 @@ public enum BasicTokenType {
     NEXT,
     NOT,
     ON,
+    OPEN,
     OR,
     PRAGMA,
     PRINT,
