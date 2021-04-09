@@ -18,19 +18,19 @@ import java.util.Locale;
 public class PragmaStatement implements Statement {
     private final String _strParameter;
     private final String _strValue;
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
 
     /**
      * add a label destination in the memory management.
      *
      * @param strParameter to be changed - name of the label
      * @param strValue - new value
-     * @param iLineNumber - number of the line in which the PRAGMA statement is added
+     * @param iTokenNumber - number of the token in which the PRAGMA statement is added
      */
-    public PragmaStatement(final int iLineNumber, final String strParameter, final String strValue) {
+    public PragmaStatement(final int iTokenNumber, final String strParameter, final String strValue) {
         _strParameter = strParameter;
         _strValue = strValue;
-        _iLineNumber = iLineNumber;
+        _iTokenNumber = iTokenNumber;
     }
 
     private void changeLogLevel(final String strLogLevel) {
@@ -54,8 +54,8 @@ public class PragmaStatement implements Statement {
     }
 
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     @Override
@@ -71,6 +71,6 @@ public class PragmaStatement implements Statement {
 
     @Override
     public final String content() throws Exception {
-        return null;
+        return new String("Pragma Statement: Set " + _strParameter + " to " + _strValue);
     }
 }

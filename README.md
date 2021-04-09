@@ -96,7 +96,8 @@ Implemented Backlog Items:
 
 0.0.6: Tagged as Array and Function Release
 * Added the `@PRAGMA` feature. At this moment it allows to change the setting of the log level, but it can also be 
-  used to change any other execute parameter of the interpreter. 
+  used to change any other execute parameter of the interpreter.
+* Added the colon `:` programming feature to the interpreter, which allows multiple commands in a single line.  
 * Added array function to all data types. The array function allows the use of n-dimensional arrays. The index of the 
   array can be one or more variables itself. The documentation is adjusted to it.
 * Adding functionality to retrieve single characters out of any string. A string's characters can be retrieved by 
@@ -122,7 +123,7 @@ Implemented Backlog Items:
 Implemented Backlog Items:
 
     [BASIC-19][BASIC-53][BASIC-64][BASIC-73][BASIC-89][BASIC-102][BASIC-104][BASIC-105][BASIC-108][BASIC-109][BASIC-110]
-    [BASIC-117][BASIC-120]
+    [BASIC-117][BASIC-120][BASIC-127]
 
 Under Development:
 

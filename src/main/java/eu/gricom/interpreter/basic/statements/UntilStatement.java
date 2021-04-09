@@ -20,7 +20,7 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  * Created in 2021
  */
 public final class UntilStatement implements Statement {
-    private final int _iTokenNo;
+    private final int _iTokenNumber;
     private final Expression _oCondition;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final Stack _oStack = new Stack();
@@ -30,18 +30,18 @@ public final class UntilStatement implements Statement {
      * Gets a previously consumed token, indexing backwards. last(1) will
      * be the token just consumed, last(2) the one before that, etc.
      *
-     * @param iTokenNo number of the token that is translated into the FOR statement
+     * @param iTokenNumber number of the token that is translated into the FOR statement
      * @param oCondition the condition, when true, enters the loop
      */
-    public UntilStatement(final int iTokenNo,
+    public UntilStatement(final int iTokenNumber,
                           final Expression oCondition) {
-        _iTokenNo = iTokenNo;
+        _iTokenNumber = iTokenNumber;
         _oCondition = oCondition;
     }
 
     @Override
-    public int getLineNumber() {
-        return _iTokenNo;
+    public int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     @Override

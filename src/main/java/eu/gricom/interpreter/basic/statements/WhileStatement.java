@@ -22,7 +22,7 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  */
 public final class WhileStatement implements Statement {
     private final int _iEndWhileLine;
-    private final int _iTokenNo;
+    private final int _iTokenNumber;
     private final Expression _oCondition;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final LineNumberXRef _oLineNumberObject = new LineNumberXRef();
@@ -33,21 +33,21 @@ public final class WhileStatement implements Statement {
      * Gets a previously consumed token, indexing backwards. last(1) will
      * be the token just consumed, last(2) the one before that, etc.
      *
-     * @param iTokenNo number of the token that is translated into the FOR statement
+     * @param iTokenNumber number of the token that is translated into the FOR statement
      * @param oCondition the condition, when true, enters the loop
      * @param iEndWhileLine location of the next command to be processed after the loop
      */
-    public WhileStatement(final int iTokenNo,
+    public WhileStatement(final int iTokenNumber,
                           final Expression oCondition,
                           final int iEndWhileLine) {
-        _iTokenNo = iTokenNo;
+        _iTokenNumber = iTokenNumber;
         _oCondition = oCondition;
         _iEndWhileLine = iEndWhileLine;
     }
 
     @Override
-    public int getLineNumber() {
-        return _iTokenNo;
+    public int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     @Override
@@ -76,7 +76,7 @@ public final class WhileStatement implements Statement {
                 throw new SyntaxErrorException("WHILE [incorrect format]: Target: " + _iEndWhileLine);
             }
         } else {
-            _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNo)));
+            _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNumber)));
         }
     }
 

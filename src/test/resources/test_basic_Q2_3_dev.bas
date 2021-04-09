@@ -20,8 +20,11 @@
 360 PRINT D#, " is odd"
 370 END-IF
 380 NEXT
-390 @PRAGMA( "Trace" = "off" )
-800 PRINT "Test done..."
+400 PRINT "Testing colon to split lines..."
+410 A$ = "Start":B$ = "End"
+420 PRINT A$, " ... ", B$
+430 PRINT "Test done..."
+800 @PRAGMA( "Trace" = "off" )
 810 DATA 123, "Test"
 820 DATA "Test 2", 456
 830 DATA "Mister", "Herr", "Senior", "De Heer", "Monsigneur"

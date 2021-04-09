@@ -153,7 +153,8 @@ public class Basic {
 
                     // Line numbers are only used in BASIC
                     if (!_strBasicVersion.contains("jasic")) {
-                        iSourceCodeLineNumber = _oLineNumbers.getLineNumberFromToken(aoStatements.get(iThisStatement).getLineNumber());
+                        iSourceCodeLineNumber =
+                                _oLineNumbers.getLineNumberFromToken(aoStatements.get(iThisStatement).getTokenNumber());
                     }
 
                     oProgramPointer.calcNextStatement();
@@ -165,7 +166,7 @@ public class Basic {
                     } else {
                         _oLogger.debug(
                                 "Basic Source Code Line [" + iSourceCodeLineNumber + "] Statement [ " + aoStatements.get(
-                                        iThisStatement).getLineNumber() + "]: " + aoStatements.get(
+                                        iThisStatement).getTokenNumber() + "]: " + aoStatements.get(
                                         iThisStatement).content());
                         oTrace.trace(iSourceCodeLineNumber);
                     }

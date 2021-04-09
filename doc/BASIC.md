@@ -75,6 +75,13 @@ __Example of a JASIC Program__
     ende:
 
 #### Structure of BASIC Programs
+The Dartmouth version of the program structure consists of a program line in two parts:
+1. A line number, which is a unique integer ahead of every single line. This number has to be constantly growing in 
+   respect to the previous number, but it does not have to consecutive (actually it is good practice to show 
+   functional blocks by the numbering scheme).
+2. One or more actual commands (see the use of the colon in the next paragraph).
+
+An example of a BASIC program following the Dartmouth format follows here:
 
 __Example of a BASIC Program__
 
@@ -91,6 +98,18 @@ __Example of a BASIC Program__
     110 COUNT# = COUNT# - 1
     120 GOTO 50
     130 END
+
+Note: All BASIC implementations started following the Dartmouth format. Newer versions have moved to the format of 
+the JASIC programming style. GD-BASIC is in the process to gain functional completeness and will not increase the 
+JASIC functionality until the Dartmouth version is functional complete.
+
+##### Use of the Colon in the program line
+The Colon is used to have multiple BASIC commands in a single command line:
+
+    20 REM Colon Example
+    30 COUNT# = 5 : MULTIPLIER# = 2
+    40 COUNT# = COUNT# * MULTIPLIER
+
 
 ### Variables, Arrays, and Constants
 Basic is a strongly typed programming language, which means that type conversion can only be done using conversion functions. These functions 

@@ -10,26 +10,26 @@ package eu.gricom.interpreter.basic.statements;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class DimStatement implements Statement {
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
 
     /**
      * Default constructor.
      *
      * An "DIM" statement initializes an array of any type.
-     * @param iLineNumber - number of the command in the basic program
+     * @param iTokenNumber - number of the command in the basic program
      */
-    public DimStatement(final int iLineNumber) {
-        _iLineNumber = iLineNumber;
+    public DimStatement(final int iTokenNumber) {
+        _iTokenNumber = iTokenNumber;
     }
 
     /**
-     * Get Line Number.
+     * Get Token Number.
      *
-     * @return iLineNumber - the command line number of the statement
+     * @return the command line number of the statement
      */
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     /**

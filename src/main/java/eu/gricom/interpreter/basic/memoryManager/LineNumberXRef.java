@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class LineNumberXRef {
     private final Logger _oLogger = new Logger(this.getClass().getName());
-    private static Map<Integer, Integer> _aoLineNumbers = new HashMap<>();
+    private static Map<Integer, Integer> _aoLineNumbers = new HashMap<>();       // Key: Token, Basic Source Line: Value
     private static Map<Integer, Integer> _aoStatementNumbers = new HashMap<>();
 
     /**
@@ -29,7 +29,8 @@ public class LineNumberXRef {
      */
     public final void putLineNumber(final int iLineNumber, final int iTokenNumber) {
 
-        _aoLineNumbers.put(iLineNumber, iTokenNumber);
+//        _aoLineNumbers.put(iLineNumber, iTokenNumber);
+        _aoLineNumbers.put(iTokenNumber, iLineNumber);
     }
 
     /**
@@ -53,10 +54,10 @@ public class LineNumberXRef {
      */
     public final int getLineNumberFromToken(final int iTokenNumber) throws RuntimeException {
         for (Map.Entry<Integer, Integer> oLine : _aoLineNumbers.entrySet()) {
-            if (oLine.getValue().equals(iTokenNumber)) {
+            if (oLine.getKey().equals(iTokenNumber)) {
                 _oLogger.debug("-getLineNumberFromToken-> Token No. [" + iTokenNumber + "] ---> Line No. ["
-                        + oLine.getKey() + "]");
-                return oLine.getKey();
+                        + oLine.getValue() + "]");
+                return oLine.getValue();
             }
         }
 
@@ -90,7 +91,7 @@ public class LineNumberXRef {
      * @throws RuntimeException a requested statement number was not found
      */
     public final int getStatementFromLineNumber(final int iLineNumber) throws RuntimeException {
-
+/*
         if (_aoLineNumbers.containsKey(iLineNumber)) {
             int iTokenNumber = _aoLineNumbers.get(iLineNumber);
 
@@ -98,6 +99,18 @@ public class LineNumberXRef {
                 _oLogger.debug("-getStatementFromLineNumber-> Line No. [" + iLineNumber + "] ---> Statement ["
                         + _aoStatementNumbers.get(iTokenNumber) + "]");
                 return _aoStatementNumbers.get(iTokenNumber);
+            }
+        }
+*/
+        for (Map.Entry<Integer, Integer> oLine : _aoLineNumbers.entrySet()) {
+            if (oLine.getValue().equals(iLineNumber)) {
+                int iTokenNumber = oLine.getKey();
+
+                if (_aoStatementNumbers.containsKey(iTokenNumber)) {
+                    _oLogger.debug("-getStatementFromLineNumber-> Line No. [" + iLineNumber + "] ---> Statement ["
+                                           + _aoStatementNumbers.get(iTokenNumber) + "]");
+                    return _aoStatementNumbers.get(iTokenNumber);
+                }
             }
         }
 
@@ -133,6 +146,24 @@ public class LineNumberXRef {
 
         for (Map.Entry<Integer, Integer> oLine : _aoLineNumbers.entrySet()) {
 
+            if (oLine.getValue() > iLineNumber) {
+                int iNewNextHigher = oLine.getValue();
+
+                if (iNextHigherStatement == 0) {
+                    iNextHigherStatement = iNewNextHigher;
+                }
+
+                if (iNewNextHigher < iNextHigherStatement) {
+                    iNextHigherStatement = iNewNextHigher;
+                }
+            }
+        }
+        _oLogger.debug("-getNextLineNumber-> Line No. [" + iLineNumber + "] ---> next Line No. ["
+                               + iNextHigherStatement + "]");
+
+/*
+        for (Map.Entry<Integer, Integer> oLine : _aoLineNumbers.entrySet()) {
+
             if (oLine.getKey() > iLineNumber) {
                 int iNewNextHigher = oLine.getKey();
 
@@ -147,18 +178,28 @@ public class LineNumberXRef {
         }
         _oLogger.debug("-getNextLineNumber-> Line No. [" + iLineNumber + "] ---> next Line No. ["
                 + iNextHigherStatement + "]");
-
+*/
         return iNextHigherStatement;
     }
 
     /**
      * verify that a requested statement number is in the XRef table.
      *
-     * @param iStatementNumber statement number
+     * @param iTokenNumber statement number
      * @return true if the statement is in the memory management
      */
-    public final boolean contains(final int iStatementNumber) {
+    public final boolean contains(final int iTokenNumber) {
 
-        return _aoLineNumbers.containsKey(iStatementNumber);
+        return _aoLineNumbers.containsKey(iTokenNumber);
+    }
+
+    /**
+     * verify that a requested statement number is in the XRef table.
+     */
+    public final void list() {
+        for (Map.Entry<Integer, Integer> oLine : _aoLineNumbers.entrySet()) {
+                _oLogger.debug("-list-> Token No. [" + oLine.getKey() + "] ---> Line No. ["
+                                       + oLine.getValue() + "]");
+        }
     }
 }

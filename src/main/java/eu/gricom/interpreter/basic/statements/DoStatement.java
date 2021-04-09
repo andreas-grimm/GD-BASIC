@@ -17,7 +17,7 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  * Created in 2021
  */
 public class DoStatement implements Statement {
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
 
     /**
      * Default constructor.
@@ -25,22 +25,22 @@ public class DoStatement implements Statement {
      * The "Do" statement defines the return location for the "Until" command for the "do-until" loop.
      * The class has no further function.
      *
-     * @param iLineNumber the line number of this command
+     * @param iTokenNumber the line number of this command
      */
-    public DoStatement(final int iLineNumber) {
-        _iLineNumber = iLineNumber;
+    public DoStatement(final int iTokenNumber) {
+        _iTokenNumber = iTokenNumber;
     }
 
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     @Override
     public final void execute() throws Exception {
         final Stack oStack = new Stack();
 
-        oStack.push(new IntegerValue(_iLineNumber));
+        oStack.push(new IntegerValue(_iTokenNumber));
     }
 
     @Override

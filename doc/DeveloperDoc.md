@@ -234,7 +234,9 @@ Every token identified by the lexer is in a strict sequential list. The position
 ###### Object Statement Numbers
 The instantiated objects for the program execution are in a strict sequential list. As the position is not known at the time of the creation,
 the number is at this version not an attribute of the object. This will change in the next main release, the object will also provide a method
-to retrieve the information.
+to retrieve the information. The statement does hold the number of the token it is related to. This is a 
+private value in the statement itself: `iTokenNumber` and the access can be done by the method `getTokenNumber()`. 
+Each statement does have this method.
 
 ###### Implementation of the Relationship
 The relationship is implemented by using two in-memory key-value stores. These key-value stores are hidden in the mentioned class below. It is possible to navigate between
@@ -589,6 +591,27 @@ and does not need to be modified in case additional types (like
 [booleans](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#variable-type-boolean)) are added in a later version.
 
 #### Statements
+All BASIC programming commands that change the state of the program during execution are implemented in the `eu.
+gricom.interpreter.basic.statements` package. The are all implementations of the `Statement` interface. All 
+classes derived from that interface have in common:
+* the methods `getTokenNumber()`, `execute()`, and `content()`
+
+##### `getTokenNumber()`
+All objects in the executable list are directly related with one of more identified token. Those token are in a list,
+and the statement is aware of the position of the token in the list. This way it is possible to build the link from 
+statement to token to BASIC command. All statement objects receive the token number as part of the instantiation in 
+the parsing process.
+
+##### `execute()`
+The `execute()` method is triggered by the runtime component in the BASIC interpreter. The runtime component 
+receives a list of all statement objects and is processing them following the project flow. This flow is according 
+to the order of the list, except for conditional and un-conditional jumps. The `execute()` method has no parameters 
+and does not provide any output except exceptions which are thrown in case of programming errors. All required data 
+is added in the object during instantiation or via the memory management package.
+
+##### `content()`
+The content method is used to inform the user on the content of the object. It does not change the state of the 
+object, but moves the important data of the object into a human-readable format. 
 
 ##### `@PRAGMA` Statement
 

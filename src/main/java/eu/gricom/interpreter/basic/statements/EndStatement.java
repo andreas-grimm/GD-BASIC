@@ -10,7 +10,7 @@ package eu.gricom.interpreter.basic.statements;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class EndStatement implements Statement {
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
 
     /**
      * Default constructor.
@@ -18,17 +18,17 @@ public class EndStatement implements Statement {
      * An "END" statement performs the hard termination of the interpreter.
      */
     public EndStatement() {
-        _iLineNumber = 0;
+        _iTokenNumber = 0;
     }
 
     /**
      * Default constructor.
      *
      * An "END" statement performs the hard termination of the interpreter.
-     * @param iLineNumber - number of the command in the basic program
+     * @param iTokenNumber - number of the command in the basic program
      */
-    public EndStatement(final int iLineNumber) {
-        _iLineNumber = iLineNumber;
+    public EndStatement(final int iTokenNumber) {
+        _iTokenNumber = iTokenNumber;
     }
 
     /**
@@ -37,8 +37,8 @@ public class EndStatement implements Statement {
      * @return iLineNumber - the command line number of the statement
      */
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     /**

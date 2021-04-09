@@ -90,6 +90,9 @@ public final class Normalizer {
                     case ';':
                         strOutput += " ;";
                         break;
+                    case ':':
+                        strOutput += " :";
+                        break;
                     case '(':
                         strOutput += " ( ";
                         break;

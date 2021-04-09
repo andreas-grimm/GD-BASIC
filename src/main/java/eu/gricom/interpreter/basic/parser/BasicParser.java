@@ -5,6 +5,7 @@ import eu.gricom.interpreter.basic.functions.Function;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.statements.AssignStatement;
+import eu.gricom.interpreter.basic.statements.ColonStatement;
 import eu.gricom.interpreter.basic.statements.DataStatement;
 import eu.gricom.interpreter.basic.statements.DoStatement;
 import eu.gricom.interpreter.basic.statements.ElseStatement;
@@ -180,7 +181,15 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
-                    // COMMENT Token: Ignore any following part of the line, identical to the REM token.
+                // COMMENT Token: Ignore any following part of the line, identical to the REM token.
+                case COLON:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [COLON] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    aoStatements.add(new ColonStatement(_iPosition));
+                    _iPosition++;
+                    break;
+
+                // COMMENT Token: Ignore any following part of the line, identical to the REM token.
                 case COMMENT:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [COMMENT] ");
                     _iPosition++;
@@ -538,7 +547,7 @@ public class BasicParser implements Parser {
         }
 
         for (Statement oStatement: aoStatements) {
-            _oLineNumber.putStatementNumber(oStatement.getLineNumber(), aoStatements.indexOf(oStatement));
+            _oLineNumber.putStatementNumber(oStatement.getTokenNumber(), aoStatements.indexOf(oStatement));
         }
 
         return aoStatements;

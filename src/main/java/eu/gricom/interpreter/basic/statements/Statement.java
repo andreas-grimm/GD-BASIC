@@ -12,11 +12,11 @@ package eu.gricom.interpreter.basic.statements;
 public interface Statement {
 
     /**
-     * Get Line Number.
+     * Get Token Number - get the number of the corresponding token to this statement.
      *
-     * @return iLineNumber - the command line number of the statement
+     * @return the command line number of the statement
      */
-    int getLineNumber();
+    int getTokenNumber();
 
     /**
      * Statements implement this to actually perform whatever behavior the

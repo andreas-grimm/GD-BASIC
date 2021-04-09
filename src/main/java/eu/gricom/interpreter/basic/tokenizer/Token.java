@@ -15,6 +15,7 @@ public final class Token {
     private String _strText;
     private final BasicTokenType _oType;
     private final int _iLineNumber;
+    private final int _iCommandSequenceNumber;
 
     /**
      * Constructor of the Code Generator object.
@@ -26,6 +27,24 @@ public final class Token {
         _strText = strText;
         _oType = oType;
         _iLineNumber = iLineNumber;
+        _iCommandSequenceNumber = 1; // this is the first command in the line
+    }
+
+    /**
+     * Constructor of the Code Generator object.
+     * @param strText read text of the source code
+     * @param oType type of the token
+     * @param iLineNumber number of the line in the BASIC source code
+     * @param iCommandSequenceNumber the number of the command in the source code line
+     */
+    public Token(final String strText,
+                 final BasicTokenType oType,
+                 final int iLineNumber,
+                 final int iCommandSequenceNumber) {
+        _strText = strText;
+        _oType = oType;
+        _iLineNumber = iLineNumber;
+        _iCommandSequenceNumber = iCommandSequenceNumber;
     }
 
     /**
@@ -47,12 +66,21 @@ public final class Token {
     }
 
     /**
-     * Get method for the TYPE attribute.
+     * Get the line number of the BASIC command.
      *
-     * @return Read type of the token found
+     * @return BASIC line number
      */
     public int getLine() {
         return _iLineNumber;
+    }
+
+    /**
+     * Get the sequence number of the command.
+     *
+     * @return sequence number of the command
+     */
+    public int getCommandSequence() {
+        return _iCommandSequenceNumber;
     }
 
     /**
