@@ -1,27 +1,24 @@
 package eu.gricom.interpreter.basic.statements;
 
-import eu.gricom.interpreter.basic.error.EmptyStackException;
-import eu.gricom.interpreter.basic.memoryManager.Stack;
-
 /**
- * CleanStatement.java
+ * ColonStatement.java
  * <p>
  * Description:
  * <p>
- * The DimStatement class defines all kind of arrays.
+ * The ColonStatement class provides the necessary information for the runtime to get all required information.
  * <p>
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
-public class CleanStatement implements Statement {
+public class ColonStatement implements Statement {
     private final int _iTokenNumber;
 
     /**
      * Default constructor.
      *
-     * An "CLEAN" statement cleans the stack from the last entrence if you jump out of the block.
+     * An "DIM" statement initializes an array of any type.
      * @param iTokenNumber - number of the command in the basic program
      */
-    public CleanStatement(final int iTokenNumber) {
+    public ColonStatement(final int iTokenNumber) {
         _iTokenNumber = iTokenNumber;
     }
 
@@ -38,16 +35,10 @@ public class CleanStatement implements Statement {
     /**
      * Execute.
      *
-     * Remove the last stack entry.
+     * Terminate the running program.
      */
     public final void execute() {
-        Stack oStack = new Stack();
 
-        try {
-            oStack.pop();
-        } catch (EmptyStackException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -60,6 +51,6 @@ public class CleanStatement implements Statement {
     @Override
     public final String content() {
 
-        return "END";
+        return "COLON";
     }
 }

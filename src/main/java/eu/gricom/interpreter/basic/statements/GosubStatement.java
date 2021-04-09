@@ -44,7 +44,7 @@ public final class GosubStatement implements Statement {
      * @return iLineNumber - the command line number of the statement
      */
     @Override
-    public int getLineNumber() {
+    public int getTokenNumber() {
         return _iTokenNumber;
     }
 

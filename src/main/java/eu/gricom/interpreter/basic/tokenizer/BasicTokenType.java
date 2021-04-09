@@ -51,7 +51,9 @@ public enum BasicTokenType {
     NEXT,
     NOT,
     ON,
+    OPEN,
     OR,
+    PRAGMA,
     PRINT,
     RANDOM,
     READ,
@@ -76,7 +78,6 @@ public enum BasicTokenType {
     VAL,
     WHILE,
     WRITE,
-    AMPERSAND, // token for the & operator
     PLUS, // token for the + operator
     MINUS, // token for the - operator
     MULTIPLY, // token for the * operator

@@ -56,6 +56,13 @@ public class OperatorExpression implements Expression {
             case "^":
                 return oLeftValue.power(oRightValue);
 
+            case "&":
+            case "AND":
+                return oLeftValue.and(oRightValue);
+            case "|":
+            case "OR":
+                return oLeftValue.or(oRightValue);
+
             case "==":
                 return oLeftValue.equals(oRightValue);
             case "!=":

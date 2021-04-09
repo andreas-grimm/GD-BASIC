@@ -27,7 +27,7 @@ public final class ForStatement implements Statement {
     private final Expression _oEndValue;
     private final Expression _oStepSize;
     private final int _iEndIfStatement;
-    private final int _iTokenNo;
+    private final int _iTokenNumber;
     private final VariableManagement _oVariableManagement = new VariableManagement();
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final Stack _oStack = new Stack();
@@ -36,20 +36,20 @@ public final class ForStatement implements Statement {
      * Gets a previously consumed token, indexing backwards. last(1) will
      * be the token just consumed, last(2) the one before that, etc.
      *
-     * @param iTokenNo number of the token that is translated into the FOR statement
+     * @param iTokenNumber number of the token that is translated into the FOR statement
      * @param strName Name of the counting variable.
      * @param oStartValueExpression Expression for the calculation of start value.
      * @param oEndValueExpression Expression for the calculation of the end value.
      * @param oStepSize size of the steps in which the loop is processed
      * @param iEndIfStatement location of the next command to be processed after the loop
      */
-    public ForStatement(final int iTokenNo,
+    public ForStatement(final int iTokenNumber,
                         final String strName,
                         final Expression oStartValueExpression,
                         final Expression oEndValueExpression,
                         final Expression oStepSize,
                         final int iEndIfStatement) throws Exception {
-        _iTokenNo = iTokenNo;
+        _iTokenNumber = iTokenNumber;
         _strName = strName;
         _oStartValue = oStartValueExpression;
         _oEndValue = oEndValueExpression;
@@ -58,8 +58,8 @@ public final class ForStatement implements Statement {
    }
 
     @Override
-    public int getLineNumber() {
-        return _iTokenNo;
+    public int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     @Override
@@ -84,7 +84,7 @@ public final class ForStatement implements Statement {
 
                 // if the sum of the current value + step size remains lower than the end value, continue
                 _oVariableManagement.putMap(_strName, new RealValue(RealValue.round(dCounter + dStepSize, 2)));
-                _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNo)));
+                _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNumber)));
 
             } else  {
                 // calculate the final sum of the current value and leave the loop
@@ -95,7 +95,7 @@ public final class ForStatement implements Statement {
             return;
         } else {
             // define the variable and set the initial value. If the value already exists - overwrite.
-            _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNo)));
+            _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNumber)));
             _oVariableManagement.putMap(_strName, _oStartValue.evaluate());
             _bForStarted = true;
         }

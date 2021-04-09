@@ -22,7 +22,7 @@ public final class ReservedWords {
      * This defines the different kinds of tokens for the Dartmouth BASIC styles.
      */
     private static String[] _astrReservedWords = {
-            "ABS", "AND", "ASC", "ATN",
+            "@PRAGMA", "ABS", "AND", "ASC", "ATN",
             "CALL", "CDBL", "CHR", "CINT", "CLEAN", "CLOSE", "CLS", "CMD", "CONT", "COS",
             "DATA", "DEFFN", "DIM", "DO",
             "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT", "EXP",
@@ -32,7 +32,7 @@ public final class ReservedWords {
             "LEFT", "LEN", "LENGTH", "LET", "LOG", "LOG10",
             "MEM", "MID",
             "NEXT", "NOT",
-            "ON", "OR",
+            "ON", "OPEN", "OR",
             "PRINT",
             "RANDOM", "READ", "REM", "%", "RETURN", "RIGHT$", "RND",
             "SIN", "SQR", "STEP", "STOP", "STRING", "STR", "SYSTEM",
@@ -40,12 +40,13 @@ public final class ReservedWords {
             "UNTIL",
             "VAL",
             "WHILE", "WRITE",
-            "&", "\\+", "\\-", "\\*", "\\/", ":",
+            "&&", "\\+", "\\-", "\\*", "\\/", ":",
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
-            "\\(", "\\)", "\\'", "\\;", "\\,"
+            "\\(", "\\)", "\\'", "\\;", "\\,", "||", "\\?"
     };
 
     private static BasicTokenType[] _aeTokenTypes = {
+        BasicTokenType.PRAGMA,
         BasicTokenType.ABS, BasicTokenType.AND, BasicTokenType.ASC, BasicTokenType.ATN,
         BasicTokenType.CALL, BasicTokenType.CDBL, BasicTokenType.CHR, BasicTokenType.CINT, BasicTokenType.CLEAN,
             BasicTokenType.CLOSE, BasicTokenType.CLS, BasicTokenType.CMD, BasicTokenType.CONT, BasicTokenType.COS,
@@ -58,7 +59,7 @@ public final class ReservedWords {
         BasicTokenType.LEFT, BasicTokenType.LEN, BasicTokenType.LENGTH, BasicTokenType.LET, BasicTokenType.LOG, BasicTokenType.LOG10,
         BasicTokenType.MEM, BasicTokenType.MID,
         BasicTokenType.NEXT, BasicTokenType.NOT,
-        BasicTokenType.ON, BasicTokenType.OR,
+        BasicTokenType.ON, BasicTokenType.OPEN, BasicTokenType.OR,
         BasicTokenType.PRINT,
         BasicTokenType.RANDOM, BasicTokenType.READ, BasicTokenType.REM, BasicTokenType.REMAINDER, BasicTokenType.RETURN,
             BasicTokenType.RIGHT, BasicTokenType.RND,
@@ -68,10 +69,12 @@ public final class ReservedWords {
         BasicTokenType.UNTIL,
         BasicTokenType.VAL,
         BasicTokenType.WHILE, BasicTokenType.WRITE,
-        BasicTokenType.AMPERSAND, BasicTokenType.PLUS, BasicTokenType.MINUS, BasicTokenType.MULTIPLY, BasicTokenType.DIVIDE, BasicTokenType.COLON,
+        BasicTokenType.AND, BasicTokenType.PLUS, BasicTokenType.MINUS, BasicTokenType.MULTIPLY, BasicTokenType.DIVIDE,
+            BasicTokenType.COLON,
         BasicTokenType.GREATER, BasicTokenType.GREATER_EQUAL, BasicTokenType.SMALLER, BasicTokenType.SMALLER_EQUAL, BasicTokenType.ASSIGN_EQUAL,
             BasicTokenType.PASCAL_ASSIGN_EQUAL, BasicTokenType.COMPARE_EQUAL, BasicTokenType.COMPARE_NOT_EQUAL, BasicTokenType.POWER,
-        BasicTokenType.LEFT_PAREN, BasicTokenType.RIGHT_PAREN, BasicTokenType.COMMENT, BasicTokenType.SEMICOLON, BasicTokenType.COMMA};
+        BasicTokenType.LEFT_PAREN, BasicTokenType.RIGHT_PAREN, BasicTokenType.COMMENT, BasicTokenType.SEMICOLON,
+            BasicTokenType.COMMA, BasicTokenType.OR, BasicTokenType.PRINT};
 
     /**
      * getIndex returns the index of the token based on an entered token type.

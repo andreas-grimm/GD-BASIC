@@ -20,22 +20,22 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  */
 public class EndWhileStatement implements Statement {
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
 
     /**
      * Default constructor.
      *
      * An "end-while" statement returns to the "while" loop start.
      *
-     * @param iLineNumber the line number of this command
+     * @param iTokenNumber the line number of this command
      */
-    public EndWhileStatement(final int iLineNumber) {
-        _iLineNumber = iLineNumber;
+    public EndWhileStatement(final int iTokenNumber) {
+        _iTokenNumber = iTokenNumber;
     }
 
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     @Override

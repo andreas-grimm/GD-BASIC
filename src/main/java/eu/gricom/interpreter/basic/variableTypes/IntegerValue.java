@@ -172,6 +172,34 @@ public class IntegerValue implements Value {
     }
 
     @Override
+    public final Value and(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        if (oValue instanceof IntegerValue) {
+
+            if (_iValue > 0 && ((IntegerValue) oValue).toInt() > 0) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
+        }
+
+        throw new SyntaxErrorException(oValue.content() + " is not of type integer");
+    }
+
+    @Override
+    public final Value or(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        if (oValue instanceof IntegerValue) {
+
+            if (_iValue > 0 || ((IntegerValue) oValue).toInt() > 0) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
+        }
+
+        throw new SyntaxErrorException(oValue.content() + " is not of type integer");
+    }
+
+    @Override
     public final Value shiftRight(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
         IntegerValue oReturn;
 

@@ -5,6 +5,7 @@ import eu.gricom.interpreter.basic.functions.Function;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
 import eu.gricom.interpreter.basic.statements.AssignStatement;
+import eu.gricom.interpreter.basic.statements.ColonStatement;
 import eu.gricom.interpreter.basic.statements.DataStatement;
 import eu.gricom.interpreter.basic.statements.DoStatement;
 import eu.gricom.interpreter.basic.statements.ElseStatement;
@@ -18,6 +19,7 @@ import eu.gricom.interpreter.basic.statements.InputStatement;
 import eu.gricom.interpreter.basic.statements.LabelStatement;
 import eu.gricom.interpreter.basic.statements.NextStatement;
 import eu.gricom.interpreter.basic.statements.OperatorExpression;
+import eu.gricom.interpreter.basic.statements.PragmaStatement;
 import eu.gricom.interpreter.basic.statements.PrintStatement;
 import eu.gricom.interpreter.basic.statements.ReadStatement;
 import eu.gricom.interpreter.basic.statements.RemStatement;
@@ -153,6 +155,40 @@ public class BasicParser implements Parser {
 
         while (bContinue) {
             switch (getToken(0).getType()) {
+                // PRAGMA Token: Change execution behaviour of the program.
+                case PRAGMA:
+                    int iPragmaLineNumber = _iPosition;
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [@PRAGMA] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    _iPosition++;
+
+                    // Get start assignment, target value, and step size
+                    _iPosition++;
+                    String strSetting = consumeToken(BasicTokenType.STRING).getText();
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [STRING] " + strSetting);
+
+                    if (getToken(0).getType() != BasicTokenType.ASSIGN_EQUAL) {
+                        throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString() + " in Line ["
+                                                               + getToken(0).getLine() + "]");
+                    }
+
+                    _iPosition++;
+                    String strValue = consumeToken(BasicTokenType.STRING).getText();
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [VALUE] " + strValue);
+
+                    aoStatements.add(new PragmaStatement(iPragmaLineNumber, strSetting, strValue));
+
+                    _iPosition++;
+                    break;
+
+                // COMMENT Token: Ignore any following part of the line, identical to the REM token.
+                case COLON:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [COLON] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    aoStatements.add(new ColonStatement(_iPosition));
+                    _iPosition++;
+                    break;
+
                 // COMMENT Token: Ignore any following part of the line, identical to the REM token.
                 case COMMENT:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [COMMENT] ");
@@ -292,6 +328,7 @@ public class BasicParser implements Parser {
 
                 // IF Token: Conditional processing
                 case IF:
+                    int iElsePosition; // initialize the variable that holds the location of the ELSE token
                     iOrgPosition = _iPosition;
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     _iPosition++;
@@ -314,8 +351,9 @@ public class BasicParser implements Parser {
                         try {
                             oElseToken = findToken(BasicTokenType.ELSE);
                             _oLogger.debug("-parse-> followed Token: <" + oElseToken.getLine() + "> [ELSE]");
+                            iElsePosition = oElseToken.getLine();
                         } catch (SyntaxErrorException eException) {
-
+                            iElsePosition = 0;
                         }
 
                         Token oEndIfToken = findToken(BasicTokenType.ENDIF);
@@ -332,7 +370,7 @@ public class BasicParser implements Parser {
                             }
                         }
 
-                        aoStatements.add(new IfThenStatement(oCondition, iOrgPosition, oElseToken.getLine(), oEndIfToken.getLine(),
+                        aoStatements.add(new IfThenStatement(oCondition, iOrgPosition, iElsePosition, oEndIfToken.getLine(),
                                                              0));
                     }
 
@@ -420,6 +458,7 @@ public class BasicParser implements Parser {
 
                 // READ Token: read a data value from a DATA block
                 case READ:
+                    int iReadPosition = _iPosition;
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [READ] ");
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     List<String> astrVariables = new ArrayList<>();
@@ -447,7 +486,7 @@ public class BasicParser implements Parser {
                         _iPosition++;
                     }
 
-                    aoStatements.add(new ReadStatement(_iPosition, astrVariables));
+                    aoStatements.add(new ReadStatement(iReadPosition, astrVariables));
                     break;
 
                 // REM Token: contains comments to the program, ignore the rest of the line
@@ -508,7 +547,7 @@ public class BasicParser implements Parser {
         }
 
         for (Statement oStatement: aoStatements) {
-            _oLineNumber.putStatementNumber(oStatement.getLineNumber(), aoStatements.indexOf(oStatement));
+            _oLineNumber.putStatementNumber(oStatement.getTokenNumber(), aoStatements.indexOf(oStatement));
         }
 
         return aoStatements;
@@ -568,6 +607,8 @@ public class BasicParser implements Parser {
                 || oToken.getType() == BasicTokenType.MULTIPLY
                 || oToken.getType() == BasicTokenType.DIVIDE
                 || oToken.getType() == BasicTokenType.POWER
+                || oToken.getType() == BasicTokenType.AND
+                || oToken.getType() == BasicTokenType.OR
                 || oToken.getType() == BasicTokenType.COMPARE_EQUAL
                 || oToken.getType() == BasicTokenType.COMPARE_NOT_EQUAL
                 || oToken.getType() == BasicTokenType.SMALLER
@@ -669,7 +710,7 @@ public class BasicParser implements Parser {
 
             // single parameter function calls
             case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case EXP: case LEN: case LOG:
-                case LOG10: case SIN: case SQR: case STR: case TAN: case VAL:
+                case LOG10: case NOT: case SIN: case SQR: case STR: case TAN: case VAL:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
@@ -686,8 +727,7 @@ public class BasicParser implements Parser {
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
                 _iPosition++;
-                Expression oFunction = new Function(oToken);
-                return oFunction;
+                return new Function(oToken);
 
             default:
                 // OK - here we have a text block that we cannot parse, so we throw an syntax exception

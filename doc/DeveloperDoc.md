@@ -195,13 +195,24 @@ should be managed by the `VariableManagement` class or the `Stack` class in the 
 ### Runtime
 
 Internally the parsed program is stored in a number of data structures:
-- The `parse` method of the Jasic and the Basic parser returns a list of objects (instantiated statement classes) in a processing sequence. This list is defined as `List<Statement> aoStatements`.
-- For Jasic programs: The execute function of the program utilizes the `LabelStatement` class to have a reference for jumps and conditions.
-- For Basic programs: The execute function of the program utilizes the `LineNumberXRef` class to have a reference between the basic line numbers, token number, and statement number.
+- The `parse` method of the Jasic and the Basic parser returns a list of objects (instantiated statement classes) in a 
+  processing sequence. This list is defined as `List<Statement> aoStatements`.
+- For Jasic programs: The execute function of the program utilizes the `LabelStatement` class to have a reference for 
+  jumps and conditions.
+- For Basic programs: The execute function of the program utilizes the `LineNumberXRef` class to have a reference 
+  between the basic line numbers, token number, and statement number.
 
 ## Basic Concepts
 
 ### Memory Management
+As a very important basic rule for the Parser and the Runtime components: The only place the interpreter stores and 
+keeps values during the execution if the `memoryManager` package. No other component is allowed to keep any 
+information longer than the execution of a function or method needs it, no class has any static variables, no class 
+except the `Logger` class keeps static values. This way the location of the variables can be adjusted to the needs 
+of the user of the interpreter. At this moment all variables are static variables in memory, but if the need arises 
+it would be possible to use a relational, non-relational, or in-memory database (eg. using the Hazelcast package) to 
+store those values, even achieve programming language supported high-availability. Note: non of this is currently 
+planned.
 
 ### Program Control
 
@@ -223,7 +234,9 @@ Every token identified by the lexer is in a strict sequential list. The position
 ###### Object Statement Numbers
 The instantiated objects for the program execution are in a strict sequential list. As the position is not known at the time of the creation,
 the number is at this version not an attribute of the object. This will change in the next main release, the object will also provide a method
-to retrieve the information.
+to retrieve the information. The statement does hold the number of the token it is related to. This is a 
+private value in the statement itself: `iTokenNumber` and the access can be done by the method `getTokenNumber()`. 
+Each statement does have this method.
 
 ###### Implementation of the Relationship
 The relationship is implemented by using two in-memory key-value stores. These key-value stores are hidden in the mentioned class below. It is possible to navigate between
@@ -578,7 +591,57 @@ and does not need to be modified in case additional types (like
 [booleans](https://github.com/andreas-grimm/Interpreters/blob/feature_tokenizer/doc/DeveloperDoc.md#variable-type-boolean)) are added in a later version.
 
 #### Statements
+All BASIC programming commands that change the state of the program during execution are implemented in the `eu.
+gricom.interpreter.basic.statements` package. The are all implementations of the `Statement` interface. All 
+classes derived from that interface have in common:
+* the methods `getTokenNumber()`, `execute()`, and `content()`
 
+##### `getTokenNumber()`
+All objects in the executable list are directly related with one of more identified token. Those token are in a list,
+and the statement is aware of the position of the token in the list. This way it is possible to build the link from 
+statement to token to BASIC command. All statement objects receive the token number as part of the instantiation in 
+the parsing process.
+
+##### `execute()`
+The `execute()` method is triggered by the runtime component in the BASIC interpreter. The runtime component 
+receives a list of all statement objects and is processing them following the project flow. This flow is according 
+to the order of the list, except for conditional and un-conditional jumps. The `execute()` method has no parameters 
+and does not provide any output except exceptions which are thrown in case of programming errors. All required data 
+is added in the object during instantiation or via the memory management package.
+
+##### `content()`
+The content method is used to inform the user on the content of the object. It does not change the state of the 
+object, but moves the important data of the object into a human-readable format. 
+
+##### `@PRAGMA` Statement
+
+The `@PRAGMA` directive does not change any of the BASIC program internal settings, changes any variables, or 
+executes any BASIC feature. This directive is used to change the settings of the interpreter itself, and allows the 
+developer to modify the behaviour of the interpreter at run-time. It is therefore not documented in the BASIC 
+language guide.
+
+The directive is added in the BASIC program test, but cannot be used as a jump target. 
+
+    @PRAGMA( <paramter> = <value> )
+
+At this moment the following parameter are implemented:
+* `LOG`: modifies the logging behaviour. Can be set to `TRACE`, `INFO`, `WARN`, `DEBUG`, and `OFF`. Note: This 
+  directive only applies to the logging feature of the interpreter itself, it is not usable for the logging of the 
+  BASIC program.
+
+   ```  
+    @PRAGMA("Log" = "Debug")
+   ```
+  
+* `TRACE`: prints the BASIC line numbers during the processing of the program. This function is similar to the 
+  `TRON` or `TROFF` function in TRS-80 Basic Level II.
+  
+   ```  
+    @PRAGMA("Trace" = "on")
+   ```
+
+
+  
 ##### Assignment to variables and basic mathematical operators
 
 ##### `DO - UNTIL` Loop Statement
@@ -946,8 +1009,9 @@ of the keywords can vary - refer to the language manual for the use of the reser
 
 | Reserved Word |  GD-Basic | Jasic | TRS-80 Level II Basic | Applesoft Basic | Commodore Basic | Notes |
 |---------------|-----------|-------|-----------------------|-----------------|-----------------|-------|
+| `@PRAGMA` | implemented |  |  |  |  |
 | `ABS` | implemented |  | implemented | implemented | implemented |
-| `AND` | reserved |  | implemented | implemented | implemented |
+| `AND` | implemented |  | implemented | implemented | implemented |
 | `ASC` | implemented |  | implemented | implemented | implemented |
 | `AT` |  |  |  | implemented |  | 
 | `ATN` | implemented |  | implemented | implemented | implemented |
@@ -971,7 +1035,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `CVD` |  | not planned | implemented |  |  |
 | `CVI` |  |  | implemented |  |  |
 | `CVS` |  |  | implemented |  |  |
-| `DATA` | reserved |  | implemented | implemented | implemented |
+| `DATA` | implemented |  | implemented | implemented | implemented |
 | `DEF` |  |  | implemented | implemented |
 | `DEF FN` | reserved |  |  | implemented |  |
 | `DEFDBL` |  |  | implemented |  |  |
@@ -981,10 +1045,10 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `DEL` |  |  |  | implemented |  |
 | `DELETE` |  |  | implemented |  |  |
 | `DIM` | depreciated |  | implemented | implemented | implemented |
-| `DO` | reserved |  |  |  |  |
+| `DO` | implemented |  |  |  |  |
 | `DRAW` |  |  |  | implemented |  |
 | `EDIT` |  |  | implemented |  |  |
-| `ELSE` | reserved |  | implemented | implemented | implemented |
+| `ELSE` | implemented |  | implemented | implemented | implemented |
 | `END` | implemented |  | implemented | implemented | implemented |
 | `END-IF` | implemented |  |  |  |  |
 | `END-WHILE` | implemented |  |  |  |  |
@@ -994,7 +1058,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `ERL` | reserved |  | implemented |  |  |
 | `ERR` | reserved |  | implemented |  |
 | `ERROR` |  |  | implemented |  |  |
-| `EXP` | reserved |  | implemented | implemented | implemented |
+| `EXP` | implemented |  | implemented | implemented | implemented |
 | `EXIT` | reserved |  |  |  |  |
 | `FIELD` |  |  | implemented |  |  |
 | `FIX` | | not planned | implemented | | |
@@ -1025,9 +1089,9 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `INPUT` | implemented | implemented | implemented | implemented | implemented |
 | `INPUT#` |  |  |  |  | implemented |
 | `KILL` |  |  | implemented |  |  |
-| `LEFT` | reserved |  | implemented | implemented | implemented |
-| `LEN` | reserved |  | implemented | implemented | implemented |
-| `LENGTH` | reserved |  | implemented | implemented | implemented |
+| `LEFT` | implemented |  | implemented | implemented | implemented |
+| `LEN` | implemented |  | implemented | implemented | implemented |
+| `LENGTH` | implemented |  | implemented | implemented | implemented |
 | `LET` | depreciated |  | implemented | implemented | implemented |
 | `LINE` | implemented | implemented | implemented (different function) | | | The `LINE` token is used to mark empty program lines, the token has no responding reserved word.
 | `LIST` |  |  | implemented | implemented | implemented |
@@ -1035,26 +1099,26 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `LOAD` |  |  | implemented |  | implemented |
 | `LOC` |  |  | implemented |  |  |
 | `LOF` |  |  | implemented |  |  |
-| `LOG` | reserved |  | implemented | implemented | implemented |
+| `LOG` | implemented |  | implemented | implemented | implemented |
 | `LOMEM` |  |  |  | implemented |  |
 | `LPRINT` |  |  | implemented |  |  |
 | `LSET` |  |  | implemented |  |  |
 | `MEM` | implemented |  | implemented |  |
 | `MERGE` |  |  | implemented |  |  |
-| `MID` | reserved, used token: `MID` |  | implemented | implemented | implemented |
+| `MID` | implemented |  | implemented | implemented | implemented |
 | `MKD` |  |  | implemented | | |
 | `MKI` |  |  | implemented | | |
 | `MKS` |  |  | implemented | | |
 | `NAME` |  |  | implemented | | |
 | `NEW` |  |  | implemented | implemented | implemented |
-| `NEXT` | reserved |  | implemented | implemented | implemented |
+| `NEXT` | implemented |  | implemented | implemented | implemented |
 | `NORMAL` |  |  |  | implemented |  |
-| `NOT` | reserved |  | implemented | implemented | implemented |
+| `NOT` | implemented |  | implemented | implemented | implemented |
 | `NOTRACE` |  | not planned |  | implemented |  |
 | `ON` | reserved |  | implemented |  | implemented |
 | `ONERR` |  |  |  | implemented |  |
-| `OPEN` |  |  | implemented | implemented | implemented |
-| `OR` | reserved |  | implemented | implemented | implemented |
+| `OPEN` | reserved |  | implemented | implemented | implemented |
+| `OR` | implemented |  | implemented | implemented | implemented |
 | `OUT` |  |  | implemented |  |  |
 | `PDL` |  |  |  | implemented |  |
 | `PEEK` |  |  | implemented | implemented | implemented |
@@ -1068,7 +1132,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `PRINT#` |  |  |  |  | implemented |
 | `PUT` |  |  | implemented |  |  |
 | `RANDOM` | reserved |  | implemented |  |  |
-| `READ` | reserved |  | implemented | implemented | implemented |
+| `READ` | implemented |  | implemented | implemented | implemented |
 | `RECALL` |  |  |  | implemented |  |
 | `REM` | implemented |  | implemented | implemented | implemented |
 | `REMINDER` | reserved, used token instead of `%` |  |  |  |  |
@@ -1092,11 +1156,11 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `SPC` |  |  |  | implemented | implemented |
 | `SPEED` |  |  |  | implemented |  |
 | `SQR` | implemented |  | implemented | implemented | implemented |
-| `STEP` | reserved |  | implemented | implemented | implemented |
+| `STEP` | implemented |  | implemented | implemented | implemented |
 | `STOP` | reserved |  | implemented | implemented | implemented |
 | `STORE` |  |  |  | implemented |  |
 | `STRING` | reserved, used token: `TOSTRING` |  | implemented |  |  |
-| `STR` | reserved |  | implemented | implemented | implemented |
+| `STR` | implemented |  | implemented | implemented | implemented |
 | `SYSTEM` | reserved |  | implemented |  |  |
 | `SYS` |  |  |  |  | implemented |
 | `TAB` | reserved |  | implemented | implemented | implemented |
@@ -1106,17 +1170,17 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `TIME` | implemented |  | implemented |  |  |
 | `TO` | implemented |  | implemented | implemented | implemented |
 | `TRACE` |  |  |  | implemented |  |
-| `TRON` |  |  | implemented |  |  |
-| `TROFF` |  |  | implemented |  |  |
-| `UNTIL` | reserved |  |  |  |  |
+| `TRON` |  |  | implemented |  |  | GD-Basic provides this function via the `@PRAGMA` command
+| `TROFF` |  |  | implemented |  |  | GD-Basic provides this function via the `@PRAGMA` command
+| `UNTIL` | implemented |  |  |  |  |
 | `USR` |  |  |  | implemented | implemented |
-| `VAL` | reserved |  | implemented | implemented | implemented |
+| `VAL` | implemented |  | implemented | implemented | implemented |
 | `VERIFY` |  |  |  |  | implemented |
 | `VLIN` |  |  |  | implemented |  |
 | `VTAB` |  |  |  | implemented |  |
 | `WAIT` |  |  |  |  | implemented |
 | `XDRAW` |  |  |  | implemented |  |
-| `&` | reserved, used token: `AMPERSAND` |  |  | implemented |  |
+| `&` | implemented, equivalent to: `AND` |  |  | implemented |  |
 | `+` | implemented, used token: `PLUS` | implemented | implemented | implemented | implemented |
 | `-` | implemented, used token: `MINUS` | implemented | implemented | implemented | implemented |
 | `*` | implemented, used token: `MULTIPLY` | implemented | implemented | implemented | implemented |
@@ -1136,6 +1200,7 @@ of the keywords can vary - refer to the language manual for the use of the reser
 | `!=` | implemented, used token: `COMPARE_NOT_EQUAL` |  |  |
 | `^` | implemented, used token: `POWER` | reserved | implemented |  | implemented |
 | `\'` (`REM` Quote) | implemented | implemented | implemented |  |
+| `|` | implemented, equivalent to: `OR` |  |  |  |  |
 
 ### Compatibility Guide
 

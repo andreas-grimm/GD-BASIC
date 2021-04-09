@@ -19,23 +19,23 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  * Created in 2021
  */
 public class ReturnStatement implements Statement {
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
 
     /**
      * Default constructor.
      *
      * An "return" statement terminates the GoSub subroutine and jumps to the command after the GoSub statement.
      *
-     * @param iLineNumber the line number of this command
+     * @param iTokenNumber the line number of this command
      */
 
-    public ReturnStatement(final int iLineNumber) {
-        _iLineNumber = iLineNumber;
+    public ReturnStatement(final int iTokenNumber) {
+        _iTokenNumber = iTokenNumber;
     }
 
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     @Override
