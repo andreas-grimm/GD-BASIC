@@ -104,11 +104,30 @@ Implemented Backlog Items:
 * Added string functions: `ASC`, `CHR`, `INSTR`, `LEFT`, `LEN`, `MID`, `RIGHT`, `STR`, `VAL`
 * Added system functions: `MEM`, `SYSTEM`, `TIME`
 * Added `gradle` build script
+* Added `READ` and `DATA` statements
+* Fixed issues:
+1. `FOR` statement only accepted fixed numbers for start-, end-, and step- value. This has changed that now 
+   variables, arrays, and functions can be used for those parameters.
+2. `IF` statement is now able to use a direct jump target after the `THEN` keyword. This is a reaction to problems 
+   using a `GOTO` out of the block, leaving an unresolved stack entry back. To allow a developer to jump out of any 
+   block (`DO`,`FOR`, `IF`, and `WHILE`) a new statement `CLEAN` is planned that removes the un-used stack entry. 
+   The BASIC programming guide will be added to discuss best practices concerning the `GOTO` command: with the 
+   existing commands, the use of the `GOTO` command should be avoided.
+3. `IF` statement is now supporting the `ELSE` extension, generating a command block for the alternate flow processing.
 
 Implemented Backlog Items:
+
+    [BASIC-53][BASIC-64][BASIC-73][BASIC-89][BASIC-102][BASIC-104][BASIC-105][BASIC-108][BASIC-110][BASIC-117]
+    [BASIC-120]
+
+Under Development:
+
+    [BASIC-19][BASIC-37][BASIC-48][BASIC-75][BASIC-79][BASIC-82][BASIC-83][BASIC-88][BASIC-109][BASIC-115][BASIC-121]
+    [BASIC-124]
 
 ---
 Implemented test and demonstration programs, located at `src/test/resources/GD_Basic_Examples`:
 - `Fibonacci.bas`: translation of the ECMA demonstration `FIBONACCI.BAS` program
+- `Eratosthenese.bas`: translation of the ECMA demonstration `ERATOSTHENES.BAS` program
 
-** NOTE: as of this version, all further versions pass CheckStyle and PMD tests **
+** NOTE: as of this version, all further versions pass the CheckStyle test **
