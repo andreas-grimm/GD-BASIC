@@ -3,6 +3,7 @@ package eu.gricom.interpreter.basic.statements;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
 import eu.gricom.interpreter.basic.helper.Logger;
+import eu.gricom.interpreter.basic.tokenizer.BasicTokenType;
 import eu.gricom.interpreter.basic.variableTypes.Value;
 
 /**
@@ -14,6 +15,7 @@ public class OperatorExpression implements Expression {
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private final Expression _oLeft;
     private final String _strOperator;
+    private final BasicTokenType _oOperator;
     private final Expression _oRight;
 
     /**
@@ -27,6 +29,22 @@ public class OperatorExpression implements Expression {
         _oLogger.debug("--->  " + oLeft.content() + " " + strOperator + " " + oRight.content());
         _oLeft = oLeft;
         _strOperator = strOperator;
+        _oOperator = null;
+        _oRight = oRight;
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param oLeft left part of the operation
+     * @param oOperator the actual operator - defined as a BasicTokenType
+     * @param oRight right side of the operation
+     */
+    public OperatorExpression(final Expression oLeft, final BasicTokenType oOperator, final Expression oRight) {
+        _oLogger.debug("--->  " + oLeft.content() + " " + oOperator + " " + oRight.content());
+        _oLeft = oLeft;
+        _strOperator = null;
+        _oOperator = oOperator;
         _oRight = oRight;
     }
 
@@ -75,6 +93,11 @@ public class OperatorExpression implements Expression {
                 return oLeftValue.largerThan(oRightValue);
             case ">=":
                 return oLeftValue.largerEqualThan(oRightValue);
+
+            case ">>":
+                return oLeftValue.shiftRight(oRightValue);
+            case "<<":
+                return oLeftValue.shiftLeft(oRightValue);
 
             default:
                 throw new SyntaxErrorException("Unknown operator: " + _strOperator);

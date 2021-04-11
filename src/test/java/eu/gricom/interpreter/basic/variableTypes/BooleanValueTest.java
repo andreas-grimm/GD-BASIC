@@ -158,7 +158,18 @@ public class BooleanValueTest {
         BooleanValue oSecondValue = new BooleanValue(true);
 
         assertThrows(SyntaxErrorException.class, () -> {
-            BooleanValue oResultValue = (BooleanValue) oFirstValue.minus(oSecondValue);
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.divide(oSecondValue);
+            System.out.println(oResultValue.toString());
+        });
+    }
+
+    @Test
+    public void testModulo() {
+        BooleanValue oFirstValue = new BooleanValue(true);
+        BooleanValue oSecondValue = new BooleanValue(true);
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            BooleanValue oResultValue = (BooleanValue) oFirstValue.modulo(oSecondValue);
             System.out.println(oResultValue.toString());
         });
     }

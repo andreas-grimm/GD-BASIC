@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "Building..."
-mvn -Drevision=0.0.6-SNAPSHOT -Dmaven.javadoc.skip=true clean site package
+mvn -Drevision=0.0.7-SNAPSHOT -Dmaven.javadoc.skip=true clean site package
 
 #echo " Building documentation"
 

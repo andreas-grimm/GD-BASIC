@@ -606,6 +606,7 @@ public class BasicParser implements Parser {
                 || oToken.getType() == BasicTokenType.MINUS
                 || oToken.getType() == BasicTokenType.MULTIPLY
                 || oToken.getType() == BasicTokenType.DIVIDE
+                || oToken.getType() == BasicTokenType.MODULO
                 || oToken.getType() == BasicTokenType.POWER
                 || oToken.getType() == BasicTokenType.AND
                 || oToken.getType() == BasicTokenType.OR
@@ -615,8 +616,11 @@ public class BasicParser implements Parser {
                 || oToken.getType() == BasicTokenType.SMALLER_EQUAL
                 || oToken.getType() == BasicTokenType.GREATER
                 || oToken.getType() == BasicTokenType.GREATER_EQUAL
-                || oToken.getType() == BasicTokenType.ASSIGN_EQUAL) {
-            _oLogger.debug("-operator-> token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
+                || oToken.getType() == BasicTokenType.ASSIGN_EQUAL
+                || oToken.getType() == BasicTokenType.SHIFT_LEFT
+                || oToken.getType() == BasicTokenType.SHIFT_RIGHT
+        ) {
+            _oLogger.debug("-operator-> token: <" + _iPosition + "> [" + oToken.getType() + "] '"
                     + oToken.getText() + "' [" + oToken.getLine() + "]");
             _iPosition++;
             Expression oRight = atomic();

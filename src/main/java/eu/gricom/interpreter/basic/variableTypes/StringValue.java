@@ -93,6 +93,11 @@ public class StringValue implements Value {
     }
 
     @Override
+    public final Value modulo(final Value oValue) throws SyntaxErrorException {
+        throw new SyntaxErrorException(oValue.content() + " '%' for strings, the expression is not defined");
+    }
+
+    @Override
     public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
         throw new SyntaxErrorException(oValue.content() + " '<<' for strings, the expression is not defined");
     }
