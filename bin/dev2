@@ -1,1 +1,1 @@
-java -jar target/BASIC-0.0.7-SNAPSHOT-jar-with-dependencies.jar -i src/test/resources/test_basic_Q2_3_dev.bas
+java -jar target/BASIC-0.0.6-RC-jar-with-dependencies.jar src/test/resources/test_basic_Q2_3_dev.bas
