@@ -8,12 +8,15 @@ GDBasic language syntax
 
 ## Introduction
 
-This text starts with a correction. The GDBasic interpreter is not an interpreter in the pure sense of the definition of an interpreter as it does not react on
-entered words as they are entered and changes its state. It actually works more live a `JAVA` compiler, as it performs a lexical analysis of the program, then parses
-the result, and finally generates executable code that is run by a runtime module. In this version all three components are in one project / `JAVA` executable, but as a plan
-the runtime components might end up in a separate component.
+This text starts with a correction. The GD-Basic interpreter is not an interpreter in the pure sense of the 
+definition of an interpreter as it does not react on entered words as they are entered and changes its state. It 
+actually works more live a `JAVA` compiler, as it performs a lexical analysis of the program, then parses the 
+result, and finally generates executable code that is run by a runtime module. In this version all three 
+components are in one project / `JAVA` executable, but as a plan the runtime components might end up in a 
+separate component.
 
-GDBasic is also not a compiler as it does not generate machine code, but `JAVA` objects that are executed in sequence. At this time of the work that saves the translation into
+GD-Basic is also not a compiler as it does not generate machine code, but `JAVA` objects that are executed in 
+sequence. At this time of the work that saves the translation into
 platform dependent code and keeps the platform migrate-able - it shall run on Windows, Linux, and Mac OSX. The change to low level machine code might happen at a later stage.
 It is nit planned, as the performance of a standard laptop or even Raspberry Pi is sufficient to outperform any classical BASIC computer.
 
@@ -40,7 +43,6 @@ gives a high level overview on their expected use.
 
 | Used Symbol  | Description |
 |--------------|-------------|
-| `<label>` | for `JASIC` only. Labels are defined as character strings terminated by a colon `:`|
 | `<line_number>` | for `BASIC` only. Line numbers are integer values at the beginning of each command line. |
 | `<statement>` | a statement is a command, comment, assignment (which could be understood as a special form of a command), or condition. |
 | `<comment>` | a comment is a command with no function, entered to document the program. |
@@ -52,27 +54,6 @@ gives a high level overview on their expected use.
 
 
 ## Language Elements
-
-#### Structure of JASIC Programs
-
-__Example of a JASIC Program__
-
-          ' Example Code of a JASIC Program: 
-          ' Looping over a print statement for 10 Times
-
-          count = 5
-    
-          count = count * 2
-    
-          ' stop looping if we're done
-    top:  
-          if count = 0 then ende
-          print "Hello, world!"
-    
-          ' decrement and restart the loop
-          count = count - 1
-          goto top
-    ende:
 
 #### Structure of BASIC Programs
 The Dartmouth version of the program structure consists of a program line in two parts:
@@ -100,8 +81,8 @@ __Example of a BASIC Program__
     130 END
 
 Note: All BASIC implementations started following the Dartmouth format. Newer versions have moved to the format of 
-the JASIC programming style. GD-BASIC is in the process to gain functional completeness and will not increase the 
-JASIC functionality until the Dartmouth version is functional complete.
+the JASIC / GW-BASIC programming style. GD-BASIC is in the process to gain functional completeness and will not 
+increase the JASIC programming feature until the Dartmouth version is functional complete.
 
 ##### Use of the Colon in the program line
 The Colon is used to have multiple BASIC commands in a single command line:
@@ -271,16 +252,6 @@ The following keywords are reserved and cannot be used for variables. The follow
 
 ## Statements
 
-###### JASIC Syntax
-Each statement is on its own line. Optionally, a line may have a label before the statement. A label is a name that ends with a colon:
-
-    <label> <comment | assignment | command>
-
-Example:
-
-    foo:
-        print "This is an example"
-
 ###### BASIC Syntax
 Each statement is on its own line. It starts with an integer number, which is increasing for each following line. Duplicates 
 of the line numbers is not allowed. The structure of a statement is:
@@ -301,16 +272,6 @@ Comments start with ' and proceed to the end of the line:
 Assignments are made in the form "\<name\> `=` \<expression\>".
 
 They evaluate the expression on the right and assigns the result to the given named variable. 
-
-###### JASIC Syntax
-The implemented JASIC version does not support negative or non-integer numbers in the program code. Even as all numbers
-are represented internally, the need to be programmed as integers:
-
-    pi = (314159 / 10000)
-
-and for negative numbers:
-
-    a = (0 - 1)
 
 ###### BASIC Syntax
 The implemented BASIC version supports real numbers and negative numbers:
@@ -502,18 +463,6 @@ The `GOTO` command represents the unconditional jump to another location in the 
 (different to the `GOSUB` command). The command will not change any variable content or any status of the program, just 
 will move the program pointer to the new location.
 
-###### JASIC Syntax
-
-`GOTO <label>`
-
-Jumps to the statement after the label in the program. Processes the program from that location on.
-
-    loop:
-          PRINT "Hello"
-          GOTO loop
-
-###### BASIC Syntax
-
 `GOTO <line_number>`
 
 Jumps to the statement at the given line number. Processes the program from that location on.
@@ -525,15 +474,6 @@ Jumps to the statement at the given line number. Processes the program from that
 
 ##### `IF` Command
 
-###### JASIC Syntax
-
-`IF <condition> THEN <label>`
-
-Evaluates the expression. If it evaluates to a non-zero number, then jumps to the statement after the given label.
-
-    IF a < b THEN jump_location
-
-###### BASIC Syntax
 The BASIC version of the `IF` command supports to coding versions:
 
 `IF <condition> THEN <statements> ELSE <statements> END-IF` and
@@ -582,7 +522,7 @@ version of the command.
 ## Expressions and Operators
 The following expressions are supported:
 
-* \<expression\> `=` \<expression\>: (for JASIC, but works for BASIC)
+* \<expression\> `=` \<expression\>:
   Evaluates to 1 if the two expressions are equal, 0 otherwise.
 
 * \<expression\> `==` \<expression\>: (BASIC only)
@@ -780,20 +720,12 @@ Every BASIC program consists of different elements:
 * Statement and Commands, and
 * Controls (which look like commands, but control the execution)
 
-### JASIC
-Based on the original implementation of the JASIC interpreter, this implementation is regression tested against the JASIC
-programs. Nevertheless, the interpreter will provide a superset of the programming language. Different to all other BASIC
-dialects implemented, JASIC does not require line numbers, but uses labels to address jump destinations.
-
 ### Dartmouth Basic
 This Basic interpreter is targeted to implement the definition of the BASIC programming language as defined by Thomas Kurtz
 from [Dartmouth College](https://en.wikipedia.org/wiki/Dartmouth_BASIC).
 
-The following [Link](https://www.dartmouth.edu/basicfifty/commands.html) links to the definition of the language. At this
-moment, the interpreter supports both versions - JASIC, and the Dartmouth Basic format.
-The language support is mightier for the Dartmouth version, no additional language enhancement have been made for the Jasic version.
-Jasic, as a less formatted later version of the programming language, will remain to be supported
-(why throwing working functions out?). A copy of the Dartmouth Basic programming manual is added to the documentation.
+The following [Link](https://www.dartmouth.edu/basicfifty/commands.html) links to the definition of the language. The 
+language support is mightier for the Dartmouth version. A copy of the Dartmouth Basic programming manual is added to the documentation.
 
 ### ECMA Minimal Basic
 The following link point to a [C Compiler for ECMA Minimal Basic](https://buraphakit.sourceforge.io/BASIC.shtml).
@@ -815,15 +747,6 @@ differences, where GDBasic programs exceed the different dialects.
 #### Dartmouth Basic
 Variable names can be a single letter, or a single letter followed by a
 single digit. This provides for 286 possible variable names.
-
-#### JASIC
-JASIC supports the same types as the Dartmouth Basic, but it allows longer variable
-names and therefore more variables:
-
-| Type | Variable Name Structure | Values |
-|------|-------------------------|--------|
-| `REAL` | `AB` | est. 9.9999999 E+37 |
-| `STRING` | `AB` | est. 0 to 256 Characters |
 
 #### Applesoft Basic
 

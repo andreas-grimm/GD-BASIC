@@ -2,10 +2,6 @@
 tput clear
 VERSION=0.0.7
 
-echo "--- Jasic Regression Test ---"
-java -jar target/BASIC-$VERSION-SNAPSHOT-jar-with-dependencies.jar -b=jasic -i src/test/resources/test_jasic_1.jas
-read -p "Press any [enter] to resume ..."
-
 echo "--- Basic Regression Test ---"
 echo "Test run: src/test/resources/test_basic_jasic_1_recoded.bas"
 java -jar target/BASIC-$VERSION-SNAPSHOT-jar-with-dependencies.jar -i src/test/resources/test_basic_jasic_1_recoded.bas

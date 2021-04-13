@@ -57,30 +57,29 @@ If you want to participate, please adopt your contributions to the look and feel
 the styleguide will be rejected.
 
 A wrapper around this command can be found in the `./bin`-directory: `./bin/build`. A number of test
-scripts are added: `bin/test` is running the _JASIC_ test programs, `bin/test2` runs the same program logic as a _BASIC_
-program. `bin/dev` is used to run the development _BASIC_ program that is used to implement and unit test the _BASIC_
+scripts are added: `bin/regtest` is running a number of programs that have been used for testing before. `bin/dev` is 
+used to run the development _BASIC_ program that is used to implement and unit test the _BASIC_
 version of the interpreter.
 
 At this stage, the interpreter is using a command line interface (`CLI`). The syntax of the `CLI` is (setting the link for the `JAVA` libraries up before):
 
-    java -jar target/BASIC-<version-SNAPSHOT>.jar <parameter> <program name>.<.bas|.jas>
+    java -jar target/BASIC-<version-SNAPSHOT>.jar <parameter> <program name>.<bas>
 
 or (if the `JAVA` libraries are nto in the path):
 
-    java -jar target/BASIC-<version-SNAPSHOT>-jar-with-dependencies.jar  <parameter> <program name>.<.bas|.jas>
+    java -jar target/BASIC-<version-SNAPSHOT>-jar-with-dependencies.jar  <parameter> <program name>.<bas>
 
 Possible optional parameter supported are:
 * "`-h`" - help (This screen), no further arguments
 * "`-q`" - quiet mode, disables all interpeter messages and only displays the output of the program
 * "`-v`" - verbose level: parameter defines the debug level, e.g. `info`, `debug`. See the following example.
-* "`-b`" - language type: `J` = Jasic, `B` = Basic, default is set to `B`
 
 The only mandatory parameter is:
 * "`-i`" - mandatory name of the input file, with the name of the input file as an argument
 
 _Example_:
 
-    java -jar target/BASIC-0.0.5-SNAPSHOT-jar-with-dependencies.jar -v"debug|info" -i src/test/resources/testfile_basic.bas
+    java -jar target/BASIC-0.0.5-SNAPSHOT-jar-with-dependencies.jar -v"debug|info" src/test/resources/testfile_basic.bas
 
 ## Participation in the Development of the Interpreter
 As of version `0.1.0` (planned) the interpreter is avaiable in a public _GITHUB_ (`github.com`) repository. It is covered by
@@ -113,10 +112,8 @@ This implementation consists one Java tokenizer interface class (`Tokenizer.java
 structures are similar, even as the outcoming list of token is slightly different.
 
 The tokenizers are named after the Basic versions they are implementing:
-* __Basic__ - contains the tokenization of programs following the dialects based on Dartmouth BASIC formats (such like ECMA, 
-  Tandy TRS Basic Level II, Applesoft Basic, or Commodore Basic).
-* __Jasic__ - contains the tokenization following the original Jasic programming format, e.g. without line numbers and using 
-  labels as jumping destinations.
+* __BasicTokenTypes__ - contains the tokenization of programs following the dialects based on Dartmouth BASIC formats 
+  (such like ECMA, Tandy TRS Basic Level II, Applesoft Basic, or Commodore Basic).
 
 The result of the tokenization process is a list of objects of type Token (see `eu.gricom.interpreter.basic.tokenizier.Token`). 
 Each token object holds three attributes:
@@ -141,8 +138,6 @@ The main function of the tokenizer class is named `tokenize`. It follows this pr
 a) Remove whitespaces and tabs from any location outside quotation marks (`"`). 
 b) Separate parenthesis (`(` and `)`) from the keywords. This is only done for keywords, not for arrays.
 - find keywords and generate a list of tokens.    
-
-#### JASIC Programs
 
 ### Adding new token to the Tokenizer
 
@@ -195,11 +190,9 @@ should be managed by the `VariableManagement` class or the `Stack` class in the 
 ### Runtime
 
 Internally the parsed program is stored in a number of data structures:
-- The `parse` method of the Jasic and the Basic parser returns a list of objects (instantiated statement classes) in a 
+- The `parse` method of the parser returns a list of objects (instantiated statement classes) in a 
   processing sequence. This list is defined as `List<Statement> aoStatements`.
-- For Jasic programs: The execute function of the program utilizes the `LabelStatement` class to have a reference for 
-  jumps and conditions.
-- For Basic programs: The execute function of the program utilizes the `LineNumberXRef` class to have a reference 
+- The execute function of the program utilizes the `LineNumberXRef` class to have a reference 
   between the basic line numbers, token number, and statement number.
 
 ## Basic Concepts
@@ -292,12 +285,12 @@ interpretion process:
 
 ![Referencing Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer_reference.png)
 
-This section of the documentation is detailing the process of tokenizing the BASIC or JASIC source code. The general
+This section of the documentation is detailing the process of tokenizing the BASIC source code. The general
 sequence (Tokeinzing (Lexicalic Analysis) -> Parsing -> Executing) has been described already, this section descrbes
 the different classes and functions more in detail.
 
-The two main classes in the package are the two Lexer classes, `JasicLexer.java` and `BasicLexer.java`. These
-transfer the source code into token. The floowing sections describe the functionality of the two Lexer classes.
+The two main classes in the package are the Lexer class, `BasicLexer.java`. This class
+transfers the source code into token. The following sections describe the functionality of the two Lexer classes.
 
 #### `Lexer.java`
 The `Lexer.java` interface class defines the functions of any lexer in this package. The required function does 
@@ -307,8 +300,6 @@ require a single method:
     List<Token> tokenize(String strSource) throws SyntaxErrorException;
 ```
 
-
-#### `JasicLexer.java`
 
 #### `BasicLexer.java`
 
@@ -405,11 +396,6 @@ The content of the `BasicTokenType.java` class is limited to the definition of t
 enumeration.
 No functionality is implemented in the class. The class is only used for the BASIC programming language.
 
-##### `JasicTokenType.java`
-The content of the `JasicTokenType.java` class is limited to the definition of the available token types as an
-enumeration. No functionality is implemented in the class. The class is only used for the BASIC programming language.
-
-
 ##### `ReservedWords.java`
 The `ReservedWords.java` class is the cross-reference or mapping class for the tokenizing process. It contains two
 lists with identical sequence - between all reserved words, and the related `BasicTokenType` entry.
@@ -417,8 +403,6 @@ lists with identical sequence - between all reserved words, and the related `Bas
 
 ### Parser Package
 ![Parser Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/parser.png)
-
-#### JasicParser
 
 #### BasicParser
 
@@ -453,16 +437,6 @@ The `getToken`-Method does return the token found at a location defined by an of
     private Expression expression() throws SyntaxErrorException
     public final Expression operator() throws SyntaxErrorException
     public final Expression atomic() throws SyntaxErrorException
-```
-
-##### Depreciated methods
-
-###### matchNextToken
-The method is used in the Jasic parser, but is not needed in the Basic parser at this time. As a general the Basic parser will not use the
-name in the token, but the token type. In this release, the method is not used and marked as depreciated.
-
-```java
-    public final boolean matchNextToken(final String strName)
 ```
 
 ### The MemoryManager Package
@@ -690,10 +664,10 @@ to a different location in the program. The executable functionality is located 
 `eu.gricom.interpreter.basic.statements.GotoStatement`. The class is an implementation of the 
 `eu.gricom.interpreter.basic.statements.Statement` interface. 
 
-The implementation of the functionality is realized by using two different classes: 
-`eu.gricom.interpreter.basic.statements.LabelStatement` for the JASIC programs, and 
-`eu.gricom.interpreter.basic.memoryManagement.LineNumberXRef` for the BASIC program. These classes are used to identify
-the target for the jump, which is either a Label (see `LabelStatement`), or a line number.
+The implementation of the functionality is realized by using the following class: 
+`eu.gricom.interpreter.basic.memoryManagement.LineNumberXRef`. This class is used to identify
+the target for the jump, which is currently always a line number. One of the next versions will allow the use of 
+labels as target for a jump command.
 
 When using labels, the actual label is identified by the parsing process and is added to the list of locations in the
 `LabelStatement` class. The class then has a second method to retrieve the location of the label in the program, and the
@@ -706,14 +680,12 @@ to determine the target of the jump. The link looks as follows:
 Basic Source Code Line -> Token -> Executable Statement
 
 When the `GOTO` command is executed, it will first look whether the argument with the command is located in the list of 
-the labels. If there is no reference in the `Label` object (which will only be populated for JASIC programs), the flow
-will use the `LineNumberXRef` object to determine the target of the jump. For this, the `GOTO` statement
-will use the token sequence number (an attribute of the `Statement` classes) to retrieve the line number in the BASIC 
-program.
+the labels. If there is no reference in the `Label` object, the flow will use the `LineNumberXRef` object to 
+determine the target of the jump. For this, the `GOTO` statement will use the token sequence number (an attribute 
+of the `Statement` classes) to retrieve the line number in the BASIC program.
 
 
-The argument in the `GOTO` command is either a string (and then in the JASIC handling of the flow), or (alternatively) a 
-number - which makes it part of the BASIC implementation.
+The argument in the `GOTO` command is either a string, or (alternatively) a number - which makes it part of the BASIC implementation.
 
 Limitations of the current implementation:
 * As the comments commands `REM` and `'` are not reflected in the executables, those commands can not be justed as targets 
@@ -749,17 +721,11 @@ this information - which will cause deterministic but incorrect behaviour and wi
 
 ##### `IF-THEN` Statement
 The `IF-THEN` statement implements the main control statement in the programming language. The main structure of the control
-statement consists of 4 token: `IF`, `THEN`, `ELSE`, `END-IF`. In the JASIC implementation the structure only consist of
-two token: `IF` and `THEN`.
+statement consists of 4 token: `IF`, `THEN`, `ELSE`, `END-IF`.
 
 The two possible command structures in BASIC are:
 `IF` [condition] `THEN` [commands] <`ELSE` [commands]> `END-IF`, and
 `IF` [condition] `THEN` [line_number]
-
-The same structure in JASIC is:
-`IF` [condition] `THEN` [jump target]
-
-The implementation of the structure for BASIC is therefore similar to the JASIC implementation. 
 
 ###### `END-IF` Statement
 The `END-IF` statement closes the `IF-THEN` block, It is mainly used from the `IF-THEN` statement as a jump target in case the IF clause

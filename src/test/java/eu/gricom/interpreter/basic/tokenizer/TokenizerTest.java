@@ -1,7 +1,6 @@
 package eu.gricom.interpreter.basic.tokenizer;
 
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
-import eu.gricom.interpreter.basic.helper.FileHandler;
 import eu.gricom.interpreter.basic.helper.Logger;
 import org.junit.jupiter.api.Test;
 
@@ -15,24 +14,7 @@ public class TokenizerTest {
     private static final Logger LOGGER = new Logger("eu.gricom.interpreter.basic.tokenizer.TokenizerTest");
 
     @Test
-    public void testTokenizeForJasic() {
-        // disable the logger
-        try {
-            LOGGER.setLogLevel("");
-
-            String strReadText = FileHandler.readFile("src/test/resources/test_jasic_1.jas");
-            Lexer oTokenizer = new JasicLexer();
-
-            List<Token> aoTokens = oTokenizer.tokenize(strReadText);
-
-            assertEquals(aoTokens.size(), 35);
-        } catch (SyntaxErrorException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void testTokenizeForBasicSimpleLine() {
+    public void testTokenizeSimpleLine() {
         try {
             LOGGER.setLogLevel("");
 
@@ -61,7 +43,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testTokenizeForBasicBrokenSequence() {
+    public void testTokenizeBrokenSequence() {
         LOGGER.setLogLevel("");
 
         String strProgramLine = "20 PRINT A$\n10 REM Error Test";
@@ -74,7 +56,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testTokenizeForBasicAssignmentWithParenthesis() {
+    public void testTokenizeAssignmentWithParenthesis() {
         try {
 
             LOGGER.setLogLevel("");
@@ -146,7 +128,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testTokenizeForBasicAssignmentWithOutParenthesis() {
+    public void testTokenizeAssignmentWithOutParenthesis() {
         try {
 
             LOGGER.setLogLevel("");
@@ -206,7 +188,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testTokenizeForBasicAssignmentWithFunctionCallNoParam() {
+    public void testTokenizeAssignmentWithFunctionCallNoParam() {
         try {
 
             LOGGER.setLogLevel("");
@@ -242,7 +224,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testTokenizeForBasicAssignmentWithFunctionCall() {
+    public void testTokenizeAssignmentWithFunctionCall() {
         try {
 
             LOGGER.setLogLevel("");

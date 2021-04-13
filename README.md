@@ -95,6 +95,8 @@ Implemented Backlog Items:
     [BASIC-80], [BASIC-67], [BASIC-68], [BASIC-69], [BASIC-70], [BASIC-71], [BASIC-72], [BASIC-81], [BASIC-84]
 
 0.0.6: Tagged as Array and Function Release
+* Removed the `-i` mandatory parameter in the command line
+* Removed the JASIC functionality  
 * Added the `@PRAGMA` feature. At this moment it allows to change the setting of the log level, but it can also be 
   used to change any other execute parameter of the interpreter.
 * Added the colon `:` programming feature to the interpreter, which allows multiple commands in a single line.  
