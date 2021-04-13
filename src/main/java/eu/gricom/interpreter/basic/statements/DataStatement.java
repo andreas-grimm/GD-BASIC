@@ -14,30 +14,30 @@ import java.util.List;
  * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class DataStatement implements Statement {
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
     private List<Value> _aoValues;
 
     /**
      * Default constructor.
      *
      * An "DATA" statement prepares and loads the FiFo Queue.
-     * @param iLineNumber - number of the command in the basic program
+     * @param iTokenNumber - number of the command in the basic program
      * @param aoValues - List of all Values to be pushed into the queue
      */
-    public DataStatement(final int iLineNumber, final List<Value> aoValues) {
+    public DataStatement(final int iTokenNumber, final List<Value> aoValues) {
 
-        _iLineNumber = iLineNumber;
+        _iTokenNumber = iTokenNumber;
         _aoValues = aoValues;
     }
 
     /**
-     * Get Line Number.
+     * Get Token Number.
      *
-     * @return iLineNumber - the command line number of the statement
+     * @return the command line number of the statement
      */
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     /**

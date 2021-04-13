@@ -21,23 +21,23 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
  */
 public class ElseStatement implements Statement {
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
 
     /**
      * Default constructor.
      *
      * An "ELSE" statement jumps to the command past the "END-IF" command.
      *
-     * @param iLineNumber the line number of this command
+     * @param iTokenNumber the line number of this command
      */
-    public ElseStatement(final int iLineNumber) {
+    public ElseStatement(final int iTokenNumber) {
 
-        _iLineNumber = iLineNumber;
+        _iTokenNumber = iTokenNumber;
     }
 
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     @Override

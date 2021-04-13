@@ -147,6 +147,34 @@ public class RealValue implements Value {
     }
 
     @Override
+    public final Value and(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        if (oValue instanceof RealValue) {
+
+            if (_fValue > 0 && oValue.toReal() > 0) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
+        }
+
+        throw new SyntaxErrorException(oValue.content() + " is not of type Real");
+    }
+
+    @Override
+    public final Value or(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        if (oValue instanceof RealValue) {
+
+            if (_fValue > 0 || oValue.toReal() > 0) {
+                return new BooleanValue(true);
+            }
+
+            return new BooleanValue(false);
+        }
+
+        throw new SyntaxErrorException(oValue.content() + " is not of type Real");
+    }
+
+    @Override
     public final Value shiftRight(final Value oValue) throws SyntaxErrorException {
         throw new SyntaxErrorException(oValue.content() + " '>>' for real type variables is not defined");
     }

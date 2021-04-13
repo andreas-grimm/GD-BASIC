@@ -18,20 +18,20 @@ import eu.gricom.interpreter.basic.tokenizer.Normalizer;
 public final class AssignStatement implements Statement {
     private final String _strKey;
     private final Expression _oValue;
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
     private final VariableManagement _oVariableManagement = new VariableManagement();
 
     /**
      * Default constructor.
      *
-     * @param iLineNumber - number of the basic command line
+     * @param iTokenNumber - number of the basic command line
      * @param strName - target of the assign statement
      * @param oValue - value of the assignment statement
      */
-    public AssignStatement(final int iLineNumber, final String strName, final Expression oValue) {
+    public AssignStatement(final int iTokenNumber, final String strName, final Expression oValue) {
         _strKey = strName;
         _oValue = oValue;
-        _iLineNumber = iLineNumber;
+        _iTokenNumber = iTokenNumber;
     }
 
     /**
@@ -43,17 +43,17 @@ public final class AssignStatement implements Statement {
     public AssignStatement(final String strName, final Expression oValue) {
         _strKey = strName;
         _oValue = oValue;
-        _iLineNumber = 0;
+        _iTokenNumber = 0;
     }
 
     /**
-     * Get Line Number.
+     * Get Token Number.
      *
-     * @return iLineNumber - the command line number of the statement
+     * @return the command line number of the statement
      */
     @Override
-    public int getLineNumber() {
-        return _iLineNumber;
+    public int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     /**

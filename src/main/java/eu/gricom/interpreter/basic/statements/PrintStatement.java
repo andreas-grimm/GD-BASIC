@@ -16,7 +16,7 @@ import java.util.List;
  */
 public final class PrintStatement implements Statement {
     private final Expression _oExpression;
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
     private final List<Expression> _aoExpression;
     private final boolean _bCRLF;
 
@@ -28,7 +28,7 @@ public final class PrintStatement implements Statement {
      * @param oExpression - input to the print statement
      */
     public PrintStatement(final Expression oExpression) {
-        _iLineNumber = 0;
+        _iTokenNumber = 0;
         _oExpression = oExpression;
         _aoExpression = null;
         _bCRLF = true;
@@ -39,12 +39,12 @@ public final class PrintStatement implements Statement {
      *
      * Receive the statement that is targeted to be printed.
      *
-     * @param iLineNumber  - number of the line in the BASIC program
+     * @param iTokenNumber  - number of the token in the BASIC program
      * @param aoExpression - list of inputs to the print statement
      * @param bCRLF - if true, the line to be printed ends with a CR
      */
-    public PrintStatement(final int iLineNumber, final List<Expression> aoExpression, final boolean bCRLF) {
-        _iLineNumber = iLineNumber;
+    public PrintStatement(final int iTokenNumber, final List<Expression> aoExpression, final boolean bCRLF) {
+        _iTokenNumber = iTokenNumber;
         _oExpression = null;
         _aoExpression = aoExpression;
         _bCRLF = bCRLF;
@@ -56,8 +56,8 @@ public final class PrintStatement implements Statement {
      * @return iLineNumber - the command line number of the statement
      */
     @Override
-    public int getLineNumber() {
-        return _iLineNumber;
+    public int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     /**

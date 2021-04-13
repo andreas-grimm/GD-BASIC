@@ -18,7 +18,7 @@ import java.util.List;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class ReadStatement implements Statement {
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
     private List<String> _astrNames;
 
     /**
@@ -26,11 +26,11 @@ public class ReadStatement implements Statement {
      *
      * An "input" statement reads input from the user and stores it in a variable.
      *
-     * @param iLineNumber the line number of this command
+     * @param iTokenNumber the token number of this command
      * @param astrNames the names of the variable to be read.
      */
-    public ReadStatement(final int iLineNumber, final List<String> astrNames) {
-        _iLineNumber = iLineNumber;
+    public ReadStatement(final int iTokenNumber, final List<String> astrNames) {
+        _iTokenNumber = iTokenNumber;
         _astrNames = astrNames;
     }
 
@@ -40,8 +40,8 @@ public class ReadStatement implements Statement {
      * @return the command line number of the statement
      */
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     /**
@@ -59,7 +59,7 @@ public class ReadStatement implements Statement {
         for (String strName: _astrNames) {
             try {
                 Value oInput = oFiFO.pop();
-                oAssignStatement = new AssignStatement(_iLineNumber, strName, oInput);
+                oAssignStatement = new AssignStatement(_iTokenNumber, strName, oInput);
                 oAssignStatement.execute();
             } catch (EmptyStackException eOutOfDataException) {
                 throw new OutOfDataException(eOutOfDataException.getMessage());

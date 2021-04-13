@@ -75,6 +75,13 @@ __Example of a JASIC Program__
     ende:
 
 #### Structure of BASIC Programs
+The Dartmouth version of the program structure consists of a program line in two parts:
+1. A line number, which is a unique integer ahead of every single line. This number has to be constantly growing in 
+   respect to the previous number, but it does not have to consecutive (actually it is good practice to show 
+   functional blocks by the numbering scheme).
+2. One or more actual commands (see the use of the colon in the next paragraph).
+
+An example of a BASIC program following the Dartmouth format follows here:
 
 __Example of a BASIC Program__
 
@@ -91,6 +98,18 @@ __Example of a BASIC Program__
     110 COUNT# = COUNT# - 1
     120 GOTO 50
     130 END
+
+Note: All BASIC implementations started following the Dartmouth format. Newer versions have moved to the format of 
+the JASIC programming style. GD-BASIC is in the process to gain functional completeness and will not increase the 
+JASIC functionality until the Dartmouth version is functional complete.
+
+##### Use of the Colon in the program line
+The Colon is used to have multiple BASIC commands in a single command line:
+
+    20 REM Colon Example
+    30 COUNT# = 5 : MULTIPLIER# = 2
+    40 COUNT# = COUNT# * MULTIPLIER
+
 
 ### Variables, Arrays, and Constants
 Basic is a strongly typed programming language, which means that type conversion can only be done using conversion functions. These functions 
@@ -163,7 +182,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | Reserved Word |  GD-Basic | Jasic | 
 |---------------|-----------|-------|
 | `ABS` | implemented | |
-| `AND` | reserved | |
+| `AND` | implemented | |
 | `ASC` | implemented | |
 | `ATN` | implemented | |
 | `CALL` | reserved | |
@@ -176,7 +195,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `CONT` | reserved | |
 | `COS` | implemented | |
 | `DATA` | implemented | |
-| `DEF FN` | reserved | |
+| `DEF FN` | planned | |
 | `DIM` | depreciated | |
 | `DO` | implemented | |
 | `ELSE` | implemented | |
@@ -203,10 +222,10 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `MEM` | implemented | |
 | `MID` | implemented | |
 | `NEXT` | implemented | |
-| `NOT` | reserved | |
+| `NOT` | implemented | |
 | `ON` | reserved | |
 | `OPEN` | reserved | |
-| `OR` | reserved | |
+| `OR` | implemented | |
 | `PRINT` | implemented | implemented |
 | `RANDOM` | reserved | |
 | `READ` | implemented | |
@@ -247,6 +266,8 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `!=` | implemented | |
 | `^` | implemented | |
 | `'` | implemented | |
+| `&&` | implemented | |
+| `||` | implemented | |
 
 ## Statements
 
@@ -558,7 +579,7 @@ Using the `GOTO` command inside the `IF` / `ELSE` / `END-IF` block is considered
 jump out of a non-finished block, and this can use to unwanted program behaviour. In this case, use the non-blocked 
 version of the command.
 
-## Expressions
+## Expressions and Operators
 The following expressions are supported:
 
 * \<expression\> `=` \<expression\>: (for JASIC, but works for BASIC)
@@ -592,6 +613,12 @@ The following expressions are supported:
 * \<expression\> `>` \<expression\>
 
 * \<expression\> `>` \<expression\>
+
+* \<expression\> `&` \<expression\> (or \<expression\> `AND` \<expression\>): Implements the logical `AND` operator. 
+  The result is `true` only if both expressions provide a result that is interpreted as `true`.
+
+* \<expression\> `|` \<expression\> (or \<expression\> `OR` \<expression\>): Implements the logical `OR` operator.
+  The result is `true` only if one of the two expressions provides a result that is interpreted as `true`.
 
 * \<name\>:
     A name in an expression simply returns the value of the variable with
@@ -672,6 +699,11 @@ The function `LOG` returns the logarithm naturalis of the parameter given. The p
 
 #### `LOG10`
 The function `LOG10` returns the logarithm decimalis of the parameter given. The parameter needs to be of type `real`.
+
+#### `NOT`
+The function `NOT` reverses the logical or boolean content of a variable and returns that content: `true` becomes 
+`false` and vice versa. For numerical values, any value smaller or equal to `0` becomes `1`, and all values larger 
+than `0` become `0`.
 
 #### `RND`
 The `RND` function does not require any parameter. It returns a `REAL` value which is pseudo-randomly generated and between `0` and `1`.

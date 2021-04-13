@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
  */
 public class InputStatement implements Statement {
     private final String _strName;
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
 
     /**
      * Default constructor.
@@ -31,7 +31,7 @@ public class InputStatement implements Statement {
      * @param strName - the name of the variable to be read.
      */
     public InputStatement(final String strName) {
-        _iLineNumber = 0;
+        _iTokenNumber = 0;
         _strName = strName;
     }
 
@@ -40,11 +40,11 @@ public class InputStatement implements Statement {
      *
      * An "input" statement reads input from the user and stores it in a variable.
      *
-     * @param iLineNumber the line number of this command
+     * @param iTokenNumber the line number of this command
      * @param strName the name of the variable to be read.
      */
-    public InputStatement(final int iLineNumber, final String strName) {
-        _iLineNumber = iLineNumber;
+    public InputStatement(final int iTokenNumber, final String strName) {
+        _iTokenNumber = iTokenNumber;
         _strName = strName;
     }
 
@@ -54,8 +54,8 @@ public class InputStatement implements Statement {
      * @return the command line number of the statement
      */
     @Override
-    public final int getLineNumber() {
-        return _iLineNumber;
+    public final int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     /**
@@ -80,7 +80,7 @@ public class InputStatement implements Statement {
                 oValue = new StringValue(strInput);
             }
 
-            oAssignStatement = new AssignStatement(_iLineNumber, _strName, oValue);
+            oAssignStatement = new AssignStatement(_iTokenNumber, _strName, oValue);
             oAssignStatement.execute();
         } catch (IOException | SyntaxErrorException eException) {
             throw new RuntimeException("Incorrect input detected: " + eException.getMessage());

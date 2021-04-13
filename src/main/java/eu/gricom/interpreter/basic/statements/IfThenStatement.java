@@ -23,7 +23,7 @@ import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
 public final class IfThenStatement implements Statement {
     private final Expression _oCondition;
     private final String _strLabel;
-    private int _iStatementNumber = 0;
+    private int _iTokenNumber = 0;
     private int _iTargetLineNumber = 0;
     private  int _iElseStatement = 0;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
@@ -47,18 +47,18 @@ public final class IfThenStatement implements Statement {
      * BASIC constructor.
      *
      * @param oCondition - condition to be tested.
-     * @param iStatementNumber - the sequence number of this statement in the program
+     * @param iTokenNumber - the number of this token related to this statement
      * @param iELseStatement location of the next command to be processed after the else command
      * @param iEndIfLine - destination for the jump after unsuccessful completion of the condition.
      * @param iTargetLineNumber - alternative syntax: if the coder wants to use a jump target if the condition is
      *                          true, the jump target is added here.
      */
     public IfThenStatement(final Expression oCondition,
-                           final int iStatementNumber,
+                           final int iTokenNumber,
                            final int iELseStatement,
                            final int iEndIfLine,
                            final int iTargetLineNumber) {
-        _iStatementNumber = iStatementNumber;
+        _iTokenNumber = iTokenNumber;
         _oCondition = oCondition;
         _strLabel = "";
         _iElseStatement = iELseStatement;
@@ -67,13 +67,13 @@ public final class IfThenStatement implements Statement {
     }
 
     /**
-     * Get Line Number.
+     * Get Token Number.
      *
-     * @return iLineNumber - the command line number of the statement
+     * @return the command line number of the statement
      */
     @Override
-    public int getLineNumber() {
-        return _iStatementNumber;
+    public int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     /**

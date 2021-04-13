@@ -21,7 +21,7 @@ import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 public final class GotoStatement implements Statement {
     private final Logger _oLogger = new Logger(this.getClass().getName());
     private final String _strTarget;
-    private final int _iLineNumber;
+    private final int _iTokenNumber;
     private final ProgramPointer _oProgramPointer = new ProgramPointer();
     private final LabelStatement _oLabelStatement = new LabelStatement();
     private final LineNumberXRef _oLineNumberObject = new LineNumberXRef();
@@ -32,28 +32,28 @@ public final class GotoStatement implements Statement {
      * @param strTarget - target of the jump - defined by a label
      */
     public GotoStatement(final String strTarget) {
-        _iLineNumber = 0;
+        _iTokenNumber = 0;
         _strTarget = strTarget;
     }
 
     /**
      * Default constructor.
-     * @param iLineNumber - number of the line of the command
+     * @param iTokenNumber - number of the line of the command
      * @param strTarget - target of the jump - defined by a label
      */
-    public GotoStatement(final int iLineNumber, final String strTarget) {
-        _iLineNumber = iLineNumber;
+    public GotoStatement(final int iTokenNumber, final String strTarget) {
+        _iTokenNumber = iTokenNumber;
         _strTarget = strTarget;
     }
 
     /**
-     * Get Line Number.
+     * Get Token Number.
      *
-     * @return iLineNumber - the command line number of the statement
+     * @return the command line number of the statement
      */
     @Override
-    public int getLineNumber() {
-        return _iLineNumber;
+    public int getTokenNumber() {
+        return _iTokenNumber;
     }
 
     /**
