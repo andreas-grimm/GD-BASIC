@@ -179,6 +179,20 @@ public class LongValueTest {
     }
 
     @Test
+    public void testModulo() {
+        try {
+            LongValue oFirstValue = new LongValue(3);
+            LongValue oSecondValue = new LongValue(2);
+
+            LongValue oResultValue = (LongValue) oFirstValue.modulo(oSecondValue);
+            assertTrue(oResultValue.toLong() == 1);
+
+        } catch (SyntaxErrorException | DivideByZeroException e) {
+            fail();
+        }
+    }
+
+    @Test
     public void testPower() {
         try {
             LongValue oFirstValue = new LongValue(2);

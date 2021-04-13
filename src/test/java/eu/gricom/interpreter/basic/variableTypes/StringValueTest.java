@@ -111,6 +111,17 @@ public class StringValueTest {
     }
 
     @Test
+    public void testModulo() {
+        StringValue oFirstValue = new StringValue("a");
+        StringValue oSecondValue = new StringValue("b");
+
+        assertThrows(SyntaxErrorException.class, () -> {
+            StringValue oResultValue = (StringValue) oFirstValue.modulo(oSecondValue);
+            System.out.println(oResultValue.toString());
+        });
+    }
+
+    @Test
     public void testPower() {
         StringValue oFirstValue = new StringValue("a");
         StringValue oSecondValue = new StringValue("b");

@@ -96,6 +96,16 @@ public interface Value extends Expression {
     Value divide(Value oValue) throws DivideByZeroException, SyntaxErrorException;
 
     /**
+     * Remainder of an integer division.
+     *
+     * @param oValue divisor for the calculation
+     * @return the result of the division
+     * @throws DivideByZeroException thrown for a division by zero
+     * @throws SyntaxErrorException thrown when different types are used
+     */
+    Value modulo(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+
+    /**
      * Multiplication of one value object by 2, parameter times.
      *
      * @param oValue second factor for the calculation

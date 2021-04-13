@@ -130,6 +130,20 @@ public class RealValueTest {
     }
 
     @Test
+    public void testModulo() {
+        try {
+            RealValue oFirstValue = new RealValue(3);
+            RealValue oSecondValue = new RealValue(2);
+
+            RealValue oResultValue = (RealValue) oFirstValue.modulo(oSecondValue);
+            assertTrue(oResultValue.toReal() == 1);
+
+        } catch (SyntaxErrorException | DivideByZeroException e) {
+            fail();
+        }
+    }
+
+    @Test
     public void testPower() {
         try {
             RealValue oFirstValue = new RealValue(2);

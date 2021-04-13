@@ -48,6 +48,7 @@ public enum BasicTokenType {
     LOG10,
     MEM,
     MID, // token for the MID$ function
+    MODULO, // token for the % operation
     NEXT,
     NOT,
     ON,
@@ -58,7 +59,6 @@ public enum BasicTokenType {
     RANDOM,
     READ,
     REM,
-    REMAINDER, // token for the % operation
     RETURN,
     RIGHT, //token for the RIGHT$ function
     RND,

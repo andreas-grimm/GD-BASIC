@@ -95,6 +95,8 @@ Implemented Backlog Items:
     [BASIC-80], [BASIC-67], [BASIC-68], [BASIC-69], [BASIC-70], [BASIC-71], [BASIC-72], [BASIC-81], [BASIC-84]
 
 0.0.6: Tagged as Array and Function Release
+* Removed the `-i` mandatory parameter in the command line
+* Removed the JASIC functionality  
 * Added the `@PRAGMA` feature. At this moment it allows to change the setting of the log level, but it can also be 
   used to change any other execute parameter of the interpreter.
 * Added the colon `:` programming feature to the interpreter, which allows multiple commands in a single line.  
@@ -103,7 +105,7 @@ Implemented Backlog Items:
 * Adding functionality to retrieve single characters out of any string. A string's characters can be retrieved by 
   using squared brackets:
   `[` and `]`.
-* Added mathematical operators: `AND`, and `OR`  
+* Added mathematical operators: `>>`, `<<`, `%`, `AND`, and `OR`  
 * Added mathematical functions: `ABS`, `ATN`, `CDBL`, `CINT`, `COS`, `EXP`, `LOG`, `LOG10`, `NOT`, `RND`, `SIN`, `SQR`, 
   `TAN`
 * Added string functions: `ASC`, `CHR`, `INSTR`, `LEFT`, `LEN`, `MID`, `RIGHT`, `STR`, `VAL`
@@ -122,13 +124,18 @@ Implemented Backlog Items:
 
 Implemented Backlog Items:
 
-    [BASIC-19][BASIC-53][BASIC-64][BASIC-73][BASIC-89][BASIC-102][BASIC-104][BASIC-105][BASIC-108][BASIC-109][BASIC-110]
-    [BASIC-117][BASIC-120][BASIC-127]
+    [BASIC-19][BASIC-37][BASIC-53][BASIC-64][BASIC-73][BASIC-89][BASIC-102][BASIC-104][BASIC-105][BASIC-108][BASIC-109]
+    [BASIC-110][BASIC-117][BASIC-120][BASIC-127]
+
+0.0.7: Tagged as Macro Release
+
+Implemented Backlog Items:
+
+    [BASIC-121]
 
 Under Development:
 
-    [BASIC-37][BASIC-48][BASIC-75][BASIC-79][BASIC-82][BASIC-83][BASIC-88][BASIC-115][BASIC-121]
-    [BASIC-124]
+    [BASIC-48][BASIC-76][BASIC-79][BASIC-82][BASIC-83][BASIC-88][BASIC-115][BASIC-124]
 
 ---
 Implemented test and demonstration programs, located at `src/test/resources/GD_Basic_Examples`:

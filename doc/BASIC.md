@@ -8,12 +8,15 @@ GDBasic language syntax
 
 ## Introduction
 
-This text starts with a correction. The GDBasic interpreter is not an interpreter in the pure sense of the definition of an interpreter as it does not react on
-entered words as they are entered and changes its state. It actually works more live a `JAVA` compiler, as it performs a lexical analysis of the program, then parses
-the result, and finally generates executable code that is run by a runtime module. In this version all three components are in one project / `JAVA` executable, but as a plan
-the runtime components might end up in a separate component.
+This text starts with a correction. The `GD-BASIC` interpreter is not an interpreter in the pure sense of the 
+definition of an interpreter as it does not react on entered words as they are entered and changes its state. It 
+actually works more live a `JAVA` compiler, as it performs a lexical analysis of the program, then parses the 
+result, and finally generates executable code that is run by a runtime module. In this version all three 
+components are in one project / `JAVA` executable, but as a plan the runtime components might end up in a 
+separate component.
 
-GDBasic is also not a compiler as it does not generate machine code, but `JAVA` objects that are executed in sequence. At this time of the work that saves the translation into
+`GD-BASIC` is also not a compiler as it does not generate machine code, but `JAVA` objects that are executed in 
+sequence. At this time of the work that saves the translation into
 platform dependent code and keeps the platform migrate-able - it shall run on Windows, Linux, and Mac OSX. The change to low level machine code might happen at a later stage.
 It is nit planned, as the performance of a standard laptop or even Raspberry Pi is sufficient to outperform any classical BASIC computer.
 
@@ -22,7 +25,7 @@ the example of `JRUBY` for Ruby or `JYTHON` for Python.
 
 ## Standards and supported Basic Implementations
 
-#### GD Basic
+#### `GD-BASIC`
 
 | Type | Variable Name Structure | Values |
 |------|-------------------------|--------|
@@ -40,7 +43,6 @@ gives a high level overview on their expected use.
 
 | Used Symbol  | Description |
 |--------------|-------------|
-| `<label>` | for `JASIC` only. Labels are defined as character strings terminated by a colon `:`|
 | `<line_number>` | for `BASIC` only. Line numbers are integer values at the beginning of each command line. |
 | `<statement>` | a statement is a command, comment, assignment (which could be understood as a special form of a command), or condition. |
 | `<comment>` | a comment is a command with no function, entered to document the program. |
@@ -52,27 +54,6 @@ gives a high level overview on their expected use.
 
 
 ## Language Elements
-
-#### Structure of JASIC Programs
-
-__Example of a JASIC Program__
-
-          ' Example Code of a JASIC Program: 
-          ' Looping over a print statement for 10 Times
-
-          count = 5
-    
-          count = count * 2
-    
-          ' stop looping if we're done
-    top:  
-          if count = 0 then ende
-          print "Hello, world!"
-    
-          ' decrement and restart the loop
-          count = count - 1
-          goto top
-    ende:
 
 #### Structure of BASIC Programs
 The Dartmouth version of the program structure consists of a program line in two parts:
@@ -100,8 +81,8 @@ __Example of a BASIC Program__
     130 END
 
 Note: All BASIC implementations started following the Dartmouth format. Newer versions have moved to the format of 
-the JASIC programming style. GD-BASIC is in the process to gain functional completeness and will not increase the 
-JASIC functionality until the Dartmouth version is functional complete.
+the JASIC / GW-BASIC programming style. `GD-BASIC` is in the process to gain functional completeness and will not 
+increase the JASIC programming feature until the Dartmouth version is functional complete.
 
 ##### Use of the Colon in the program line
 The Colon is used to have multiple BASIC commands in a single command line:
@@ -157,7 +138,7 @@ Booleans Variables have two possible results: True or False.
 | A + non A = 1 | A (non)A = 0 |
 
 #### Strings
-Strings are lists of characters. In GD-Basic, even single characters are representated as strings. To mark the border of
+Strings are lists of characters. In `GD-BASIC`, even single characters are representated as strings. To mark the border of
 strings, each string is surrounded by quotation marks (`"`).
 
 Allowed operations for strings are:
@@ -179,7 +160,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 - `planned`: the keyword is used in the current development and/or released as a beta
 - `reserved`: the keyword might be used in the future or is already on the roadmap. Do not use these keywords in order to be compatible in the future.
 
-| Reserved Word |  GD-Basic | Jasic | 
+| Reserved Word |  `GD-BASIC` | Jasic | 
 |---------------|-----------|-------|
 | `ABS` | implemented | |
 | `AND` | implemented | |
@@ -271,16 +252,6 @@ The following keywords are reserved and cannot be used for variables. The follow
 
 ## Statements
 
-###### JASIC Syntax
-Each statement is on its own line. Optionally, a line may have a label before the statement. A label is a name that ends with a colon:
-
-    <label> <comment | assignment | command>
-
-Example:
-
-    foo:
-        print "This is an example"
-
 ###### BASIC Syntax
 Each statement is on its own line. It starts with an integer number, which is increasing for each following line. Duplicates 
 of the line numbers is not allowed. The structure of a statement is:
@@ -302,16 +273,6 @@ Assignments are made in the form "\<name\> `=` \<expression\>".
 
 They evaluate the expression on the right and assigns the result to the given named variable. 
 
-###### JASIC Syntax
-The implemented JASIC version does not support negative or non-integer numbers in the program code. Even as all numbers
-are represented internally, the need to be programmed as integers:
-
-    pi = (314159 / 10000)
-
-and for negative numbers:
-
-    a = (0 - 1)
-
 ###### BASIC Syntax
 The implemented BASIC version supports real numbers and negative numbers:
 
@@ -331,12 +292,12 @@ In sequence, this section describes:
 - Control Structures / Process Control
 - Expressions and Mathematical Functions
 
-Finally, special function of the GD-Basic implementations are discussed, such as the `SYSTEM` interface and the `CALL` function
+Finally, special function of the `GD-BASIC` implementations are discussed, such as the `SYSTEM` interface and the `CALL` function
 Those features will be implemented potentially in the Q2 release.
 
 #### Loops and Iterations
 
-This section of the BASIC programming guide describes the three different loops GD-Basic provides:
+This section of the BASIC programming guide describes the three different loops `GD-BASIC` provides:
 - the `WHILE`-loop, which is a check-first style loop: The condition for the loop is checked before the loop is executed,
 - the `DO`-loop, which is a execute-first loop: The loop body is executed before the repetition of the loop is verified, and
 - the `FOR`-loop, which is a counting loop: the loop counts a value from a start to an end in certain step sizes.
@@ -502,18 +463,6 @@ The `GOTO` command represents the unconditional jump to another location in the 
 (different to the `GOSUB` command). The command will not change any variable content or any status of the program, just 
 will move the program pointer to the new location.
 
-###### JASIC Syntax
-
-`GOTO <label>`
-
-Jumps to the statement after the label in the program. Processes the program from that location on.
-
-    loop:
-          PRINT "Hello"
-          GOTO loop
-
-###### BASIC Syntax
-
 `GOTO <line_number>`
 
 Jumps to the statement at the given line number. Processes the program from that location on.
@@ -525,15 +474,6 @@ Jumps to the statement at the given line number. Processes the program from that
 
 ##### `IF` Command
 
-###### JASIC Syntax
-
-`IF <condition> THEN <label>`
-
-Evaluates the expression. If it evaluates to a non-zero number, then jumps to the statement after the given label.
-
-    IF a < b THEN jump_location
-
-###### BASIC Syntax
 The BASIC version of the `IF` command supports to coding versions:
 
 `IF <condition> THEN <statements> ELSE <statements> END-IF` and
@@ -582,7 +522,7 @@ version of the command.
 ## Expressions and Operators
 The following expressions are supported:
 
-* \<expression\> `=` \<expression\>: (for JASIC, but works for BASIC)
+* \<expression\> `=` \<expression\>:
   Evaluates to 1 if the two expressions are equal, 0 otherwise.
 
 * \<expression\> `==` \<expression\>: (BASIC only)
@@ -626,8 +566,8 @@ The following expressions are supported:
 
 All binary (atomic) operators have the same precedence.
 
-## Converting BASIC Programs to GD-Basic
-Programs written in a BASIC language other than GD-BASIC may require some minor adjustments before they can be run. The following
+## Converting BASIC Programs to `GD-BASIC`
+Programs written in a BASIC language other than `GD-BASIC` may require some minor adjustments before they can be run. The following
 sections describe these adjustments.
 
 ### String and Array Dimensions
@@ -640,14 +580,14 @@ which dimensions a string array for `J` elements of length `I`, should be remove
     DIM A$(J)
     DIM A(H)
 
-GD-Basic does not support prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
+`GD-BASIC` does not support prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
 shrinking.
 
 ### String Functions
 Some Basic languages use a comma `,` or ampersand `&` for string concatenation. Each of these must be changed to a plus sign `+`,
-which is the operator for GD-Basic string concatenation.
+which is the operator for `GD-BASIC` string concatenation.
 
-In GD-Basic, the `MID$`, `RIGHT$`, and `LEFT$` functions will be used in a later release to take substrings of strings. Forms
+In `GD-BASIC`, the `MID$`, `RIGHT$`, and `LEFT$` functions will be used in a later release to take substrings of strings. Forms
 such as `A$(I)` to access the `I`th character in `A$` are replaced by `A$[I]`, or `A$(I,J)` to take a substring of `A$` from
 position `I` to position `J` must be replaced by `A$[I,J]` (later supported in a later version).
 
@@ -656,20 +596,20 @@ Some Basic languages allow statements of the following to set `B` and `C` equal 
 
     10 LET B=C=0
 
-GD-Basic does not support this logic. GW-Basic interprets the statement in which the value B is set based on C equal to zero.
+`GD-BASIC` does not support this logic. GW-Basic interprets the statement in which the value B is set based on C equal to zero.
 This will be needed to be changed to
 
     10 B = A == 0
 
 ### Multiple Statement
-Some Basic languages use a backslash `\\` or colons `:` to separate statements on a single line. With GD-Basic, make sure all elements on a line
+Some Basic languages use a backslash `\\` or colons `:` to separate statements on a single line. With `GD-BASIC`, make sure all elements on a line
 only apply to a single command. the use of the colon `:` is not support in the current version.
 
 ### MAT Functions
 Programs using the `MAT` functions available in some Basic languages must be rewritten to use `FOR-NEXT` loops to execute properly .
 
 ### FOR-NEXT Loops
-Some GD-Basic will always execute a `FOR-NEXT` loop once, regardless of the limits. Other Basic languages checks the limits first
+Some `GD-BASIC` will always execute a `FOR-NEXT` loop once, regardless of the limits. Other Basic languages checks the limits first
 and does not execute the loop if past limits.
 
 ## Implemented Functions
@@ -766,7 +706,7 @@ The following standard Basic commands are depreciated and should not be used.
 - The `LET` command is depreciated and will be ignored
 - The `DIM` command is depreciated and will cause a Syntax Error
 
-The `SINGLE` data type of the old BASIC implementations does not exist in GD-Basic. The developer is asked to use 
+The `SINGLE` data type of the old BASIC implementations does not exist in `GD-BASIC`. The developer is asked to use 
 the simple integer data type. Therefore, the conversions functions are not implemented:
 
 - The `CSNG` and `SNG` functions are not implemented
@@ -780,20 +720,12 @@ Every BASIC program consists of different elements:
 * Statement and Commands, and
 * Controls (which look like commands, but control the execution)
 
-### JASIC
-Based on the original implementation of the JASIC interpreter, this implementation is regression tested against the JASIC
-programs. Nevertheless, the interpreter will provide a superset of the programming language. Different to all other BASIC
-dialects implemented, JASIC does not require line numbers, but uses labels to address jump destinations.
-
 ### Dartmouth Basic
 This Basic interpreter is targeted to implement the definition of the BASIC programming language as defined by Thomas Kurtz
 from [Dartmouth College](https://en.wikipedia.org/wiki/Dartmouth_BASIC).
 
-The following [Link](https://www.dartmouth.edu/basicfifty/commands.html) links to the definition of the language. At this
-moment, the interpreter supports both versions - JASIC, and the Dartmouth Basic format.
-The language support is mightier for the Dartmouth version, no additional language enhancement have been made for the Jasic version.
-Jasic, as a less formatted later version of the programming language, will remain to be supported
-(why throwing working functions out?). A copy of the Dartmouth Basic programming manual is added to the documentation.
+The following [Link](https://www.dartmouth.edu/basicfifty/commands.html) links to the definition of the language. The 
+language support is mightier for the Dartmouth version. A copy of the Dartmouth Basic programming manual is added to the documentation.
 
 ### ECMA Minimal Basic
 The following link point to a [C Compiler for ECMA Minimal Basic](https://buraphakit.sourceforge.io/BASIC.shtml).
@@ -816,15 +748,6 @@ differences, where GDBasic programs exceed the different dialects.
 Variable names can be a single letter, or a single letter followed by a
 single digit. This provides for 286 possible variable names.
 
-#### JASIC
-JASIC supports the same types as the Dartmouth Basic, but it allows longer variable
-names and therefore more variables:
-
-| Type | Variable Name Structure | Values |
-|------|-------------------------|--------|
-| `REAL` | `AB` | est. 9.9999999 E+37 |
-| `STRING` | `AB` | est. 0 to 256 Characters |
-
 #### Applesoft Basic
 
 | Type | Variable Name Structure | Values |
@@ -839,7 +762,7 @@ names and therefore more variables:
 
 #### `IF` Statement
 Different to GW-Basic, this interpreter allows the use of a command block following the `IF` command. In GW-Basic, 
-the `IF` command is followed by a single command, followed by a potential `ELSE` command. GD-Basic allows a block of 
+the `IF` command is followed by a single command, followed by a potential `ELSE` command. `GD-BASIC` allows a block of 
 commands, with the blocks terminating in an `ELSE` and `END-IF` statement.
 
 ## Known Issues and Workarounds

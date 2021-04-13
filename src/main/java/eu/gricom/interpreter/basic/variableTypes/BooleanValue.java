@@ -192,6 +192,11 @@ public class BooleanValue implements Value {
     }
 
     @Override
+    public final Value modulo(final Value oValue) throws SyntaxErrorException {
+        throw new SyntaxErrorException(oValue.content() + " '%' for boolean expression is not defined");
+    }
+
+    @Override
     public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
         throw new SyntaxErrorException(oValue.content() + " '<<' for boolean expression is not defined");
     }
