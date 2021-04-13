@@ -624,7 +624,7 @@ public class BasicParser implements Parser {
                     + oToken.getText() + "' [" + oToken.getLine() + "]");
             _iPosition++;
             Expression oRight = atomic();
-            oExpression = new OperatorExpression(oExpression, oToken.getText(), oRight);
+            oExpression = new OperatorExpression(oExpression, oToken.getType(), oRight);
             oToken = getToken(0);
         }
 
@@ -739,14 +739,6 @@ public class BasicParser implements Parser {
                         + getToken(0).getLine() + ">");
 
         }
-
-        // The contents of a parenthesized expression can be any expression. This lets us "restart" the precedence cascade
-        // so that you can have a lower precedence expression inside the parentheses.
-        //if (matchNextToken(BasicTokenType.LEFT_PAREN)) {
-        //    Expression expression = expression();
-        //    consumeToken(BasicTokenType.RIGHT_PAREN);
-        //    return (expression);
-        //}
     }
 
     /**
@@ -843,15 +835,5 @@ public class BasicParser implements Parser {
 
         // get the requested token
         return _aoTokens.get(_iPosition + iOffset);
-    }
-
-    /**
-     * Helper Function for JUnit.
-     *
-     * @param iPosition artificial set iPosition
-     */
-    public final void setPosition(final int iPosition) {
-
-        _iPosition = iPosition;
     }
 }

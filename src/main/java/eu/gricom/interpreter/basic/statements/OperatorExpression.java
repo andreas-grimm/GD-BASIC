@@ -58,45 +58,89 @@ public class OperatorExpression implements Expression {
         Value oLeftValue = _oLeft.evaluate();
         Value oRightValue = _oRight.evaluate();
 
-        switch (_strOperator) {
-            // needed for Jasic
-            case "=":
-                return oLeftValue.equals(oRightValue);
+        if (_strOperator != null) { // needed for Jasic
+            switch (_strOperator) {
+                case "=":
+                    return oLeftValue.equals(oRightValue);
 
-            case "+":
+                case "+":
+                    return oLeftValue.plus(oRightValue);
+                case "-":
+                    return oLeftValue.minus(oRightValue);
+                case "*":
+                    return oLeftValue.multiply(oRightValue);
+                case "/":
+                    return oLeftValue.divide(oRightValue);
+                case "^":
+                    return oLeftValue.power(oRightValue);
+
+                case "&":
+                case "AND":
+                    return oLeftValue.and(oRightValue);
+                case "|":
+                case "OR":
+                    return oLeftValue.or(oRightValue);
+
+                case "==":
+                    return oLeftValue.equals(oRightValue);
+                case "!=":
+                    return oLeftValue.notEqual(oRightValue);
+                case "<":
+                    return oLeftValue.smallerThan(oRightValue);
+                case "<=":
+                    return oLeftValue.smallerEqualThan(oRightValue);
+                case ">":
+                    return oLeftValue.largerThan(oRightValue);
+                case ">=":
+                    return oLeftValue.largerEqualThan(oRightValue);
+
+                case "%":
+                    return oLeftValue.modulo(oRightValue);
+                case ">>":
+                    return oLeftValue.shiftRight(oRightValue);
+                case "<<":
+                    return oLeftValue.shiftLeft(oRightValue);
+
+                default:
+                    throw new SyntaxErrorException("Unknown operator: " + _strOperator);
+            }
+        }
+
+        switch (_oOperator) {
+            case PLUS:
                 return oLeftValue.plus(oRightValue);
-            case "-":
+            case MINUS:
                 return oLeftValue.minus(oRightValue);
-            case "*":
+            case MULTIPLY:
                 return oLeftValue.multiply(oRightValue);
-            case "/":
+            case DIVIDE:
                 return oLeftValue.divide(oRightValue);
-            case "^":
+            case POWER:
                 return oLeftValue.power(oRightValue);
 
-            case "&":
-            case "AND":
+            case AND:
                 return oLeftValue.and(oRightValue);
-            case "|":
-            case "OR":
+            case OR:
                 return oLeftValue.or(oRightValue);
 
-            case "==":
+            case COMPARE_EQUAL:
                 return oLeftValue.equals(oRightValue);
-            case "!=":
+            case COMPARE_NOT_EQUAL:
                 return oLeftValue.notEqual(oRightValue);
-            case "<":
+            case SMALLER:
                 return oLeftValue.smallerThan(oRightValue);
-            case "<=":
+            case SMALLER_EQUAL:
                 return oLeftValue.smallerEqualThan(oRightValue);
-            case ">":
+            case GREATER:
                 return oLeftValue.largerThan(oRightValue);
-            case ">=":
+            case GREATER_EQUAL:
                 return oLeftValue.largerEqualThan(oRightValue);
 
-            case ">>":
+            case MODULO:
+                return oLeftValue.modulo(oRightValue);
+            case SHIFT_RIGHT:
                 return oLeftValue.shiftRight(oRightValue);
-            case "<<":
+            case SHIFT_LEFT:
                 return oLeftValue.shiftLeft(oRightValue);
 
             default:
@@ -140,7 +184,7 @@ public class OperatorExpression implements Expression {
      * @return - readable string with the name and the value of the assignment
      */
     public final String content() {
-        return _oLeft.content() + " " + _strOperator + " " + _oRight.content();
+        return _oLeft.content() + " " + _oOperator + " " + _oRight.content();
 
     }
 }

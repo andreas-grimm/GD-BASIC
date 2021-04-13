@@ -24,6 +24,13 @@
 410 A$ = "Start":B$ = "End"
 420 PRINT A$, " ... ", B$
 430 PRINT "Test done..."
+500 PRINT "Testing new maths functions..."
+510 A% = 3 % 2
+520 PRINT "3 mod 2 = ", A%
+530 A% = 4 : B% = 1 : A% = A% << B%
+540 PRINT "4 << 1 = ", A%
+550 A% = 4 : B% = 1 : A% = A% >> B%
+560 PRINT "4 >> 1 = ", A%
 800 @PRAGMA( "Trace" = "off" )
 810 DATA 123, "Test"
 820 DATA "Test 2", 456
