@@ -280,6 +280,17 @@ interpretion process:
 - parsing,
 - executing...
 
+### Macro Manager Package
+
+*NOTE:* All coding style books agree that the use of macros is an outdated paradigm and is not supporting structured 
+programming - or any other modern coding paradigms. The reason that this interpreter does support this concept is 
+purely to be compatible with legacy Basic programs.
+
+#### `MacroProcessor.java`
+This class is changing the source code to identify macros and replace the references of the macro with the expanded 
+code. As macros are not procedure calls, but replacement of code before processing, this package is physically 
+modifying the loaded code.
+
 ### Tokenizer Package
 ![Tokenizer Class Structure](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/tokenizer.png)
 

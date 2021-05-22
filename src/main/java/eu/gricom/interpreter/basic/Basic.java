@@ -6,11 +6,11 @@ import eu.gricom.interpreter.basic.helper.FileHandler;
 import eu.gricom.interpreter.basic.helper.Logger;
 import eu.gricom.interpreter.basic.helper.Printer;
 import eu.gricom.interpreter.basic.helper.Trace;
+import eu.gricom.interpreter.basic.macroManager.MacroProcessor;
+import eu.gricom.interpreter.basic.memoryManager.Program;
 import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
 import eu.gricom.interpreter.basic.parser.BasicParser;
-import eu.gricom.interpreter.basic.parser.Parser;
 import eu.gricom.interpreter.basic.memoryManager.LineNumberXRef;
-import eu.gricom.interpreter.basic.statements.Statement;
 import eu.gricom.interpreter.basic.tokenizer.BasicLexer;
 import eu.gricom.interpreter.basic.tokenizer.Lexer;
 import eu.gricom.interpreter.basic.tokenizer.Token;
@@ -36,6 +36,7 @@ import java.util.Locale;
  */
 @SuppressWarnings("SpellCheckingInspection")
 public class Basic {
+    private Program _oProgram = new Program();
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private final transient LineNumberXRef _oLineNumbers = new LineNumberXRef();
 
@@ -55,23 +56,28 @@ public class Basic {
      *
      * In an interpreter that didn't mix the interpretation logic in with the AST node classes, this would be doing a lot more work.
      *
-     * @param strProgram A string containing the source code of a .bas script to interpret.
+     * @param oProgram The program object, containing the source code of a .bas script to interpret.
      */
-    public final void interpret(final String strProgram) {
+    public final void interpret(final Program oProgram) {
         ProgramPointer oProgramPointer = new ProgramPointer();
-        List<Statement> aoPreRunStatements = null;
-        List<Statement> aoStatements = null;
+
         Trace oTrace = new Trace(false);
+
+        // Find and process Macros.
+        _oLogger.info("Processing macros...");
+        MacroProcessor oMacroProcessor = new MacroProcessor();
+
+        _oProgram.setProgram(oMacroProcessor.process(oProgram.getProgram()));
+
 
         // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
         _oLogger.info("Starting tokenization...");
+        _oProgram = oProgram;
 
         Lexer oTokenizer = new BasicLexer();
 
-        List<Token> aoTokens = null;
-
         try {
-            aoTokens = oTokenizer.tokenize(strProgram);
+            _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
         } catch (SyntaxErrorException e) {
             System.out.println(e.getMessage());
@@ -79,11 +85,11 @@ public class Basic {
         }
 
         int iCounter = 0;
-        for (Token oToken: aoTokens) {
+        for (Token oToken: _oProgram.getTokens()) {
             if (oToken.getType().toString().contains("LINE")) {
-                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: []");
+                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType() + "]: []");
             } else {
-                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType().toString() + "]: ["
+                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType() + "]: ["
                         + oToken.getText() + "]");
             }
             iCounter++;
@@ -92,10 +98,9 @@ public class Basic {
         // Parse.
         _oLogger.info("Starting parsing...");
         try {
-            Parser oParser = new BasicParser(aoTokens);
-            aoPreRunStatements = ((BasicParser) oParser).parsePreRun();
-
-            aoStatements = oParser.parse();
+            BasicParser oParser = new BasicParser(oProgram.getTokens());
+            _oProgram.setPreRunStatements(oParser.parsePreRun());
+            _oProgram.setStatements(oParser.parse());
         } catch (SyntaxErrorException eSyntaxError) {
             eSyntaxError.printStackTrace();
         }
@@ -103,16 +108,17 @@ public class Basic {
         // Run.
         _oLogger.info("Pre-load environment...");
         try {
-            if (aoPreRunStatements != null) {
+            if (_oProgram.getPreRunStatements() != null) {
                 oProgramPointer.setCurrentStatement(0);
-                while (oProgramPointer.getCurrentStatement() < aoPreRunStatements.size()) {
+                while (oProgramPointer.getCurrentStatement() < _oProgram.getPreRunStatements().size()) {
                     // as long as we have not reached the end of the code
                     int iThisStatement = oProgramPointer.getCurrentStatement();
 
                     oProgramPointer.calcNextStatement();
-                    _oLogger.debug("PreRun Statement # <" + iThisStatement + ">: [" + aoPreRunStatements.get(iThisStatement).content() + "]");
+                    _oLogger.debug("PreRun Statement # <" + iThisStatement + ">: ["
+                                           + _oProgram.getPreRunStatements().get(iThisStatement).content() + "]");
 
-                    aoPreRunStatements.get(iThisStatement).execute();
+                    _oProgram.getPreRunStatements().get(iThisStatement).execute();
                 }
             } else {
                 _oLogger.error("Parsing delivered empty program");
@@ -124,25 +130,25 @@ public class Basic {
 
         _oLogger.info("Starting execution...");
         try {
-            if (aoStatements != null) {
-                int iSourceCodeLineNumber = -1;
+            if (_oProgram.getStatements() != null) {
+                int iSourceCodeLineNumber;
                 oProgramPointer.setCurrentStatement(0);
 
-                while (oProgramPointer.getCurrentStatement() < aoStatements.size()) {
+                while (oProgramPointer.getCurrentStatement() < _oProgram.getStatements().size()) {
                     // as long as we have not reached the end of the code
                     int iThisStatement = oProgramPointer.getCurrentStatement();
 
-                    iSourceCodeLineNumber = _oLineNumbers.getLineNumberFromToken(aoStatements.get(iThisStatement).getTokenNumber());
+                    iSourceCodeLineNumber = _oLineNumbers.getLineNumberFromToken(_oProgram.getStatements().get(iThisStatement).getTokenNumber());
 
                     oProgramPointer.calcNextStatement();
 
                     _oLogger.debug(
-                            "Basic Source Code Line [" + iSourceCodeLineNumber + "] Statement [ " + aoStatements.get(
-                                    iThisStatement).getTokenNumber() + "]: " + aoStatements.get(
-                                    iThisStatement).content());
+                            "Basic Source Code Line [" + iSourceCodeLineNumber + "] Statement [ "
+                                    + _oProgram.getStatements().get(iThisStatement).getTokenNumber() + "]: "
+                                    + _oProgram.getStatements().get(iThisStatement).content());
                     oTrace.trace(iSourceCodeLineNumber);
 
-                    aoStatements.get(iThisStatement).execute();
+                    _oProgram.getStatements().get(iThisStatement).execute();
                 }
             } else {
                 _oLogger.error("Parsing delivered empty program");
@@ -166,6 +172,7 @@ public class Basic {
      */
     public static void main(final String[] args) {
         Logger oLogger = new Logger("main");
+        Program oProgram = new Program();
         oLogger.setLogLevel("");
 
         CommandLine oCommandLine = null;
@@ -220,7 +227,7 @@ public class Basic {
             oLogger.debug("Display help message...");
 
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("java -jar BASIC-<build-name>.jar -i <filename.bas>", options);
+            formatter.printHelp("java -jar BASIC-<build-name>.jar <filename.bas>", options);
         }
 
         List<String> astrArguments = oCommandLine.getArgList();
@@ -237,12 +244,12 @@ public class Basic {
 
             // Read the file.
             oLogger.info("Read file: " + strArgument + "...");
-            String strContents = FileHandler.readFile(strArgument);
+            oProgram.load(FileHandler.readFile(strArgument));
 
             // Run it.
             oLogger.info("Run the interpreter...");
             Basic oBasic = new Basic();
-            oBasic.interpret(strContents);
+            oBasic.interpret(oProgram);
         }
     }
 }

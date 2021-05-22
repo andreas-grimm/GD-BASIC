@@ -699,6 +699,11 @@ The `SYSTEM` executes a command on OS level. The function works is called with t
   
 - Program: contains the command line to be executed, as a `String` value.
 
+## Macro Processing
+
+#### `DEF` Command
+
+
 ## Depreciated Basic Commands and Functions
 
 The following standard Basic commands are depreciated and should not be used.

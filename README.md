@@ -128,6 +128,7 @@ Implemented Backlog Items:
     [BASIC-110][BASIC-117][BASIC-120][BASIC-127]
 
 0.0.7: Tagged as Macro Release
+* Added the framework to handle macro constructs
 
 Implemented Backlog Items:
 
