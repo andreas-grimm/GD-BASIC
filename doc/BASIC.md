@@ -701,8 +701,14 @@ The `SYSTEM` executes a command on OS level. The function works is called with t
 
 ## Macro Processing
 
-#### `DEF` Command
+The macro processing is a two pass process: in the first pass, the macro processor class runs the lexer over the 
+source code to find the `DEF` command. The actual macro is then added into the list of the macros. In the second 
+pass, the macro processor replaces every occurrence of the macro in the code with the function defined in the `DEF` 
+command.
 
+#### `DEF` Command
+The `DEF` command is used to define a macro. The macro processor is looking for the command and takes the left over 
+of the command and processes it as a macro. This is happening during the first pass of the program.
 
 ## Depreciated Basic Commands and Functions
 
@@ -762,6 +768,12 @@ single digit. This provides for 286 possible variable names.
 | `STRING` | `AB$` | 0 to 256 Characters |
 
 ### Detailed Changes To The Existing Standards
+
+### Differences any reviewed Basic Implementations
+
+#### `DEF` Statement
+GD-Basic does not need a macro defined before used in the code. As GD-Basic has a macro processor that runs 
+multi-pass through the source code, the macro definition can be in the source code after the macro is referenced.
 
 ### Differences to GW-Basic
 

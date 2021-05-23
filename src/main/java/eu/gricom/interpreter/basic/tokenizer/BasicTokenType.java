@@ -19,7 +19,7 @@ public enum BasicTokenType {
     CONT,
     COS,
     DATA,
-    DEFFN,
+    DEF,
     DIM,
     DO,
     ELSE,

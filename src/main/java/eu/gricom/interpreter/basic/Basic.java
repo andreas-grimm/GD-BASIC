@@ -65,14 +65,18 @@ public class Basic {
 
         // Find and process Macros.
         _oLogger.info("Processing macros...");
+        _oProgram = oProgram;
         MacroProcessor oMacroProcessor = new MacroProcessor();
 
-        _oProgram.setProgram(oMacroProcessor.process(oProgram.getProgram()));
-
+        try {
+            _oProgram.setProgram(oMacroProcessor.process(oProgram.getProgram()));
+        } catch (SyntaxErrorException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
 
         // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
         _oLogger.info("Starting tokenization...");
-        _oProgram = oProgram;
 
         Lexer oTokenizer = new BasicLexer();
 
@@ -80,8 +84,10 @@ public class Basic {
             _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
         } catch (SyntaxErrorException e) {
+            // This syntax error has to generated due to the use of the macro. Original code errors in the lexer are
+            // discovered in the previous step.
             System.out.println(e.getMessage());
-            System.exit(0);
+            System.exit(1);
         }
 
         int iCounter = 0;
