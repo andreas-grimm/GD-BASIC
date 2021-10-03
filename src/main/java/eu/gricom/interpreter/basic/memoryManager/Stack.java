@@ -8,10 +8,9 @@ import eu.gricom.interpreter.basic.variableTypes.Value;
  * <p>
  * Description:
  * <p>
- * This class is implements the local used stack. The stack will be required at a later version, when the GOSUB and
- * FOR/NEXT commands will be added.
+ * This class is implements the local used stack.
  * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020 by Andreas Grimm, Den Haag, The Netherlands
  */
 public class Stack {
     private static java.util.Stack _oStack = null;
@@ -39,7 +38,7 @@ public class Stack {
 
     @SuppressWarnings("unchecked")
     /**
-     * Reoves the top Value typed element from the Stack
+     * Returns the top Value typed element from the Stack
      *
      * @return Value retrieved from the stack
      * @throws EmptyStackException the stack is empty while a pop method is called

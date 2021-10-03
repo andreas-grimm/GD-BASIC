@@ -1,0 +1,72 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "GD Basic",
+	"patterns": [
+		{
+			"include": "#lineNumbers"
+		},
+		{
+			"include": "#functions"
+		},
+		{
+			"include": "#constants"
+		}
+	],
+	"repository": {	
+		"lineNumbers": {
+			"patterns": [
+				{
+					"name": "comment.line.number-sign",
+					"match": "^(\\d+)"
+				},
+				{
+					"name": "comment.line",
+					"match": "(REM.+)"
+				},
+				{
+					"name": "comment.line.number-sign",
+					"match": "\\b[GOTO|GOSUB|THEN]\\w(\\d+)"
+				}
+			]
+		},
+		"functions": {
+			"patterns": [
+				{
+					"name": "support.function",
+					"match": "\\b(ABS|ASC|ATN|CALL|CDBL|CHR|CINT|CLEAN|CLOSE|CLS|CMD|CONT|COS|DATA|DEF|DO|EOF|EOL|ERL|ERR|EXIT|EXP|FCLOSE|FOPEN|FPRINT|FREAD|FREE|INSTR|INPUT|INT|LEFT|LEN|LENGTH|LET|LOG|LOG10|MEM|MID|%|OPEN|PRINT|RANDOM|READ|REM|RIGHT|RND|SIN|SQR|STRING|STR|SYSTEM|TAB|TAN|TIME|VAL|WRITE)\\b"
+				}, 
+				{
+					"name": "keyword.control",
+					"match": "\\b(AND|BYE|END|END-IF|END-WHILE|ELSE|FOR|GOSUB|GOTO|IF|NEW|NEXT|NOT|ON|OR|RETURN|STEP|STOP|THEN|TO|UNTIL|WHILE)\\b"
+				},
+				{
+					"name": "storage.type",
+					"match": "\\b(DIM)\\b"
+				}
+			]
+		},
+		"constants": 
+		{
+			"patterns": [
+				{
+					"name": "string.quoted",
+					"begin": "\"",
+					"end": "\"",
+					"patterns": [
+						{
+							"name": "constant.character.escape.basic",
+							"match": "\\\\."
+						}
+					]
+				},
+				{
+					"patterns": [{
+						"name": "constant.numeric",
+						"match": "\\d+"
+					}]
+				}
+			]
+		}
+	},
+	"scopeName": "source.basic"
+}

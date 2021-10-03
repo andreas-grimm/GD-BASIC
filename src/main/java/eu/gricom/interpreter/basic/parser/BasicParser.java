@@ -221,6 +221,20 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
+                // DEF Token: Ignored as this part of the code is processed in the MacroProcessor.
+                case DEF:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [DEF] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    aoStatements.add(new RemStatement(_iPosition));
+
+                    int iMoveTo = 1;
+                    while (getToken(iMoveTo).getType() != BasicTokenType.STRING) {
+                        iMoveTo++;
+                    }
+                    _iPosition = _iPosition + iMoveTo;
+                    _iPosition++;
+                    break;
+
                 // DO Token: Define the anchor point for the DO - UNTIL loop
                 case DO:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [DO] ");
@@ -462,7 +476,6 @@ public class BasicParser implements Parser {
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [READ] ");
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     List<String> astrVariables = new ArrayList<>();
-                    String strVariable;
                     _iPosition++;
 
                     Token oReadToken = getToken(0);

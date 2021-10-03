@@ -18,8 +18,8 @@ import java.util.Map;
  */
 public class LineNumberXRef {
     private final Logger _oLogger = new Logger(this.getClass().getName());
-    private static Map<Integer, Integer> _aoLineNumbers = new HashMap<>();       // Key: Token, Basic Source Line: Value
-    private static Map<Integer, Integer> _aoStatementNumbers = new HashMap<>();
+    private final static Map<Integer, Integer> _aoLineNumbers = new HashMap<>(); // Key: Token, Basic Source Line: Value
+    private final static Map<Integer, Integer> _aoStatementNumbers = new HashMap<>();
 
     /**
      * add a line number destination in the memory management.
