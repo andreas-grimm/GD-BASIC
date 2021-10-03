@@ -1,1 +1,1 @@
-java -jar build/libs/BASIC-0.1.0-java8.jar -v"debug|info" -i src/test/resources/test_basic_Q2_3_dev.bas
+java -jar build/libs/BASIC-0.1.0-java8.jar -v"debug|info" src/test/resources/test_basic_Q3_dev.bas

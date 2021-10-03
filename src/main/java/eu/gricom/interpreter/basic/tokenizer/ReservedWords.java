@@ -24,17 +24,17 @@ public final class ReservedWords {
     private static String[] _astrReservedWords = {
             "@PRAGMA", "ABS", "AND", "ASC", "ATN",
             "CALL", "CDBL", "CHR", "CINT", "CLEAN", "CLOSE", "CLS", "CMD", "CONT", "COS",
-            "DATA", "DEFFN", "DIM", "DO",
+            "DATA", "DEF", "DIM", "DO",
             "ELSE", "END", "END-IF", "END-WHILE", "EOF", "EOL", "ERL", "ERR", "EXIT", "EXP",
-            "FOR", "FREE",
+            "FCLOSE", "FOPEN", "FOR", "FPRINT", "FREAD", "FREE",
             "GOSUB", "GOTO",
             "IF", "INSTR", "INPUT",
             "LEFT", "LEN", "LENGTH", "LET", "LOG", "LOG10",
-            "MEM", "MID",
+            "MEM", "MID", "%",
             "NEXT", "NOT",
             "ON", "OPEN", "OR",
             "PRINT",
-            "RANDOM", "READ", "REM", "%", "RETURN", "RIGHT$", "RND",
+            "RANDOM", "READ", "REM", "RETURN", "RIGHT$", "RND",
             "SIN", "SQR", "STEP", "STOP", "STRING", "STR", "SYSTEM",
             "TAB", "TAN", "THEN", "TIME", "TO",
             "UNTIL",
@@ -42,7 +42,8 @@ public final class ReservedWords {
             "WHILE", "WRITE",
             "&&", "\\+", "\\-", "\\*", "\\/", ":",
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
-            "\\(", "\\)", "\\'", "\\;", "\\,", "||", "\\?"
+            "\\(", "\\)", "\\'", "\\;", "\\,", "||", "\\?",
+            ">>", "<<"
     };
 
     private static BasicTokenType[] _aeTokenTypes = {
@@ -50,18 +51,19 @@ public final class ReservedWords {
         BasicTokenType.ABS, BasicTokenType.AND, BasicTokenType.ASC, BasicTokenType.ATN,
         BasicTokenType.CALL, BasicTokenType.CDBL, BasicTokenType.CHR, BasicTokenType.CINT, BasicTokenType.CLEAN,
             BasicTokenType.CLOSE, BasicTokenType.CLS, BasicTokenType.CMD, BasicTokenType.CONT, BasicTokenType.COS,
-        BasicTokenType.DATA, BasicTokenType.DEFFN, BasicTokenType.DIM, BasicTokenType.DO,
+        BasicTokenType.DATA, BasicTokenType.DEF, BasicTokenType.DIM, BasicTokenType.DO,
         BasicTokenType.ELSE, BasicTokenType.END, BasicTokenType.ENDIF, BasicTokenType.ENDWHILE, BasicTokenType.EOF, BasicTokenType.EOL,
             BasicTokenType.ERL, BasicTokenType.ERR, BasicTokenType.EXIT, BasicTokenType.EXP,
-        BasicTokenType.FOR, BasicTokenType.FREE,
+        BasicTokenType.FCLOSE, BasicTokenType.FOPEN, BasicTokenType.FOR, BasicTokenType.FPRINT, BasicTokenType.FREAD,
+            BasicTokenType.FREE,
         BasicTokenType.GOSUB, BasicTokenType.GOTO,
         BasicTokenType.IF, BasicTokenType.INSTR, BasicTokenType.INPUT,
         BasicTokenType.LEFT, BasicTokenType.LEN, BasicTokenType.LENGTH, BasicTokenType.LET, BasicTokenType.LOG, BasicTokenType.LOG10,
-        BasicTokenType.MEM, BasicTokenType.MID,
-        BasicTokenType.NEXT, BasicTokenType.NOT,
+        BasicTokenType.MEM, BasicTokenType.MID, BasicTokenType.MODULO,
+            BasicTokenType.NEXT, BasicTokenType.NOT,
         BasicTokenType.ON, BasicTokenType.OPEN, BasicTokenType.OR,
         BasicTokenType.PRINT,
-        BasicTokenType.RANDOM, BasicTokenType.READ, BasicTokenType.REM, BasicTokenType.REMAINDER, BasicTokenType.RETURN,
+        BasicTokenType.RANDOM, BasicTokenType.READ, BasicTokenType.REM, BasicTokenType.RETURN,
             BasicTokenType.RIGHT, BasicTokenType.RND,
         BasicTokenType.SIN, BasicTokenType.SQR, BasicTokenType.STEP, BasicTokenType.STOP, BasicTokenType.TOSTRING, BasicTokenType.STR,
             BasicTokenType.SYSTEM,
@@ -74,7 +76,8 @@ public final class ReservedWords {
         BasicTokenType.GREATER, BasicTokenType.GREATER_EQUAL, BasicTokenType.SMALLER, BasicTokenType.SMALLER_EQUAL, BasicTokenType.ASSIGN_EQUAL,
             BasicTokenType.PASCAL_ASSIGN_EQUAL, BasicTokenType.COMPARE_EQUAL, BasicTokenType.COMPARE_NOT_EQUAL, BasicTokenType.POWER,
         BasicTokenType.LEFT_PAREN, BasicTokenType.RIGHT_PAREN, BasicTokenType.COMMENT, BasicTokenType.SEMICOLON,
-            BasicTokenType.COMMA, BasicTokenType.OR, BasicTokenType.PRINT};
+            BasicTokenType.COMMA, BasicTokenType.OR, BasicTokenType.PRINT,
+        BasicTokenType.SHIFT_RIGHT, BasicTokenType.SHIFT_LEFT};
 
     /**
      * getIndex returns the index of the token based on an entered token type.

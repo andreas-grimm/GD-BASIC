@@ -142,6 +142,22 @@ public class RealValue implements Value {
     }
 
     @Override
+    public final Value modulo(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        RealValue oReturn;
+
+        if (oValue instanceof RealValue) {
+            if (oValue.toReal() != 0) {
+                oReturn = new RealValue(_fValue % oValue.toReal());
+            } else {
+                throw new DivideByZeroException(this.toReal() + "%" + oValue.toReal() + " is a division by zero");
+            }
+            return oReturn;
+        }
+
+        throw new SyntaxErrorException(oValue.content() + " is not a number");
+    }
+
+    @Override
     public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
         throw new SyntaxErrorException(oValue.content() + " '<<' for real type variables is not defined");
     }

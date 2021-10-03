@@ -1,0 +1,39 @@
+{
+    "name": "atari-basic",
+    "displayName": "atari-basic",
+    "description": "Landuage supprot for Atari Basic",
+    "publisher": "MarcinJozwikowski",
+    "repository": {
+        "url": "https://github.com/marcin-jozwikowski/atari-basic-vsc-extension.git",
+        "type": "git"
+    },
+    "version": "0.1.1",
+    "engines": {
+        "vscode": "^1.51.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "basic",
+                "aliases": [
+                    "Atari Basic",
+                    "basic"
+                ],
+                "extensions": [
+                    ".bas"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "basic",
+                "scopeName": "source.basic",
+                "path": "./syntaxes/basic.tmLanguage.json"
+            }
+        ]
+    }
+}

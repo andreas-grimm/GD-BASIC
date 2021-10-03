@@ -19,7 +19,7 @@ public enum BasicTokenType {
     CONT,
     COS,
     DATA,
-    DEFFN,
+    DEF,
     DIM,
     DO,
     ELSE,
@@ -33,7 +33,11 @@ public enum BasicTokenType {
     ERR,
     EXIT,
     EXP,
+    FCLOSE,
+    FOPEN,
     FOR,
+    FPRINT,
+    FREAD,
     FREE,
     GOSUB,
     GOTO,
@@ -48,6 +52,7 @@ public enum BasicTokenType {
     LOG10,
     MEM,
     MID, // token for the MID$ function
+    MODULO, // token for the % operation
     NEXT,
     NOT,
     ON,
@@ -58,7 +63,6 @@ public enum BasicTokenType {
     RANDOM,
     READ,
     REM,
-    REMAINDER, // token for the % operation
     RETURN,
     RIGHT, //token for the RIGHT$ function
     RND,

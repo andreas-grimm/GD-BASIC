@@ -179,6 +179,20 @@ public class IntegerValueTest {
     }
 
     @Test
+    public void testModulo() {
+        try {
+        IntegerValue oFirstValue = new IntegerValue(3);
+        IntegerValue oSecondValue = new IntegerValue(2);
+
+        IntegerValue oResultValue = (IntegerValue) oFirstValue.modulo(oSecondValue);
+        assertTrue(oResultValue.toInt() == 1);
+
+        } catch (SyntaxErrorException | DivideByZeroException e) {
+            fail();
+        }
+    }
+
+    @Test
     public void testPower() {
         try {
             IntegerValue oFirstValue = new IntegerValue(2);
