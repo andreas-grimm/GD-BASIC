@@ -5,15 +5,22 @@ This is the ReadMe File of the Project:
 &copy; 2020 - Andreas Grimm, Use according to the included licence file (LICENSE.md)
 
 ---
+References
 
 Based on the [JASIC project of Bob Nystrom](https://github.com/munificent/jasic)
+
+The Visual Studio Code (VSC) extension in  /etc/VSCExtension is based on the [Atari VSC Extension of Marcin 
+Jozwikowski](https://github.com/marcin-jozwikowski/atari-basic-vsc-extension)
+
+Both projects provided the logical starting point, the actual software artefacts are not copies of the original 
+projects. 
 
 ---
 
 Project Planning and Control
 
 This project is using Jira to manage progress, but also to log bugs and plan new features. The Jira repository for the Project is here:
-[Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC)
+[Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC/boards/3)
 
 ---
 Build Process:
@@ -128,11 +135,13 @@ Implemented Backlog Items:
     [BASIC-110][BASIC-117][BASIC-120][BASIC-127]
 
 0.0.7: Tagged as Macro Release
-* Added the framework to handle macro constructs
+* Verified that the JASIC code has been completely removed from the project
+* Added the framework to handle macro constructs (`DEF FN`)
+* Added the code highlighting for [Visual Studio Code (VSC)](https://code.visualstudio.com/) 
 
 Implemented Backlog Items:
 
-    [BASIC-121]
+    [BASIC-55][BASIC-121][BASIC-133]
 
 Under Development:
 

@@ -37,8 +37,12 @@ public class MacroList {
     }
 
     public String getFunction(String strParameterList, String strMacroName) {
-        Vector<String> vstrParametersFromSource = toVector('[' + strParameterList + ']');
+        String strWorkParameterList = strParameterList;
+        Vector<String> vstrParametersFromSource = new Vector<>();
         Vector<String> vstrParametersFromDEF = new Vector<>();
+
+        // Build the parameter list
+        vstrParametersFromSource = toVector(strParameterList);
 
         _oLogger.debug("Macros found: " + strMacroName);
         _oLogger.debug("Parameters: " + vstrParametersFromSource.size());
@@ -90,16 +94,24 @@ public class MacroList {
         Vector<String> vstrVectorFromString = new Vector();
         String strValue = new String();
 
-        char[] sChars = strStringCodedVector.toCharArray();
-        for(int iCounter = 0; iCounter < strStringCodedVector.length(); iCounter++) {
-            if (sChars[iCounter] == '[' || sChars[iCounter] == ' ') {
-                // ignore those chars
-            } else if (sChars[iCounter] == ',' || sChars[iCounter] == ']') {
-                vstrVectorFromString.add(strValue);
-            } else {
-                strValue += String.valueOf(sChars[iCounter]);
-            }
+        if (strStringCodedVector.indexOf("[") >= 0) {
+            strStringCodedVector = strStringCodedVector.substring(strStringCodedVector.indexOf("[") + 1);
         }
+
+        if (strStringCodedVector.indexOf("]") >= 0) {
+            strStringCodedVector = strStringCodedVector.substring(0, strStringCodedVector.indexOf("]"));
+        }
+
+        int iCommaFound = strStringCodedVector.indexOf(",");
+
+        while (iCommaFound > 0) {
+            String strFirstParameter = strStringCodedVector.substring(0, iCommaFound);
+            strStringCodedVector = strStringCodedVector.substring(iCommaFound + 1).trim();
+            vstrVectorFromString.add(strFirstParameter);
+            iCommaFound = strStringCodedVector.indexOf(",");
+        }
+
+        vstrVectorFromString.add(strStringCodedVector);
 
         return vstrVectorFromString;
     }

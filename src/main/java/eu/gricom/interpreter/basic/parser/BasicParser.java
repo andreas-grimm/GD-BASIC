@@ -476,7 +476,6 @@ public class BasicParser implements Parser {
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [READ] ");
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     List<String> astrVariables = new ArrayList<>();
-                    String strVariable;
                     _iPosition++;
 
                     Token oReadToken = getToken(0);

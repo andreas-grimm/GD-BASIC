@@ -1,6 +1,7 @@
 This document describes the features and capabilities of the BASIC version implemented in this interpreter. The version is 
 very similar to the original BASIC interpreters and additional functions are added to provide even more of the original functionality.
-If the functionality of the interpreter does not match the documentation, refer to the error reporting processing in Github.
+If the functionality of the interpreter does not match the documentation, refer to the error reporting processing in 
+GitHub.
 Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
 GDBasic language syntax
@@ -18,7 +19,8 @@ separate component.
 `GD-BASIC` is also not a compiler as it does not generate machine code, but `JAVA` objects that are executed in 
 sequence. At this time of the work that saves the translation into
 platform dependent code and keeps the platform migrate-able - it shall run on Windows, Linux, and Mac OSX. The change to low level machine code might happen at a later stage.
-It is nit planned, as the performance of a standard laptop or even Raspberry Pi is sufficient to outperform any classical BASIC computer.
+It is not planned, as the performance of a standard laptop or even Raspberry Pi is sufficient to outperform any 
+classical BASIC computer.
 
 The focus at this time of the work is to provide a function complete, extended `JAVA` based interpreter that can work standalone or can be embedded in `JAVA` programs, following
 the example of `JRUBY` for Ruby or `JYTHON` for Python.
@@ -138,12 +140,12 @@ Booleans Variables have two possible results: True or False.
 | A + non A = 1 | A (non)A = 0 |
 
 #### Strings
-Strings are lists of characters. In `GD-BASIC`, even single characters are representated as strings. To mark the border of
+Strings are lists of characters. In `GD-BASIC`, even single characters are represented as strings. To mark the border of
 strings, each string is surrounded by quotation marks (`"`).
 
 Allowed operations for strings are:
 - `==` - compares two strings
-- `+` - concatinates two strings
+- `+` - concatenates two strings
 - `[]` - retrieves a single character in a string:
 
       10 A$ = "Test"
@@ -189,8 +191,12 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `ERR` | reserved | |
 | `EXIT` | planned | |
 | `EXP` | implemented | |
+| `FCLOSE` | planned | |
+| `FOPEN` | planned | |
 | `FOR` | implemented | |
-| `FRE` | reserved | |
+| `FREAD` | planned | |
+| `FREE` | reserved | |
+| `FPRINT` | planned | |
 | `GOSUB` | implemented | |
 | `GOTO` | implemented | implemented |
 | `IF` | implemented | implemented |
@@ -299,7 +305,8 @@ Those features will be implemented potentially in the Q2 release.
 
 This section of the BASIC programming guide describes the three different loops `GD-BASIC` provides:
 - the `WHILE`-loop, which is a check-first style loop: The condition for the loop is checked before the loop is executed,
-- the `DO`-loop, which is a execute-first loop: The loop body is executed before the repetition of the loop is verified, and
+- the `DO`-loop, which is an execute-first loop: The loop body is executed before the repetition of the loop is 
+  verified, and
 - the `FOR`-loop, which is a counting loop: the loop counts a value from a start to an end in certain step sizes.
 
 Only the `FOR`-loop can be found in standard BASIC literature, the `WHILE` and the `DO` loops are extensions implemented
@@ -327,7 +334,7 @@ statement.
 
 ###### `UNTIL` Command
 The `UNTIL` command closes the `DO` loop. It contains the exit condition, which needs to be true in order to lease the loop. If the
-condition is false, the loop will return back to the `DO` command and will continue from there.
+condition is false, the loop will return to the `DO` command and will continue from there.
 
 ###### References
 This loop is known in other programming languages or dialects as:
@@ -335,7 +342,8 @@ This loop is known in other programming languages or dialects as:
 - `DO - LOOP UNTIL` - loop
 
 ##### `FOR` Command
-The FOR loop is a command that counts a variable from a start value (in the inital expression) to an end value (after the `TO` part of the command),
+The FOR loop is a command that counts a variable from a start value (in the initial expression) to an end value 
+(after the `TO` part of the command),
 using increments defined by the `STEP` command.
 Between the increment number after the step and the `NEXT` command, which triggers the next iteration, the developer can include one or multiple commands.
 The syntax looks as follows:
@@ -423,7 +431,8 @@ Output:
 
     These two commands will print in the same line.
 
-The `PRINT` command also allows to print multiple fields in the same command. These fields are seperated by a comma (`,`).
+The `PRINT` command also allows printing multiple fields in the same command. These fields are seperated by a comma 
+(`,`).
 
 Example:
 
@@ -710,6 +719,18 @@ command.
 The `DEF` command is used to define a macro. The macro processor is looking for the command and takes the left over 
 of the command and processes it as a macro. This is happening during the first pass of the program.
 
+The defined macro does not have a limit in the number of parameters. The following examples describe a set of typical 
+defined macros:
+
+    50 DEF FNA(X) = "X * 2"
+    60 DEF FNB(X, Y) = "X * Y"
+    70 DEF FNC(X, Y, Z) = "X * Y + Z"
+
+The macros are called in the program as follows:
+
+    120 X# = FNA(X#) * FNA(X#)
+
+
 ## Depreciated Basic Commands and Functions
 
 The following standard Basic commands are depreciated and should not be used.
@@ -791,6 +812,12 @@ avoided by having another command (e.g. `PRINT`) following the next command.
 
 As a best practice, put all `DATA` definitions after the `END` command. This way the error can be avoided. 
 Resolution for this issue is not planned at the moment.
+
+## Using an Integrated Development Environment (IDE)
+At this moment the project contains the setting to allow syntax highlighting in Microsoft's Visual Studio Code. This 
+extension can be installed as follows:
+
+-- tbd --
 
 ## Alternative Projects and Information
 

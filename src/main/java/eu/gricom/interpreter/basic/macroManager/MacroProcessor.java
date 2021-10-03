@@ -6,14 +6,13 @@ import eu.gricom.interpreter.basic.tokenizer.BasicLexer;
 import eu.gricom.interpreter.basic.tokenizer.BasicTokenType;
 import eu.gricom.interpreter.basic.tokenizer.Lexer;
 import eu.gricom.interpreter.basic.tokenizer.Token;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 public class MacroProcessor {
 
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
-    private Lexer _oTokenizer = new BasicLexer();
+    private final Lexer _oTokenizer = new BasicLexer();
 
 
     /**
@@ -35,7 +34,7 @@ public class MacroProcessor {
     public String process (String strProgram) throws SyntaxErrorException {
         // Step 1: Tokenize the source code
         List<Token> aoToken = tokenize(strProgram);
-        Vector<String> vstrParameter = new Vector();
+        Vector<String> vstrParameter = new Vector<>();
         MacroList oMarcoList = new MacroList();
         String strConvertedProgram = new String();
 
@@ -81,7 +80,7 @@ public class MacroProcessor {
         String[] astrProgramLines = strProgram.split("\\s*\n\\s*");
 
         for (String strProgramLine: astrProgramLines) {
-            String strStatus = "to process";
+            String strStatus;
 
             if (strProgramLine.contains(" DEF ")) {
                 strConvertedProgram += strProgramLine + '\n';
@@ -104,7 +103,6 @@ public class MacroProcessor {
 
     private int getFunction(List<Token> aoToken, int iStartCounter) throws SyntaxErrorException {
         int iCounter = iStartCounter;
-        List<Token> aoProcessToken = aoToken;
 
         while (iCounter < aoToken.size()) {
             if (aoToken.get(iCounter).getType() == BasicTokenType.STRING) {
@@ -127,10 +125,10 @@ public class MacroProcessor {
             strChanged = strWork.substring(0, strWork.indexOf(strFoundMacro));
 
             String strRest = strWork.substring(strWork.indexOf(strFoundMacro));
-            String strGetParameter = strRest.substring(strRest.indexOf("(") + 1, strRest.indexOf(")"));
+            String strGetParameters = strRest.substring(strRest.indexOf("(") + 1, strRest.indexOf(")"));
             String strGetMacroName = strRest.substring(0, strRest.indexOf("("));
 
-            strChanged += oMarcoList.getFunction(strGetParameter, strGetMacroName) + strRest.substring(strRest.indexOf(")") + 1);
+            strChanged += oMarcoList.getFunction(strGetParameters, strGetMacroName) + strRest.substring(strRest.indexOf(")") + 1);
 
             strWork = strChanged;
             strFoundMacro = oMarcoList.containsMacro(strChanged);
