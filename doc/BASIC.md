@@ -817,7 +817,15 @@ Resolution for this issue is not planned at the moment.
 At this moment the project contains the setting to allow syntax highlighting in Microsoft's Visual Studio Code. This 
 extension can be installed as follows:
 
--- tbd --
+The VSC extension is located in `<PACKAGE>/etc/VSCExtension`. To install it, the content needs to be copied to `~/.vscode/extensions/gd-basic/`
+When starting VSC, the extension should be visible:
+
+![Visual Studio Code Extension](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/VSC_Extension.png)
+
+As a result of the extension, Basic code in VSC should be optically supported:
+
+![Visual Studio Code Extension](https://github.com/andreas-grimm/Interpreters/blob/development/doc/png/VSC_Basic_Grammar.png)
+
 
 ## Alternative Projects and Information
 
