@@ -1,0 +1,3 @@
+/Users/andreas/Projects/Sources/Java/GD-BASIC/src/main/c++/cmake-build-default/CMakeFiles/rebuild_cache.dir
+/Users/andreas/Projects/Sources/Java/GD-BASIC/src/main/c++/cmake-build-default/CMakeFiles/edit_cache.dir
+/Users/andreas/Projects/Sources/Java/GD-BASIC/src/main/c++/cmake-build-default/CMakeFiles/GD_Basic_RunTime.dir
