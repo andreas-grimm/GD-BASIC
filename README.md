@@ -139,6 +139,11 @@ Implemented Backlog Items:
 * Added the framework to handle macro constructs (`DEF FN`)
 * Added the code highlighting for [Visual Studio Code (VSC)](https://code.visualstudio.com/) 
 
+0.0.8: File Handling Release
+* Added file interface to allow the interpreter to work with external files
+* Change the build setting to allow compilation on Debian and Raspberry PI 4 under 64 bit Ubuntu
+* Added directories to allow C and GO compiler modules
+
 Implemented Backlog Items:
 
     [BASIC-55][BASIC-121][BASIC-133]

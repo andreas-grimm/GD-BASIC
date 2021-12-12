@@ -1,27 +1,28 @@
 #!/bin/sh
 tput clear
-VERSION=0.0.6
+VERSION=0.0.8
+RELEASE_LEVEL=DEV
 
 echo "--- Basic Regression Test ---"
 echo "Test run: src/test/resources/test_basic_jasic_1_recoded.bas"
-java -jar target/BASIC-$VERSION-RC-jar-with-dependencies.jar src/test/resources/test_basic_jasic_1_recoded.bas
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/resources/test_basic_jasic_1_recoded.bas
 read -p "Press any [enter] to resume ..."
 
 echo "Test run: src/test/resources/test_basic1_Q1_dev.bas"
-java -jar target/BASIC-$VERSION-RC-jar-with-dependencies.jar src/test/resources/test_basic_Q1_dev.bas
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/resources/test_basic_Q1_dev.bas
 read -p "Press any [enter] to resume ..."
 
 echo "Test run: src/test/resources/test_basic1_Q2_dev.bas"
-java -jar target/BASIC-$VERSION-RC-jar-with-dependencies.jar src/test/resources/test_basic_Q2_dev.bas
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/resources/test_basic_Q2_dev.bas
 read -p "Press any [enter] to resume ..."
 
 echo "Test run: src/test/resources/test_basic1_Q2_1_dev.bas"
-java -jar target/BASIC-$VERSION-RC-jar-with-dependencies.jar src/test/resources/test_basic_Q2_1_dev.bas
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/resources/test_basic_Q2_1_dev.bas
 read -p "Press any [enter] to resume ..."
 
 echo "Test run: src/test/resources/test_basic1_Q2_2_dev.bas"
-java -jar target/BASIC-$VERSION-RC-jar-with-dependencies.jar src/test/resources/test_basic_Q2_2_dev.bas
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/resources/test_basic_Q2_2_dev.bas
 read -p "Press any [enter] to resume ..."
 
 echo "Test run: src/test/resources/test_basic1_Q2_3_dev.bas"
-java -jar target/BASIC-$VERSION-RC-jar-with-dependencies.jar src/test/resources/test_basic_Q2_3_dev.bas
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/resources/test_basic_Q2_3_dev.bas
