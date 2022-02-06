@@ -76,7 +76,6 @@ public class IntegerValue implements Value {
         return this;
     }
 
-
     @Override
     public final Value equals(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {

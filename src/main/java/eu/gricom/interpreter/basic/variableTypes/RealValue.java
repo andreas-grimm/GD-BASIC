@@ -1,7 +1,11 @@
 package eu.gricom.interpreter.basic.variableTypes;
 
+import eu.gricom.interpreter.basic.helper.EnvParam;
+
 import eu.gricom.interpreter.basic.error.DivideByZeroException;
 import eu.gricom.interpreter.basic.error.SyntaxErrorException;
+
+import eu.gricom.interpreter.basic.math.BCDConverter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,6 +21,14 @@ import java.math.RoundingMode;
  */
 public class RealValue implements Value {
     private double _fValue;
+
+    // BCD Representation
+    private final int _iMaxNumOfDigits = EnvParam.getMAX_BCD_DIGITS(); // max value of float + decimal point
+    private char[] _aiBCDValue = new char[_iMaxNumOfDigits];
+    private char[] _aiBCDMaxValue = new char[_iMaxNumOfDigits];
+    private char[] _aiBCDMinValue = new char[_iMaxNumOfDigits];
+    private final double _fMaxReal = Float.MAX_VALUE;
+    private final double _fMinReal = Float.MIN_VALUE;
 
     /**
      * Default constructor.
