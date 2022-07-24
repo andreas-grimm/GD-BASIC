@@ -68,7 +68,7 @@ task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'GD-BASIC',
                 'Implementation-Version': archiveVersion,
-                'Main-Class': 'eu.gricom.interpreter.basic.Basic'
+                'Main-Class': 'Basic'
     }
     archiveBaseName = project.name
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

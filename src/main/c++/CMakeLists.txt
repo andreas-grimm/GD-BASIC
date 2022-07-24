@@ -5,5 +5,5 @@ set(CMAKE_CXX_STANDARD 14)
 
 configure_file(version.h.in version.h)
 
-add_executable(GD_Basic_RunTime main.cpp util/libutil.a)
+add_executable(GD_Basic_RunTime gdbas-rtl.cpp util/libutil.a)
 
