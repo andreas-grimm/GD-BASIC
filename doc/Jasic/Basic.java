@@ -805,7 +805,7 @@ public class Basic {
 
     /**
      * This is where the magic happens. This runs the code through the parsing
-     * pipeline to generate the AST. Then it executes each statement. It keeps
+     * pipeline to generator the AST. Then it executes each statement. It keeps
      * track of the current line in a member variable that the statement objects
      * have access to. This lets "goto" and "if then" do flow control by simply
      * setting the index of the current statement.
