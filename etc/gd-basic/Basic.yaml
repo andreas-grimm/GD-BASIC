@@ -1,0 +1,362 @@
+---
+language:
+  - name: GD-Basic
+  - version: 1.0
+
+commands:
+  ABS:
+    - token: ABS
+    - code: "ABS"
+  AND:
+    - token: AND
+    - code: "AND"
+    - code: "&&"
+  ASC:
+    - token: ASC
+    - code: "ASC"
+  ATN:
+    - token: ATN
+    - code: "ATN"
+  CALL:
+    - token: CALL
+    - code: "CALL"
+  CDBL:
+    - token: CDBL
+    - code: "CDBL"
+  CHR:
+    - token: CHR
+    - code: "CHR"
+    - descr: token for the CHR$ function
+  CINT:
+    - token: CINT
+    - code: "CINT"
+  CLEAN:
+    - token: CLEAN
+    - code: "CLEAN"
+  CLOSE:
+    - token: CLOSE
+    - code: "CLOSE"
+  CLS:
+    - token: CLS
+    - code: "CLS"
+  CMD:
+    - token: CMD
+    - code: "CMD"
+  CONT:
+    - token: CONT
+    - code: "CONT"
+  COS:
+    - token: COS
+    - code: "COS"
+  DATA:
+    - token: DATA
+    - code: "DATA"
+  DEF:
+    - token: DEF
+    - code: "DEF"
+  DIM:
+    - token: DIM
+    - code: "DIM"
+  DO:
+    - token: DO
+    - code: "DO"
+  ELSE:
+    - token: ELSE
+    - code: "ELSE"
+  END:
+    - token: END
+    - code: "END"
+  ENDIF:
+    - token: ENDIF
+    - code: "END-IF"
+  ENDWHILE:
+    - token: ENDWHILE
+    - code: "END-WHILE"
+  EOF:
+    - token: EOF
+    - code: "EOF"
+  EOL:
+    - token: EOL
+    - code: "EOL"
+  EOP:
+    - token: EOP
+    - code:
+  ERL:
+    - token: ERL
+    - code: "ERL"
+  ERR:
+    - token: ERR
+    - code: "ERR"
+  EXIT:
+    - token: EXIT
+    - code: "EXIT"
+  EXP:
+    - token: EXP
+    - code: "EXP"
+  FCLOSE:
+    - token: FCLOSE
+    - code: "FCLOSE"
+  FOPEN:
+    - token: FOPEN
+    - code: "FOPEN"
+  FOR:
+    - token: FOR
+    - code: "FOR"
+  FPRINT:
+    - token: FPRINT
+    - code: "FPRINT"
+  FREAD:
+    - token: FREAD
+    - code: "FREAD"
+  FREE:
+    - token: FREE
+    - code: "FREE"
+  GOSUB:
+    - token: GOSUB
+    - code: "GOSUB"
+  GOTO:
+    - token: GOTO
+    - code: "GOTO"
+  IF:
+    - token: IF
+    - code: "IF"
+  INSTR:
+    - token: INSTR
+    - code: "INSTR"
+  INPUT:
+    - token: INPUT
+    - code: "INPUT"
+  LEFT:
+    - token: LEFT
+    - code: "LEFT"
+    - descr: token for the LEFT$ function
+  LEN:
+    - token: LEN
+    - code: "LEN"
+  LENGTH:
+    - token: LENGTH
+    - code: "LENGTH"
+  LET:
+    - token: LET
+    - code: "LET"
+  LOG:
+    - token: LOG
+    - code: "LOG"
+  LOG10:
+    - token: LOG10
+    - code: "LOG10"
+  MEM:
+    - token: MEM
+    - code: "MEM"
+  MID:
+    - token: MID
+    - code: "MID"
+    - descr: token for the MID$ function
+  MODULO:
+    - token: MODULO
+    - code: "%"
+    - descr: token for the % operation
+  NEXT:
+    - token: NEXT
+    - code: "NEXT"
+  NOT:
+    - token: NOT
+    - code: "NOT"
+  ON:
+    - token: ON
+    - code: "ON"
+  OPEN:
+    - token: OPEN
+    - code: "OPEN"
+  OR:
+    - token: OR
+    - code: "OR"
+    - code: "||"
+  PRAGMA:
+    - token: PRAGMA
+    - code: "@PRAGMA"
+  PRINT:
+    - token: PRINT
+    - code: "PRINT"
+    - code: "\\?"
+  RANDOM:
+    - token: RANDOM
+    - code: "RANDOM"
+  READ:
+    - token: READ
+    - code: "READ"
+  REM:
+    - token: REM
+    - code: "REM"
+  RETURN:
+    - token: RETURN
+    - code: "RETURN"
+  RIGHT:
+    - token: RIGHT
+    - code: "RIGHT$"
+    - descr: token for the RIGHT$ function
+  RND:
+    - token: RND
+    - code: "RND"
+  SIN:
+    - token: SIN
+    - code: "SIN"
+  SQR:
+    - token: SQR
+    - code: "SQR"
+  STEP:
+    - token: STEP
+    - code: "STEP"
+  STOP:
+    - token: STOP
+    - code: "STOP"
+  TOSTRING:
+    - token: TOSTRING
+    - code: "STRING"
+    - descr: token for the STRING$ function
+  STR:
+    - token: STR
+    - code: "STR"
+    - descr: token for the STR$ function
+  SYSTEM:
+    - token: SYSTEM
+    - code: "SYSTEM"
+  TAB:
+    - token: TAB
+    - code: "TAB"
+  TAN:
+    - token: TAN
+    - code: "TAN"
+  THEN:
+    - token: THEN
+    - code: "THEN"
+  TIME:
+    - token: TIME
+    - code: "TIME"
+    - descr: token for the TIME$ function
+  TO:
+    - token: TO
+    - code: "TO"
+  UNTIL:
+    - token: UNTIL
+    - code: "UNTIL"
+  VAL:
+    - token: VAL
+    - code: "VAL"
+  WHILE:
+    - token: WHILE
+    - code: "WHILE"
+  WRITE:
+    - token: WRITE
+    - code: "WRITE"
+  PLUS:
+    - token: PLUS
+    - code: "\\+"
+    - descr: token for the + operator
+  MINUS:
+    - token: MINUS
+    - code: "\\-"
+    - descr: token for the - operator
+  MULTIPLY:
+    - token: MULTIPLY
+    - code: "\\*"
+    - descr: token for the * operator
+  DIVIDE:
+    - token: DIVIDE
+    - code: "\\/"
+    - descr: token for the / operator
+  SHIFT_LEFT:
+    - token: SHIFT_LEFT
+    - code: "<<"
+    - descr: shift a number / bytes to the left (multiply by 2)
+  SHIFT_RIGHT:
+    - token: SHIFT_RIGHT
+    - code: ">>"
+    - descr: shift a number / bytes to the right (divide by 2)
+  COLON:
+    - token: COLON
+    - code: ":"
+    - descr: token for the program line divider ':'
+  GREATER:
+    - token: GREATER
+    - code: ">"
+    - descr: token for the > operator
+  GREATER_EQUAL:
+    - token: GREATER_EQUAL
+    - code: ">="
+    - descr: token for the => operator
+  SMALLER:
+    - token: SMALLER
+    - code: "<"
+    - descr: token for the < operator
+  SMALLER_EQUAL:
+    - token: SMALLER_EQUAL
+    - code: "<="
+    - descr: token for the <= operator
+  ASSIGN_EQUAL:
+    - token: ASSIGN_EQUAL
+    - code: "="
+    - descr: token for the assignment operator =
+  PASCAL_ASSIGN_EQUAL:
+    - token: PASCAL_ASSIGN_EQUAL
+    - code: ":="
+    - descr: token for the PASCAL assignment operator :=
+  COMPARE_EQUAL:
+    - token: COMPARE_EQUAL
+    - code: "=="
+    - descr: token for the == operator
+  COMPARE_NOT_EQUAL:
+    - token: COMPARE_NOT_EQUAL
+    - code: "!="
+    - descr: token for the != operator
+  POWER:
+    - token: POWER
+    - code: "\\^"
+    - descr: token for the power operator
+  LEFT_PAREN:
+    - token: LEFT_PAREN
+    - code: "\\("
+    - descr: token for the ( symbol
+  RIGHT_PAREN:
+    - token: RIGHT_PAREN
+    - code: "\\)"
+    - descr: token for the ) symbol
+  COMMENT:
+    - token: COMMENT
+    - code: "\\'"
+    - descr: to be replaced by REM
+  WORD:
+    - token: WORD
+    - descr: super-token to cover command and functions in JASIC
+  NUMBER:
+    - token: NUMBER
+    - descr: Token for any real values
+  STRING:
+    - token: STRING
+    - descr: Token for any strings
+  INTEGER:
+    - token: INTEGER
+    - descr: Token for any integer numbers
+  BOOLEAN:
+    - token: BOOLEAN
+    - descr: Token for any boolean variable
+  OPERATOR:
+    - token: OPERATOR
+    - descr: super-token to cover all operations in JASIC
+  LABEL:
+    - token: LABEL
+    - descr: JASIC GOTO label, not supported for the Dartmouth BASIC dialects
+  LINE:
+    - token: LINE
+    - descr: empty line - white space. Kept to keep the line numbering consistent
+  EQUALS:
+    - token: EQUALS
+    - descr: used exclusively for the JASIC version
+  COMMA:
+    - token: COMMA
+    - code: "\\,"
+    - descr: used exclusively for the print command
+  SEMICOLON:
+    - token: SEMICOLON
+    - code: "\\;"
+    - descr: used exclusively for the print command

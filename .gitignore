@@ -1,6 +1,14 @@
+# Ignore for the Java main Components (blocking IntelliJ, Eclipse, and Maven and Gradle targets
 app
 .classpath
 .project
 .settings
 target
+build
 *.iml
+.gradle
+.idea
+
+# Ignore of the VSC Extension
+node_modules
+*.vsix

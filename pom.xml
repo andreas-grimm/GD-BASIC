@@ -52,7 +52,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>eu.gricom.interpreter.basic.Basic</mainClass>
+                            <mainClass>eu.gricom.basic.Basic</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -62,7 +62,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>eu.gricom.interpreter.basic.Basic</mainClass>
+                            <mainClass>eu.gricom.basic.Basic</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -211,7 +211,7 @@
         <dependency>
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
-            <version>3.1.2</version>
+            <version>8.2.1</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>

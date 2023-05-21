@@ -1,0 +1,31 @@
+#!/bin/sh
+tput clear
+echo ""
+echo "  #####  ######      ######     #     #####  ###  #####     "
+echo " #     # #     #     #     #   # #   #     #  #  #     #    GriCom Basic Interpreter Version 0.1.0"
+echo " #       #     #     #     #  #   #  #        #  #          (c) Copyright A.Grimm 2020"
+echo " #  #### #     # ### ######  #     #  #####   #  #          "
+echo " #     # #     #     #     # #######       #  #  #          Java / Maven Build Process"
+echo " #     # #     #     #     # #     # #     #  #  #     #    "
+echo "  #####  ######      ######  #     #  #####  ###  #####     "
+echo ""
+
+
+if [ `uname -m` = "x86_64" ]
+then
+   echo "Cleaning the environment for checkingi: Apple / Debian version"
+   mvn clean
+   gradle clean
+
+   echo "Cleaning the C++ and GO environment"
+   rm -rf src/main/c++/util/CMakeCache.txt src/main/c++/util/CMakeFiles src/main/c++/util/Makefile src/main/c++/util/cmake_install.cmake src/main/c++/util/*.a
+   rm -rf src/main/c++/CMakeCache.txt src/main/c++/CMakeFiles src/main/c++/Makefile src/main/c++/cmake_install.cmake src/main/c++/GD_Basic_RunTime
+
+elif [ `uname -m` = "aarch64" ]
+then
+   echo "Building for Raspberry Pi"
+   mvn -Drevision=0.0.8-DEV -Dmaven.javadoc.skip=true -Dmaven.test.skip=true clean site package
+else
+   echo "unknown architecture"
+fi
+

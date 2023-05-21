@@ -117,7 +117,7 @@ The tokenizers are named after the Basic versions they are implementing:
 
 The result of the tokenization process is a list of objects of type Token (see `eu.gricom.interpreter.basic.tokenizier.Token`). 
 Each token object holds three attributes:
-* __Type__: the token type, as defined in `eu.gricom.interpreter.basic.tokenizer.BasicTokenType.java`.
+* __Type__: the token type, as defined in `BasicTokenType.java`.
 * __Text__: the program code identified by the token
 * __Line__: the line number of the program code in the original program. This is used i.e. for interpreter error messages.
 
@@ -141,7 +141,7 @@ b) Separate parenthesis (`(` and `)`) from the keywords. This is only done for k
 
 ### Adding new token to the Tokenizer
 
-- Step 1: Add the new reserved word into the list of reserved words (`eu.gricom.interpreter.basic.tokenizer.ReservedWords.java`)
+- Step 1: Add the new reserved word into the list of reserved words (`ReservedWords.java`)
   and the token file (`eu.gricom.interpeter.basic.tokenizer.TokenType.java`).
 - Step 2: Verify that the BASIC tokenizer (`eu.gricom.interpreter.basic.BasicLexer.java`) can process the added new tokens and reserved word.
 
@@ -259,14 +259,14 @@ Utility methods:
 1. Set the program pointer to the next BASIC program line following the BASIC line number defined in `iTargetNumber`:
 
 ```java
-    import eu.gricom.interpreter.basic.memoryManager.ProgramPointer;
-    ...
-    private final LineNumberXRef oLineNumberObject = new LineNumberXRef();
-    ...
-    _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
-            oLineNumberObject.getNextLineNumber(
-                    oLineNumberObject.getLineNumberFromToken(
-                            oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
+
+...
+private final LineNumberXRef oLineNumberObject=new LineNumberXRef();
+        ...
+        _oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
+        oLineNumberObject.getNextLineNumber(
+        oLineNumberObject.getLineNumberFromToken(
+        oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
 ```
 
 ## Main Classes
@@ -468,7 +468,7 @@ A further planned class is:
 
 #### The `Stack` Class
 
-The `Stack` class (`eu.gricom.interpreter.basic.memoryManager.Stack`) is a wrapper around the standard Java Stack class (`java.util.Stack`).
+The `Stack` class (`Stack`) is a wrapper around the standard Java Stack class (`java.util.Stack`).
 In order to make a common stack available in the interpreter, the `Stack` class implements internally a static private stack object
 which can be accessed using the class `push` and `pop` method.
 
@@ -502,12 +502,12 @@ The following table describes the mapping:
 
 | Basic Variable Type | Variable Appendix | Interpreter Variable Type |
 |---------------------|-------------------|---------------------------|
-| String | `$` | `eu.gricom.interpreter.basic.variableTypes.StringValue` |
-| Integer | `%` | `eu.gricom.interpreter.basic.variableTypes.IntegerValue` |
-| Long | `&` | `eu.gricom.interpreter.basic.variableTypes.LongValue` |
-| Real | `#` | `eu.gricom.interpreter.basic.variableTypes.RealValue` |
+| String | `$` | `StringValue` |
+| Integer | `%` | `IntegerValue` |
+| Long | `&` | `LongValue` |
+| Real | `#` | `RealValue` |
 | Double | `!` | `eu.gricom.interpreter.basic.variableTypes.DoubleValue` |
-| Boolean | `@` | `eu.gricom.interpreter.basic.variableTypes.BooleanValue` |
+| Boolean | `@` | `BooleanValue` |
 
 ##### Common Functions
 
@@ -672,8 +672,8 @@ statement. *NOTE:* Intentionally the interpreter will always pair the `FOR` stat
 ##### `GOTO` Statement
 The `GOTO` Statement - or non-conditional jump - moves the execution of the running Basic program
 to a different location in the program. The executable functionality is located in class 
-`eu.gricom.interpreter.basic.statements.GotoStatement`. The class is an implementation of the 
-`eu.gricom.interpreter.basic.statements.Statement` interface. 
+`GotoStatement`. The class is an implementation of the 
+`Statement` interface. 
 
 The implementation of the functionality is realized by using the following class: 
 `eu.gricom.interpreter.basic.memoryManagement.LineNumberXRef`. This class is used to identify
@@ -707,11 +707,11 @@ Limitations of the current implementation:
 
 ##### `GOSUB` Statement
 The `GOSUB` Statement - or non-conditional jump into a subroutine - moves the execution of the running Basic program
-to a different location in the program. The executable functionality is located in class `eu.gricom.interpreter.basic.statements.GosubStatement`. 
-The class is an implementation of the `eu.gricom.interpreter.basic.statements.Statement` interface.
+to a different location in the program. The executable functionality is located in class `GosubStatement`. 
+The class is an implementation of the `Statement` interface.
 
 The implementation of the functionality is realized by using two different classes:
-`eu.gricom.interpreter.basic.memoryManagement.LineNumberXRef` to determine the target for the jump and `eu.gricom.interpreter.basic.memoryManager.Stack`
+`eu.gricom.interpreter.basic.memoryManagement.LineNumberXRef` to determine the target for the jump and `Stack`
 to store the location of the `GOSUB` command. The later is needed for the calculation of the return to the main program
 using the `RETURN` command.
 
@@ -904,12 +904,6 @@ basic.variableTypes.*`). All imported classes are explicitly mentioned.
 ```java
 package eu.gricom.interpreter.basic.functions;
 
-import eu.gricom.interpreter.basic.error.RuntimeException;
-import eu.gricom.interpreter.basic.variableTypes.IntegerValue;
-import eu.gricom.interpreter.basic.variableTypes.LongValue;
-import eu.gricom.interpreter.basic.variableTypes.RealValue;
-import eu.gricom.interpreter.basic.variableTypes.Value;
-import eu.gricom.interpreter.basic.statements.Expression;
  ```
 We document the functionality of the function in the class header, not on method level.
 ```java
