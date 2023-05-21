@@ -119,4 +119,23 @@ public final class AssignStatement implements Statement {
     public String content() {
         return "ASSIGN [" + _strKey + ":= " + _oValue.content() + "]";
     }
+
+    /**
+     * Structure.
+     *
+     * Method for the compiler to get the structure of the program.
+     *
+     * @return gives the name of the statement ("INPUT") and a list of the parameters
+     * @throws Exception based on errors in the implementation classes
+     */
+    @Override
+    public String structure() throws Exception {
+        String strReturn = "{\"ASSIGN\": {\n";
+        strReturn += "\t\"TOKEN_NR\": \""+ _iTokenNumber +"\",\n";
+        strReturn += "\t\"NAME\": \""+ _strKey +"\",\n";
+        strReturn += "\t\"EXPRESSION\": \""+ _oValue.structure() +"\",\n";
+        strReturn += "\t}\n";
+        strReturn += "}\n";
+        return strReturn;
+    }
 }

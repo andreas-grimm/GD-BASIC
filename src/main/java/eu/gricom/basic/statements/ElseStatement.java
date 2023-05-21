@@ -58,4 +58,18 @@ public class ElseStatement implements Statement {
     public final String content() {
         return "ELSE";
     }
+
+    /**
+     * Structure.
+     *
+     * Method for the compiler to get the structure of the program.
+     *
+     * @return gives the name of the statement ("INPUT") and a list of the parameters
+     * @throws Exception based on errors in the implementation classes
+     */
+    @Override
+    public String structure() throws Exception {
+        String strReturn = this.toString();
+        return strReturn;
+    }
 }

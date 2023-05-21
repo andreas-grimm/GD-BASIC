@@ -62,7 +62,7 @@ public final class IfThenStatement implements Statement {
         _oCondition = oCondition;
         _strLabel = "";
         _iElseStatement = iELseStatement;
-        _iEndIfLine = iEndIfLine;
+            _iEndIfLine = iEndIfLine;
         _iTargetLineNumber = iTargetLineNumber;
     }
 
@@ -159,6 +159,20 @@ public final class IfThenStatement implements Statement {
     @Override
     public String content() {
 
-        return "IF (" + _oCondition.content() + ") THEN " + _strLabel;
+        return "IF (" + _oCondition.content() + ") THEN " + _iTargetLineNumber;
+    }
+
+    /**
+     * Structure.
+     *
+     * Method for the compiler to get the structure of the program.
+     *
+     * @return gives the name of the statement ("INPUT") and a list of the parameters
+     * @throws Exception based on errors in the implementation classes
+     */
+    @Override
+    public String structure() throws Exception {
+        String strReturn = this.toString();
+        return strReturn;
     }
 }

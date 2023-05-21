@@ -225,7 +225,7 @@ public class BasicParser implements Parser {
                 case DEF:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [DEF] ");
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    aoStatements.add(new RemStatement(_iPosition));
+                    aoStatements.add(new RemStatement(_iPosition, "found DEF statement"));
 
                     int iMoveTo = 1;
                     while (getToken(iMoveTo).getType() != BasicTokenType.STRING) {
@@ -506,7 +506,7 @@ public class BasicParser implements Parser {
                 case REM:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [REM] ");
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    aoStatements.add(new RemStatement(_iPosition));
+                    aoStatements.add(new RemStatement(_iPosition, "Comment"));
                     _iPosition++;
                     break;
 

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LabelStatementTest {
-    private LabelStatement _oLabelStatement = new LabelStatement();
+    private final LabelStatement _oLabelStatement = new LabelStatement();
 
     @Test
     @Order(1)

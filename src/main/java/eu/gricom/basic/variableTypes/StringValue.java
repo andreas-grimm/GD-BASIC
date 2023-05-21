@@ -175,6 +175,20 @@ public class StringValue implements Value {
     }
 
     /**
+     * Structure.
+     *
+     * Method for the compiler to get the structure of the program.
+     *
+     * @return gives the name of the statement ("INPUT") and a list of the parameters
+     * @throws Exception based on errors in the implementation classes
+     */
+    @Override
+    public String structure() throws Exception {
+        String strReturn = this.toString();
+        return strReturn;
+    }
+
+    /**
      * The keys extentions (squared ('[]') or round ('()') brackets are ignored in previous steps of the value
      * retrieval. During this step they are now processed.
      *

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class DataStatement implements Statement {
     private final int _iTokenNumber;
-    private List<Value> _aoValues;
+    private final List<Value> _aoValues;
 
     /**
      * Default constructor.
@@ -69,5 +69,19 @@ public class DataStatement implements Statement {
         }
 
         return "DATA" + strValue;
+    }
+
+    /**
+     * Structure.
+     *
+     * Method for the compiler to get the structure of the program.
+     *
+     * @return gives the name of the statement ("INPUT") and a list of the parameters
+     * @throws Exception based on errors in the implementation classes
+     */
+    @Override
+    public String structure() throws Exception {
+        String strReturn = this.toString();
+        return strReturn;
     }
 }

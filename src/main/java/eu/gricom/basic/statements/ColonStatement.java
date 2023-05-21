@@ -53,4 +53,21 @@ public class ColonStatement implements Statement {
 
         return "COLON";
     }
+
+    /**
+     * Structure.
+     *
+     * Method for the compiler to get the structure of the program.
+     *
+     * @return gives the name of the statement ("INPUT") and a list of the parameters
+     * @throws Exception based on errors in the implementation classes
+     */
+    @Override
+    public String structure() throws Exception {
+        String strReturn = "{\"COLON\": {\n";
+        strReturn += "\t\"TOKEN_NR\": \""+ _iTokenNumber +"\"\n";
+        strReturn += "\t}\n";
+        strReturn += "}\n";
+        return strReturn;
+    }
 }

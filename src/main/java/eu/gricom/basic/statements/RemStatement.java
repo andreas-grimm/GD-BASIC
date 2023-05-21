@@ -11,15 +11,19 @@ package eu.gricom.basic.statements;
  */
 public class RemStatement implements Statement {
     private final int _iTokenNumber;
+    private final String _strRemText;
 
     /**
      * Default constructor.
      *
      * An "REM" statement performs the hard termination of the interpreter.
      * @param iTokenNumber - number of the command in the basic program
+     * @param strRemText - text of the rem statement
      */
-    public RemStatement(final int iTokenNumber) {
+    public RemStatement(final int iTokenNumber, final String strRemText) {
+
         _iTokenNumber = iTokenNumber;
+        _strRemText = strRemText;
     }
 
     /**
@@ -50,6 +54,20 @@ public class RemStatement implements Statement {
     @Override
     public final String content() {
 
-        return "REM";
+        return "REM [" + _strRemText + "]";
+    }
+
+    /**
+     * Structure.
+     *
+     * Method for the compiler to get the structure of the program.
+     *
+     * @return gives the name of the statement ("INPUT") and a list of the parameters
+     * @throws Exception based on errors in the implementation classes
+     */
+    @Override
+    public String structure() throws Exception {
+        String strReturn = this.toString();
+        return strReturn;
     }
 }
