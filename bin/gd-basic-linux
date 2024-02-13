@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java -jar /usr/local/gd-basic/BASIC-0.1.0-java17-jar-with-dependencies.jar $@
