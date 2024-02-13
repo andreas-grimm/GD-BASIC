@@ -45,6 +45,7 @@ public class DataStatement implements Statement {
      *
      * Push the array into the FIFO structure.
      */
+    //TODO: This needs fixing: the FiFo Queue will forget the values after the end of the call. Look at READ statement
     public final void execute() {
         FiFoQueue oQueue = new FiFoQueue();
 

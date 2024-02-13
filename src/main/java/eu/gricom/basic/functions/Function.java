@@ -137,6 +137,10 @@ public class Function implements Expression {
             case LEN:
                 return Len.execute(_oFirstParam.evaluate());
 
+            // LOG Token: Return the Logarithm Naturalis of the value parameter
+            case LOG:
+                return Log.execute(_oFirstParam.evaluate());
+
             // LOG10 Token: Return the Logarithm Decimalis of the value parameter
             case LOG10:
                 return Log10.execute(_oFirstParam.evaluate());

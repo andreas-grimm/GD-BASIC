@@ -204,59 +204,6 @@ public class Basic {
         // run the program
         oRun.runProgram();
 
-/*
-        _oLogger.info("Pre-load environment...");
-        try {
-            if (_oProgram.getPreRunStatements() != null) {
-                oProgramPointer.setCurrentStatement(0);
-                while (oProgramPointer.getCurrentStatement() < _oProgram.getPreRunStatements().size()) {
-                    // as long as we have not reached the end of the code
-                    int iThisStatement = oProgramPointer.getCurrentStatement();
-
-                    oProgramPointer.calcNextStatement();
-                    _oLogger.debug("PreRun Statement # <" + iThisStatement + ">: ["
-                                           + _oProgram.getPreRunStatements().get(iThisStatement).content() + "]");
-
-                    _oProgram.getPreRunStatements().get(iThisStatement).execute();
-                }
-            } else {
-                _oLogger.error("Parsing delivered empty program");
-                System.exit(-1);
-            }
-        } catch (Exception eException) {
-            eException.printStackTrace();
-        }
-
-        _oLogger.info("Starting execution...");
-        try {
-            if (_oProgram.getStatements() != null) {
-                int iSourceCodeLineNumber;
-                oProgramPointer.setCurrentStatement(0);
-
-                while (oProgramPointer.getCurrentStatement() < _oProgram.getStatements().size()) {
-                    // as long as we have not reached the end of the code
-                    int iThisStatement = oProgramPointer.getCurrentStatement();
-
-                    iSourceCodeLineNumber = _oLineNumbers.getLineNumberFromToken(_oProgram.getStatements().get(iThisStatement).getTokenNumber());
-
-                    oProgramPointer.calcNextStatement();
-
-                    _oLogger.debug(
-                            "Basic Source Code Line [" + iSourceCodeLineNumber + "] Statement [ "
-                                    + _oProgram.getStatements().get(iThisStatement).getTokenNumber() + "]: "
-                                    + _oProgram.getStatements().get(iThisStatement).content());
-                    oTrace.trace(iSourceCodeLineNumber);
-
-                    _oProgram.getStatements().get(iThisStatement).execute();
-                }
-            } else {
-                _oLogger.error("Parsing delivered empty program");
-                System.exit(-1);
-            }
-        } catch (Exception eException) {
-            eException.printStackTrace();
-        }
-*/
         System.exit(0);
     }
 
