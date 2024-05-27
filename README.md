@@ -19,13 +19,10 @@ projects.
 
 Project Planning and Control
 
-This project is using Jira to manage progress, but also to log bugs and plan new features. The Jira repository for the Project is here:
-[Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC/boards/3)
-
 ---
 Build Process:
 
-This package has been tested to build with Maven 3.6.3, using Oracle Java 1.8.0_131 under Mac OS X 10.15.7
+This package has been tested to build with Maven 3.6.3, using Oracle Java 17.0.1 under Mac OS X 14.5, and Debian 10 or higher
 
 Use the following command line:
 
@@ -153,3 +150,7 @@ Implemented test and demonstration programs, located at `src/test/resources/GD_B
 - `Eratosthenese.bas`: translation of the ECMA demonstration `ERATOSTHENES.BAS` program
 
 ** NOTE: as of this version, all further versions pass the CheckStyle test **
+
+---
+This build version has removed gradle as a build tool, The JIRA backlog has been closed.
+At this moment the code is considered stable and will be maintained as needed.
