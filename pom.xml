@@ -206,7 +206,7 @@
         <dependency>
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
-            <version>3.2.0</version>
+            <version>8.2.1</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
