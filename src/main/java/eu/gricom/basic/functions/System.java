@@ -9,11 +9,11 @@ import java.io.InputStreamReader;
 import java.util.Locale;
 
 /**
- * STR Function.
+ * System Function.
  *
  * Description:
  *
- * The STR function returns the string value of an input value.
+ * The System function returns the string value of an input value.
  *
  * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
  */

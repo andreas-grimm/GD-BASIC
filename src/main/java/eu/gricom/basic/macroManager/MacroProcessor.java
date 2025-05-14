@@ -32,11 +32,12 @@ public class MacroProcessor {
      * @return - the generated code after the macros have benn processed
      */
     public String process (String strProgram) throws SyntaxErrorException {
-        // Step 1: Tokenize the source code
-        List<Token> aoToken = tokenize(strProgram);
         Vector<String> vstrParameter = new Vector<>();
         MacroList oMarcoList = new MacroList();
         String strConvertedProgram = new String();
+
+        // Step 1: Tokenize the source code
+        List<Token> aoToken = tokenize(strProgram);
 
         // Step 2: Build the list of all found macros
         int iCounter = 0;
