@@ -43,12 +43,7 @@ any newer version of Maven should work as well. The command line to run Maven is
     mvn clean compile dependency:tree dependency:copy-dependencies package
 ```
 
-alternatively, a *Gradle* build script is part of the source package. At this stage, the Maven build script is the 
-preferred one.
-
-```bash
-    gradle build
-```    
+The project uses Apache Maven as the primary build system, which provides comprehensive dependency management, testing, and packaging capabilities.    
 
 During the build process, the interpreter is compiled, but the process also runs a number of JUNIT test cases, and performs
 a static code analysis using Checkstyle. The definition ofgi the syntax for Checkstyle is in the `./etc` directory, Checkstyle

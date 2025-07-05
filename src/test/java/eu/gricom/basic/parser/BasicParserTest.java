@@ -22,7 +22,7 @@ public class BasicParserTest {
         String strReadText = FileHandler.readFile("src/test/basic/test_basic_Q1_unittest.bas");
         List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
-        BasicParser oParser = new BasicParser(aoTokens);
+        BasicParser oParser = new BasicParser(aoTokens, true);
         Expression oExpression = oParser.atomic();
 
         String strExpression = oExpression.toString();

@@ -28,6 +28,7 @@ import eu.gricom.basic.statements.PragmaStatement;
 import eu.gricom.basic.statements.ReadStatement;
 import eu.gricom.basic.statements.ReturnStatement;
 import eu.gricom.basic.statements.Statement;
+import eu.gricom.basic.statements.UnaryOperatorExpression;
 import eu.gricom.basic.statements.UntilStatement;
 import eu.gricom.basic.statements.VariableExpression;
 import eu.gricom.basic.statements.WhileStatement;
@@ -52,6 +53,7 @@ public class BasicParser implements Parser {
     private final List<Token> _aoTokens;
     private int _iPosition;
     private final LineNumberXRef _oLineNumber = new LineNumberXRef();
+    private final boolean _bDartmouthFlag;
 
     /**
      * Default constructor.
@@ -59,9 +61,10 @@ public class BasicParser implements Parser {
      *
      * @param aoTokens - the tokenized program
      */
-    public BasicParser(final List<Token> aoTokens) {
+    public BasicParser(final List<Token> aoTokens, boolean bDartmouthFlag) {
         _aoTokens = aoTokens;
         _iPosition = 0;
+        _bDartmouthFlag = bDartmouthFlag;
     }
 
 
@@ -580,10 +583,16 @@ public class BasicParser implements Parser {
      */
     private Expression expression() throws SyntaxErrorException {
         _oLogger.debug("-expression-> <" + _iPosition + "> [" + getToken(0).getType().toString() + "]");
-        return operator();
+        if (_bDartmouthFlag == true) {
+            return operator();
+        }
+
+        return logicalOr();
     }
 
     /**
+     * For Dartmouth mode:
+     *
      * Parses a series of binary operator expressions into a single
      * expression. In Basic, all operators have the same precedence and
      * associate left-to-right. That means it will interpret:
@@ -644,6 +653,198 @@ public class BasicParser implements Parser {
         _oLogger.debug("-operator-> expression: [" + oExpression.content() + "]");
         return oExpression;
     }
+
+    /**
+     * For Precedence Mode:
+     *
+     * In the Precendence Mode, mathematical calcualtion is done following
+     * the rules of calculus. In this case the calcualtion is not done left
+     * to right, but following the precedence of the calculation, from low
+     * (logical or) to high (UnaryOperatorExpression).
+     *
+     * @return The parsed expression.
+     * @throws SyntaxErrorException - marks any syntax issues
+     */
+    /**
+     * Logical OR operator (lowest precedence)
+     *
+     * @return Expression with logical OR precedence
+     * @throws SyntaxErrorException for syntax errors
+     */
+    private Expression logicalOr() throws SyntaxErrorException {
+        Expression left = logicalAnd();
+
+        while (getToken(0).getType() == BasicTokenType.OR) {
+            Token operator = getToken(0);
+            _iPosition++;
+            Expression right = logicalAnd();
+            left = new OperatorExpression(left, operator.getType(), right);
+        }
+
+        return left;
+    }
+
+    /**
+     * Logical AND operator
+     *
+     * @return Expression with logical AND precedence
+     * @throws SyntaxErrorException for syntax errors
+     */
+    private Expression logicalAnd() throws SyntaxErrorException {
+        Expression left = equality();
+
+        while (getToken(0).getType() == BasicTokenType.AND) {
+            Token operator = getToken(0);
+            _iPosition++;
+            Expression right = equality();
+            left = new OperatorExpression(left, operator.getType(), right);
+        }
+
+        return left;
+    }
+
+    /**
+     * Equality operators (==, !=)
+     *
+     * @return Expression with equality precedence
+     * @throws SyntaxErrorException for syntax errors
+     */
+    private Expression equality() throws SyntaxErrorException {
+        Expression left = comparison();
+
+        while (getToken(0).getType() == BasicTokenType.COMPARE_EQUAL ||
+                getToken(0).getType() == BasicTokenType.COMPARE_NOT_EQUAL) {
+            Token operator = getToken(0);
+            _iPosition++;
+            Expression right = comparison();
+            left = new OperatorExpression(left, operator.getType(), right);
+        }
+
+        return left;
+    }
+
+    /**
+     * Comparison operators (<, <=, >, >=)
+     *
+     * @return Expression with comparison precedence
+     * @throws SyntaxErrorException for syntax errors
+     */
+    private Expression comparison() throws SyntaxErrorException {
+        Expression left = shift();
+
+        while (getToken(0).getType() == BasicTokenType.SMALLER ||
+                getToken(0).getType() == BasicTokenType.SMALLER_EQUAL ||
+                getToken(0).getType() == BasicTokenType.GREATER ||
+                getToken(0).getType() == BasicTokenType.GREATER_EQUAL) {
+            Token operator = getToken(0);
+            _iPosition++;
+            Expression right = shift();
+            left = new OperatorExpression(left, operator.getType(), right);
+        }
+
+        return left;
+    }
+
+    /**
+     * Bitwise shift operators (<<, >>)
+     *
+     * @return Expression with shift precedence
+     * @throws SyntaxErrorException for syntax errors
+     */
+    private Expression shift() throws SyntaxErrorException {
+        Expression left = addition();
+
+        while (getToken(0).getType() == BasicTokenType.SHIFT_LEFT ||
+                getToken(0).getType() == BasicTokenType.SHIFT_RIGHT) {
+            Token operator = getToken(0);
+            _iPosition++;
+            Expression right = addition();
+            left = new OperatorExpression(left, operator.getType(), right);
+        }
+
+        return left;
+    }
+
+    /**
+     * Addition and subtraction operators (+, -)
+     *
+     * @return Expression with addition precedence
+     * @throws SyntaxErrorException for syntax errors
+     */
+    private Expression addition() throws SyntaxErrorException {
+        Expression left = multiplication();
+
+        while (getToken(0).getType() == BasicTokenType.PLUS ||
+                getToken(0).getType() == BasicTokenType.MINUS) {
+            Token operator = getToken(0);
+            _iPosition++;
+            Expression right = multiplication();
+            left = new OperatorExpression(left, operator.getType(), right);
+        }
+
+        return left;
+    }
+
+    /**
+     * Multiplication, division, and modulo operators (*, /, %)
+     *
+     * @return Expression with multiplication precedence
+     * @throws SyntaxErrorException for syntax errors
+     */
+    private Expression multiplication() throws SyntaxErrorException {
+        Expression left = exponentiation();
+
+        while (getToken(0).getType() == BasicTokenType.MULTIPLY ||
+                getToken(0).getType() == BasicTokenType.DIVIDE ||
+                getToken(0).getType() == BasicTokenType.MODULO) {
+            Token operator = getToken(0);
+            _iPosition++;
+            Expression right = exponentiation();
+            left = new OperatorExpression(left, operator.getType(), right);
+        }
+
+        return left;
+    }
+
+    /**
+     * Exponentiation operator (^) - right associative
+     *
+     * @return Expression with exponentiation precedence
+     * @throws SyntaxErrorException for syntax errors
+     */
+    private Expression exponentiation() throws SyntaxErrorException {
+        Expression left = unary();
+
+        if (getToken(0).getType() == BasicTokenType.POWER) {
+            Token operator = getToken(0);
+            _iPosition++;
+            // Exponentiation is right-associative, so we call exponentiation() recursively
+            Expression right = exponentiation();
+            left = new OperatorExpression(left, operator.getType(), right);
+        }
+
+        return left;
+    }
+
+    /**
+     * Unary operators (+, -, NOT)
+     *
+     * @return Expression with unary precedence
+     * @throws SyntaxErrorException for syntax errors
+     */
+    private Expression unary() throws SyntaxErrorException {
+        if (getToken(0).getType() == BasicTokenType.PLUS ||
+                getToken(0).getType() == BasicTokenType.MINUS ||
+                getToken(0).getType() == BasicTokenType.NOT) {
+            Token operator = getToken(0);
+            _iPosition++;
+            Expression operand = unary();
+            return new UnaryOperatorExpression(operator.getType(), operand);
+        }
+
+        return atomic();
+    }
+
 
     /**
      * Parses an "atomic" expression. This is the highest level of

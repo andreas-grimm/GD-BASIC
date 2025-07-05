@@ -1,220 +1,518 @@
-# The Official gricom.eu Java Style Guide
+# GD-BASIC Java Style Guide
 
-This style guide is different from other you may see, because the focus is
-centered on readability for print and the web. We created this style guide to
-keep the code in our tutorials consistent.
+## Table of Contents
 
-Our overarching goals are __conciseness__, __readability__ and __simplicity__.
+1. [Overview](#overview)
+2. [Naming Conventions](#naming-conventions)
+3. [Code Structure](#code-structure)
+4. [Formatting](#formatting)
+5. [Best Practices](#best-practices)
+6. [Project Standards](#project-standards)
+7. [Version Control](#version-control)
 
-You should also check out [Swift](https://github.com/raywenderlich/swift-style-guide)
-and [Objective-C](https://github.com/raywenderlich/objective-c-style-guide)
-style guides too.
+## Overview
 
-## Checkstyle
+This style guide ensures consistent, readable code across the GD-BASIC project. Our primary goals are **conciseness**, **readability**, and **simplicity**.
 
-All rules in the styleguide are verified using the Checkstyle tool during the build process.
+### Key Principles
 
-## Inspiration
+- **Consistency**: Follow established patterns throughout the codebase
+- **Readability**: Code should be self-documenting and easy to understand
+- **Maintainability**: Write code that's easy to modify and extend
+- **Performance**: Consider performance implications of coding decisions
 
-This style-guide is somewhat of a mash-up between the existing Java language
-style guides, style guide for C and C++ coding, and a tutorial-readability focused Swift style-guide. The language
-guidance is drawn from the
-[Android contributors style guide](https://source.android.com/source/code-style.html),
- and the
-[Google Java Style Guide](https://google-styleguide.googlecode.com/svn/trunk/javaguide.html).
+### Tools and Validation
 
-## Nomenclature
+All style guide rules are enforced using **Checkstyle** during the build process. This ensures consistent code quality across all contributions.
 
-On the whole, naming should follow Java standards.
+### Inspiration
+
+This style guide combines elements from:
+- [Android Contributors Style Guide](https://source.android.com/source/code-style.html)
+- [Google Java Style Guide](https://google-styleguide.googlecode.com/svn/trunk/javaguide.html)
+- Tutorial-focused Swift and Objective-C style guides
+
+## Naming Conventions
 
 ### Packages
 
-Package names are all __lower-case__, multiple words concatenated together,
-without hypenation or underscores:
+**Rule**: Use lowercase letters only, concatenate multiple words without hyphens or underscores.
 
-__BAD__:
+❌ **Incorrect**:
+```java
+eu.GriCom.funky_widget
+eu.gricom.funky-widget
+```
 
-> eu.GriCom.funky_widget
+✅ **Correct**:
+```java
+eu.gricom.funkywidget
+eu.gricom.basic.parser
+```
 
-__GOOD__:
+### Classes and Interfaces
 
-> eu.gricom.funkywidget
+**Rule**: Use **UpperCamelCase** (PascalCase).
 
-
-### Classes & Interfaces
-
-Written in __UpperCamelCase__. For example 'ResourceHandler'. 
+✅ **Examples**:
+```java
+public class BasicParser { }
+public interface Statement { }
+public class OperatorExpression { }
+```
 
 ### Methods
 
-Written in __lowerCamelCase__. For example 'setValue'.
+**Rule**: Use **lowerCamelCase**.
 
-### Fields
+✅ **Examples**:
+```java
+public void parseExpression() { }
+public Value evaluate() { }
+public String getTokenText() { }
+```
 
-Written in __lowerCamelCase__.
+### Fields and Variables
 
-Static fields should be written in __uppercase__, with an underscore separating
-words:
+#### General Rules
 
-> public static final int THE_ANSWER = 42;
+**Rule**: Use **lowerCamelCase** for regular fields and variables.
 
-Field naming should follow Hungarian Notation and naming conventions in the following form:
+#### Hungarian Notation for Member Variables
 
-- each field starts with a description of it's type, common descriptions are "str" for string, "i" for integer, "o" of undetermined object, "b" for boolean, and "l" for long.
-- collections add the type of collection before the type: "v" for Vector, "a" for array, and "l" for list
-- maps are considered objects
-- member variables (variables that are global in an object) start with an underscore "_".
+**Rule**: Member variables (class-level fields) use Hungarian notation with type prefixes and underscore prefix.
 
-For example:
->  public static final int SOME_CONSTANT = 42;
->
->  private static MyClass _oSingleton;
->  
->  int iPrivate;
->
->  String strPrivate;
->
->  Vector<String> vstrProtected;
+**Type Prefixes**:
+- `str` - String
+- `i` - Integer
+- `l` - Long
+- `b` - Boolean
+- `o` - Object (undetermined type)
+- `f` - Float/Double
+- `c` - Character
 
-### Variables & Parameters
+**Collection Prefixes**:
+- `v` - Vector
+- `a` - Array
+- `l` - List
+- `m` - Map
 
-Written in __lowerCamelCase__.
+✅ **Examples**:
+```java
+// Constants
+public static final int MAX_ARRAY_SIZE = 1000;
+public static final String DEFAULT_ENCODING = "UTF-8";
 
-Single character values to be avoided except for temporary looping variables.
+// Member variables (with underscore prefix)
+private static MyClass _oSingleton;
+private int iCount;
+private String strName;
+private boolean bIsValid;
+private Vector<String> vstrItems;
+private List<Integer> liNumbers;
+private Map<String, Value> mstrValues;
+```
 
-### Misc
+#### Static Fields
 
-In code, acronyms should be treated as words. For example:
+**Rule**: Use **UPPER_SNAKE_CASE** for static final constants.
 
-__BAD:__
+✅ **Example**:
+```java
+public static final int THE_ANSWER = 42;
+public static final String DEFAULT_CONFIG_PATH = "/etc/config.yaml";
+```
 
-> XMLHTTPRequest
+### Variables and Parameters
 
-> String URL
+**Rule**: Use **lowerCamelCase**. Avoid single-character names except for loop variables.
 
-> findPostByID
+❌ **Incorrect**:
+```java
+String s;
+int x;
+```
 
-__GOOD:__
+✅ **Correct**:
+```java
+String username;
+int counter;
+for (int i = 0; i < items.size(); i++) { }  // Loop variable is acceptable
+```
 
-> XmlHttpRequest
+### Acronyms
 
-> String url
+**Rule**: Treat acronyms as words in camelCase.
 
-> findPostById
+❌ **Incorrect**:
+```java
+XMLHTTPRequest
+String URL
+findPostByID
+```
 
+✅ **Correct**:
+```java
+XmlHttpRequest
+String url
+findPostById
+```
 
-## Project Naming
-
-Each project is designated a 4 character project name. The first character is designated "G" for internal projects. Alternative characters can be reserved as needed. The second character is designated a "D" for projects resulting in common libraries, development tools, utilities. The character "C" is designated for projects related with commercial issues. The character "R" is designated to projects related with reference and master data issues. The character "X" in the second position is reserved for projects that do not fall into any of those categories.
-
-Each project shall have a README.md file which describes the purpose of the project and also contains the modification history and planning. Mandatory on published projects is also the LICENSE.md file containing the license governing the release of the software and the STYLEGUIDE.md file (this file) describing the used coding conventions. The latest version of each of these files is in the GDXX project. Every release should adopt the latest version of the files.
-
-## Versioning and Version Control
-
-The version control system of choice is GIT. The latest tested and released version of each project is in the Master branch of the software repository, the Release Candidate is in the Test branch, and the daily build is in the Development branch. Projects with more than one developer are using Feature Branches.
-
-Each project has a version number. THe version number consists of three digits, designated for <major>.<minor>.<bugfix>. A major vrsion number < 0 designates not published code.
+## Code Structure
 
 ### Access Level Modifiers
 
-Access level modifiers should be explicitly defined for classes, methods and
-member variables.
+**Rule**: Always explicitly define access level modifiers for classes, methods, and member variables.
 
-### Fields & Variables
+✅ **Example**:
+```java
+public class MyClass {
+    private String strPrivateField;
+    protected int iProtectedField;
+    public void publicMethod() { }
+    private void privateMethod() { }
+}
+```
 
-Prefer single declaration per line.
+### Field and Variable Declarations
 
-__BAD:__
+**Rule**: Declare one variable per line for better readability.
 
-> String username, twitterHandle;
+❌ **Incorrect**:
+```java
+String username, twitterHandle, email;
+int x, y, z;
+```
 
-__GOOD:__
-
-> String username;
-
-> String twitterHandle;
+✅ **Correct**:
+```java
+String username;
+String twitterHandle;
+String email;
+int x;
+int y;
+int z;
+```
 
 ### Classes
 
-Exactly one class per source file, although inner classes are encouraged where
-scoping appropriate.
+**Rule**: One class per source file. Inner classes are encouraged where appropriate for scoping.
 
+✅ **Example**:
+```java
+public class OuterClass {
+    // Outer class content
+    
+    private class InnerClass {
+        // Inner class content
+    }
+}
+```
 
 ### Enum Classes
 
-Enum classes should be avoided where possible, due to a large memory overhead.
-Static constants are preferred.
+**Rule**: Avoid enum classes when possible due to memory overhead. Prefer static constants.
 
-Enum classes without methods may be formatted without line-breaks, as follows:
+**Exception**: Simple enums without methods may be formatted inline.
 
-> private enum CompassDirection { EAST, NORTH, WEST, SOUTH }
+✅ **Examples**:
+```java
+// Preferred: Static constants
+public static final int DIRECTION_EAST = 0;
+public static final int DIRECTION_NORTH = 1;
+public static final int DIRECTION_WEST = 2;
+public static final int DIRECTION_SOUTH = 3;
 
-## Spacing
+// Acceptable: Simple enum
+private enum CompassDirection { EAST, NORTH, WEST, SOUTH }
+```
 
-Spacing is especially important in code, as code needs to be
-easily readable as part of the tutorial. Java does not lend itself well to this.
+## Formatting
 
 ### Indentation
 
-Indentation is using spaces - never tabs.
+**Rule**: Use spaces, never tabs.
 
-#### Blocks
+#### Block Indentation
+**Rule**: Use 2 spaces for block indentation.
 
-Indentation for blocks uses 2 spaces (not the default 4):
+✅ **Example**:
+```java
+public void method() {
+  if (condition) {
+    doSomething();
+  }
+}
+```
 
-#### Line Wraps
+#### Line Wrap Indentation
+**Rule**: Use 4 spaces for line continuation.
 
-Indentation for line wraps should use 4 spaces (not the default 8):
+✅ **Example**:
+```java
+public void longMethodName(String parameter1, String parameter2,
+    String parameter3) {
+  // Method body
+}
+```
 
 ### Line Length
 
-Lines should be no longer than 100 characters long.
+**Rule**: Maximum 100 characters per line.
 
 ### Vertical Spacing
 
-There should be exactly one blank line between methods to aid in visual clarity 
-and organization. Whitespace within methods should separate functionality, but 
-having too many sections in a method often means you should refactor into
-several methods.
+**Rule**: One blank line between methods for visual clarity.
 
-## Getters and Setters
+✅ **Example**:
+```java
+public void method1() {
+  // Implementation
+}
 
-For external access to fields in classes, getters and setters are preferred to
-direct access of the fields. Fields should rarely be public.
+public void method2() {
+  // Implementation
+}
+```
 
-However, it is encouraged to use the field directly when accessing internally
-(i.e. from inside the class). This is a performance optimization recommended
-by Google: http://developer.android.com/training/articles/perf-tips.html#GettersSetters
+**Rule**: Use whitespace within methods to separate logical sections.
 
-## Brace Style
+✅ **Example**:
+```java
+public void complexMethod() {
+  // Section 1: Variable initialization
+  String strInput = getInput();
+  int iCount = parseCount(strInput);
+  
+  // Section 2: Validation
+  if (iCount < 0) {
+    throw new IllegalArgumentException("Count must be positive");
+  }
+  
+  // Section 3: Processing
+  processItems(iCount);
+}
+```
 
-Only trailing closing-braces are awarded their own line. All others appear the
-same line as preceding code
+### Brace Style
 
-Conditional statements are always required to be enclosed with braces,
-irrespective of the number of lines required.
+**Rule**: Opening braces on the same line, closing braces on their own line.
 
-## Switch Statements
+✅ **Example**:
+```java
+public void method() {
+  if (condition) {
+    doSomething();
+  } else {
+    doSomethingElse();
+  }
+}
+```
 
-Switch statements fall-through by default, but this can be unintuitive. If you
-require this behavior, comment it.
+**Rule**: Always use braces for conditional statements, even single-line blocks.
 
-Alway include the default case.
+❌ **Incorrect**:
+```java
+if (condition)
+  doSomething();
+```
 
-## Annotations
+✅ **Correct**:
+```java
+if (condition) {
+  doSomething();
+}
+```
 
-Standard annotations should be used - in particular @overwrite. This should
-appear the line before the function declaration.
+### Switch Statements
 
+**Rule**: Always include a default case and comment intentional fall-through behavior.
 
-## XML Guidance
+✅ **Example**:
+```java
+switch (value) {
+  case 1:
+    doSomething();
+    break;
+  case 2:
+    doSomething();
+    // Intentional fall-through
+  case 3:
+    doSomethingElse();
+    break;
+  default:
+    handleDefault();
+    break;
+}
+```
 
-The use of XMML is discouraged, the data format of choice is JSON. The format for configuration files is YAML
+### Annotations
 
-## Language
+**Rule**: Place annotations on the line before the method declaration.
 
-Use British English spelling.
+✅ **Example**:
+```java
+@Override
+public String toString() {
+  return "MyClass";
+}
 
-## Copyright Statement
+@Deprecated
+public void oldMethod() {
+  // Implementation
+}
+```
 
-The Copyright statement should have minimal length, copyrights and related issues are documented in the LICENSE.md file
+## Best Practices
+
+### Getters and Setters
+
+**Rule**: Use getters and setters for external access to fields. Fields should rarely be public.
+
+**Performance Note**: Access fields directly within the same class for better performance.
+
+✅ **Example**:
+```java
+public class MyClass {
+  private String strName;
+  
+  // External access
+  public String getName() {
+    return strName;
+  }
+  
+  public void setName(String strName) {
+    this.strName = strName;
+  }
+  
+  // Internal access (direct field access for performance)
+  public void processName() {
+    if (strName != null) {  // Direct access
+      // Process the name
+    }
+  }
+}
+```
+
+### Method Length
+
+**Rule**: If a method has too many logical sections, consider refactoring into multiple methods.
+
+**Guideline**: Aim for methods under 50 lines. If a method exceeds this, consider breaking it down.
+
+### Error Handling
+
+**Rule**: Use appropriate exception types and provide meaningful error messages.
+
+✅ **Example**:
+```java
+if (input == null) {
+  throw new IllegalArgumentException("Input cannot be null");
+}
+
+if (count < 0) {
+  throw new IllegalArgumentException("Count must be non-negative, got: " + count);
+}
+```
+
+## Project Standards
+
+### Project Naming Convention
+
+**Rule**: Use 4-character project names with specific meaning:
+
+- **First character**: "G" for internal projects
+- **Second character**:
+  - "D" - Development tools, libraries, utilities
+  - "C" - Commercial projects
+  - "R" - Reference and master data projects
+  - "X" - Other categories
+
+**Examples**:
+- `GDXX` - Development utility project
+- `GCXX` - Commercial project
+- `GRXX` - Reference data project
+
+### Required Project Files
+
+**Rule**: Every project must include:
+
+1. **README.md** - Project description, purpose, modification history, and planning
+2. **LICENSE.md** - License governing software release
+3. **STYLEGUIDE.md** - This coding conventions file
+
+**Note**: Latest versions of these files are maintained in the GDXX project.
+
+### Data Formats
+
+**Rule**: Use the following formats:
+- **Configuration**: YAML
+- **Data Exchange**: JSON
+- **Avoid**: XML (discouraged)
+
+### Language
+
+**Rule**: Use British English spelling throughout documentation and comments.
+
+**Examples**:
+- `colour` instead of `color`
+- `behaviour` instead of `behavior`
+- `organisation` instead of `organization`
+
+## Version Control
+
+### Git Workflow
+
+**Rule**: Use Git as the version control system with the following branch structure:
+
+- **Main** - Latest tested and released version
+- **Test** - Release candidate
+- **Development** - Daily build
+- **Feature branches** - For projects with multiple developers
+
+### Version Numbering
+
+**Rule**: Use semantic versioning with three digits: `<major>.<minor>.<bugfix>`
+
+**Examples**:
+- `0.1.0` - Initial development version
+- `1.0.0` - First stable release
+- `1.2.3` - Bug fix release
+- `2.0.0` - Major version with breaking changes
+
+**Note**: Major version numbers < 0 indicate unpublished code.
+
+### Commit Messages
+
+**Rule**: Write clear, descriptive commit messages.
+
+✅ **Good Examples**:
+```
+Add support for mathematical operator precedence
+Fix division by zero error in RealValue class
+Update documentation for new parser implementation
+```
+
+❌ **Poor Examples**:
+```
+fix bug
+update
+wip
+```
+
+## Copyright and Licensing
+
+**Rule**: Keep copyright statements minimal in source files. Detailed copyright and licensing information should be documented in the LICENSE.md file.
+
+✅ **Example**:
+```java
+/**
+ * BasicParser.java
+ * 
+ * (c) 2020-2024 by Andreas Grimm, Den Haag, The Netherlands
+ */
+```
+
+---
+
+This style guide ensures consistent, maintainable code across the GD-BASIC project. All developers should follow these conventions to maintain code quality and readability.

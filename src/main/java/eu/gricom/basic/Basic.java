@@ -39,6 +39,7 @@ public class Basic {
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strCompileLanguage = "java";
     private static boolean _bCompile = false;
+    private static boolean _bDartmouthFlag = false;
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of the interpreter such as the values of
@@ -124,7 +125,7 @@ public class Basic {
         // Parse.
         _oLogger.info("Starting parsing...");
         try {
-            BasicParser oParser = new BasicParser(oProgram.getTokens());
+            BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
             _oProgram.setPreRunStatements(oParser.parsePreRun());
             _oProgram.setStatements(oParser.parse());
         } catch (SyntaxErrorException eSyntaxError) {
@@ -188,7 +189,7 @@ public class Basic {
         // Parse.
         _oLogger.info("Starting parsing...");
         try {
-            BasicParser oParser = new BasicParser(oProgram.getTokens());
+            BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
             _oProgram.setPreRunStatements(oParser.parsePreRun());
             _oProgram.setStatements(oParser.parse());
         } catch (SyntaxErrorException eSyntaxError) {
@@ -251,7 +252,7 @@ public class Basic {
         // Parse.
         _oLogger.info("Starting parsing...");
         try {
-            BasicParser oParser = new BasicParser(oProgram.getTokens());
+            BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
             _oProgram.setPreRunStatements(oParser.parsePreRun());
             _oProgram.setStatements(oParser.parse());
         } catch (SyntaxErrorException eSyntaxError) {
@@ -295,8 +296,9 @@ public class Basic {
             options.addOption("i", true, "define input file");
             options.addOption("q", false, "quiet mode");
             options.addOption("v", true, "verbose level: (info, debug, trace, or error)");
-            options.addOption("c", true, "compile <compile class>");
+            options.addOption("c", false, "compile");
             options.addOption("l", true, "compile language <java>");
+            options.addOption("d", false, "dartmouth mode");
 
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(options, args);
@@ -352,6 +354,11 @@ public class Basic {
 
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("java -jar BASIC-<build-name>.jar <filename.bas>", options);
+        }
+
+        if (oCommandLine != null && oCommandLine.hasOption("d")) {
+            _bDartmouthFlag = true;
+            oLogger.debug("Dartmouth mode selected...");
         }
 
         if (oCommandLine != null) {
