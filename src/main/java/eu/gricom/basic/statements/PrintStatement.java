@@ -120,4 +120,8 @@ public final class PrintStatement implements Statement {
         String strReturn = this.toString();
         return strReturn;
     }
+
+    public Expression getExpression() {
+        return _aoExpression.get(0);
+    }
 }

@@ -16,6 +16,8 @@ public class Execute {
     private final List<Statement> _aoStatements;
     private final Trace _oTrace = new Trace(false);
 
+    private Statement _oStatement = null;
+
     public Execute(Program oProgram) {
         _aoPreRunStatements = oProgram.getPreRunStatements();
         _aoStatements = oProgram.getStatements();
@@ -69,6 +71,7 @@ public class Execute {
 
                     _oTrace.trace(iSourceCodeLineNumber);
 
+                    _oStatement = _aoStatements.get(iThisStatement);
                     _aoStatements.get(iThisStatement).execute();
                 }
             } else {
@@ -78,5 +81,9 @@ public class Execute {
         } catch (Exception eException) {
             eException.printStackTrace();
         }
+    }
+
+    public Statement getFinalStatement() {
+        return _oStatement;
     }
 }
