@@ -91,7 +91,7 @@ public class MacroList {
     }
 
     private Vector<String> toVector (String strStringCodedVector) {
-        Vector<String> vstrVectorFromString = new Vector();
+        Vector<String> vstrVectorFromString = new Vector<String>();
         String strValue = new String();
 
         if (strStringCodedVector.indexOf("[") >= 0) {

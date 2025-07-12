@@ -126,7 +126,7 @@ public class BasicParser implements Parser {
                     aoStatements.add(new DataStatement(_iPosition, aoValues));
                     break;
 
-                // EOP Token: End of the program found, finishing the loop thru the program
+                // EOP Token: End of the program found, finishing the loop through the program
                 case EOP:
                     _oLogger.debug("-parsePreRun-> found Token: <" + _iPosition + "> [EOP] ");
                     bContinue = false;
@@ -260,7 +260,7 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
-                // EOP Token: End of the program found, finishing the loop thru the program
+                // EOP Token: End of the program found, finishing the loop through the program
                 case EOP:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [EOP] ");
                     bContinue = false;
@@ -575,7 +575,7 @@ public class BasicParser implements Parser {
 
     /**
      * Parses a single expression. Recursive descent parsers start with the
-     * lowest-precedent term and moves towards higher priority. For Basic,
+     * lowest-precedent term and move towards higher priority. For Basic,
      * binary operators (+, -, etc.) are the lowest.
      *
      * @return The parsed expression.
@@ -655,17 +655,7 @@ public class BasicParser implements Parser {
     }
 
     /**
-     * For Precedence Mode:
      *
-     * In the Precendence Mode, mathematical calcualtion is done following
-     * the rules of calculus. In this case the calcualtion is not done left
-     * to right, but following the precedence of the calculation, from low
-     * (logical or) to high (UnaryOperatorExpression).
-     *
-     * @return The parsed expression.
-     * @throws SyntaxErrorException - marks any syntax issues
-     */
-    /**
      * Logical OR operator (lowest precedence)
      *
      * @return Expression with logical OR precedence

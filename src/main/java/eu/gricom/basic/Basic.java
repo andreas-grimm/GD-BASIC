@@ -215,6 +215,7 @@ public class Basic {
      * which it then will compile to execute.
      *
      * @param oProgram The program object, containing the source code of a .bas script to interpret.
+     * @param strLanguage Define the target programming language, default is "Java"
      */
     public final void compile(final Program oProgram, final String strLanguage) {
         _oLogger.info("Compiler started, using " + strLanguage + "...");
@@ -258,8 +259,6 @@ public class Basic {
         } catch (SyntaxErrorException eSyntaxError) {
             eSyntaxError.printStackTrace();
         }
-
-
 
         // Generate code.
         _oLogger.info("Create the code...");

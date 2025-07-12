@@ -6,7 +6,6 @@ import eu.gricom.basic.memoryManager.Program;
 import eu.gricom.basic.runtimeManager.Execute;
 import eu.gricom.basic.statements.Expression;
 import eu.gricom.basic.statements.PrintStatement;
-import eu.gricom.basic.statements.Statement;
 import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.Lexer;
 import eu.gricom.basic.tokenizer.Token;
@@ -15,25 +14,24 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class BasicParserTest {
 
-
     /**
      * Verify maths - using precedence rules of calcualtion (* before +)...
-     *
+     * <p>
      * Note: This unit test only works iff the last statement in the test program is a PRINT command on a real value
      * e.g. a#
      *
-     * @throws Exception
      */
     @Test
     public void testDartmouthMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_Q1_unittest_2.bas");
+        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_1.bas");
         Program oProgram = new Program();
         oProgram.load(strReadText);
 
@@ -50,24 +48,21 @@ public class BasicParserTest {
         Value oValue = oExpression.evaluate();
 
         double dValue = oValue.toReal();
-        System.out.println(dValue);
-
-        assertTrue(dValue == 57.6650390625);
+        assertEquals(57.6650390625, dValue);
     }
 
     /**
      * Verify maths - using precedence rules of calcualtion (* before +)...
-     *
+     * <p>
      * Note: This unit test only works iff the last statement in the test program is a PRINT command on a real value
      * e.g. a#
      *
-     * @throws Exception
      */
     @Test
     public void testPrecedenceMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_Q1_unittest_2.bas");
+        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_1.bas");
         Program oProgram = new Program();
         oProgram.load(strReadText);
 
@@ -84,24 +79,21 @@ public class BasicParserTest {
         Value oValue = oExpression.evaluate();
 
         double dValue = oValue.toReal();
-        System.out.println(dValue);
-
-        assertTrue(dValue == 1.005859375);
+        assertEquals(1.005859375, dValue);
     }
 
     /**
      * Verify maths - using precedence rules of calcualtion (* before +)...
-     *
+     * <p>
      * Note: This unit test only works iff the last statement in the test program is a PRINT command on a real value
      * e.g. a#
      *
-     * @throws Exception
      */
     @Test
     public void testAddMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_Q1_unittest_3_add.bas");
+        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_2_add.bas");
         Program oProgram = new Program();
         oProgram.load(strReadText);
 
@@ -118,24 +110,21 @@ public class BasicParserTest {
         Value oValue = oExpression.evaluate();
 
         double dValue = oValue.toReal();
-        System.out.println(dValue);
-
-        assertTrue(dValue == 3);
+        assertEquals(3, dValue);
     }
 
     /**
      * Verify maths - using precedence rules of calcualtion (* before +)...
-     *
+     * <p>
      * Note: This unit test only works iff the last statement in the test program is a PRINT command on a real value
      * e.g. a#
      *
-     * @throws Exception
      */
     @Test
     public void testDivideMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_Q1_unittest_4_divide.bas");
+        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_3_divide.bas");
         Program oProgram = new Program();
         oProgram.load(strReadText);
 
@@ -152,24 +141,21 @@ public class BasicParserTest {
         Value oValue = oExpression.evaluate();
 
         double dValue = oValue.toReal();
-        System.out.println(dValue);
-
-        assertTrue(dValue == 0.75);
+        assertEquals(0.75, dValue);
     }
 
     /**
      * Verify maths - using precedence rules of calcualtion (* before +)...
-     *
+     * <p>
      * Note: This unit test only works iff the last statement in the test program is a PRINT command on a real value
      * e.g. a#
      *
-     * @throws Exception
      */
     @Test
     public void testMultiplyMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_Q1_unittest_5_multiply.bas");
+        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_4_multiply.bas");
         Program oProgram = new Program();
         oProgram.load(strReadText);
 
@@ -186,16 +172,17 @@ public class BasicParserTest {
         Value oValue = oExpression.evaluate();
 
         double dValue = oValue.toReal();
-        System.out.println(dValue);
-
-        assertTrue(dValue == 6);
+        assertEquals(6, dValue);
     }
 
+    /**
+     * Test Atomic Word...
+     */
     @Test
     public void testAtomicWord() throws SyntaxErrorException {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_Q1_unittest.bas");
+        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest.bas");
         List<Token> aoTokens = oTokenizer.tokenize(strReadText);
 
         BasicParser oParser = new BasicParser(aoTokens, true);
