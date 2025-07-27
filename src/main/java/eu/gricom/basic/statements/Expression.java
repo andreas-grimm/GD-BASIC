@@ -21,7 +21,7 @@ public interface Expression {
     Value evaluate() throws Exception;
 
     /**
-     * Get the content in human readable form.
+     * Get the content in human-readable form.
      *
      * @return Content in readable form
      */
@@ -29,7 +29,7 @@ public interface Expression {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters

@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class Program {
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
+    private String _strProgramName;
     private String _strLoadedProgramSource;
     private String _strCurrentProgramSource;
     private LineNumberXRef _oLineNumbers = new LineNumberXRef();
@@ -42,13 +43,23 @@ public class Program {
      *
      * @param strProgram The basic program, containing the source code of a .bas script to interpret.
      */
-    public final void load(final String strProgram) {
+    public final void load(final String strProgramName, final String strProgram) {
         _oLogger.info("Loading program...");
 
         _strLoadedProgramSource = strProgram;
         _strCurrentProgramSource = strProgram;
+        _strProgramName = strProgramName;
     }
 
+    /**
+     * Get the Program Name.
+     * Return the name of the program loaded.
+     *
+     * @return The name of the basic program.
+     */
+    public final String getProgramName() {
+        return _strProgramName;
+    }
 
     /**
      * get Program.

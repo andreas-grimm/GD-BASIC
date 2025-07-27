@@ -5,15 +5,14 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
  * DoStatement.java
- *
+ * <p>
  * Description:
- *
- * A For statement counts an integer or real value from a start value to an end value - and with every increase it
- * loops thru the block from the For statement to the next Next statement. When the target value is reached, the
- * program flow will jump to the statement past the next statement.
- *
- * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
- *
+ * <p>
+ * A 'Do' statement counts is an accepting loop, executing first ('Do') and checks the result and exit
+ * condition at the end ('Until').
+ * <p>
+ * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
  * Created in 2021
  */
 public class DoStatement implements Statement {
@@ -21,7 +20,7 @@ public class DoStatement implements Statement {
 
     /**
      * Default constructor.
-     *
+     * <p>
      * The "Do" statement defines the return location for the "Until" command for the "do-until" loop.
      * The class has no further function.
      *
@@ -50,7 +49,7 @@ public class DoStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -58,7 +57,9 @@ public class DoStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"DO\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

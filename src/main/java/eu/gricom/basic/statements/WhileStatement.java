@@ -9,15 +9,15 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
  * WhileStatement.java
- *
+ * <p>
  * Description:
- *
- * A While statement loops thru the block from the While statement to the next End-While statement as long as the
+ * <p>
+ * A While statement loops through the block from the While statement to the next End-While statement as long as the
  * condition in the While statement is True. When the condition defined is changing from True to False, the program
  * flow will jump to the next statement past the End-While statement.
- *
- * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
- *
+ * <p>
+ * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
  * Created in 2021
  */
 public final class WhileStatement implements Statement {
@@ -30,10 +30,10 @@ public final class WhileStatement implements Statement {
 
 
     /**
-     * Gets a previously consumed token, indexing backwards. last(1) will
+     * Gets a previously consumed token, indexing backwards. Last (1) will
      * be the token just consumed, last(2) the one before that, etc.
      *
-     * @param iTokenNumber number of the token that is translated into the FOR statement
+     * @param iTokenNumber number of the token that is translated into the 'FOR' statement
      * @param oCondition the condition, when true, enters the loop
      * @param iEndWhileLine location of the next command to be processed after the loop
      */
@@ -54,7 +54,7 @@ public final class WhileStatement implements Statement {
     public void execute() throws Exception {
         final LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
-        // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
+        // Here we are using line numbers to jump to the destination. This is only done for BASIC programs.
         BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
 
         // different to the code above: when the result of the condition is false, then ignore the next block and
@@ -87,7 +87,7 @@ public final class WhileStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -95,7 +95,11 @@ public final class WhileStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"WHILE\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
+        strReturn += "\"CONDITION\": \""+ _oCondition.structure() +"\",";
+        strReturn += "\"END_WHILE\": \""+ _iEndWhileLine +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

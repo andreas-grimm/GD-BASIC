@@ -2,23 +2,25 @@ package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.EmptyStackException;
 import eu.gricom.basic.memoryManager.Stack;
+import eu.gricom.basic.helper.Logger;
 
 /**
  * CleanStatement.java
  * <p>
  * Description:
  * <p>
- * The DimStatement class defines all kind of arrays.
+ * The DimStatement class defines all kinds of arrays.
  * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
  */
 public class CleanStatement implements Statement {
     private final int _iTokenNumber;
+    private final Logger _oLogger = new Logger(this.getClass().getName());
 
     /**
      * Default constructor.
-     *
-     * An "CLEAN" statement cleans the stack from the last entrence if you jump out of the block.
+     * <p>
+     * An "CLEAN" statement cleans the stack from the last entrance if you jump out of the block.
      * @param iTokenNumber - number of the command in the basic program
      */
     public CleanStatement(final int iTokenNumber) {
@@ -37,7 +39,7 @@ public class CleanStatement implements Statement {
 
     /**
      * Execute.
-     *
+     * <p>
      * Remove the last stack entry.
      */
     public final void execute() {
@@ -45,14 +47,14 @@ public class CleanStatement implements Statement {
 
         try {
             oStack.pop();
-        } catch (EmptyStackException e) {
-            e.printStackTrace();
+        } catch (EmptyStackException eException) {
+            _oLogger.error(eException.getMessage());
         }
     }
 
     /**
      * Content.
-     *
+     * <p>
      * Method for JUnit to return the content of the statement.
      *
      * @return - gives the name of the statement ("END")
@@ -65,7 +67,7 @@ public class CleanStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -73,10 +75,9 @@ public class CleanStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = "{\"CLEAN\": {\n";
-        strReturn += "\t\"TOKEN_NR\": \""+ _iTokenNumber +"\"\n";
-        strReturn += "\t}\n";
-        strReturn += "}\n";
+        String strReturn = "{\"CLEAN\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

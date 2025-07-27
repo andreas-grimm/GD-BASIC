@@ -10,12 +10,12 @@ import eu.gricom.basic.variableTypes.BooleanValue;
 
 /**
  * UnaryOperatorExpression handles unary operators that operate on a single operand.
- * 
+ * <p>
  * Supported unary operators:
- * - PLUS (+) : Unary plus (usually no effect, but validates the operand)
- * - MINUS (-) : Unary minus (negates the operand)
- * - NOT (!) : Logical NOT (inverts boolean values, bitwise NOT for integers)
- * 
+ * - PLUS (+): Unary plus (usually no effect, but validates the operand)
+ * - MINUS (-): Unary minus (negates the operand)
+ * - NOT (!): Logical NOT (inverts boolean values, bitwise NOT for integers)
+ * <p>
  * This class follows the same pattern as OperatorExpression but handles
  * single-operand operations instead of binary operations.
  * 
@@ -57,20 +57,13 @@ public class UnaryOperatorExpression implements Expression {
         Value operandValue = _oOperand.evaluate();
         
         _oLogger.debug("Evaluating unary operator: " + _oOperator + " on operand: " + operandValue);
-        
-        switch (_oOperator) {
-            case PLUS:
-                return evaluateUnaryPlus(operandValue);
-                
-            case MINUS:
-                return evaluateUnaryMinus(operandValue);
-                
-            case NOT:
-                return evaluateUnaryNot(operandValue);
-                
-            default:
-                throw new SyntaxErrorException("Unknown unary operator: " + _oOperator);
-        }
+
+        return switch (_oOperator) {
+            case PLUS -> evaluateUnaryPlus(operandValue);
+            case MINUS -> evaluateUnaryMinus(operandValue);
+            case NOT -> evaluateUnaryNot(operandValue);
+            default -> throw new SyntaxErrorException("Unknown unary operator: " + _oOperator);
+        };
     }
 
     /**
@@ -187,7 +180,11 @@ public class UnaryOperatorExpression implements Expression {
      */
     @Override
     public String structure() throws Exception {
-        return "UNARY_OP(" + _oOperator + ", " + _oOperand.structure() + ")";
+        String strReturn = "{\"UNARY_OP\": {";
+        strReturn += "\"OPERATOR\": \""+ _oOperator.toString() +"\",";
+        strReturn += "\"OPERAND\": \""+ _oOperand.structure() +"\"";
+        strReturn += "}}";
+        return strReturn;
     }
 
     /**
@@ -197,16 +194,12 @@ public class UnaryOperatorExpression implements Expression {
      * @return the string symbol for the operator
      */
     private String getOperatorSymbol(BasicTokenType operator) {
-        switch (operator) {
-            case PLUS:
-                return "+";
-            case MINUS:
-                return "-";
-            case NOT:
-                return "!";
-            default:
-                return operator.toString();
-        }
+        return switch (operator) {
+            case PLUS -> "+";
+            case MINUS -> "-";
+            case NOT -> "!";
+            default -> operator.toString();
+        };
     }
 
     /**

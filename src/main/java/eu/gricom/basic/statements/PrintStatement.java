@@ -9,7 +9,7 @@ import java.util.List;
  * <p>
  * A "print" statement evaluates an expression, converts the result to a string, and displays it to the user.
  * <p>
- * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2004,...,2016 by Andreas Grimm, Den Haag, The Netherlands
  * <p>
  * Created in 2003
  *
@@ -22,8 +22,8 @@ public final class PrintStatement implements Statement {
 
     /**
      * Default constructor.
-     *
-     * Receive the statement that is targeted to be printed.
+     * <p>
+     * Receive the statement targeted to be printed.
      *
      * @param oExpression - input to the print statement
      */
@@ -36,8 +36,8 @@ public final class PrintStatement implements Statement {
 
     /**
      * Default constructor.
-     *
-     * Receive the statement that is targeted to be printed.
+     * <p>
+     * Receive the statement targeted to be printed.
      *
      * @param iTokenNumber  - number of the token in the BASIC program
      * @param aoExpression - list of inputs to the print statement
@@ -71,7 +71,7 @@ public final class PrintStatement implements Statement {
             System.out.println(_oExpression.evaluate().toString());
         }
 
-        // this more complex version is used by the BASIC version
+        // the BASIC version uses this more complex version
         if (_aoExpression != null) {
             for (Expression oExpression : _aoExpression) {
                 System.out.print(oExpression.evaluate());
@@ -91,10 +91,10 @@ public final class PrintStatement implements Statement {
     @Override
     public String content() {
         if (_aoExpression != null) {
-            String strContent = new String();
+            StringBuilder strContent = new StringBuilder();
 
             for (Expression oExpression : _aoExpression) {
-                strContent += "<" + oExpression.content() + ">";
+                strContent.append("<").append(oExpression.content()).append(">");
             }
 
             return "PRINT (" + strContent + ")";
@@ -109,7 +109,7 @@ public final class PrintStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -117,11 +117,23 @@ public final class PrintStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
-        return strReturn;
+        assert _aoExpression != null;
+        StringBuilder strReturn = new StringBuilder("{\"PRINT\": {");
+        strReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
+        for (Expression oExpression : _aoExpression) {
+            strReturn.append("\"EXPRESSION\": ").append(oExpression.structure()).append(",");
+        }
+        if (_bCRLF) {
+            strReturn.append("\"CRLF\": \"TRUE\"");
+        } else {
+            strReturn.append("\"CRLF\": \"FALSE\"");
+        }
+        strReturn.append("}}");
+        return strReturn.toString();
     }
 
     public Expression getExpression() {
-        return _aoExpression.get(0);
+        assert _aoExpression != null;
+        return _aoExpression.getFirst();
     }
 }

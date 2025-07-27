@@ -7,15 +7,15 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
  * NextStatement.java
- *
+ * <p>
  * Description:
- *
+ * <p>
  * A For statement counts an integer or real value from a start value to an end value - and with every increase it
- * loops thru the block from the For statement to the next Next statement. When the target value is reached, the
+ * loops through the block from the "For" statement to the next "Next" statement. When the target value is reached, the
  * program flow will jump to the statement past the next statement.
- *
- * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
- *
+ * <p>
+ * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
  * Created in 2021
  */
 public class EndWhileStatement implements Statement {
@@ -24,7 +24,7 @@ public class EndWhileStatement implements Statement {
 
     /**
      * Default constructor.
-     *
+     * <p>
      * An "end-while" statement returns to the "while" loop start.
      *
      * @param iTokenNumber the line number of this command
@@ -59,7 +59,7 @@ public class EndWhileStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -67,7 +67,9 @@ public class EndWhileStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"END_WHILE\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

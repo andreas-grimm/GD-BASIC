@@ -9,11 +9,11 @@ import java.util.Locale;
  * <p>
  * Description:
  * <p>
- * The Pragma Statement changes the behaviour of the interpreter / compiler during execution from the moment it is
- * found. Currently the following paramter can be modified:
+ * The Pragma Statement changes the behavior of the interpreter / compiler during execution from the moment it is
+ * found. Currently, the following parameter can be modified:
  * Debug Level
  * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
  */
 public class PragmaStatement implements Statement {
     private final String _strParameter;
@@ -71,12 +71,12 @@ public class PragmaStatement implements Statement {
 
     @Override
     public final String content() throws Exception {
-        return new String("Pragma Statement: Set " + _strParameter + " to " + _strValue);
+        return "Pragma Statement: Set " + _strParameter + " to " + _strValue;
     }
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -84,7 +84,11 @@ public class PragmaStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"PRAGMA\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
+        strReturn += "\"PARAMETER\": \""+ _strParameter +"\",";
+        strReturn += "\"VALUE\": \""+ _strValue +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

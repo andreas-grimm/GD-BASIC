@@ -21,7 +21,6 @@ public class RemStatement implements Statement {
      * @param strRemText - text of the rem statement
      */
     public RemStatement(final int iTokenNumber, final String strRemText) {
-
         _iTokenNumber = iTokenNumber;
         _strRemText = strRemText;
     }
@@ -67,7 +66,10 @@ public class RemStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"REM\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
+        strReturn += "\"REM_TEXT\": \""+ _strRemText +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

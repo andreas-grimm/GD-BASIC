@@ -31,9 +31,10 @@ public class BasicParserTest {
     public void testDartmouthMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_1.bas");
+        String strTestProgramName = "src/test/basic/test_basic_parser_unittest_1.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
         Program oProgram = new Program();
-        oProgram.load(strReadText);
+        oProgram.load(strTestProgramName, strReadText);
 
         oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
@@ -62,9 +63,10 @@ public class BasicParserTest {
     public void testPrecedenceMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_1.bas");
+        String strTestProgramName = "src/test/basic/test_basic_parser_unittest_1.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
         Program oProgram = new Program();
-        oProgram.load(strReadText);
+        oProgram.load(strTestProgramName, strReadText);
 
         oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
@@ -93,9 +95,10 @@ public class BasicParserTest {
     public void testAddMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_2_add.bas");
+        String strTestProgramName = "src/test/basic/test_basic_parser_unittest_2_add.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
         Program oProgram = new Program();
-        oProgram.load(strReadText);
+        oProgram.load(strTestProgramName, strReadText);
 
         oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
@@ -124,9 +127,10 @@ public class BasicParserTest {
     public void testDivideMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_3_divide.bas");
+        String strTestProgramName = "src/test/basic/test_basic_parser_unittest_3_divide.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
         Program oProgram = new Program();
-        oProgram.load(strReadText);
+        oProgram.load(strTestProgramName, strReadText);
 
         oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
@@ -155,9 +159,10 @@ public class BasicParserTest {
     public void testMultiplyMathParsing() throws Exception {
         Lexer oTokenizer = new BasicLexer();
 
-        String strReadText = FileHandler.readFile("src/test/basic/test_basic_parser_unittest_4_multiply.bas");
+        String strTestProgramName = "src/test/basic/test_basic_parser_unittest_4_multiply.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
         Program oProgram = new Program();
-        oProgram.load(strReadText);
+        oProgram.load(strTestProgramName, strReadText);
 
         oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 

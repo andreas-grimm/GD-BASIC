@@ -10,14 +10,14 @@ import eu.gricom.basic.tokenizer.Normalizer;
  * <p>
  * An assignment statement evaluates an expression and stores the result in a variable.
  * <p>
- * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2004,...,2016 by Andreas Grimm, Den Haag, The Netherlands
  * <p>
  * Created in 2003
  *
  */
 public final class AssignStatement implements Statement {
     private final String _strKey;
-    private final Expression _oValue;
+    private final Expression _oExpression;
     private final int _iTokenNumber;
     private final VariableManagement _oVariableManagement = new VariableManagement();
 
@@ -26,11 +26,11 @@ public final class AssignStatement implements Statement {
      *
      * @param iTokenNumber - number of the basic command line
      * @param strName - target of the assign statement
-     * @param oValue - value of the assignment statement
+     * @param oExpression - value of the assignment statement
      */
-    public AssignStatement(final int iTokenNumber, final String strName, final Expression oValue) {
+    public AssignStatement(final int iTokenNumber, final String strName, final Expression oExpression) {
         _strKey = strName;
-        _oValue = oValue;
+        _oExpression = oExpression;
         _iTokenNumber = iTokenNumber;
     }
 
@@ -38,11 +38,11 @@ public final class AssignStatement implements Statement {
      * Default constructor.
      *
      * @param strName - target of the assign statement
-     * @param oValue - value of the assignment statement
+     * @param oExpression - value of the assignment statement
      */
-    public AssignStatement(final String strName, final Expression oValue) {
+    public AssignStatement(final String strName, final Expression oExpression) {
         _strKey = strName;
-        _oValue = oValue;
+        _oExpression = oExpression;
         _iTokenNumber = 0;
     }
 
@@ -60,7 +60,7 @@ public final class AssignStatement implements Statement {
      * The assignment is defined as part of the default constructor. But only here the transaction is actually
      * executed. After the execution, the variable is assigned.
      *
-     * @throws Exception - any excpetion coming from the memory management
+     * @throws Exception - any exception coming from the memory management
      */
     @Override
     public void execute() throws Exception {
@@ -76,7 +76,7 @@ public final class AssignStatement implements Statement {
 
             if (strInner.contains(",")) {
                 String[] astrCommaSeperatedList = strInner.split(",");
-                String strCommaSeperatedList = new String();
+                StringBuilder strCommaSeperatedList = new StringBuilder();
 
                 for (String strExpression: astrCommaSeperatedList) {
                     String strValue = strExpression;
@@ -86,7 +86,7 @@ public final class AssignStatement implements Statement {
                         strValue = oExpression.evaluate().toString();
                     }
 
-                    strCommaSeperatedList += strValue + ",";
+                    strCommaSeperatedList.append(strValue).append(",");
                 }
 
                 strKey = strKey.substring(0, iIndexStart + 1)
@@ -107,7 +107,7 @@ public final class AssignStatement implements Statement {
             strKey = Normalizer.normalizeIndex(strKey);
         }
 
-        _oVariableManagement.putMap(strKey, _oValue.evaluate());
+        _oVariableManagement.putMap(strKey, _oExpression.evaluate());
     }
 
     /**
@@ -117,12 +117,12 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public String content() {
-        return "ASSIGN [" + _strKey + ":= " + _oValue.content() + "]";
+        return "ASSIGN [" + _strKey + ":= " + _oExpression.content() + "]";
     }
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -130,12 +130,11 @@ public final class AssignStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = "{\"ASSIGN\": {\n";
-        strReturn += "\t\"TOKEN_NR\": \""+ _iTokenNumber +"\",\n";
-        strReturn += "\t\"NAME\": \""+ _strKey +"\",\n";
-        strReturn += "\t\"EXPRESSION\": \""+ _oValue.structure() +"\",\n";
-        strReturn += "\t}\n";
-        strReturn += "}\n";
+        String strReturn = "{\"ASSIGN\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
+        strReturn += "\"NAME\": \""+ _strKey +"\",";
+        strReturn += "\"EXPRESSION\": "+ _oExpression.structure();
+        strReturn += "}}";
         return strReturn;
     }
 }

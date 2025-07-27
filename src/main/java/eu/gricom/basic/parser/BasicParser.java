@@ -41,10 +41,10 @@ import java.util.List;
 /**
  * This defines the Basic parser. The parser takes in a sequence of tokens
  * and generates an abstract syntax tree. This is the nested data structure
- * that represents the series of statements, and the expressions (which can
+ * that represents the series of statements and the expressions (which can
  * nest arbitrarily deeply) that they evaluate. In technical terms, what we
  * have is a recursive descent parser, the simplest kind to hand-write.
- *
+ * <p>
  * As a side-effect, this phase also stores off the line numbers for each
  * label in the program. It's a bit gross, but it works.
  */
@@ -583,7 +583,7 @@ public class BasicParser implements Parser {
      */
     private Expression expression() throws SyntaxErrorException {
         _oLogger.debug("-expression-> <" + _iPosition + "> [" + getToken(0).getType().toString() + "]");
-        if (_bDartmouthFlag == true) {
+        if (_bDartmouthFlag) {
             return operator();
         }
 
@@ -592,17 +592,17 @@ public class BasicParser implements Parser {
 
     /**
      * For Dartmouth mode:
-     *
+     * <p>
      * Parses a series of binary operator expressions into a single
      * expression. In Basic, all operators have the same precedence and
      * associate left-to-right. That means it will interpret:
      *    1 + 2 * 3 - 4 / 5
      * like:
      *    ((((1 + 2) * 3) - 4) / 5)
-     *
+     * <p>
      * It works by building the expression tree one at a time. So, given
      * this code: 1 + 2 * 3, this will:
-     *
+     * <p>
      * 1. Parse (1) as an atomic expression.
      * 2. See the (+) and start a new operator expression.
      * 3. Parse (2) as an atomic expression.
@@ -611,7 +611,7 @@ public class BasicParser implements Parser {
      * 6. Parse (3) as an atomic expression.
      * 7. Build a ((1 + 2) * 3) expression and replace (1 + 2) with it.
      * 8. Return the last expression built.
-     *
+     * <p>
      * @return The parsed expression.
      * @throws SyntaxErrorException - marks any syntax issues
      */

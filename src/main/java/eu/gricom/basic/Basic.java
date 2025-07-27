@@ -20,6 +20,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,6 +43,7 @@ public class Basic {
     private static String _strCompileLanguage = "java";
     private static boolean _bCompile = false;
     private static boolean _bDartmouthFlag = false;
+    private static String _strSerializedFileName = "program.ser";
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of the interpreter such as the values of
@@ -260,9 +264,25 @@ public class Basic {
             eSyntaxError.printStackTrace();
         }
 
-        // Generate code.
-        _oLogger.info("Create the code...");
-        Generator.create(_oProgram, strLanguage);
+        // Generate and store object code.
+        _oLogger.info("Create the object code...");
+        Generator.createObjectCode(_oProgram);
+
+/*
+        // export
+        try (FileOutputStream fileOut = new FileOutputStream(_strSerializedFileName);
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            out.writeObject(oProgram);
+            System.out.println("Serialized data is saved " + _strSerializedFileName);
+        } catch (IOException eException) {
+            eException.printStackTrace();
+        }
+*/
+        // Generate target code.
+        _oLogger.info("Create the target code...");
+        if (strLanguage.equals("java")) {
+            Generator.createJavaCode();
+        }
 
         // compile.
 
@@ -371,25 +391,24 @@ public class Basic {
                 System.exit(-1);
             }
 
-            for (String strArgument : astrArguments) {
+            String strFileName = astrArguments.getLast();
 
-                // Read the file.
-                oLogger.info("Read file: " + strArgument + "...");
-                oProgram.load(FileHandler.readFile(strArgument));
+            // Read the file.
+            oLogger.info("Read file: " + strFileName + "...");
+            oProgram.load(strFileName, FileHandler.readFile(strFileName));
 
-                // Run it.
-                Basic oBasic = new Basic();
+            // Run it.
+            Basic oBasic = new Basic();
 
-                if (_bCompile) {
-                    oLogger.info("Run the compiler...");
-                    oBasic.compile(oProgram, _strCompileLanguage);
-                } else {
-                    oLogger.info("Run the interpreter...");
-                    oBasic.interpret(oProgram);
-                }
-
-                System.exit(-1);
+            if (_bCompile) {
+                oLogger.info("Run the compiler...");
+                oBasic.compile(oProgram, _strCompileLanguage);
+            } else {
+                oLogger.info("Run the interpreter...");
+                oBasic.interpret(oProgram);
             }
+
+            System.exit(-1);
         }
     }
 }
