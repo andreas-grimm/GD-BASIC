@@ -5,13 +5,13 @@ RELEASE_LEVEL=java21
 
 echo "--- Basic Regression Test ---"
 echo "Test run: src/test/resources/test_basic_jasic_1_recoded.bas"
-java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c src/test/basic/test_basic_jasic_1_recoded.bas
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c -b src/test/basic/test_basic_jasic_1_recoded.bas
 cat src/test/basic/test_basic_jasic_1_recoded.json
 rm src/test/basic/test_basic_jasic_1_recoded.json
 read -p "Press any [enter] to resume ..."
 
 echo "Test run: src/test/resources/test_basic1_Q1_dev.bas"
-java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c src/test/basic/test_basic_Q1_dev.bas
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c -b src/test/basic/test_basic_Q1_dev.bas
 cat src/test/basic/test_basic_Q1_dev.json
 rm src/test/basic/test_basic_Q1_dev.json
 read -p "Press any [enter] to resume ..."

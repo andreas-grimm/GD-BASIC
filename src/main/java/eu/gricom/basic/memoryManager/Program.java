@@ -7,20 +7,19 @@ import java.util.List;
 
 /**
  * Program.java
- *
+ * <p>
  * Description:
- *
+ * <p>
  * This is the storage class for the Basic program to be executed. This is the main place of persistent information for
  * the different stages of the code: loaded, tokenized, and parsed. This allows the use of intermediate storage during
  * execution.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
+ * (c) = 2021,...,2025 by Andreas Grimm, Den Haag, The Netherlands
  */
 public class Program {
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private String _strProgramName;
-    private String _strLoadedProgramSource;
-    private String _strCurrentProgramSource;
+    private String _strProgramSource;
     private LineNumberXRef _oLineNumbers = new LineNumberXRef();
     private List<Statement> _aoPreRunStatements;
     private List<Statement> _aoStatements = null;
@@ -29,7 +28,7 @@ public class Program {
 
     /**
      * Constructs a new Program instance. The instance stores the global state of
-     * the program such as the values of all of the variables and the
+     * the program such as the values of all the variables and the
      * current statement.
      */
     public Program() {
@@ -46,8 +45,7 @@ public class Program {
     public final void load(final String strProgramName, final String strProgram) {
         _oLogger.info("Loading program...");
 
-        _strLoadedProgramSource = strProgram;
-        _strCurrentProgramSource = strProgram;
+        _strProgramSource = strProgram;
         _strProgramName = strProgramName;
     }
 
@@ -62,24 +60,24 @@ public class Program {
     }
 
     /**
-     * get Program.
-     * This method return the program source code.
+     * Get Program.
+     * This method returns the program source code.
      *
      * @return the basic program, containing the source code of a .bas script to interpret.
      */
     public final String getProgram() {
-        return _strCurrentProgramSource;
+        return _strProgramSource;
     }
 
 
     /**
      * set Program.
-     * This method is used to adopt the source code, e.g. due to the processing of macros.
+     * This method is used to adopt the source code, e.g., due to the processing of macros.
      *
      * @param strProgram - the source code of the changed code.
      */
     public final void setProgram(String strProgram) {
-        _strCurrentProgramSource = strProgram;
+        _strProgramSource = strProgram;
     }
 
 
@@ -98,7 +96,7 @@ public class Program {
      * get Tokens.
      * This method provides the list of tokens inside this object.
      *
-     * @return array of token objects.
+     * @return list of token objects.
      */
     public final List<Token> getTokens() {
         return _aoTokens;
@@ -120,7 +118,7 @@ public class Program {
      * get Statements.
      * This method provides the list of statements inside this object.
      *
-     * @return array of statements objects.
+     * @return list of statement objects.
      */
     public final List<Statement> getStatements() {
         return _aoStatements;
@@ -142,7 +140,7 @@ public class Program {
      * get PreRunStatements.
      * This method provides the list of pre-run statements inside this object.
      *
-     * @return array of statements objects.
+     * @return list of statement objects.
      */
     public final List<Statement> getPreRunStatements() {
         return _aoPreRunStatements;

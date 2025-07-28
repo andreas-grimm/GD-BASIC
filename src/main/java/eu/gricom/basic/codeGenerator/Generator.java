@@ -1,6 +1,5 @@
 package eu.gricom.basic.codeGenerator;
 
-import eu.gricom.basic.codeGenerator.java.ObjectCodeGenerator;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.memoryManager.Program;
 
@@ -15,10 +14,11 @@ public class Generator {
      *
      * @param oProgram the parsed program to be stored.
      */
-    public static void createObjectCode(Program oProgram) {
-        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.");
+    public static void createJSONCode(Program oProgram, boolean bBeautified) {
+        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createJSONCode");
+        boolean bGenerateObjectCode = true;
 
-        String strObjectCode;
+        String strJSONCode = "";
         String strProgramName = oProgram.getProgramName();
 
         oLogger.info("Loaded program: " + strProgramName);
@@ -32,19 +32,18 @@ public class Generator {
             }
         }
         oLogger.info("Name of object file: " + _strObjectName);
-        strObjectCode = "{ \"" + _strObjectName + "\": [";
 
-        ObjectCodeGenerator oObjectCodeGenerator = new ObjectCodeGenerator(oProgram);
-        strObjectCode += oObjectCodeGenerator.create();
-        strObjectCode += "]}";
+        JSONCodeGenerator oJSONCodeGenerator = new JSONCodeGenerator(_strObjectName, oProgram);
+        strJSONCode += oJSONCodeGenerator.create(bBeautified);
+        strJSONCode += "}";
 
-        if (strObjectCode != null) {
-            oLogger.info(strObjectCode);
+        if (strJSONCode != null) {
+            oLogger.info(strJSONCode);
         }
 
         try {
             PrintWriter out = new PrintWriter(_strObjectName);
-            out.println(strObjectCode);
+            out.println(strJSONCode);
             out.close();
         } catch (Exception eException) {
             oLogger.error("Cannot generate file, error: " + eException.getMessage());
@@ -52,13 +51,19 @@ public class Generator {
         }
     }
 
-    /**
-     * Create and store the target Java code.
-     * Return the name of the program loaded.
-     *
-     */
+    public static void createObjectCode(Program oProgram) {
+        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createObjectCode");
+
+        ObjectCodeGenerator.createObjectCode(oProgram);
+    }
+
+        /**
+         * Create and store the target Java code.
+         * Return the name of the program loaded.
+         *
+         */
     public static void createJavaCode() {
-        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator,createJavaCode");
+        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createJavaCode");
 
         String strJavaProgramName = _strObjectName.replace(".json", ".comp.java");
         oLogger.info("Name of target Java file: " + strJavaProgramName);
