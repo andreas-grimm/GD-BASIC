@@ -49,6 +49,7 @@ public class JSONCodeGenerator {
             }
         }
         strJSONProgram.deleteCharAt(strJSONProgram.length()-1);
+        strJSONProgram.append("]},{\"TOKEN\": [");
         strJSONProgram.append("]}]}");
 
         // Beautify the object file

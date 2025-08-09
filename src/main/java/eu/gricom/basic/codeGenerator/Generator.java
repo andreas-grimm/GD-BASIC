@@ -35,7 +35,7 @@ public class Generator {
 
         JSONCodeGenerator oJSONCodeGenerator = new JSONCodeGenerator(_strObjectName, oProgram);
         strJSONCode += oJSONCodeGenerator.create(bBeautified);
-        strJSONCode += "}";
+//        strJSONCode += "}";
 
         if (strJSONCode != null) {
             oLogger.info(strJSONCode);
