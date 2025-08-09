@@ -67,15 +67,22 @@ public class IntegerValue implements Value {
     }
 
     /**
-     * Return the value field as an object.
+     * Returns this instance as the evaluated value.
      *
-     * @return the number value as an object
+     * @return this IntegerValue instance
      */
     public final Value evaluate() {
 
         return this;
     }
 
+    /**
+     * Compares this integer value to another value for equality.
+     *
+     * @param oValue the value to compare with
+     * @return a BooleanValue indicating whether the two values are equal
+     * @throws SyntaxErrorException if the provided value is not an integer
+     */
     @Override
     public final Value equals(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof IntegerValue) {
@@ -324,11 +331,11 @@ public class IntegerValue implements Value {
     }
 
     /**
-     * Content.
+     * Returns the string representation of the stored integer value.
      *
-     * Method for JUnit to return the content of the statement.
+     * Primarily used for testing or debugging purposes to access the internal integer as a string.
      *
-     * @return - gives the name of the statement ("INPUT") and the variable name
+     * @return the integer value as a string
      */
     @Override
     public final String content() {
@@ -337,12 +344,10 @@ public class IntegerValue implements Value {
     }
 
     /**
-     * Structure.
+     * Returns the string representation of this integer value for use in compiler structure analysis.
      *
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return the string representation of the stored integer value
+     * @throws Exception if an error occurs during structure retrieval
      */
     @Override
     public String structure() throws Exception {

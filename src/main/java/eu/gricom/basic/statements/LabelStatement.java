@@ -21,10 +21,12 @@ public class LabelStatement implements Statement {
 // section managing the labels found...
 
     /**
-     * add a label destination in the memory management.
+     * Associates the specified label with a statement number in the static label map.
      *
-     * @param strLabel - name of the label
-     * @param iStatementNumber - statement number
+     * Updates the current instance to reflect the provided label and statement number.
+     *
+     * @param strLabel the name of the label to add or update
+     * @param iStatementNumber the statement number to associate with the label
      */
     public final void putLabelStatement(final String strLabel, final int iStatementNumber) {
         _iStatementNumber = iStatementNumber;
@@ -33,20 +35,20 @@ public class LabelStatement implements Statement {
     }
 
     /**
-     * get the statement number of the label statement searched.
+     * Retrieves the statement number associated with the specified label.
      *
-     * @param strLabel - label name
-     * @return - statement number
+     * @param strLabel the name of the label to look up
+     * @return the statement number mapped to the label, or {@code null} if the label does not exist
      */
     public final int getLabelStatement(final String strLabel) {
         return _aoLabels.get(strLabel);
     }
 
     /**
-     * verify that the Label is stored.
+     * Checks whether a label with the specified name exists in the label map.
      *
-     * @param strKey - Label name
-     * @return - true if label is in the memory management
+     * @param strKey the name of the label to check
+     * @return true if the label exists; false otherwise
      */
     public final boolean containsLabelKey(final String strKey) {
 
@@ -54,9 +56,9 @@ public class LabelStatement implements Statement {
     }
 
     /**
-     * Get Token Number - get the number of the corresponding token to this statement.
+     * Returns the token number associated with this statement.
      *
-     * @return the command line number of the statement
+     * @return always returns 0, indicating no specific token number is assigned.
      */
     @Override
     public int getTokenNumber() {
@@ -64,11 +66,9 @@ public class LabelStatement implements Statement {
     }
 
     /**
-     * Statemen objects implement this class to actually perform whatever
-     * behavior the statement causes. "Print" statements will display text
-     * here, "goto" statements will change the current statement, etc.
+     * Executes the behavior associated with this label statement.
      *
-     * @throws Exception as any execution error found during execution
+     * This implementation does nothing, as label statements do not have executable behavior.
      */
     @Override
     public void execute() throws Exception {
@@ -76,12 +76,9 @@ public class LabelStatement implements Statement {
     }
 
     /**
-     * Content.
-     * <p>
-     * Method for JUnit to return the content of the statement.
+     * Returns the content of the label statement.
      *
-     * @return gives the name of the statement ("INPUT") and the variable name
-     * @throws Exception based on errors in the implementation classes
+     * @return always returns {@code null} as label statements do not have content.
      */
     @Override
     public String content() throws Exception {
@@ -89,12 +86,10 @@ public class LabelStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-formatted string representing the label and its associated statement number.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a JSON string with the label name and statement number.
+     * @throws Exception if an error occurs during string construction.
      */
     @Override
     public String structure() throws Exception {

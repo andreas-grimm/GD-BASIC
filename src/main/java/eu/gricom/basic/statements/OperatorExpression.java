@@ -18,12 +18,12 @@ public class OperatorExpression implements Expression {
     private final BasicTokenType _oOperator;
     private final Expression _oRight;
 
-    /**
-     * Default constructor.
+    /****
+     * Constructs an OperatorExpression with the specified left and right expressions and an operator represented as a string.
      *
-     * @param oLeft left part of the operation
-     * @param strOperator the actual operator - defined as a single char
-     * @param oRight right side of the operation
+     * @param oLeft the left-hand side expression
+     * @param strOperator the operator as a string (e.g., "+", "-", "*", etc.)
+     * @param oRight the right-hand side expression
      */
     public OperatorExpression(final Expression oLeft, final String strOperator, final Expression oRight) {
         _oLogger.debug("--->  " + oLeft.content() + " " + strOperator + " " + oRight.content());
@@ -33,12 +33,12 @@ public class OperatorExpression implements Expression {
         _oRight = oRight;
     }
 
-    /**
-     * Default constructor.
+    /****
+     * Constructs an OperatorExpression with the specified left and right expressions and an operator represented as a BasicTokenType.
      *
-     * @param oLeft left part of the operation
-     * @param oOperator the actual operator - defined as a BasicTokenType
-     * @param oRight right side of the operation
+     * @param oLeft the left-hand side expression
+     * @param oOperator the operator as a BasicTokenType
+     * @param oRight the right-hand side expression
      */
     public OperatorExpression(final Expression oLeft, final BasicTokenType oOperator, final Expression oRight) {
         _oLogger.debug("--->  " + oLeft.content() + " " + oOperator + " " + oRight.content());
@@ -49,10 +49,13 @@ public class OperatorExpression implements Expression {
     }
 
     /**
-     * Return the content of the result of the operation as a value variable.
+     * Evaluates the binary operator expression and returns the resulting value.
      *
-     * @throws Exception syntax error is the operator cannot be executed
-     * @return returns the result of the operation.
+     * Recursively evaluates the left and right sub-expressions, applies the specified arithmetic, logical, comparison, or bitwise operator, and returns the computed result as a {@code Value}.
+     *
+     * @return the result of applying the operator to the evaluated left and right expressions
+     * @throws SyntaxErrorException if the operator is unknown or unsupported
+     * @throws Exception if evaluation of sub-expressions fails
      */
     public final Value evaluate() throws Exception {
         Value oLeftValue = _oLeft.evaluate();
@@ -103,9 +106,9 @@ public class OperatorExpression implements Expression {
     }
 
     /**
-     * get the left side of the operation.
+     * Returns the left-hand side expression of this operator expression.
      *
-     * @return the left side of the operation as an expression
+     * @return the left sub-expression
      */
     public final Expression getLeft() {
 
@@ -113,9 +116,9 @@ public class OperatorExpression implements Expression {
     }
 
     /**
-     * get the operator of the operation.
+     * Returns the operator of this expression as a string.
      *
-     * @return - the operator as a string
+     * @return the operator as a string, or "null" if the operator is not set as a string
      */
     public final String getOperator() {
 
@@ -123,9 +126,9 @@ public class OperatorExpression implements Expression {
     }
 
     /**
-     * get the right side of the operation.
+     * Returns the right-hand side expression of this operator expression.
      *
-     * @return the right side of the operation as an expression
+     * @return the right sub-expression
      */
     public final Expression getRight() {
 
@@ -133,9 +136,9 @@ public class OperatorExpression implements Expression {
     }
 
     /**
-     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     * Returns a string representation of the operator expression, including the contents of the left and right sub-expressions and the operator.
      *
-     * @return - readable string with the name and the value of the assignment
+     * @return a readable string showing the structure of the operator expression for debugging or testing purposes
      */
     public final String content() {
         return _oLeft.content() + " " + _oOperator + " " + _oRight.content();
@@ -143,12 +146,10 @@ public class OperatorExpression implements Expression {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string representing the structure of this operator expression, including its left and right sub-expressions and the operator.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string describing the structure of the operator expression for use by the compiler
+     * @throws Exception if retrieving the structure of a sub-expression fails
      */
     @Override
     public String structure() throws Exception {

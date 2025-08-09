@@ -13,10 +13,9 @@ public class ColonStatement implements Statement {
     private final int _iTokenNumber;
 
     /**
-     * Default constructor.
-     * <p>
-     * A "DIM" statement initializes an array of any type.
-     * @param iTokenNumber - number of the command in the basic program
+     * Constructs a ColonStatement with the specified token number.
+     *
+     * @param iTokenNumber the token number representing the statement's position in the BASIC program
      */
     public ColonStatement(final int iTokenNumber) {
         _iTokenNumber = iTokenNumber;
@@ -33,20 +32,18 @@ public class ColonStatement implements Statement {
     }
 
     /**
-     * Execute.
-     * <p>
-     * Terminate the running program.
+     * Executes the colon statement.
+     *
+     * This method performs no action for colon statements, as they serve only as statement separators in BASIC programs.
      */
     public final void execute() {
 
     }
 
     /**
-     * Content.
-     * <p>
-     * Method for JUnit to return the content of the statement.
+     * Returns the name of this statement.
      *
-     * @return - gives the name of the statement ("END")
+     * @return the string "COLON"
      */
     @Override
     public final String content() {
@@ -55,12 +52,10 @@ public class ColonStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-formatted string representing the structure of the colon statement, including its token number.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a JSON string with the statement name "COLON" and its token number.
+     * @throws Exception if an error occurs during structure generation.
      */
     @Override
     public String structure() throws Exception {

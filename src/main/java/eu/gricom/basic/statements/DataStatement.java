@@ -18,11 +18,10 @@ public class DataStatement implements Statement {
     private final List<Value> _aoValues;
 
     /**
-     * Default constructor.
-     * <p>
-     * A "DATA" statement prepares and loads the FiFo Queue.
-     * @param iTokenNumber - number of the command in the basic program
-     * @param aoValues - List of all Values to be pushed into the queue
+     * Constructs a DataStatement with the specified token number and list of values.
+     *
+     * @param iTokenNumber the line number of the DATA statement in the BASIC program
+     * @param aoValues the list of values to be associated with this DATA statement
      */
     public DataStatement(final int iTokenNumber, final List<Value> aoValues) {
 
@@ -31,9 +30,9 @@ public class DataStatement implements Statement {
     }
 
     /**
-     * Get Token Number.
+     * Returns the token number associated with this DATA statement.
      *
-     * @return the command line number of the statement
+     * @return the line number where this statement appears in the source code
      */
     @Override
     public final int getTokenNumber() {
@@ -45,7 +44,11 @@ public class DataStatement implements Statement {
      * <p>
      * Push the array into the FIFO structure.
      */
-    //TODO: This needs fixing: the FiFo Queue will forget the values after the end of the call. Look at READ statement
+    /**
+     * Loads the DATA statement's values into a new FIFO queue for use by subsequent READ statements.
+     *
+     * Note: The current implementation does not persist the queue beyond this method call, which may prevent READ statements from accessing the loaded values.
+     */
     public final void execute() {
         FiFoQueue oQueue = new FiFoQueue();
 
@@ -55,11 +58,11 @@ public class DataStatement implements Statement {
     }
 
     /**
-     * Content.
+     * Returns a string representation of the DATA statement and its values.
      * <p>
-     * Method for JUnit to return the content of the statement.
+     * The result starts with "DATA" followed by each value enclosed in angle brackets, suitable for use in JUnit tests.
      *
-     * @return - gives the name of the statement ("END")
+     * @return a string representing the DATA statement and its contained values
      */
     @Override
     public final String content() {
@@ -73,12 +76,10 @@ public class DataStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string describing the structure of the DATA statement, including its token number and values.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string representation of the DATA statement's structure for use by the compiler.
+     * @throws Exception if an error occurs while generating the structure.
      */
     @Override
     public String structure() throws Exception {

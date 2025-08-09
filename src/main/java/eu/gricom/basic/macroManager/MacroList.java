@@ -84,12 +84,21 @@ public class MacroList {
         return new String();
     }
 
+    /**
+     * Outputs the current list of macros and their parameters to the debug log.
+     */
     public void print() {
         _oLogger.debug("List of Macros:");
         _oLogger.debug("Macros: " + _aoMacroList.toString());
         _oLogger.debug("Parameters: " + _aoParameterList.toString());
     }
 
+    /**
+     * Converts a string representation of a vector (e.g., "[param1, param2, ...]") into a Vector of strings.
+     *
+     * @param strStringCodedVector the string to convert, optionally enclosed in square brackets and containing comma-separated values
+     * @return a Vector containing each element as a separate string, with whitespace trimmed
+     */
     private Vector<String> toVector (String strStringCodedVector) {
         Vector<String> vstrVectorFromString = new Vector<String>();
         String strValue = new String();

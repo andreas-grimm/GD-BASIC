@@ -90,11 +90,9 @@ public class InputStatement implements Statement {
     }
 
     /**
-     * Content.
-     * <p>
-     * Method for JUnit to return the content of the statement.
+     * Returns a string representation of the input statement, including the variable name.
      *
-     * @return - gives the name of the statement ("INPUT") and the variable name
+     * @return a string in the format "INPUT (<variable_name>)"
      */
     @Override
     public final String content() {
@@ -103,12 +101,10 @@ public class InputStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string describing the structure of this INPUT statement, including its token number and variable name.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a JSON-like string with the statement type, token number, and variable name
+     * @throws Exception if an error occurs while generating the structure
      */
     @Override
     public String structure() throws Exception {

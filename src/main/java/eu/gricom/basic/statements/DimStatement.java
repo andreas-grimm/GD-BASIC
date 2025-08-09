@@ -13,10 +13,9 @@ public class DimStatement implements Statement {
     private final int _iTokenNumber;
 
     /**
-     * Default constructor.
-     * <p>
-     * A "DIM" statement initializes an array of any type.
-     * @param iTokenNumber - number of the command in the basic program
+     * Constructs a DimStatement with the specified token number.
+     *
+     * @param iTokenNumber the token number of the DIM statement in the BASIC program
      */
     public DimStatement(final int iTokenNumber) {
         _iTokenNumber = iTokenNumber;
@@ -33,20 +32,18 @@ public class DimStatement implements Statement {
     }
 
     /**
-     * Execute.
-     * <p>
-     * Terminate the running program.
+     * Terminates the running program immediately.
      */
     public final void execute() {
         System.exit(0);
     }
 
     /**
-     * Content.
-     * <p>
-     * Method for JUnit to return the content of the statement.
+     * Returns the string "END" as the content representation of this statement.
      *
-     * @return - gives the name of the statement ("END")
+     * Primarily used in JUnit tests to identify the statement type.
+     *
+     * @return the string "END"
      */
     @Override
     public final String content() {
@@ -54,13 +51,11 @@ public class DimStatement implements Statement {
         return "END";
     }
 
-    /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+    /****
+     * Returns a JSON-formatted string representing the structure of the DIM statement, including its token number.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a JSON string in the format {"DIM": {"TOKEN_NR": "<token_number>"}}
+     * @throws Exception if an error occurs in implementation classes
      */
     @Override
     public String structure() throws Exception {

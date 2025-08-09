@@ -278,11 +278,9 @@ public class LongValue implements Value {
     }
 
     /**
-     * Content.
+     * Returns the string representation of the stored long value.
      *
-     * Method for JUnit to return the content of the statement.
-     *
-     * @return - gives the name of the statement ("INPUT") and the variable name
+     * @return the stored long value as a string
      */
     @Override
     public final String content() {
@@ -291,12 +289,10 @@ public class LongValue implements Value {
     }
 
     /**
-     * Structure.
+     * Returns the string representation of this value for use in program structure analysis.
      *
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return the string representation of the stored long value
+     * @throws Exception if an error occurs in implementation classes
      */
     @Override
     public String structure() throws Exception {

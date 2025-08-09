@@ -57,9 +57,11 @@ public final class GotoStatement implements Statement {
     }
 
     /**
-     * Execute the transaction.
+     * Transfers program execution to the statement identified by the target label or line number.
      *
-     * @throws SyntaxErrorException for unknown or incorrect formatted targets
+     * If the target is a recognized label, execution jumps to the corresponding statement. If the target is a line number, execution jumps to the statement at that line. Throws a {@code SyntaxErrorException} if the target is unknown or incorrectly formatted.
+     *
+     * @throws SyntaxErrorException if the target label or line number does not exist or is incorrectly formatted
      */
     public void execute() throws SyntaxErrorException {
         // This part of the method is executed if the BASIC interpreter uses labels (e.g., we are using JASIC)
@@ -86,9 +88,12 @@ public final class GotoStatement implements Statement {
     }
 
     /**
-     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     * Returns a string describing the GOTO statement's target and its resolved destination.
      *
-     * @return - readable string with the name and the value of the assignment
+     * The returned string indicates whether the target is a label or a line number and shows the corresponding destination statement.
+     *
+     * @return a string representation of the GOTO statement's target and destination
+     * @throws RuntimeException if the target cannot be resolved to a valid label or line number
      */
     @Override
     public String content() throws RuntimeException {
@@ -100,12 +105,10 @@ public final class GotoStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string representing the structure of this GOTO statement for compiler use.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string containing the statement type ("GOTO"), token number, and target label or line number.
+     * @throws Exception if an error occurs while generating the structure representation.
      */
     @Override
     public String structure() throws Exception {

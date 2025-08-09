@@ -27,9 +27,7 @@ public class Program {
 
 
     /**
-     * Constructs a new Program instance. The instance stores the global state of
-     * the program such as the values of all the variables and the
-     * current statement.
+     * Initializes a new Program instance for managing a BASIC program's source code and its intermediate representations.
      */
     public Program() {
         _oLogger.info("Initializing program object...");
@@ -37,10 +35,10 @@ public class Program {
 
 
     /**
-     * Load.
-     * This is the entrance point for the program source.
+     * Loads the BASIC program source and assigns its name.
      *
-     * @param strProgram The basic program, containing the source code of a .bas script to interpret.
+     * @param strProgramName The name to assign to the loaded program.
+     * @param strProgram The source code of the BASIC program to load.
      */
     public final void load(final String strProgramName, final String strProgram) {
         _oLogger.info("Loading program...");
@@ -50,31 +48,30 @@ public class Program {
     }
 
     /**
-     * Get the Program Name.
-     * Return the name of the program loaded.
+     * Returns the name of the currently loaded BASIC program.
      *
-     * @return The name of the basic program.
+     * @return the program name, or {@code null} if no program is loaded.
      */
     public final String getProgramName() {
         return _strProgramName;
     }
 
     /**
-     * Get Program.
-     * This method returns the program source code.
+     * Returns the source code of the loaded BASIC program.
      *
-     * @return the basic program, containing the source code of a .bas script to interpret.
+     * @return the source code of the currently loaded BASIC program.
      */
     public final String getProgram() {
         return _strProgramSource;
     }
 
 
-    /**
-     * set Program.
-     * This method is used to adopt the source code, e.g., due to the processing of macros.
+    /****
+     * Updates the stored source code of the program.
      *
-     * @param strProgram - the source code of the changed code.
+     * Use this method to replace the program's source code, for example after macro processing or other modifications.
+     *
+     * @param strProgram the new source code to store for the program
      */
     public final void setProgram(String strProgram) {
         _strProgramSource = strProgram;
@@ -93,10 +90,9 @@ public class Program {
 
 
     /**
-     * get Tokens.
-     * This method provides the list of tokens inside this object.
+     * Returns the list of tokens generated from the program's source code.
      *
-     * @return list of token objects.
+     * @return the list of Token objects representing the tokenized program.
      */
     public final List<Token> getTokens() {
         return _aoTokens;
@@ -115,10 +111,9 @@ public class Program {
 
 
     /**
-     * get Statements.
-     * This method provides the list of statements inside this object.
+     * Returns the list of parsed statements representing the BASIC program.
      *
-     * @return list of statement objects.
+     * @return the list of Statement objects for the loaded program.
      */
     public final List<Statement> getStatements() {
         return _aoStatements;
@@ -137,10 +132,9 @@ public class Program {
 
 
     /**
-     * get PreRunStatements.
-     * This method provides the list of pre-run statements inside this object.
+     * Returns the list of statements to be executed before the main program run.
      *
-     * @return list of statement objects.
+     * @return the list of pre-run Statement objects, or null if not set.
      */
     public final List<Statement> getPreRunStatements() {
         return _aoPreRunStatements;

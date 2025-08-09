@@ -28,22 +28,22 @@ public interface Statement {
     void execute() throws Exception;
 
     /**
-     * Content.
-     *
-     * Method for JUnit to return the content of the statement.
-     *
-     * @return gives the name of the statement ("INPUT") and the variable name
-     * @throws Exception based on errors in the implementation classes
-     */
+ * Returns a string representation of the statement's content, including the statement name and relevant variable names.
+ *
+ * Intended for use in unit testing to verify the statement's content.
+ *
+ * @return a string containing the statement name and associated variable names
+ * @throws Exception if an error occurs while generating the content
+ */
     String content() throws Exception;
 
     /**
-     * Structure.
-     *
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
-     */
+ * Returns a string describing the structure of the statement, including its name and parameter list.
+ *
+ * Intended for use by the compiler to analyze the program's structure.
+ *
+ * @return a string containing the statement name and its parameters
+ * @throws Exception if an error occurs while generating the structure description
+ */
     String structure() throws Exception;
 }

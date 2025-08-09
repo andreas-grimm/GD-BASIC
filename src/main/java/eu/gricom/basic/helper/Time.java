@@ -70,12 +70,10 @@ public class Time {
     }
 
     /**
-     * Parse an entered date + time into the object format.
-     * 
-     * @param strDate
-     *            - Date + time as string
-     * @throws Exception
-     *             - parsing fails
+     * Parses a date-time string in the format "YYYY-MM-DD HH:mm:ss" and updates the object's date and time fields.
+     *
+     * @param strDate the date-time string to parse
+     * @throws Exception if the input string is not in the expected format or any component is out of valid range
      */
     public final void parseDateTime(final String strDate) throws Exception {
         // assumption that all dates in ProvJs are formatted according to the
@@ -122,12 +120,10 @@ public class Time {
     }
 
     /**
-     * Parse an entered date into the object format.
-     * 
-     * @param strDate
-     *            - Date as string
-     * @throws Exception
-     *             - parsing fails
+     * Parses a date string in the format "YYYY-MM-DD" and updates the object's year, month, and day fields.
+     *
+     * @param strDate the date string to parse, expected in "YYYY-MM-DD" format
+     * @throws Exception if the input string is not in the correct format or if any date component is out of valid range
      */
     public final void parseDate(final String strDate) throws Exception {
         // assumption that all dates in ProvJs are formatted according to the

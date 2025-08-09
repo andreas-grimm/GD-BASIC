@@ -32,11 +32,12 @@ public final class VariableExpression implements Expression {
     }
 
     /**
-     * Return the content of the variable in the Memory Management component.
+     * Evaluates the variable expression and returns the current value of the referenced variable.
      *
-     * @return returns the value of the variable - or if the variable does not exist - returns a 0 as a numerical value
-     * @throws Exception for any errors occurring in the execution of the evaluation. Currently, this happens if
-     * the index in an array subscription is larger than the array.
+     * Supports variables with array-like indexing, including indices that are themselves variable expressions. Resolves and normalizes indices before evaluation. Throws an exception if the variable does not exist or if an error occurs during evaluation, such as an out-of-bounds array index.
+     *
+     * @return the value of the referenced variable
+     * @throws Exception if the variable does not exist or if an error occurs during evaluation
      */
     public Value evaluate() throws Exception {
         VariableManagement oVariableManager = new VariableManagement();
@@ -89,9 +90,9 @@ public final class VariableExpression implements Expression {
     }
 
     /**
-     * Get the name of the variable.
+     * Returns the name of the variable represented by this expression.
      *
-     * @return name of the variable as a string.
+     * @return the variable name as a string
      */
     public String getName() {
 
@@ -99,9 +100,11 @@ public final class VariableExpression implements Expression {
     }
 
     /**
-     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     * Returns the variable name represented by this expression.
      *
-     * @return - readable string with the name and the value of the assignment
+     * Primarily used for testing and debugging to display the assigned variable name.
+     *
+     * @return the variable name as a string
      */
     public String content() {
 
@@ -109,12 +112,13 @@ public final class VariableExpression implements Expression {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string representing the structure of this variable expression.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * <p>
+     * The returned string includes the statement type ("VARIABLE") and the variable name.
+     *
+     * @return a JSON-like string describing the variable expression's structure
+     * @throws Exception if an error occurs during structure generation
      */
     @Override
     public String structure() throws Exception {

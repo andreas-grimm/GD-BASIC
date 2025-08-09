@@ -9,6 +9,13 @@ import java.io.ObjectOutputStream;
 
 public class ObjectCodeGenerator {
 
+    /**
+     * Serializes the given Program object to an object file with a `.obj` extension.
+     *
+     * The output filename is derived from the program's name by replacing a `.bas` or `.basic` extension with `.obj`, or by appending `.obj` if neither extension is present. The method writes the serialized Program to this file. If an I/O error occurs during serialization, a RuntimeException is thrown.
+     *
+     * @param oProgram the Program object to serialize to an object file
+     */
     public static void createObjectCode(Program oProgram) {
         Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.ObjectCodeGenerator");
 

@@ -69,18 +69,24 @@ public class PragmaStatement implements Statement {
         }
     }
 
+    /**
+     * Returns a string representation of the pragma statement, indicating the parameter being set and its new value.
+     *
+     * @return a descriptive string of the pragma statement
+     * @throws Exception if an error occurs while generating the content
+     */
     @Override
     public final String content() throws Exception {
         return "Pragma Statement: Set " + _strParameter + " to " + _strValue;
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-formatted string representing the structure of this pragma statement.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * The returned string includes the statement type ("PRAGMA"), token number, parameter name, and value.
+     *
+     * @return a JSON-formatted string describing the pragma statement's structure
+     * @throws Exception if an error occurs during structure generation
      */
     @Override
     public String structure() throws Exception {

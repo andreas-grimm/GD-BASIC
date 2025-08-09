@@ -46,9 +46,11 @@ public class FnFunction implements Expression {
     }
 
     /**
-     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     * Returns a string representation of the function call, including the function name and a placeholder for parameters.
      *
-     * @return - readable string with the name and the value of the assignment
+     * Useful for testing and debugging to verify the function name and parameters set during construction.
+     *
+     * @return a string describing the function call and its parameters
      */
     public final String content() {
         String strReturn = "FN Function: " + _strFunctionId + " Parameter: <";
@@ -60,12 +62,12 @@ public class FnFunction implements Expression {
     }
 
     /**
-     * Structure.
+     * Returns a string representation of this function call, including its name and parameters.
      *
-     * Method for the compiler to get the structure of the program.
+     * Intended for use by the compiler to retrieve the structure of the program.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string describing the function call and its parameters
+     * @throws Exception if an error occurs during string conversion
      */
     @Override
     public String structure() throws Exception {

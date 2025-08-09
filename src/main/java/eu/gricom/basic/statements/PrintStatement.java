@@ -61,9 +61,11 @@ public final class PrintStatement implements Statement {
     }
 
     /**
-     * Execute the transaction.
+     * Evaluates and prints the result of one or more expressions.
      *
-     * @throws Exception any execution error found throws an exception
+     * If a single expression is present, prints its evaluated string representation followed by a newline. If a list of expressions is present, prints each evaluated result consecutively, followed by a newline if the CRLF flag is set.
+     *
+     * @throws Exception if evaluating any expression fails
      */
     public void execute() throws Exception {
         // the simple output of the expression is only used for the JASIC version
@@ -84,9 +86,9 @@ public final class PrintStatement implements Statement {
     }
 
     /**
-     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     * Returns a string representation of the print statement and its expressions for debugging purposes.
      *
-     * @return - readable string with the name and the value of the assignment
+     * @return a readable string showing the print statement and the content of its expressions
      */
     @Override
     public String content() {
@@ -108,12 +110,10 @@ public final class PrintStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string describing the structure of this print statement, including token number, each expression's structure, and the CRLF flag.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a JSON-like string representing the print statement's structure
+     * @throws Exception if an error occurs while obtaining the structure of any expression
      */
     @Override
     public String structure() throws Exception {
@@ -132,6 +132,12 @@ public final class PrintStatement implements Statement {
         return strReturn.toString();
     }
 
+    /**
+     * Returns the first expression from the list of expressions associated with this print statement.
+     *
+     * @return the first {@code Expression} in the expression list
+     * @throws AssertionError if the expression list is {@code null}
+     */
     public Expression getExpression() {
         assert _aoExpression != null;
         return _aoExpression.getFirst();
