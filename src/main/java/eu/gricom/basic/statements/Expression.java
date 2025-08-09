@@ -12,28 +12,27 @@ import eu.gricom.basic.variableTypes.Value;
 
 public interface Expression {
     /**
-     * Expression classes implement this to evaluate the expression and
-     * return the value.
-     *
-     * @return The value of the calculated expression.
-     * @throws Exception - Any Exception generated in a lower part of the program.
-     */
+ * Evaluates the expression and returns its resulting value.
+ *
+ * @return the computed value of the expression
+ * @throws Exception if an error occurs during evaluation
+ */
     Value evaluate() throws Exception;
 
     /**
-     * Get the content in human-readable form.
-     *
-     * @return Content in readable form
-     */
+ * Returns a human-readable representation of the expression's content.
+ *
+ * @return a string describing the content of the expression
+ */
     String content();
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
-     */
+ * Returns a structural description of the expression for compiler use.
+ * <p>
+ * The returned string typically includes the statement name and its parameters.
+ *
+ * @return a string representing the structure of the expression, such as the statement name and its parameters
+ * @throws Exception if an error occurs while generating the structure
+ */
     String structure() throws Exception;
 }

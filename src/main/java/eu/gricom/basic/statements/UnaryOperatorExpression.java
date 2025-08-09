@@ -28,10 +28,11 @@ public class UnaryOperatorExpression implements Expression {
     private final Expression _oOperand;
 
     /**
-     * Constructor for unary operator expressions.
+     * Creates a unary operator expression with the specified operator and operand.
      *
-     * @param oOperator the unary operator (PLUS, MINUS, or NOT)
-     * @param oOperand the operand to apply the operator to
+     * @param oOperator the unary operator to apply (must be PLUS, MINUS, or NOT)
+     * @param oOperand the operand expression to which the operator is applied
+     * @throws IllegalArgumentException if the operator is not PLUS, MINUS, or NOT
      */
     public UnaryOperatorExpression(final BasicTokenType oOperator, final Expression oOperand) {
         _oLogger.debug("--->  " + oOperator + " " + oOperand.content());
@@ -47,10 +48,11 @@ public class UnaryOperatorExpression implements Expression {
     }
 
     /**
-     * Evaluates the unary operator expression.
-     * 
+     * Evaluates the unary operator expression by applying the specified operator to the evaluated operand.
+     *
      * @return the result of applying the unary operator to the operand
-     * @throws Exception if the operation cannot be performed
+     * @throws SyntaxErrorException if the operator is unknown or the operand is invalid for the operation
+     * @throws Exception if an error occurs during operand evaluation
      */
     @Override
     public final Value evaluate() throws Exception {
@@ -67,11 +69,10 @@ public class UnaryOperatorExpression implements Expression {
     }
 
     /**
-     * Evaluates unary plus operator (+).
-     * Unary plus typically has no effect but validates the operand.
-     * 
-     * @param operand the operand value
-     * @return the operand value unchanged
+     * Applies the unary plus operator to the operand, returning it unchanged.
+     *
+     * @param operand the value to which the unary plus is applied
+     * @return the operand value, unchanged
      * @throws SyntaxErrorException if the operand is null
      */
     private Value evaluateUnaryPlus(Value operand) throws SyntaxErrorException {
@@ -82,13 +83,12 @@ public class UnaryOperatorExpression implements Expression {
         return operand;
     }
 
-    /**
-     * Evaluates unary minus operator (-).
-     * Negates the operand value.
-     * 
-     * @param operand the operand value
-     * @return the negated value
-     * @throws SyntaxErrorException if the operand cannot be negated
+    /****
+     * Applies the unary minus operator to the given operand, returning its numeric negation as a `RealValue`.
+     *
+     * @param operand the value to negate; must be convertible to a real number
+     * @return a `RealValue` representing the negated operand
+     * @throws SyntaxErrorException if the operand is null or cannot be converted to a numeric value
      */
     private Value evaluateUnaryMinus(Value operand) throws SyntaxErrorException {
         if (operand == null) {
@@ -105,13 +105,13 @@ public class UnaryOperatorExpression implements Expression {
     }
 
     /**
-     * Evaluates unary NOT operator (!).
-     * For boolean values: inverts the boolean
-     * For numeric values: performs bitwise NOT
-     * 
-     * @param operand the operand value
-     * @return the result of the NOT operation
-     * @throws SyntaxErrorException if the operand cannot be processed
+     * Applies the unary NOT operator to the given operand.
+     *
+     * For boolean operands, returns the logical negation. For numeric operands, performs a bitwise NOT on the operand's long integer representation and returns the result as an integer or real value as appropriate.
+     *
+     * @param operand the value to which the NOT operator is applied
+     * @return the result of the NOT operation as a BooleanValue, IntegerValue, or RealValue
+     * @throws SyntaxErrorException if the operand is null or cannot be converted to a boolean or numeric value
      */
     private Value evaluateUnaryNot(Value operand) throws SyntaxErrorException {
         if (operand == null) {
@@ -143,16 +143,16 @@ public class UnaryOperatorExpression implements Expression {
     }
 
     /**
-     * Gets the unary operator.
+     * Returns the unary operator used in this expression.
      *
-     * @return the unary operator as BasicTokenType
+     * @return the unary operator as a BasicTokenType
      */
     public final BasicTokenType getOperator() {
         return _oOperator;
     }
 
     /**
-     * Gets the operand expression.
+     * Returns the operand expression to which the unary operator is applied.
      *
      * @return the operand expression
      */
@@ -161,10 +161,9 @@ public class UnaryOperatorExpression implements Expression {
     }
 
     /**
-     * Returns a human-readable representation of the unary expression.
-     * Used for debugging and testing.
+     * Returns a string representation of the unary operator expression in the format "operator(operand)".
      *
-     * @return string representation of the unary expression
+     * @return a human-readable string representing the unary expression
      */
     @Override
     public final String content() {
@@ -173,10 +172,10 @@ public class UnaryOperatorExpression implements Expression {
     }
 
     /**
-     * Returns the structure of the unary expression for compilation.
+     * Returns a JSON-like string representing the structure of this unary operator expression, including its operator and operand.
      *
-     * @return structure information for the compiler
-     * @throws Exception if there's an error getting the structure
+     * @return a string describing the structure of the unary operator expression for use by the compiler
+     * @throws Exception if retrieving the operand's structure fails
      */
     @Override
     public String structure() throws Exception {
@@ -188,10 +187,10 @@ public class UnaryOperatorExpression implements Expression {
     }
 
     /**
-     * Converts BasicTokenType to its string symbol representation.
+     * Returns the string symbol corresponding to the given unary operator.
      *
-     * @param operator the BasicTokenType operator
-     * @return the string symbol for the operator
+     * @param operator the unary operator token
+     * @return the symbol representing the operator ("+", "-", or "!")
      */
     private String getOperatorSymbol(BasicTokenType operator) {
         return switch (operator) {
@@ -203,9 +202,9 @@ public class UnaryOperatorExpression implements Expression {
     }
 
     /**
-     * Returns a string representation of the unary expression.
+     * Returns a string describing the unary operator expression, including its operator and operand.
      *
-     * @return string representation
+     * @return a string representation of the unary operator expression
      */
     @Override
     public String toString() {

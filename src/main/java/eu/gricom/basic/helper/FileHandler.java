@@ -29,11 +29,12 @@ public final class FileHandler {
     }
 
     /**
-     * readFile.
-     * Reads the file from the given path and returns its contents as a single string.
+     * Reads the entire contents of the file at the specified path and returns it as a single string.
      *
-     * @param  strPath  Path to the text file to read.
-     * @return          The contents of the file or null if the load failed.
+     * Appends a newline character to the end of the content to ensure parser compatibility. If the file cannot be opened, logs an error and terminates the program. Returns {@code null} if reading fails.
+     *
+     * @param strPath the path to the file to read
+     * @return the file contents as a string, or {@code null} if reading fails
      */
     public static String readFile(final String strPath) {
         _strBasicFile = strPath;
@@ -73,11 +74,12 @@ public final class FileHandler {
         return null;
     }
 
-    /**
-     * writeFile.
-     * Writes the target file for the compiler.
+    /****
+     * Constructs and logs the intended output filename by replacing the extension of the last read file with the specified file type.
      *
-     * @param  strFileType  Type of the generated file.
+     * If no file has been read previously, logs an error indicating the filename is empty.
+     *
+     * @param strFileType the file extension to use for the output filename
      */
     public static void writeFile(String strFileType) {
         if (_strBasicFile != null) {

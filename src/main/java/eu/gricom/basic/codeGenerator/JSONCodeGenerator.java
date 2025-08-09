@@ -12,12 +12,27 @@ public class JSONCodeGenerator {
     private String _strProgram;
 
 
+    /**
+     * Constructs a JSONCodeGenerator for the specified program.
+     *
+     * @param strProgram the name or path of the program
+     * @param oProgram the Program object containing pre-run and main statements
+     */
     public JSONCodeGenerator(String strProgram, Program oProgram) {
         _aoPreRunStatements = oProgram.getPreRunStatements();
         _aoStatements = oProgram.getStatements();
         _strProgram = strProgram;
     }
 
+    /**
+     * Generates a JSON representation of the program's statements, including pre-run settings and main program statements.
+     *
+     * The output JSON contains three sections: "SETTINGS" (pre-run statements), "PROGRAM" (main statements), and an empty "TOKEN" array.
+     * If beautification is requested, the JSON is formatted with indentation for readability.
+     *
+     * @param bBeautified whether to format the JSON output with indentation
+     * @return the generated JSON string representing the program's structure
+     */
     public String create(boolean bBeautified) {
         Logger oLogger = new Logger(this.getClass().getName());
 

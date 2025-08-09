@@ -54,18 +54,21 @@ public class ElseStatement implements Statement {
 
     }
 
+    /**
+     * Returns the string representation of this statement, which is "ELSE".
+     *
+     * @return the string "ELSE"
+     */
     @Override
     public final String content() {
         return "ELSE";
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string representing the structure of the ELSE statement for compiler use.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string containing the statement name "ELSE" and its token number.
+     * @throws Exception if an error occurs while generating the structure.
      */
     @Override
     public String structure() throws Exception {

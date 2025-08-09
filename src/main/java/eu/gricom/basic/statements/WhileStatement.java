@@ -50,6 +50,14 @@ public final class WhileStatement implements Statement {
         return _iTokenNumber;
     }
 
+    /**
+     * Executes the WHILE statement by evaluating its condition and controlling program flow accordingly.
+     *
+     * If the condition evaluates to false, advances execution to the statement following the corresponding END-WHILE line.
+     * If the condition evaluates to true, pushes the current statement number onto the loop control stack to mark the start of the loop.
+     *
+     * @throws SyntaxErrorException if the END-WHILE target line is invalid or cannot be parsed.
+     */
     @Override
     public void execute() throws Exception {
         final LineNumberXRef oLineNumberObject = new LineNumberXRef();
@@ -80,18 +88,22 @@ public final class WhileStatement implements Statement {
         }
     }
 
+    /**
+     * Returns a string representation of the WHILE statement, including its condition.
+     *
+     * @return the WHILE statement as a string with its condition
+     * @throws Exception if retrieving the condition's content fails
+     */
     @Override
     public String content() throws Exception {
         return "WHILE (" + _oCondition.content() + ")";
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string describing the structure of this WHILE statement for use by the compiler.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string containing the statement type, token number, condition structure, and END-WHILE line number
+     * @throws Exception if an error occurs while generating the condition structure
      */
     @Override
     public String structure() throws Exception {

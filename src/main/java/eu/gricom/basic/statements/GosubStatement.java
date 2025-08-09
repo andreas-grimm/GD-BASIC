@@ -69,9 +69,12 @@ public final class GosubStatement implements Statement {
     }
 
     /**
-     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     * Returns a string representation of the GOSUB statement for debugging or testing purposes.
      *
-     * @return - readable string with the name and the value of the assignment
+     * The returned string includes the target label or line number and its corresponding destination statement index.
+     *
+     * @return a readable string describing the GOSUB statement's target and destination
+     * @throws RuntimeException if label or line number resolution fails
      */
     @Override
     public String content() throws RuntimeException {
@@ -83,12 +86,10 @@ public final class GosubStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string representing the structure of this GOSUB statement, including its token number and target.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string describing the statement's structure for use by the compiler.
+     * @throws Exception if an error occurs in underlying implementation classes.
      */
     @Override
     public String structure() throws Exception {

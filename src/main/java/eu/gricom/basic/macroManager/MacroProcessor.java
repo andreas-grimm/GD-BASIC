@@ -25,11 +25,13 @@ public class MacroProcessor {
     }
 
     /**
-     * Process Function.
-     * This function converts the macros into code that is added to the code.
+     * Processes the input program string, expanding all macro definitions and replacing macro usages with their corresponding expanded code.
      *
-     * @param strProgram - the program to be processed to find and replace macros.
-     * @return - the generated code after the macros have benn processed
+     * Scans the program for macro definitions, collects them, and then iterates through each line to substitute macro calls with their expanded forms. Lines containing macro definitions are left unchanged, while lines with macro usages are converted accordingly.
+     *
+     * @param strProgram the program code to process for macro expansion
+     * @return the program code with all macros expanded and replaced
+     * @throws SyntaxErrorException if the macro definitions or usages are syntactically invalid
      */
     public String process (String strProgram) throws SyntaxErrorException {
         Vector<String> vstrParameter = new Vector<>();

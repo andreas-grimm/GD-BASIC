@@ -70,11 +70,9 @@ public class ReadStatement implements Statement {
     }
 
     /**
-     * Content.
-     * <p>
-     * Method for JUnit to return the content of the statement.
+     * Returns a string representation of the READ statement and its variable names.
      *
-     * @return - gives the name of the statement ("INPUT") and the variable name
+     * @return a string in the format "READ ( var1 var2 ... )" listing all variable names.
      */
     @Override
     public final String content() {
@@ -89,12 +87,10 @@ public class ReadStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string representing the structure of the READ statement, including the token number and all variable names.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string describing the statement's structure for use by the compiler
+     * @throws Exception if an error occurs during string construction
      */
     @Override
     public String structure() throws Exception {

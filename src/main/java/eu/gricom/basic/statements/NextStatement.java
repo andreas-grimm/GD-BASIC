@@ -22,21 +22,32 @@ public class NextStatement implements Statement {
     private final int _iTokenNumber;
 
     /**
-     * Default constructor.
-     * <p>
-     * A "Next" statement returns to the "for" loop start.
+     * Constructs a NextStatement with the specified line number.
      *
-     * @param iTokenNumber the line number of this command
+     * @param iTokenNumber the line number where this "NEXT" statement appears in the program
      */
     public NextStatement(final int iTokenNumber) {
         _iTokenNumber = iTokenNumber;
     }
 
+    /**
+     * Returns the line number (token number) associated with this "Next" statement.
+     *
+     * @return the token number of this statement
+     */
     @Override
     public final int getTokenNumber() {
         return _iTokenNumber;
     }
 
+    /**
+     * Advances execution to the next iteration of the most outer open "For" loop.
+     *
+     * Pops the target line number for the next loop iteration from the stack and sets the program pointer to that line.
+     * Throws a {@code SyntaxErrorException} if the target line number is zero, indicating an undefined jump target.
+     *
+     * @throws SyntaxErrorException if the target line number is zero
+     */
     @Override
     public final void execute() throws Exception {
         final Stack oStack = new Stack();
@@ -50,18 +61,21 @@ public class NextStatement implements Statement {
 
     }
 
+    /**
+     * Returns the string representation of this statement, which is "NEXT".
+     *
+     * @return the string "NEXT"
+     */
     @Override
     public final String content() {
         return "NEXT";
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string describing the structure of this "NEXT" statement, including its token number.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string representation of the statement type and its token number
+     * @throws Exception if an error occurs while generating the structure
      */
     @Override
     public String structure() throws Exception {

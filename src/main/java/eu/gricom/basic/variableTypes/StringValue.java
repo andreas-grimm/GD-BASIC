@@ -73,11 +73,23 @@ public class StringValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " is not a String");
     }
 
+    /**
+     * Returns a new StringValue representing the concatenation of this string and the string representation of the given value.
+     *
+     * @param oValue the value whose string representation will be appended
+     * @return a new StringValue containing the concatenated result
+     * @throws SyntaxErrorException if the operation is not supported for the given value type
+     */
     @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
         return new StringValue(_strValue + oValue.toString());
     }
 
+    /**
+     * Throws a SyntaxErrorException to indicate that subtraction is not defined for string values.
+     *
+     * @throws SyntaxErrorException always, as the minus operation is invalid for strings
+     */
     @Override
     public final Value minus(final Value oValue) throws SyntaxErrorException {
         throw new SyntaxErrorException(oValue.content() + " '-' for strings, the expression is not defined");
@@ -136,6 +148,13 @@ public class StringValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " value is not a String");
     }
 
+    /**
+     * Determines if this string is lexicographically less than or equal to the given value's string.
+     *
+     * @param oValue the value to compare with
+     * @return a BooleanValue representing whether this string is less than or equal to the argument's string
+     * @throws SyntaxErrorException if the argument is not a StringValue
+     */
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (Objects.equals(equals(oValue).toString(), "True")
@@ -159,6 +178,13 @@ public class StringValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " value is not a String");
     }
 
+    /**
+     * Determines if this string is lexicographically greater than or equal to the string value of the given {@code Value}.
+     *
+     * @param oValue the value to compare with
+     * @return a {@code BooleanValue} representing whether this string is greater than or equal to the argument
+     * @throws SyntaxErrorException if {@code oValue} is not a {@code StringValue}
+     */
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
         if (Objects.equals(equals(oValue).toString(), "True")
@@ -169,6 +195,11 @@ public class StringValue implements Value {
         }
     }
 
+    /**
+     * Returns the stored string value contained in this instance.
+     *
+     * @return the encapsulated string value
+     */
     @Override
     public final String content() {
 
@@ -176,12 +207,10 @@ public class StringValue implements Value {
     }
 
     /**
-     * Structure.
+     * Returns the string value enclosed in double quotes as its structural representation.
      *
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return the quoted string representing the structure of this value
+     * @throws Exception if an error occurs during structure generation
      */
     @Override
     public String structure() throws Exception {

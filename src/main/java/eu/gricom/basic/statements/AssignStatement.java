@@ -22,11 +22,11 @@ public final class AssignStatement implements Statement {
     private final VariableManagement _oVariableManagement = new VariableManagement();
 
     /**
-     * Default constructor.
+     * Constructs an assignment statement with the specified token number, target variable name, and expression to assign.
      *
-     * @param iTokenNumber - number of the basic command line
-     * @param strName - target of the assign statement
-     * @param oExpression - value of the assignment statement
+     * @param iTokenNumber the token or line number associated with this statement
+     * @param strName the name or key of the variable to assign the result to
+     * @param oExpression the expression whose evaluated result will be assigned
      */
     public AssignStatement(final int iTokenNumber, final String strName, final Expression oExpression) {
         _strKey = strName;
@@ -35,10 +35,10 @@ public final class AssignStatement implements Statement {
     }
 
     /**
-     * Default constructor.
+     * Constructs an assignment statement with the specified target variable and expression, using a default token number of 0.
      *
-     * @param strName - target of the assign statement
-     * @param oExpression - value of the assignment statement
+     * @param strName the name of the variable to assign to
+     * @param oExpression the expression whose evaluated result will be assigned
      */
     public AssignStatement(final String strName, final Expression oExpression) {
         _strKey = strName;
@@ -57,10 +57,11 @@ public final class AssignStatement implements Statement {
     }
 
     /**
-     * The assignment is defined as part of the default constructor. But only here the transaction is actually
-     * executed. After the execution, the variable is assigned.
+     * Executes the assignment statement by evaluating the expression and storing its result in the target variable.
      *
-     * @throws Exception - any exception coming from the memory management
+     * If the target variable includes index or function-like notation, any variable references within the indices are resolved before assignment. The evaluated result is stored in the variable management system under the processed key.
+     *
+     * @throws Exception if an error occurs during variable resolution, expression evaluation, or variable assignment.
      */
     @Override
     public void execute() throws Exception {
@@ -111,9 +112,9 @@ public final class AssignStatement implements Statement {
     }
 
     /**
-     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     * Returns a string representation of the assignment statement, showing the target variable and the expression content.
      *
-     * @return - readable string with the name and the value of the assignment
+     * @return a readable string displaying the assignment target and the assigned expression.
      */
     @Override
     public String content() {
@@ -121,12 +122,12 @@ public final class AssignStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string describing the structure of this assignment statement.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * The returned string includes the statement type ("ASSIGN"), token number, target variable name, and the structure of the assigned expression.
+     *
+     * @return a JSON-like string representing the structure of the assignment statement
+     * @throws Exception if an error occurs while retrieving the structure of the expression
      */
     @Override
     public String structure() throws Exception {

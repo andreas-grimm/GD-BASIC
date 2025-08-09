@@ -271,11 +271,9 @@ public class BooleanValue implements Value {
     }
 
     /**
-     * Content.
+     * Returns the string representation of the stored boolean value.
      *
-     * Method for JUnit to return the content of the statement.
-     *
-     * @return - gives the name of the statement ("INPUT") and the variable name
+     * @return "true" if the value is true, otherwise "false"
      */
     @Override
     public final String content() {
@@ -284,12 +282,10 @@ public class BooleanValue implements Value {
     }
 
     /**
-     * Structure.
+     * Returns the string representation of this BooleanValue.
      *
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return the string representation of the boolean value ("True" or "False")
+     * @throws Exception if an error occurs in implementation (not explicitly thrown here)
      */
     @Override
     public String structure() throws Exception {

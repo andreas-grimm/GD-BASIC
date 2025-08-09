@@ -18,11 +18,21 @@ public class Execute {
 
     private Statement _oStatement = null;
 
+    /**
+     * Initializes the Execute instance with pre-run and main program statements from the given Program.
+     *
+     * @param oProgram the Program containing pre-run and main statements to be executed
+     */
     public Execute(Program oProgram) {
         _aoPreRunStatements = oProgram.getPreRunStatements();
         _aoStatements = oProgram.getStatements();
     }
 
+    /**
+     * Executes all pre-run initialization statements for the BASIC program.
+     *
+     * If no pre-run statements are available, logs an error and terminates the program.
+     */
     public void loadEnvironment() {
         _oLogger.info("Pre-load environment...");
         try {
@@ -47,6 +57,11 @@ public class Execute {
         }
     }
 
+    /**
+     * Executes the main statements of the BASIC program sequentially.
+     *
+     * Iterates through all main program statements, updating the program pointer and executing each statement in order. If no main statements are present, logs an error and terminates the program.
+     */
     public void runProgram() {
 
         _oLogger.info("Starting execution...");
@@ -83,6 +98,11 @@ public class Execute {
         }
     }
 
+    /**
+     * Returns the last executed statement of the program.
+     *
+     * @return the most recently executed Statement, or null if no statement has been executed yet
+     */
     public Statement getFinalStatement() {
         return _oStatement;
     }

@@ -44,20 +44,17 @@ public class Basic {
     private static boolean _bPCode = false;
 
     /**
-     * Constructs a new Basic instance. The instance stores the global state of the interpreter such as the values of
-     * all the variables and the current statement.
+     * Initializes a new instance of the BASIC interpreter, maintaining the interpreter's global state.
      */
     public Basic() {
     }
 
 
     /**
-     * MacroProcessing.
-     * This function manages all macros that need to be processed before the actual tokenization and parsing is
-     * executed.
+     * Expands macros in the program source code before tokenization and parsing.
      *
-     * @param oProgram The program object, containing the source code of a .bas script to interpret.
-     * @return program object after the macro's have been incorporated
+     * @param oProgram The program object containing the source code to process.
+     * @return The updated program object with all macros expanded.
      */
     private Program macroProcessing(final Program oProgram) {
         _oLogger.info("Processing macros...");
@@ -75,14 +72,13 @@ public class Basic {
 
 
     /**
-     * Process.
-     * This is where the magic happens. This runs the code through the parsing pipeline to generator the AST. Then it
-     * executes each statement. It keeps track of the current line in a member variable that the statement objects
-     * have access to. This lets "goto" and "if then" do flow control by simply setting the index of the current statement.
-     * <p>
-     * In an interpreter that didn't mix the interpretation logic in with the AST node classes, this would be doing a lot more work.
+     * Processes a BASIC program by performing macro expansion, tokenization, and parsing.
      *
-     * @param oProgram The program object, containing the source code of a .bas script to interpret.
+     * This method updates the provided program object by expanding macros, converting the source code into tokens,
+     * and parsing those tokens into executable statements. Any syntax errors encountered during macro processing or
+     * tokenization will cause the program to print an error message and terminate immediately.
+     *
+     * @param oProgram The program object containing the source code to process.
      */
     public final void process(final Program oProgram) {
         _oLogger.info("Processing program...");
@@ -136,14 +132,11 @@ public class Basic {
     }
 
     /**
-     * Interpret.
-     * This is where the magic happens. This runs the code through the parsing pipeline to generator the AST. Then it
-     * executes each statement. It keeps track of the current line in a member variable that the statement objects
-     * have access to. This lets "goto" and "if then" do flow control by simply setting the index of the current statement.
-     * <p>
-     * In an interpreter that didn't mix the interpretation logic in with the AST node classes, this would be doing a lot more work.
+     * Interprets and executes a BASIC program from source code.
      *
-     * @param oProgram The program object, containing the source code of a .bas script to interpret.
+     * Performs macro processing, tokenization, and parsing to build the program's abstract syntax tree (AST), then executes the parsed statements. Handles flow control constructs such as GOTO and IF-THEN by tracking the current execution line. Terminates the process upon completion or if a syntax error occurs during macro processing or tokenization.
+     *
+     * @param oProgram The program object containing the source code to interpret.
      */
     public final void interpret(final Program oProgram) {
 
@@ -207,14 +200,13 @@ public class Basic {
         System.exit(0);
     }
 
-    /**
-     * Compile.
-     * The compile function executes the same macro processing, tokenization, and parsing as the interpreter. The
-     * difference is that - instead of executing the code - the compiler generates a Java (at this stage) program
-     * which it then will compile to execute.
+    /****
+     * Compiles a BASIC program by processing macros, tokenizing, parsing, and generating target code.
      *
-     * @param oProgram The program object, containing the source code of a .bas script to interpret.
-     * @param strLanguage Define the target programming language, default is "Java"
+     * Performs macro expansion, tokenization, and parsing on the provided program. Generates intermediate object code in JSON format or as runtime object code, and produces target language source code (currently Java) if specified. Terminates the process upon completion.
+     *
+     * @param oProgram   The BASIC program to compile.
+     * @param strLanguage The target programming language for code generation (e.g., "java").
      */
     public final void compile(final Program oProgram, final String strLanguage) {
         _oLogger.info("Compiler started, using " + strLanguage + "...");
@@ -283,12 +275,12 @@ public class Basic {
 
     // Utility stuff -----------------------------------------------------------
 
-    /**
-     * Runs the interpreter as a command-line app. Takes one argument: a path
-     * to a script file to load and run. The script should contain one
-     * statement per line.
+    /****
+     * Entry point for the BASIC interpreter and compiler command-line application.
      *
-     * @param args Command-line arguments.
+     * Parses command-line arguments to configure interpreter or compiler options, loads the specified BASIC source file, and either interprets or compiles the program based on user flags. Supports options for verbosity, quiet mode, compile mode, beautified output, p-code generation, target language selection, Dartmouth BASIC compatibility, and help display. Exits the JVM after execution or compilation.
+     *
+     * @param args Command-line arguments for configuring execution and specifying the BASIC source file.
      */
     public static void main(final String[] args) {
         Logger oLogger = new Logger("main");

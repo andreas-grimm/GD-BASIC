@@ -10,8 +10,9 @@ package eu.gricom.basic.parser;
 public class PrecedenceExample {
     
     /**
-     * Demonstrates the difference in evaluation between current GD-BASIC
-     * and standard mathematical precedence
+     * Entry point that demonstrates differences between GD-BASIC's left-to-right expression evaluation and standard mathematical operator precedence.
+     *
+     * Runs several example expressions, printing their evaluation results under both systems, and summarizes key distinctions between the two approaches.
      */
     public static void main(String[] args) {
         System.out.println("=== GD-BASIC Mathematical Expression Evaluation ===");
@@ -44,7 +45,11 @@ public class PrecedenceExample {
     }
     
     /**
-     * Demonstrates how an expression would be evaluated in both systems
+     * Compares the evaluation of a given expression using both GD-BASIC's left-to-right rules and standard mathematical operator precedence.
+     *
+     * Prints the expression, then displays its evaluation and result under each system for illustrative purposes.
+     *
+     * @param expression the arithmetic or logical expression to be evaluated and compared
      */
     private static void demonstrateExpression(String expression) {
         System.out.println("Expression: " + expression);
@@ -65,7 +70,11 @@ public class PrecedenceExample {
     }
     
     /**
-     * Simulates current GD-BASIC left-to-right evaluation
+     * Simulates GD-BASIC's left-to-right evaluation of a space-separated arithmetic expression.
+     *
+     * Parses the expression by applying each operator to the running result in strict left-to-right order, ignoring standard operator precedence. Supports basic arithmetic and exponentiation. Prints each evaluation step and the final result.
+     *
+     * @param expression A space-separated arithmetic expression (e.g., "2 + 3 * 4").
      */
     private static void evaluateLeftToRight(String expression) {
         // This is a simplified simulation of the current parser behavior
@@ -110,7 +119,11 @@ public class PrecedenceExample {
     }
     
     /**
-     * Simulates standard mathematical precedence evaluation
+     * Simulates evaluation of an expression using standard mathematical operator precedence.
+     *
+     * Prints step-by-step evaluation and the final result for known example expressions, demonstrating how operator precedence affects the outcome compared to left-to-right evaluation.
+     *
+     * @param expression the expression string to simulate evaluation for
      */
     private static void evaluateWithPrecedence(String expression) {
         // This simulates how the expression would be evaluated with proper precedence
@@ -161,7 +174,9 @@ public class PrecedenceExample {
     }
     
     /**
-     * Shows how to implement the precedence-aware parser
+     * Prints a suggested method hierarchy for implementing a precedence-aware expression parser.
+     *
+     * Outlines the sequence of parsing methods, each responsible for a specific operator precedence level, to guide the design of a parser that correctly handles standard mathematical and logical operator precedence.
      */
     public static void showImplementation() {
         System.out.println("=== Implementation Strategy ===");

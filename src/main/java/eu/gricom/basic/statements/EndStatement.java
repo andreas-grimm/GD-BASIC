@@ -51,11 +51,9 @@ public class EndStatement implements Statement {
     }
 
     /**
-     * Content.
+     * Returns the name of this statement, which is "END".
      *
-     * Method for JUnit to return the content of the statement.
-     *
-     * @return - gives the name of the statement ("END")
+     * @return the string "END"
      */
     @Override
     public final String content() {
@@ -64,12 +62,10 @@ public class EndStatement implements Statement {
     }
 
     /**
-     * Structure.
+     * Returns a JSON-formatted string describing the structure of the END statement, including its token number.
      *
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a JSON string with the statement name "END" and its associated token number.
+     * @throws Exception if an error occurs during structure generation.
      */
     @Override
     public String structure() throws Exception {

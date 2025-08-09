@@ -9,10 +9,12 @@ public class Generator {
     private static String _strObjectName = "";
 
     /**
-     * Create and store the object code.
-     * Return the name of the program loaded.
+     * Generates JSON code from the given parsed program and writes it to a file.
      *
-     * @param oProgram the parsed program to be stored.
+     * The output filename is derived from the program's name by replacing `.bas` or `.basic` extensions with `.json`, or appending `.json` if neither is present. The generated JSON code is written to this file. If an error occurs during file writing, the program logs the error and terminates.
+     *
+     * @param oProgram the parsed program to generate JSON code from
+     * @param bBeautified whether the generated JSON should be formatted for readability
      */
     public static void createJSONCode(Program oProgram, boolean bBeautified) {
         Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createJSONCode");
@@ -51,6 +53,11 @@ public class Generator {
         }
     }
 
+    /**
+     * Generates object code from the provided Program instance by delegating to the ObjectCodeGenerator.
+     *
+     * @param oProgram the parsed Program object to generate object code from
+     */
     public static void createObjectCode(Program oProgram) {
         Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createObjectCode");
 
@@ -58,10 +65,10 @@ public class Generator {
     }
 
         /**
-         * Create and store the target Java code.
-         * Return the name of the program loaded.
-         *
-         */
+     * Logs the intended Java output file name derived from the current object file name.
+     *
+     * The method replaces the `.json` extension in the stored object file name with `.comp.java` and logs the resulting Java file name.
+     */
     public static void createJavaCode() {
         Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createJavaCode");
 

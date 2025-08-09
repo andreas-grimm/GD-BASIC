@@ -18,19 +18,18 @@ public class CleanStatement implements Statement {
     private final Logger _oLogger = new Logger(this.getClass().getName());
 
     /**
-     * Default constructor.
-     * <p>
-     * An "CLEAN" statement cleans the stack from the last entrance if you jump out of the block.
-     * @param iTokenNumber - number of the command in the basic program
+     * Constructs a CleanStatement with the specified token number.
+     *
+     * @param iTokenNumber the position of the "CLEAN" statement in the source program
      */
     public CleanStatement(final int iTokenNumber) {
         _iTokenNumber = iTokenNumber;
     }
 
     /**
-     * Get Token Number.
+     * Returns the token number indicating the position of this statement in the source code.
      *
-     * @return the command line number of the statement
+     * @return the token number of the statement
      */
     @Override
     public final int getTokenNumber() {
@@ -38,9 +37,9 @@ public class CleanStatement implements Statement {
     }
 
     /**
-     * Execute.
-     * <p>
-     * Remove the last stack entry.
+     * Removes the last entry from the stack, if present.
+     *
+     * If the stack is empty, logs an error message.
      */
     public final void execute() {
         Stack oStack = new Stack();
@@ -53,11 +52,9 @@ public class CleanStatement implements Statement {
     }
 
     /**
-     * Content.
-     * <p>
-     * Method for JUnit to return the content of the statement.
+     * Returns the string representation of the statement for testing purposes.
      *
-     * @return - gives the name of the statement ("END")
+     * @return the string "END"
      */
     @Override
     public final String content() {
@@ -66,12 +63,10 @@ public class CleanStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-formatted string describing the statement type as "CLEAN" and its token number.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a JSON string with the statement type and token number.
+     * @throws Exception if an error occurs during structure generation.
      */
     @Override
     public String structure() throws Exception {

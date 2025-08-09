@@ -68,18 +68,22 @@ public final class UntilStatement implements Statement {
         }
     }
 
+    /**
+     * Returns a string representation of the UNTIL statement, including its condition.
+     *
+     * @return the string "UNTIL (<condition content>)"
+     * @throws Exception if retrieving the condition's content fails
+     */
     @Override
     public String content() throws Exception {
         return "UNTIL (" + _oCondition.content() + ")";
     }
 
     /**
-     * Structure.
+     * Returns a JSON-like string describing the structure of the UNTIL statement, including its token number and condition.
      *
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a JSON-formatted string representing the statement type, token number, and the structure of the condition expression
+     * @throws Exception if an error occurs while obtaining the structure of the condition expression
      */
     @Override
     public String structure() throws Exception {

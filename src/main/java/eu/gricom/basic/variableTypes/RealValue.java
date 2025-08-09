@@ -289,11 +289,11 @@ public class RealValue implements Value {
     }
 
     /**
-     * Content.
+     * Returns the string representation of the stored real value.
      *
-     * Method for JUnit to return the content of the statement.
+     * Intended for use in testing to retrieve the current value as a string.
      *
-     * @return - gives the name of the statement ("INPUT") and the variable name
+     * @return the string representation of the stored double value
      */
     @Override
     public final String content() {
@@ -302,12 +302,10 @@ public class RealValue implements Value {
     }
 
     /**
-     * Structure.
+     * Returns the string representation of this real value for compiler structure inspection.
      *
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return the string representation of the stored real value
+     * @throws Exception if an error occurs in implementation classes
      */
     @Override
     public String structure() throws Exception {

@@ -52,18 +52,21 @@ public class EndWhileStatement implements Statement {
 
     }
 
+    /**
+     * Returns the string representation of this statement as "NEXT".
+     *
+     * @return the string "NEXT"
+     */
     @Override
     public final String content() {
         return "NEXT";
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string representing the structure of this END_WHILE statement for compiler use.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string containing the statement type "END_WHILE" and its token number.
+     * @throws Exception if an error occurs while generating the structure.
      */
     @Override
     public String structure() throws Exception {

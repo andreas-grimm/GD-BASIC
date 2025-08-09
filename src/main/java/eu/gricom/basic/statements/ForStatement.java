@@ -33,16 +33,15 @@ public final class ForStatement implements Statement {
     private final Stack _oStack = new Stack();
 
     /**
-     * Gets a previously consumed token, indexing backwards. Last(1) will
-     * be the token just consumed, last(2) the one before that, etc.
-     *
-     * @param iTokenNumber number of the token that is translated into the "FOR" statement
-     * @param strName Name of the counting variable.
-     * @param oStartValueExpression Expression for the calculation of start value.
-     * @param oEndValueExpression Expression for the calculation of the end value.
-     * @param oStepSize size of the steps in which the loop is processed
-     * @param iEndForStatement location of the next command to be processed after the loop
-     */
+    * Constructs a ForStatement representing a "For" loop with the specified loop variable, start value, end value, step size, and the statement location following the loop.
+    *
+    * @param iTokenNumber the token number associated with this "For" statement
+    * @param strName the name of the loop counter variable
+    * @param oStartValueExpression the expression representing the loop's start value
+    * @param oEndValueExpression the expression representing the loop's end value
+    * @param oStepSize the expression representing the loop's step size
+    * @param iEndForStatement the location of the statement to execute after the loop ends
+    */
     public ForStatement(final int iTokenNumber,
                         final String strName,
                         final Expression oStartValueExpression,
@@ -57,11 +56,23 @@ public final class ForStatement implements Statement {
         _iEndForStatement = iEndForStatement;
    }
 
+    /**
+     * Returns the token number associated with this "For" statement.
+     *
+     * @return the token number identifying this statement
+     */
     @Override
     public int getTokenNumber() {
         return _iTokenNumber;
     }
 
+    /**
+     * Executes one iteration of the "For" loop, updating the loop variable and controlling loop flow.
+     *
+     * If the loop has already started, evaluates whether the next counter value remains within the loop bounds and either continues the loop or exits it. If the loop is starting, initializes the loop variable and prepares for iteration.
+     *
+     * @throws Exception if evaluation of expressions or variable management fails.
+     */
     @Override
     public void execute() throws Exception {
         boolean bCountingDown = _oStepSize.evaluate().toReal() < 0;
@@ -95,6 +106,12 @@ public final class ForStatement implements Statement {
         }
     }
 
+    /**
+     * Returns a string representation of the current state of the "For" loop, including the loop variable name, start value, end value, step size, and current counter value.
+     *
+     * @return A string summarizing the loop's configuration and current counter.
+     * @throws Exception if evaluating expressions or retrieving variable values fails.
+     */
     @Override
     public String content() throws Exception {
         double dCounter;
@@ -112,12 +129,12 @@ public final class ForStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string describing the structure of this "For" statement for use by the compiler.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * The returned string includes the token number, loop variable name, serialized start value, end value, step size expressions, and the statement location following the loop.
+     *
+     * @return a JSON-like string representing the structure of the "For" statement and its parameters
+     * @throws Exception if an error occurs while serializing any of the expression components
      */
     @Override
     public String structure() throws Exception {

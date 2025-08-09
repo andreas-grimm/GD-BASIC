@@ -44,14 +44,13 @@ public final class IfThenStatement implements Statement {
     }
 
     /**
-     * BASIC constructor.
+     * Constructs an IF THEN statement for BASIC mode using line numbers for control flow.
      *
-     * @param oCondition - condition to be tested.
-     * @param iTokenNumber - the number of this token related to this statement
-     * @param iELseStatement location of the next command to be processed after the else command
-     * @param iEndIfLine - destination for the jump after unsuccessful completion of the condition.
-     * @param iTargetLineNumber - alternative syntax: if the coder wants to use a jump target if the condition is
-     *                          true, the jump target is added here.
+     * @param oCondition the condition expression to evaluate for the IF statement
+     * @param iTokenNumber the token number associated with this statement
+     * @param iELseStatement the line number of the ELSE statement, or -1 if not present
+     * @param iEndIfLine the line number of the END-IF statement, or -1 if not present
+     * @param iTargetLineNumber the line number to jump to if the condition evaluates to true, or -1 if not used
      */
     public IfThenStatement(final Expression oCondition,
                            final int iTokenNumber,
@@ -77,9 +76,11 @@ public final class IfThenStatement implements Statement {
     }
 
     /**
-     * Execute the If statement.
+     * Executes the IF statement, evaluating its condition and directing program flow accordingly.
      *
-     * @throws Exception - exposes any exception coming from the memory management
+     * In label-based mode, jumps to the labeled statement if the condition is true. In line-number mode, evaluates the condition and jumps to the appropriate target line, ELSE, or END-IF statement as required. Throws a SyntaxErrorException if jump targets are invalid or missing.
+     *
+     * @throws Exception if memory management or statement resolution fails, or if jump targets are invalid.
      */
     public void execute() throws Exception {
         Stack oStack = new Stack();
@@ -152,9 +153,9 @@ public final class IfThenStatement implements Statement {
     }
 
     /**
-     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     * Returns a string representation of the IF statement, showing its condition and target line number.
      *
-     * @return - readable string with the name and the value of the assignment
+     * @return a readable string in the format "IF (<condition>) THEN <target line number>"
      */
     @Override
     public String content() {
@@ -163,12 +164,12 @@ public final class IfThenStatement implements Statement {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string describing the structure of this IF-THEN statement.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * The returned string includes the token number, condition structure, ELSE statement line, END-IF line, and target line number.
+     *
+     * @return a JSON-like string representing the internal structure of the IF-THEN statement
+     * @throws Exception if retrieving the structure of the condition or other components fails
      */
     @Override
     public String structure() throws Exception {

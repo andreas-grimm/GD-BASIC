@@ -14,11 +14,10 @@ public class RemStatement implements Statement {
     private final String _strRemText;
 
     /**
-     * Default constructor.
+     * Constructs a REM statement with the specified token number and comment text.
      *
-     * An "REM" statement performs the hard termination of the interpreter.
-     * @param iTokenNumber - number of the command in the basic program
-     * @param strRemText - text of the rem statement
+     * @param iTokenNumber the token number (line number) of the REM statement in the Basic program
+     * @param strRemText the text content of the REM statement
      */
     public RemStatement(final int iTokenNumber, final String strRemText) {
         _iTokenNumber = iTokenNumber;
@@ -44,11 +43,9 @@ public class RemStatement implements Statement {
     }
 
     /**
-     * Content.
+     * Returns a string representation of the REM statement, including its text content.
      *
-     * Method for JUnit to return the content of the statement.
-     *
-     * @return - gives the name of the statement ("REM")
+     * @return the REM statement in the format "REM [<rem text>]"
      */
     @Override
     public final String content() {
@@ -57,12 +54,10 @@ public class RemStatement implements Statement {
     }
 
     /**
-     * Structure.
+     * Returns a JSON-like string describing the structure of this REM statement, including its token number and text.
      *
-     * Method for the compiler to get the structure of the program.
-     *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string representation of the REM statement's structure with token number and REM text.
+     * @throws Exception if an error occurs during structure generation.
      */
     @Override
     public String structure() throws Exception {

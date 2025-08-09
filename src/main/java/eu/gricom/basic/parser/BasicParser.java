@@ -56,10 +56,10 @@ public class BasicParser implements Parser {
     private final boolean _bDartmouthFlag;
 
     /**
-     * Default constructor.
-     * The constructor receives the tokenized program and parses it.
+     * Constructs a BasicParser with the given list of tokens and parsing mode.
      *
-     * @param aoTokens - the tokenized program
+     * @param aoTokens the tokenized representation of the BASIC program
+     * @param bDartmouthFlag if true, enables Dartmouth BASIC parsing mode; otherwise, uses standard operator precedence
      */
     public BasicParser(final List<Token> aoTokens, boolean bDartmouthFlag) {
         _aoTokens = aoTokens;
@@ -69,10 +69,12 @@ public class BasicParser implements Parser {
 
 
     /**
-     * This parse step catches statements that are executed before the program starts. Typical command is DATA.
+     * Parses and returns statements that must be executed before the main program run, such as DATA statements.
      *
-     * @return List of pre-run commands that need to be processed.
-     * @throws SyntaxErrorException for incorrect Basic structures
+     * Iterates through the token list, collecting DATA statements and their associated values until the end-of-program token is encountered. Throws a SyntaxErrorException if an unexpected token type is found in a DATA statement.
+     *
+     * @return a list of Statement objects representing pre-run commands.
+     * @throws SyntaxErrorException if a DATA statement contains an invalid token type or if the BASIC structure is incorrect.
      */
     public final List<Statement> parsePreRun() throws SyntaxErrorException {
         _iPosition = 0;
@@ -144,6 +146,14 @@ public class BasicParser implements Parser {
     }
 
 
+    /**
+     * Parses the main program tokens into a list of abstract syntax tree (AST) statements.
+     *
+     * Iterates through the token stream, recognizing and constructing statements such as assignments, control flow (IF, FOR, WHILE, etc.), input/output, and program structure commands. Handles syntax errors by throwing a {@code SyntaxErrorException} when unexpected or invalid tokens are encountered. After parsing, updates line number references for all statements.
+     *
+     * @return a list of {@link Statement} objects representing the parsed program.
+     * @throws SyntaxErrorException if a syntax error or unexpected token is encountered during parsing.
+     */
     @Override
     public final List<Statement> parse() throws SyntaxErrorException {
         LabelStatement oLabelStatement = new LabelStatement();
@@ -573,13 +583,13 @@ public class BasicParser implements Parser {
     // language. If this parsed English, these functions would be named like
     // noun() and verb().
 
-    /**
-     * Parses a single expression. Recursive descent parsers start with the
-     * lowest-precedent term and move towards higher priority. For Basic,
-     * binary operators (+, -, etc.) are the lowest.
+    /****
+     * Parses an expression, selecting the appropriate operator precedence rules based on the parser mode.
      *
-     * @return The parsed expression.
-     * @throws SyntaxErrorException - marks any syntax errors
+     * In Dartmouth mode, parses expressions using uniform operator precedence. Otherwise, parses with standard operator precedence and associativity.
+     *
+     * @return the parsed Expression representing the input.
+     * @throws SyntaxErrorException if a syntax error is encountered during parsing.
      */
     private Expression expression() throws SyntaxErrorException {
         _oLogger.debug("-expression-> <" + _iPosition + "> [" + getToken(0).getType().toString() + "]");
@@ -590,30 +600,13 @@ public class BasicParser implements Parser {
         return logicalOr();
     }
 
-    /**
-     * For Dartmouth mode:
-     * <p>
-     * Parses a series of binary operator expressions into a single
-     * expression. In Basic, all operators have the same precedence and
-     * associate left-to-right. That means it will interpret:
-     *    1 + 2 * 3 - 4 / 5
-     * like:
-     *    ((((1 + 2) * 3) - 4) / 5)
-     * <p>
-     * It works by building the expression tree one at a time. So, given
-     * this code: 1 + 2 * 3, this will:
-     * <p>
-     * 1. Parse (1) as an atomic expression.
-     * 2. See the (+) and start a new operator expression.
-     * 3. Parse (2) as an atomic expression.
-     * 4. Build a (1 + 2) expression and replace (1) with it.
-     * 5. See the (*) and start a new operator expression.
-     * 6. Parse (3) as an atomic expression.
-     * 7. Build a ((1 + 2) * 3) expression and replace (1 + 2) with it.
-     * 8. Return the last expression built.
-     * <p>
-     * @return The parsed expression.
-     * @throws SyntaxErrorException - marks any syntax issues
+    /****
+     * Parses a sequence of binary operator expressions with equal precedence and left-to-right associativity, as used in Dartmouth BASIC mode.
+     *
+     * All operators are treated as having the same precedence, so expressions like `1 + 2 * 3 - 4 / 5` are parsed strictly left-to-right.
+     *
+     * @return the parsed expression representing the combined binary operations
+     * @throws SyntaxErrorException if a syntax error is encountered during parsing
      */
     public final Expression operator() throws SyntaxErrorException {
         Expression oExpression = atomic();
@@ -654,12 +647,11 @@ public class BasicParser implements Parser {
         return oExpression;
     }
 
-    /**
+    /****
+     * Parses a logical OR expression, combining subexpressions with the OR operator at the lowest precedence level.
      *
-     * Logical OR operator (lowest precedence)
-     *
-     * @return Expression with logical OR precedence
-     * @throws SyntaxErrorException for syntax errors
+     * @return An Expression representing a logical OR operation or its subexpression.
+     * @throws SyntaxErrorException if a syntax error is encountered during parsing.
      */
     private Expression logicalOr() throws SyntaxErrorException {
         Expression left = logicalAnd();
@@ -675,10 +667,10 @@ public class BasicParser implements Parser {
     }
 
     /**
-     * Logical AND operator
+     * Parses a logical AND expression, handling left-associative chains of AND operators.
      *
-     * @return Expression with logical AND precedence
-     * @throws SyntaxErrorException for syntax errors
+     * @return an Expression representing the parsed logical AND operation and its operands
+     * @throws SyntaxErrorException if a syntax error is encountered during parsing
      */
     private Expression logicalAnd() throws SyntaxErrorException {
         Expression left = equality();
@@ -694,10 +686,10 @@ public class BasicParser implements Parser {
     }
 
     /**
-     * Equality operators (==, !=)
+     * Parses an equality expression, handling `==` and `!=` operators with left associativity.
      *
-     * @return Expression with equality precedence
-     * @throws SyntaxErrorException for syntax errors
+     * @return an Expression representing the parsed equality comparison
+     * @throws SyntaxErrorException if the syntax is invalid
      */
     private Expression equality() throws SyntaxErrorException {
         Expression left = comparison();
@@ -714,10 +706,10 @@ public class BasicParser implements Parser {
     }
 
     /**
-     * Comparison operators (<, <=, >, >=)
+     * Parses and constructs expressions involving comparison operators (<, <=, >, >=) with correct precedence.
      *
-     * @return Expression with comparison precedence
-     * @throws SyntaxErrorException for syntax errors
+     * @return an Expression representing a comparison operation or the next higher-precedence expression if no comparison operator is present
+     * @throws SyntaxErrorException if a syntax error is encountered during parsing
      */
     private Expression comparison() throws SyntaxErrorException {
         Expression left = shift();
@@ -735,11 +727,13 @@ public class BasicParser implements Parser {
         return left;
     }
 
-    /**
-     * Bitwise shift operators (<<, >>)
+    /****
+     * Parses and returns an expression involving bitwise shift operators (<<, >>) with correct precedence.
      *
-     * @return Expression with shift precedence
-     * @throws SyntaxErrorException for syntax errors
+     * This method parses left-associative shift expressions, where each operand may itself be an addition or subtraction expression.
+     *
+     * @return an Expression representing the parsed shift operation or its subexpression
+     * @throws SyntaxErrorException if the syntax is invalid during parsing
      */
     private Expression shift() throws SyntaxErrorException {
         Expression left = addition();
@@ -755,11 +749,11 @@ public class BasicParser implements Parser {
         return left;
     }
 
-    /**
-     * Addition and subtraction operators (+, -)
+    /****
+     * Parses an expression involving addition and subtraction, applying left-to-right associativity and correct precedence.
      *
-     * @return Expression with addition precedence
-     * @throws SyntaxErrorException for syntax errors
+     * @return an Expression representing the parsed addition or subtraction operation
+     * @throws SyntaxErrorException if a syntax error is encountered during parsing
      */
     private Expression addition() throws SyntaxErrorException {
         Expression left = multiplication();
@@ -776,10 +770,10 @@ public class BasicParser implements Parser {
     }
 
     /**
-     * Multiplication, division, and modulo operators (*, /, %)
+     * Parses and constructs expressions involving multiplication, division, and modulo operators, applying correct precedence and left associativity.
      *
-     * @return Expression with multiplication precedence
-     * @throws SyntaxErrorException for syntax errors
+     * @return an Expression representing a sequence of multiplication, division, or modulo operations
+     * @throws SyntaxErrorException if an invalid syntax is encountered during parsing
      */
     private Expression multiplication() throws SyntaxErrorException {
         Expression left = exponentiation();
@@ -797,10 +791,10 @@ public class BasicParser implements Parser {
     }
 
     /**
-     * Exponentiation operator (^) - right associative
+     * Parses an exponentiation expression, handling right-associative power (^) operators.
      *
-     * @return Expression with exponentiation precedence
-     * @throws SyntaxErrorException for syntax errors
+     * @return an Expression representing the parsed exponentiation, respecting right associativity
+     * @throws SyntaxErrorException if a syntax error is encountered during parsing
      */
     private Expression exponentiation() throws SyntaxErrorException {
         Expression left = unary();
@@ -817,10 +811,10 @@ public class BasicParser implements Parser {
     }
 
     /**
-     * Unary operators (+, -, NOT)
+     * Parses and returns an expression with unary operator precedence, handling leading +, -, or NOT operators.
      *
-     * @return Expression with unary precedence
-     * @throws SyntaxErrorException for syntax errors
+     * @return an Expression representing a unary operation or an atomic value
+     * @throws SyntaxErrorException if the syntax is invalid
      */
     private Expression unary() throws SyntaxErrorException {
         if (getToken(0).getType() == BasicTokenType.PLUS ||

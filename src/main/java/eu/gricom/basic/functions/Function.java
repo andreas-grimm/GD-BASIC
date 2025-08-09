@@ -83,11 +83,13 @@ public class Function implements Expression {
         _oThirdParam = oThirdParam;
     }
 
-    /**
-     * This method is used to trigger the function selected.
+    /****
+     * Evaluates the function represented by the token and its parameters, returning the computed result.
      *
-     * @return - value containing the result of the function
-     * @throws Exception - when the processing is running into a problem
+     * Dispatches to the appropriate static function implementation based on the token type, evaluating up to three parameters as needed. Throws an exception if the function type is unknown or if parameter evaluation fails.
+     *
+     * @return the result of the evaluated function
+     * @throws Exception if an error occurs during function evaluation or if the function type is unrecognized
      */
     public final Value evaluate() throws Exception {
 
@@ -236,9 +238,11 @@ public class Function implements Expression {
     }
 
     /**
-     * This method is used in testing and debugging. It returns the set values when the constructor has been called.
+     * Returns a string summarizing the function token type and its parameter values.
      *
-     * @return - readable string with the name and the value of the assignment
+     * The output is formatted as "Token: <type> Content: <param1, param2, param3>", where each parameter is included if present.
+     *
+     * @return a human-readable string representation of the function and its parameters
      */
     public final String content() {
         String strReturn = "Token: " + _oToken.getType().toString() + " Content: <";
@@ -261,12 +265,10 @@ public class Function implements Expression {
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-like string representing the function's structure, including its token type and the structure of each parameter if present.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a string describing the function's token type and the structure of up to three parameters
+     * @throws Exception if obtaining the structure of any parameter fails
      */
     @Override
     public String structure() throws Exception {

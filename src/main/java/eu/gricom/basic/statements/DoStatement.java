@@ -19,22 +19,31 @@ public class DoStatement implements Statement {
     private final int _iTokenNumber;
 
     /**
-     * Default constructor.
-     * <p>
-     * The "Do" statement defines the return location for the "Until" command for the "do-until" loop.
-     * The class has no further function.
+     * Constructs a DoStatement marking the position of a "Do" statement in a do-until loop.
      *
-     * @param iTokenNumber the line number of this command
+     * @param iTokenNumber the line number where the "Do" statement appears
      */
     public DoStatement(final int iTokenNumber) {
         _iTokenNumber = iTokenNumber;
     }
 
+    /**
+     * Returns the token number associated with this "Do" statement.
+     *
+     * @return the line number where the "Do" statement appears in the source code
+     */
     @Override
     public final int getTokenNumber() {
         return _iTokenNumber;
     }
 
+    /**
+     * Pushes the token number of this "Do" statement onto a new stack as an IntegerValue.
+     *
+     * This method is typically used to mark the position of the "Do" statement for loop control constructs.
+     *
+     * @throws Exception if an error occurs during stack operations
+     */
     @Override
     public final void execute() throws Exception {
         final Stack oStack = new Stack();
@@ -42,18 +51,21 @@ public class DoStatement implements Statement {
         oStack.push(new IntegerValue(_iTokenNumber));
     }
 
+    /**
+     * Returns the string representation of the "Do" statement.
+     *
+     * @return the string "DO"
+     */
     @Override
     public final String content() {
         return "DO";
     }
 
     /**
-     * Structure.
-     * <p>
-     * Method for the compiler to get the structure of the program.
+     * Returns a JSON-formatted string describing the structure of the "DO" statement, including its token number.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
-     * @throws Exception based on errors in the implementation classes
+     * @return a JSON string with the statement name "DO" and its associated token number.
+     * @throws Exception if an error occurs during structure generation.
      */
     @Override
     public String structure() throws Exception {
