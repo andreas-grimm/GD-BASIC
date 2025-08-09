@@ -7,16 +7,16 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
  * ElseStatement.java
- *
+ * <p>
  * Description:
- *
- * A ELSE statement only appears in connection with the IF command. It has two functions: the IF command will use the
+ * <p>
+ * An ELSE statement only appears in connection with the IF command. It has two functions: the IF command will use the
  * location of the ELSE command in case the condition is not met. The second function is for the program flow. When
  * the program flow, after successful evaluation of the IF command, hits the ELSE function, the program flow jumps to
  * the command past the END-IF command.
- *
- * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
- *
+ * <p>
+ * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
  * Created in 2021
  */
 public class ElseStatement implements Statement {
@@ -25,7 +25,7 @@ public class ElseStatement implements Statement {
 
     /**
      * Default constructor.
-     *
+     * <p>
      * An "ELSE" statement jumps to the command past the "END-IF" command.
      *
      * @param iTokenNumber the line number of this command
@@ -61,7 +61,7 @@ public class ElseStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -69,7 +69,9 @@ public class ElseStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"ELSE\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

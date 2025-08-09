@@ -1,3 +1,6 @@
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/andreas-grimm/GD-BASIC?utm_source=oss&utm_medium=github&utm_campaign=andreas-grimm%2FGD-BASIC&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
+
 This is the ReadMe File of the Project:
 
 # GriCom Diminutive BASIC Interpreter (GDBI)
@@ -26,9 +29,7 @@ This package has been tested to build with Maven 3.6.3, using Oracle Java 17.0.1
 
 Use the following command line:
 
-    mvn -Drevision=0.0.5-SNAPSHOT -Dmaven.javadoc.skip=true clean site package
-
-or execute the build shell script at `bin/build`
+    mvn -Drevision=0.0.6-SNAPSHOT -Dmaven.javadoc.skip=true clean site package
 
 --- 
 
@@ -44,7 +45,7 @@ The current version contains the following changes, bug fixes, and enhancements:
 * Command Line - Using Apache Commons CLI to process the input parameter
 * Logger - lightweight logger to avoid heavy-weight log4j
 * Adding JUnit Test Cases for a majority of the functions
-* Adding regression testing with provided BASIC programs
+* Adding regression testing with provided BASIC programs 
 
 Implemented Backlog Items: 
 
@@ -114,7 +115,7 @@ Implemented Backlog Items:
   `TAN`
 * Added string functions: `ASC`, `CHR`, `INSTR`, `LEFT`, `LEN`, `MID`, `RIGHT`, `STR`, `VAL`
 * Added system functions: `MEM`, `SYSTEM`, `TIME`
-* Added `gradle` build script
+* Enhanced build system with improved Maven configuration
 * Added `READ` and `DATA` statements
 * Fixed issues:
 1. `FOR` statement only accepted fixed numbers for start-, end-, and step- value. This has changed that now 

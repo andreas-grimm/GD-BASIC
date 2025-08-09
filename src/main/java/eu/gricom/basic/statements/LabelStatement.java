@@ -11,10 +11,13 @@ import java.util.Map;
  * The Label structure contained a list of the different labels found in the source code. This structure is now part
  * of the memory management function and has been deprecated.
  * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
  */
 public class LabelStatement implements Statement {
     private static final Map<String, Integer> _aoLabels = new HashMap<>();
+    private int _iStatementNumber;
+    private String _strLabel;
+
 // section managing the labels found...
 
     /**
@@ -24,7 +27,8 @@ public class LabelStatement implements Statement {
      * @param iStatementNumber - statement number
      */
     public final void putLabelStatement(final String strLabel, final int iStatementNumber) {
-
+        _iStatementNumber = iStatementNumber;
+        _strLabel = strLabel;
         _aoLabels.put(strLabel, iStatementNumber);
     }
 
@@ -60,9 +64,9 @@ public class LabelStatement implements Statement {
     }
 
     /**
-     * Statements implement this to actually perform whatever behavior the
-     * statement causes. "print" statements will display text here, "goto"
-     * statements will change the current statement, etc.
+     * Statemen objects implement this class to actually perform whatever
+     * behavior the statement causes. "Print" statements will display text
+     * here, "goto" statements will change the current statement, etc.
      *
      * @throws Exception as any execution error found during execution
      */
@@ -73,7 +77,7 @@ public class LabelStatement implements Statement {
 
     /**
      * Content.
-     *
+     * <p>
      * Method for JUnit to return the content of the statement.
      *
      * @return gives the name of the statement ("INPUT") and the variable name
@@ -86,7 +90,7 @@ public class LabelStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -94,7 +98,10 @@ public class LabelStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"LABEL\": {";
+        strReturn += "\"LABEL\": \""+ _strLabel +"\",";
+        strReturn += "\"STATEMENT\": \""+ _iStatementNumber +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

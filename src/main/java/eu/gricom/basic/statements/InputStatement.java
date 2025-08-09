@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
  * <p>
  * The InputStatement class has a single function: read the console and move the content into a named variable.
  * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
  */
 public class InputStatement implements Statement {
     private final String _strName;
@@ -25,7 +25,7 @@ public class InputStatement implements Statement {
 
     /**
      * Default constructor.
-     *
+     * <p>
      * An "input" statement reads input from the user and stores it in a variable.
      *
      * @param strName - the name of the variable to be read.
@@ -37,7 +37,7 @@ public class InputStatement implements Statement {
 
     /**
      * Default constructor.
-     *
+     * <p>
      * An "input" statement reads input from the user and stores it in a variable.
      *
      * @param iTokenNumber the line number of this command
@@ -60,7 +60,7 @@ public class InputStatement implements Statement {
 
     /**
      * Execute.
-     *
+     * <p>
      * Execute the input statement.
      *
      * @throws RuntimeException if an incorrect input is detected
@@ -91,7 +91,7 @@ public class InputStatement implements Statement {
 
     /**
      * Content.
-     *
+     * <p>
      * Method for JUnit to return the content of the statement.
      *
      * @return - gives the name of the statement ("INPUT") and the variable name
@@ -104,7 +104,7 @@ public class InputStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -112,7 +112,10 @@ public class InputStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"INPUT\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
+        strReturn += "\"VARIABLE\": \""+ _strName +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

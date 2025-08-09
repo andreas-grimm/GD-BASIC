@@ -9,14 +9,14 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
  * GoSubStatement.java
- *
+ * <p>
  * Description:
- *
+ * <p>
  * A "GOSUB" statement jumps execution to another place in the program and returns to this location after reaching the
  * return command.
- *
- * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
- *
+ * <p>
+ * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
  * Created in 2021
  */
 public final class GosubStatement implements Statement {
@@ -84,7 +84,7 @@ public final class GosubStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -92,7 +92,10 @@ public final class GosubStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"GOSUB\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
+        strReturn += "\"TARGET\": \""+ _strTarget +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

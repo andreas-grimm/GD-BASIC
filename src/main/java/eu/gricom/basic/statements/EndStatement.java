@@ -73,7 +73,9 @@ public class EndStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"END\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

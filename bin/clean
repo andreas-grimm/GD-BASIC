@@ -13,9 +13,8 @@ echo ""
 
 if [ `uname -m` = "x86_64" ]
 then
-   echo "Cleaning the environment for checkingi: Apple / Debian version"
+   echo "Cleaning the environment for checking: Apple / Debian version"
    mvn clean
-   gradle clean
 
    echo "Cleaning the C++ and GO environment"
    rm -rf src/main/c++/util/CMakeCache.txt src/main/c++/util/CMakeFiles src/main/c++/util/Makefile src/main/c++/util/cmake_install.cmake src/main/c++/util/*.a

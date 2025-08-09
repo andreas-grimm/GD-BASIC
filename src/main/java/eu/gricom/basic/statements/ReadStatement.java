@@ -15,15 +15,15 @@ import java.util.List;
  * The ReadStatement class has a single function: read the FiFo queue and move the content into a set of named
  * variables.
  * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
  */
 public class ReadStatement implements Statement {
     private final int _iTokenNumber;
-    private List<String> _astrNames;
+    private final List<String> _astrNames;
 
     /**
      * Default constructor.
-     *
+     * <p>
      * An "input" statement reads input from the user and stores it in a variable.
      *
      * @param iTokenNumber the token number of this command
@@ -46,7 +46,7 @@ public class ReadStatement implements Statement {
 
     /**
      * Execute.
-     *
+     * <p>
      * Execute the input statement.
      *
      * @throws RuntimeException if an incorrect input is detected
@@ -71,7 +71,7 @@ public class ReadStatement implements Statement {
 
     /**
      * Content.
-     *
+     * <p>
      * Method for JUnit to return the content of the statement.
      *
      * @return - gives the name of the statement ("INPUT") and the variable name
@@ -79,10 +79,10 @@ public class ReadStatement implements Statement {
     @Override
     public final String content() {
 
-        String strReturn = new String();
+        StringBuilder strReturn = new StringBuilder();
 
         for (String strName: _astrNames) {
-            strReturn += strName + " ";
+            strReturn.append(strName).append(" ");
         }
 
         return "READ ( " + strReturn + ")";
@@ -90,7 +90,7 @@ public class ReadStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -98,7 +98,13 @@ public class ReadStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
-        return strReturn;
+        StringBuilder strReturn = new StringBuilder("{\"READ\": {");
+        strReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
+        for (String strName: _astrNames) {
+            strReturn.append("\"NAME\": \"").append(strName).append("\",");
+        }
+        strReturn.deleteCharAt(strReturn.length() - 1);
+        strReturn.append("}}");
+        return strReturn.toString();
     }
 }

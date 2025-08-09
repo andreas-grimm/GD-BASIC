@@ -8,14 +8,14 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
  * ReturnStatement.java
- *
+ * <p>
  * Description:
- *
+ * <p>
  * The Return command retrieves the caller address from the stack and calculates the next statement as return address.
  * It then changes the program pointer to that address.
- *
- * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
- *
+ * <p>
+ * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
  * Created in 2021
  */
 public class ReturnStatement implements Statement {
@@ -23,8 +23,8 @@ public class ReturnStatement implements Statement {
 
     /**
      * Default constructor.
-     *
-     * An "return" statement terminates the GoSub subroutine and jumps to the command after the GoSub statement.
+     * <p>
+     * A "Return" statement terminates the GoSub subroutine and jumps to the command after the GoSub statement.
      *
      * @param iTokenNumber the line number of this command
      */
@@ -64,7 +64,7 @@ public class ReturnStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -72,7 +72,9 @@ public class ReturnStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"RETURN\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

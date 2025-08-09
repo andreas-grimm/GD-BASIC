@@ -1,27 +1,71 @@
 package eu.gricom.basic.codeGenerator;
 
-import eu.gricom.basic.codeGenerator.java.JavaGenerator;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.memoryManager.Program;
-import eu.gricom.basic.statements.Statement;
-import java.util.List;
+
+import java.io.PrintWriter;
 
 public class Generator {
+    private static String _strObjectName = "";
 
-    private final transient Logger _oLogger = new Logger(this.getClass().getName());
+    /**
+     * Create and store the object code.
+     * Return the name of the program loaded.
+     *
+     * @param oProgram the parsed program to be stored.
+     */
+    public static void createJSONCode(Program oProgram, boolean bBeautified) {
+        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createJSONCode");
+        boolean bGenerateObjectCode = true;
 
-    public static void create(Program oProgram, String strLanguage) {
-        System.out.println(oProgram.getProgram());
+        String strJSONCode = "";
+        String strProgramName = oProgram.getProgramName();
 
-        for (Statement oStatement: oProgram.getStatements()) {
-            try {
-                System.out.println(oStatement.content());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        oLogger.info("Loaded program: " + strProgramName);
+        if (strProgramName.endsWith(".bas")) {
+            _strObjectName = strProgramName.replace(".bas", ".json");
+        } else {
+            if (!strProgramName.endsWith(".basic")) {
+                _strObjectName = strProgramName.replace(".basic", ".json");
+            } else {
+                _strObjectName = strProgramName.concat(".json");
             }
         }
+        oLogger.info("Name of object file: " + _strObjectName);
 
-        JavaGenerator oJavaGenerator = new JavaGenerator(oProgram);
-        oJavaGenerator.create();
+        JSONCodeGenerator oJSONCodeGenerator = new JSONCodeGenerator(_strObjectName, oProgram);
+        strJSONCode += oJSONCodeGenerator.create(bBeautified);
+//        strJSONCode += "}";
+
+        if (strJSONCode != null) {
+            oLogger.info(strJSONCode);
+        }
+
+        try {
+            PrintWriter out = new PrintWriter(_strObjectName);
+            out.println(strJSONCode);
+            out.close();
+        } catch (Exception eException) {
+            oLogger.error("Cannot generate file, error: " + eException.getMessage());
+            System.exit(-1);
+        }
+    }
+
+    public static void createObjectCode(Program oProgram) {
+        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createObjectCode");
+
+        ObjectCodeGenerator.createObjectCode(oProgram);
+    }
+
+        /**
+         * Create and store the target Java code.
+         * Return the name of the program loaded.
+         *
+         */
+    public static void createJavaCode() {
+        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createJavaCode");
+
+        String strJavaProgramName = _strObjectName.replace(".json", ".comp.java");
+        oLogger.info("Name of target Java file: " + strJavaProgramName);
     }
 }

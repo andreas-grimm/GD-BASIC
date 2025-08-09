@@ -31,7 +31,7 @@ import java.util.Locale;
  * This is the main class of the Basic interpreter. It manages the execution flow of the program: read, tokenize,
  * parse, and interpret.
  * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
  */
 @SuppressWarnings("SpellCheckingInspection")
 public class Basic {
@@ -39,6 +39,9 @@ public class Basic {
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strCompileLanguage = "java";
     private static boolean _bCompile = false;
+    private static boolean _bBeautified = false;
+    private static boolean _bDartmouthFlag = false;
+    private static boolean _bPCode = false;
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of the interpreter such as the values of
@@ -76,7 +79,7 @@ public class Basic {
      * This is where the magic happens. This runs the code through the parsing pipeline to generator the AST. Then it
      * executes each statement. It keeps track of the current line in a member variable that the statement objects
      * have access to. This lets "goto" and "if then" do flow control by simply setting the index of the current statement.
-     *
+     * <p>
      * In an interpreter that didn't mix the interpretation logic in with the AST node classes, this would be doing a lot more work.
      *
      * @param oProgram The program object, containing the source code of a .bas script to interpret.
@@ -95,7 +98,7 @@ public class Basic {
             System.exit(1);
         }
 
-        // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
+        // Tokenize. At the end of the tokenization, I have the program transferred into a list of tokens and parameters
         _oLogger.info("Starting tokenization...");
 
         Lexer oTokenizer = new BasicLexer();
@@ -104,7 +107,7 @@ public class Basic {
             _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
         } catch (SyntaxErrorException e) {
-            // This syntax error has to generated due to the use of the macro. Original code errors in the lexer are
+            // This syntax error has to generate due to the use of the macro. Original code errors in the lexer are
             // discovered in the previous step.
             System.out.println(e.getMessage());
             System.exit(1);
@@ -124,11 +127,11 @@ public class Basic {
         // Parse.
         _oLogger.info("Starting parsing...");
         try {
-            BasicParser oParser = new BasicParser(oProgram.getTokens());
+            BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
             _oProgram.setPreRunStatements(oParser.parsePreRun());
             _oProgram.setStatements(oParser.parse());
         } catch (SyntaxErrorException eSyntaxError) {
-            eSyntaxError.printStackTrace();
+            _oLogger.error(eSyntaxError.getMessage());
         }
     }
 
@@ -137,15 +140,12 @@ public class Basic {
      * This is where the magic happens. This runs the code through the parsing pipeline to generator the AST. Then it
      * executes each statement. It keeps track of the current line in a member variable that the statement objects
      * have access to. This lets "goto" and "if then" do flow control by simply setting the index of the current statement.
-     *
+     * <p>
      * In an interpreter that didn't mix the interpretation logic in with the AST node classes, this would be doing a lot more work.
      *
      * @param oProgram The program object, containing the source code of a .bas script to interpret.
      */
     public final void interpret(final Program oProgram) {
-        // ProgramPointer oProgramPointer = new ProgramPointer();
-
-        // Trace oTrace = new Trace(false);
 
         // Find and process Macros.
         _oLogger.info("Processing macros...");
@@ -159,7 +159,7 @@ public class Basic {
             System.exit(1);
         }
 
-        // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
+        // Tokenize. At the end of the tokenization, I have the program transferred into a list of tokens and parameters
         _oLogger.info("Starting tokenization...");
 
         Lexer oTokenizer = new BasicLexer();
@@ -168,7 +168,7 @@ public class Basic {
             _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
         } catch (SyntaxErrorException e) {
-            // This syntax error has to generated due to the use of the macro. Original code errors in the lexer are
+            // This syntax error has to generate due to the use of the macro. Original code errors in the lexer are
             // discovered in the previous step.
             System.out.println(e.getMessage());
             System.exit(1);
@@ -188,11 +188,11 @@ public class Basic {
         // Parse.
         _oLogger.info("Starting parsing...");
         try {
-            BasicParser oParser = new BasicParser(oProgram.getTokens());
+            BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
             _oProgram.setPreRunStatements(oParser.parsePreRun());
             _oProgram.setStatements(oParser.parse());
         } catch (SyntaxErrorException eSyntaxError) {
-            eSyntaxError.printStackTrace();
+            _oLogger.error(eSyntaxError.getMessage());
         }
 
         // Run.
@@ -214,6 +214,7 @@ public class Basic {
      * which it then will compile to execute.
      *
      * @param oProgram The program object, containing the source code of a .bas script to interpret.
+     * @param strLanguage Define the target programming language, default is "Java"
      */
     public final void compile(final Program oProgram, final String strLanguage) {
         _oLogger.info("Compiler started, using " + strLanguage + "...");
@@ -222,7 +223,7 @@ public class Basic {
         _oLogger.info("Processing macros...");
         _oProgram = macroProcessing(oProgram);
 
-        // Tokenize. At the end of the tokenization I have the program transferred into a list of tokens and parameters
+        // Tokenize. At the end of the tokenization, I have the program transferred into a list of tokens and parameters
         _oLogger.info("Starting tokenization...");
 
         Lexer oTokenizer = new BasicLexer();
@@ -231,7 +232,7 @@ public class Basic {
             _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
         } catch (SyntaxErrorException e) {
-            // This syntax error has to generated due to the use of the macro. Original code errors in the lexer are
+            // This syntax error has to generate due to the use of the macro. Original code errors in the lexer are
             // discovered in the previous step.
             System.out.println(e.getMessage());
             System.exit(1);
@@ -251,20 +252,29 @@ public class Basic {
         // Parse.
         _oLogger.info("Starting parsing...");
         try {
-            BasicParser oParser = new BasicParser(oProgram.getTokens());
+            BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
             _oProgram.setPreRunStatements(oParser.parsePreRun());
             _oProgram.setStatements(oParser.parse());
         } catch (SyntaxErrorException eSyntaxError) {
-            eSyntaxError.printStackTrace();
+            _oLogger.error(eSyntaxError.getMessage());
         }
 
+        // Generate and store object code.
+        _oLogger.info("Create the object code...");
+        if (!_bPCode) {
+            Generator.createJSONCode(_oProgram, _bBeautified);
 
+            // Generate target code.
+            _oLogger.info("Create the target code...");
+            if (strLanguage.equals("java")) {
+                Generator.createJavaCode();
+            }
 
-        // Generate code.
-        _oLogger.info("Create the code...");
-        Generator.create(_oProgram, strLanguage);
+            // compile.
 
-        // compile.
+        } else {
+            Generator.createObjectCode(_oProgram);
+        }
 
         // Complete.
         System.exit(0);
@@ -287,7 +297,7 @@ public class Basic {
 
         CommandLine oCommandLine = null;
 
-        // create Options object
+        // create the Options object
         Options options = new Options();
 
         try {
@@ -295,8 +305,11 @@ public class Basic {
             options.addOption("i", true, "define input file");
             options.addOption("q", false, "quiet mode");
             options.addOption("v", true, "verbose level: (info, debug, trace, or error)");
-            options.addOption("c", true, "compile <compile class>");
+            options.addOption("c", false, "compile");
+            options.addOption("b", false, "beautified JSON intermediate code for compilation");
+            options.addOption("p", false, "experimental: build p-code for later runtime component");
             options.addOption("l", true, "compile language <java>");
+            options.addOption("d", false, "dartmouth mode");
 
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(options, args);
@@ -312,7 +325,7 @@ public class Basic {
             Printer.println();
             Printer.println("   _____ _____             ____            _    ");
             Printer.println("  / ____|  __ \\           |  _ \\          (_)        GriCom Basic Interpreter Version 0.1.0");
-            Printer.println(" | |  __| |  | |  ______  | |_) | __ _ ___ _  ___    (c) Copyright A.Grimm 2020");
+            Printer.println(" | |  __| |  | |  ______  | |_) | __ _ ___ _  ___    (c) Copyright A.Grimm 2025");
             Printer.println(" | | |_ | |  | | |______| |  _ < / _` / __| |/ __|   ");
             Printer.println(" | |__| | |__| |          | |_) | (_| \\__ \\ | (__    Maximum memory (KBytes): " + lMaxMemory);
             Printer.println("  \\_____|_____/           |____/ \\__,_|___/_|\\___|   Free memory (KBytes): " + lFreeMem);
@@ -346,6 +359,16 @@ public class Basic {
             oLogger.debug("Compiler selected...");
         }
 
+        if (oCommandLine != null && oCommandLine.hasOption("b")) {
+            _bBeautified = true;
+            oLogger.debug("Compiler is generating beautified JSON intermediate code...");
+        }
+
+        if (oCommandLine != null && oCommandLine.hasOption("p")) {
+            _bPCode = true;
+            oLogger.debug("Compiler is generating object code for runtime component...");
+        }
+
         if (oCommandLine != null && oCommandLine.hasOption("h")) {
             // automatically generator the help statement
             oLogger.debug("Display help message...");
@@ -354,10 +377,15 @@ public class Basic {
             formatter.printHelp("java -jar BASIC-<build-name>.jar <filename.bas>", options);
         }
 
+        if (oCommandLine != null && oCommandLine.hasOption("d")) {
+            _bDartmouthFlag = true;
+            oLogger.debug("Dartmouth mode selected...");
+        }
+
         if (oCommandLine != null) {
             List<String> astrArguments = oCommandLine.getArgList();
 
-            if (astrArguments.size() < 1) {
+            if (astrArguments.isEmpty()) {
                 oLogger.error("Program file name missing...");
                 Printer.println("");
                 Printer.println("usage: java -jar BASIC-<build-name>.jar <filename.bas>");
@@ -365,25 +393,24 @@ public class Basic {
                 System.exit(-1);
             }
 
-            for (String strArgument : astrArguments) {
+            String strFileName = astrArguments.getLast();
 
-                // Read the file.
-                oLogger.info("Read file: " + strArgument + "...");
-                oProgram.load(FileHandler.readFile(strArgument));
+            // Read the file.
+            oLogger.info("Read file: " + strFileName + "...");
+            oProgram.load(strFileName, FileHandler.readFile(strFileName));
 
-                // Run it.
-                Basic oBasic = new Basic();
+            // Run it.
+            Basic oBasic = new Basic();
 
-                if (_bCompile) {
-                    oLogger.info("Run the compiler...");
-                    oBasic.compile(oProgram, _strCompileLanguage);
-                } else {
-                    oLogger.info("Run the interpreter...");
-                    oBasic.interpret(oProgram);
-                }
-
-                System.exit(-1);
+            if (_bCompile) {
+                oLogger.info("Run the compiler...");
+                oBasic.compile(oProgram, _strCompileLanguage);
+            } else {
+                oLogger.info("Run the interpreter...");
+                oBasic.interpret(oProgram);
             }
+
+            System.exit(-1);
         }
     }
 }

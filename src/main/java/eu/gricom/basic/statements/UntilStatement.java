@@ -83,7 +83,10 @@ public final class UntilStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"UNTIL\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
+        strReturn += "\"CONDITION\": \""+ _oCondition.structure() +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

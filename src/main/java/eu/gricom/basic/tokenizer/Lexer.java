@@ -16,7 +16,6 @@ import java.util.List;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public interface Lexer {
-
     /**
      * This function takes a script as a string of characters and chunks it into
      * a sequence of tokens. Each token is a meaningful unit of program, like a

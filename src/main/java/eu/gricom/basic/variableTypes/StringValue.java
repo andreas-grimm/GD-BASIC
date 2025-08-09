@@ -4,6 +4,8 @@ import eu.gricom.basic.error.DivideByZeroException;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.error.SyntaxErrorException;
 
+import java.util.Objects;
+
 /**
  * StringValue.java
  *
@@ -14,7 +16,7 @@ import eu.gricom.basic.error.SyntaxErrorException;
  * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
  */
 public class StringValue implements Value {
-    private String _strValue;
+    private final String _strValue;
 
     /**
      * Default constructor.
@@ -73,8 +75,7 @@ public class StringValue implements Value {
 
     @Override
     public final Value plus(final Value oValue) throws SyntaxErrorException {
-        StringValue oReturn = new StringValue(_strValue + oValue.toString());
-        return oReturn;
+        return new StringValue(_strValue + oValue.toString());
     }
 
     @Override
@@ -137,8 +138,8 @@ public class StringValue implements Value {
 
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
-        if (equals(oValue).toString() == "True"
-                || smallerThan(oValue).toString() == "True") {
+        if (Objects.equals(equals(oValue).toString(), "True")
+                || Objects.equals(smallerThan(oValue).toString(), "True")) {
             return new BooleanValue(true);
         } else {
             return new BooleanValue(false);
@@ -160,8 +161,8 @@ public class StringValue implements Value {
 
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
-        if (equals(oValue).toString() == "True"
-                || largerThan(oValue).toString() == "True") {
+        if (Objects.equals(equals(oValue).toString(), "True")
+                || Objects.equals(largerThan(oValue).toString(), "True")) {
             return new BooleanValue(true);
         } else {
             return new BooleanValue(false);
@@ -184,8 +185,7 @@ public class StringValue implements Value {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
-        return strReturn;
+        return "\""+ this.toString() + "\"";
     }
 
     /**

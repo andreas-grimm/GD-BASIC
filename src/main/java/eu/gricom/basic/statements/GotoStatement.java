@@ -13,7 +13,7 @@ import eu.gricom.basic.memoryManager.ProgramPointer;
  * <p>
  * A "goto" statement jumps execution to another place in the program.
  * <p>
- * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2004,...,2016 by Andreas Grimm, Den Haag, The Netherlands
  * <p>
  * Created in 2003
  *
@@ -62,7 +62,7 @@ public final class GotoStatement implements Statement {
      * @throws SyntaxErrorException for unknown or incorrect formatted targets
      */
     public void execute() throws SyntaxErrorException {
-        // This part of the method is executed if the BASIC interpreter uses labels (e.g. we are using JASIC)
+        // This part of the method is executed if the BASIC interpreter uses labels (e.g., we are using JASIC)
         if (_oLabelStatement.containsLabelKey(_strTarget)) {
             _oLogger.debug("-execute-> jump to [" + _strTarget + "]");
             _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strTarget));
@@ -70,7 +70,7 @@ public final class GotoStatement implements Statement {
             return;
         }
 
-        // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
+        // Here we are using line numbers to jump to the destination. This is only done for BASIC programs.
         try {
             int iTokenNo = _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget));
 
@@ -80,8 +80,6 @@ public final class GotoStatement implements Statement {
             }
 
             throw new SyntaxErrorException("GOTO [unknown]: Target: " + _strTarget);
-        } catch (NumberFormatException eNumberException) {
-            throw new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strTarget);
         } catch (RuntimeException e) {
             throw new SyntaxErrorException("GOTO [incorrect format]: Target: " + _strTarget);
         }
@@ -103,7 +101,7 @@ public final class GotoStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -111,7 +109,10 @@ public final class GotoStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"GOTO\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
+        strReturn += "\"TARGET\": \""+ _strTarget +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

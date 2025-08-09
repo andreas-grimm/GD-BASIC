@@ -5,17 +5,17 @@ package eu.gricom.basic.statements;
  * <p>
  * Description:
  * <p>
- * The DimStatement class defines all kind of arrays.
+ * The DimStatement class defines all kinds of arrays.
  * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
  */
 public class DimStatement implements Statement {
     private final int _iTokenNumber;
 
     /**
      * Default constructor.
-     *
-     * An "DIM" statement initializes an array of any type.
+     * <p>
+     * A "DIM" statement initializes an array of any type.
      * @param iTokenNumber - number of the command in the basic program
      */
     public DimStatement(final int iTokenNumber) {
@@ -34,7 +34,7 @@ public class DimStatement implements Statement {
 
     /**
      * Execute.
-     *
+     * <p>
      * Terminate the running program.
      */
     public final void execute() {
@@ -43,7 +43,7 @@ public class DimStatement implements Statement {
 
     /**
      * Content.
-     *
+     * <p>
      * Method for JUnit to return the content of the statement.
      *
      * @return - gives the name of the statement ("END")
@@ -56,7 +56,7 @@ public class DimStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -64,7 +64,9 @@ public class DimStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"DIM\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

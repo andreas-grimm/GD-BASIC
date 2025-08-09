@@ -12,10 +12,10 @@ import eu.gricom.basic.variableTypes.IntegerValue;
  * <p>
  * Description:
  * <p>
- * An if then statement jumps execution to another place in the program, but only if an expression evaluates to
+ * An "IF" then statement jumps execution to another place in the program, but only if an expression evaluates to
  * something other than 0.
  * <p>
- * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
  * <p>
  * Created in 2021
  *
@@ -84,7 +84,7 @@ public final class IfThenStatement implements Statement {
     public void execute() throws Exception {
         Stack oStack = new Stack();
 
-        // This part of the method is executed if the BASIC interpreter uses labels (e.g. we are using JASIC)
+        // This part of the method is executed if the BASIC interpreter uses labels (e.g., we are using JASIC)
         if (_oLabelStatement.containsLabelKey(_strLabel)) {
             BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
             if (bValue.isTrue()) {
@@ -94,7 +94,7 @@ public final class IfThenStatement implements Statement {
             return;
         }
 
-        // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
+        // Here we are using line numbers to jump to the destination. This is only done for BASIC programs.
         BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
 
         // different to the code above: when the result of the condition is false, then ignore the next block and
@@ -131,7 +131,7 @@ public final class IfThenStatement implements Statement {
             }
         }
 
-        // if the condition is true, check whether we have a jump target. The jump target needs to be valid otherwise
+        // If the condition is true, check whether we have a jump target. The jump target needs to be valid otherwise
         // an exception is thrown
         if (_iTargetLineNumber != 0) {
             int iStatementNo = _oLineNumberObject.getStatementFromLineNumber(_iTargetLineNumber);
@@ -143,7 +143,7 @@ public final class IfThenStatement implements Statement {
             throw new SyntaxErrorException("IF [unknown]: Target: [" + _iTargetLineNumber + "]");
         }
 
-        if (_iElseStatement != 0) { // ok - we found an ELSE statement - and we will run into it. So put the
+        if (_iElseStatement != 0) { // Ok - we found an ELSE statement - and we will run into it. So put the
             // necessary info on the stack, then ELSE can use it to jump over the ELSE block.
             int iStatementNo = _oLineNumberObject.getStatementFromLineNumber(_oLineNumberObject.getNextLineNumber(_iEndIfLine));
             oStack.push(new IntegerValue(iStatementNo));
@@ -164,7 +164,7 @@ public final class IfThenStatement implements Statement {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -172,7 +172,13 @@ public final class IfThenStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"IF\": {";
+        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
+        strReturn += "\"CONDITION\": "+ _oCondition.structure() +",";
+        strReturn += "\"ELSE_STATEMENT\": \""+ _iElseStatement +"\",";
+        strReturn += "\"END_IF\": \""+ _iEndIfLine +"\",";
+        strReturn += "\"TARGET_LINE\": \"" + _iTargetLineNumber +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

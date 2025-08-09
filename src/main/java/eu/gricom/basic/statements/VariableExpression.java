@@ -7,13 +7,13 @@ import eu.gricom.basic.variableTypes.Value;
 
 /**
  * VariableExpression.java
- *
+ * <p>
  * Description:
- *
+ * <p>
  * A variable expression evaluates to the current value stored in that variable.
- *
- * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
- *
+ * <p>
+ * (c) = 2004,...,2016 by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
  * Created in 2020
  *
  */
@@ -34,8 +34,8 @@ public final class VariableExpression implements Expression {
     /**
      * Return the content of the variable in the Memory Management component.
      *
-     * @return returns the value of the variable - or if the variable does not exists - returns a 0 as a numerical value
-     * @throws Exception for any errors occuring in the execution of the evaluation. Currently this happens if
+     * @return returns the value of the variable - or if the variable does not exist - returns a 0 as a numerical value
+     * @throws Exception for any errors occurring in the execution of the evaluation. Currently, this happens if
      * the index in an array subscription is larger than the array.
      */
     public Value evaluate() throws Exception {
@@ -50,7 +50,7 @@ public final class VariableExpression implements Expression {
 
             if (strInner.contains(",")) {
                 String[] astrCommaSeperatedList = strInner.split(",");
-                String strCommaSeperatedList = new String();
+                StringBuilder strCommaSeperatedList = new StringBuilder();
 
                 for (String strExpression: astrCommaSeperatedList) {
                     String strValue = strExpression;
@@ -60,7 +60,7 @@ public final class VariableExpression implements Expression {
                         strValue = oExpression.evaluate().toString();
                     }
 
-                    strCommaSeperatedList += strValue + ",";
+                    strCommaSeperatedList.append(strValue).append(",");
                 }
 
                 strKey = strKey.substring(0, iIndexStart + 1)
@@ -91,7 +91,7 @@ public final class VariableExpression implements Expression {
     /**
      * Get the name of the variable.
      *
-     * @return name of the vaiable as a string.
+     * @return name of the variable as a string.
      */
     public String getName() {
 
@@ -110,7 +110,7 @@ public final class VariableExpression implements Expression {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -118,7 +118,9 @@ public final class VariableExpression implements Expression {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"VARIABLE\": {";
+        strReturn += "\"NAME\": \""+ _strName +"\"";
+        strReturn += "}}";
         return strReturn;
     }
 }

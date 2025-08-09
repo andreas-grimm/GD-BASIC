@@ -59,93 +59,47 @@ public class OperatorExpression implements Expression {
         Value oRightValue = _oRight.evaluate();
 
         if (_strOperator != null) { // needed for Jasic
-            switch (_strOperator) {
-                case "=":
-                    return oLeftValue.equals(oRightValue);
-
-                case "+":
-                    return oLeftValue.plus(oRightValue);
-                case "-":
-                    return oLeftValue.minus(oRightValue);
-                case "*":
-                    return oLeftValue.multiply(oRightValue);
-                case "/":
-                    return oLeftValue.divide(oRightValue);
-                case "^":
-                    return oLeftValue.power(oRightValue);
-
-                case "&":
-                case "AND":
-                    return oLeftValue.and(oRightValue);
-                case "|":
-                case "OR":
-                    return oLeftValue.or(oRightValue);
-
-                case "==":
-                    return oLeftValue.equals(oRightValue);
-                case "!=":
-                    return oLeftValue.notEqual(oRightValue);
-                case "<":
-                    return oLeftValue.smallerThan(oRightValue);
-                case "<=":
-                    return oLeftValue.smallerEqualThan(oRightValue);
-                case ">":
-                    return oLeftValue.largerThan(oRightValue);
-                case ">=":
-                    return oLeftValue.largerEqualThan(oRightValue);
-
-                case "%":
-                    return oLeftValue.modulo(oRightValue);
-                case ">>":
-                    return oLeftValue.shiftRight(oRightValue);
-                case "<<":
-                    return oLeftValue.shiftLeft(oRightValue);
-
-                default:
-                    throw new SyntaxErrorException("Unknown operator: " + _strOperator);
-            }
+            return switch (_strOperator) {
+                case "=" -> oLeftValue.equals(oRightValue); //TODO should this not be an assign?
+                case "+" -> oLeftValue.plus(oRightValue);
+                case "-" -> oLeftValue.minus(oRightValue);
+                case "*" -> oLeftValue.multiply(oRightValue);
+                case "/" -> oLeftValue.divide(oRightValue);
+                case "^" -> oLeftValue.power(oRightValue);
+                case "&", "AND" -> oLeftValue.and(oRightValue);
+                case "|", "OR" -> oLeftValue.or(oRightValue);
+                case "==" -> oLeftValue.equals(oRightValue);
+                case "!=" -> oLeftValue.notEqual(oRightValue);
+                case "<" -> oLeftValue.smallerThan(oRightValue);
+                case "<=" -> oLeftValue.smallerEqualThan(oRightValue);
+                case ">" -> oLeftValue.largerThan(oRightValue);
+                case ">=" -> oLeftValue.largerEqualThan(oRightValue);
+                case "%" -> oLeftValue.modulo(oRightValue);
+                case ">>" -> oLeftValue.shiftRight(oRightValue);
+                case "<<" -> oLeftValue.shiftLeft(oRightValue);
+                default -> throw new SyntaxErrorException("Unknown operator: " + _strOperator);
+            };
         }
 
-        switch (_oOperator) {
-            case PLUS:
-                return oLeftValue.plus(oRightValue);
-            case MINUS:
-                return oLeftValue.minus(oRightValue);
-            case MULTIPLY:
-                return oLeftValue.multiply(oRightValue);
-            case DIVIDE:
-                return oLeftValue.divide(oRightValue);
-            case POWER:
-                return oLeftValue.power(oRightValue);
-
-            case AND:
-                return oLeftValue.and(oRightValue);
-            case OR:
-                return oLeftValue.or(oRightValue);
-
-            case COMPARE_EQUAL:
-                return oLeftValue.equals(oRightValue);
-            case COMPARE_NOT_EQUAL:
-                return oLeftValue.notEqual(oRightValue);
-            case SMALLER:
-                return oLeftValue.smallerThan(oRightValue);
-            case SMALLER_EQUAL:
-                return oLeftValue.smallerEqualThan(oRightValue);
-            case GREATER:
-                return oLeftValue.largerThan(oRightValue);
-            case GREATER_EQUAL:
-                return oLeftValue.largerEqualThan(oRightValue);
-
-            case MODULO:
-                return oLeftValue.modulo(oRightValue);
-            case SHIFT_RIGHT:
-                return oLeftValue.shiftRight(oRightValue);
-            case SHIFT_LEFT:
-                return oLeftValue.shiftLeft(oRightValue);
-
-            default:
-                throw new SyntaxErrorException("Unknown operator: " + _strOperator);
-        }
+        return switch (_oOperator) {
+            case PLUS -> oLeftValue.plus(oRightValue);
+            case MINUS -> oLeftValue.minus(oRightValue);
+            case MULTIPLY -> oLeftValue.multiply(oRightValue);
+            case DIVIDE -> oLeftValue.divide(oRightValue);
+            case POWER -> oLeftValue.power(oRightValue);
+            case AND -> oLeftValue.and(oRightValue);
+            case OR -> oLeftValue.or(oRightValue);
+            case COMPARE_EQUAL -> oLeftValue.equals(oRightValue);
+            case COMPARE_NOT_EQUAL -> oLeftValue.notEqual(oRightValue);
+            case SMALLER -> oLeftValue.smallerThan(oRightValue);
+            case SMALLER_EQUAL -> oLeftValue.smallerEqualThan(oRightValue);
+            case GREATER -> oLeftValue.largerThan(oRightValue);
+            case GREATER_EQUAL -> oLeftValue.largerEqualThan(oRightValue);
+            case MODULO -> oLeftValue.modulo(oRightValue);
+            case SHIFT_RIGHT -> oLeftValue.shiftRight(oRightValue);
+            case SHIFT_LEFT -> oLeftValue.shiftLeft(oRightValue);
+            default -> throw new SyntaxErrorException("Unknown operator: " + _strOperator);
+        };
     }
 
     /**
@@ -190,7 +144,7 @@ public class OperatorExpression implements Expression {
 
     /**
      * Structure.
-     *
+     * <p>
      * Method for the compiler to get the structure of the program.
      *
      * @return gives the name of the statement ("INPUT") and a list of the parameters
@@ -198,7 +152,18 @@ public class OperatorExpression implements Expression {
      */
     @Override
     public String structure() throws Exception {
-        String strReturn = this.toString();
+        String strReturn = "{\"OPERATOR\": {";
+        strReturn += "\"LEFT_EXPRESSION\": " + _oLeft.structure() + ",";
+
+        if (_strOperator != null) {
+            strReturn += "\"OPERATOR_STRING\": \""+ _strOperator +"\"";
+        }
+        if (_oOperator != null) {
+            strReturn += "\"OPERATOR_OBJECT\": \""+ _oOperator + "\",";
+        }
+        strReturn += "\"RIGHT_EXPRESSION\": "+ _oRight.structure();
+        strReturn += "}}";
+
         return strReturn;
     }
 }
