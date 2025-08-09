@@ -1,6 +1,25 @@
 #!/bin/sh
-echo "Building..."
-mvn -Drevision=0.0.7-DEV -Dmaven.javadoc.skip=true clean site package
+tput clear
+echo ""
+echo "  #####  ######      ######     #     #####  ###  #####     "
+echo " #     # #     #     #     #   # #   #     #  #  #     #    GriCom Basic Interpreter Version 0.1.0"
+echo " #       #     #     #     #  #   #  #        #  #          (c) Copyright A.Grimm 2020"
+echo " #  #### #     # ### ######  #     #  #####   #  #          "
+echo " #     # #     #     #     # #######       #  #  #          Java / Maven Build Process"
+echo " #     # #     #     #     # #     # #     #  #  #     #    "
+echo "  #####  ######      ######  #     #  #####  ###  #####     "
+echo ""
 
-#echo " Building documentation"
+
+if [ `uname -m` = "x86_64" ]
+then
+   echo "Building for Apple Darwin or Debian Linux"
+   mvn -Drevision=0.0.8-DEV -Dmaven.javadoc.skip=true clean site package
+elif [ `uname -m` = "aarch64" ]
+then
+   echo "Building for Raspberry Pi"
+   mvn -Drevision=0.0.8-DEV -Dmaven.javadoc.skip=true -Dmaven.test.skip=true clean site package
+else
+   echo "unknown architecture"
+fi
 

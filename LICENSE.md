@@ -6,8 +6,8 @@ This is the License File of the Project:
 
 &copy; 2004 - 2021 Andreas Grimm
 
-&trade; gricom.eu, gricom.de, and gricom.nl are owned domains by Andreas Grimm, reflecting in the classnames in the software. 
-Additions shall not use class names following org.gricom, eu.gricom, de.gricom, or nl.gricom
+&trade; gricom.eu, gricom.de, gricom.nl, and gricom.no are owned domains by Andreas Grimm, reflecting in the classnames in the software. 
+Additions shall not use class names following eu.gricom, de.gricom, nl.gricom, or no.gricom
 
 According to [Common Development and Distribution License 1.0](https://opensource.org/licenses/CDDL-1.0), permission is 
 hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 

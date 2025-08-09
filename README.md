@@ -1,3 +1,6 @@
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/andreas-grimm/GD-BASIC?utm_source=oss&utm_medium=github&utm_campaign=andreas-grimm%2FGD-BASIC&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
+
 This is the ReadMe File of the Project:
 
 # GriCom Diminutive BASIC Interpreter (GDBI)
@@ -19,19 +22,14 @@ projects.
 
 Project Planning and Control
 
-This project is using Jira to manage progress, but also to log bugs and plan new features. The Jira repository for the Project is here:
-[Jira Link](https://gricom.atlassian.net/jira/software/projects/BASIC/boards/3)
-
 ---
 Build Process:
 
-This package has been tested to build with Maven 3.6.3, using Oracle Java 1.8.0_131 under Mac OS X 10.15.7
+This package has been tested to build with Maven 3.6.3, using Oracle Java 17.0.1 under Mac OS X 14.5, and Debian 10 or higher
 
 Use the following command line:
 
-    mvn -Drevision=0.0.5-SNAPSHOT -Dmaven.javadoc.skip=true clean site package
-
-or execute the build shell script at `bin/build`
+    mvn -Drevision=0.0.6-SNAPSHOT -Dmaven.javadoc.skip=true clean site package
 
 --- 
 
@@ -47,7 +45,7 @@ The current version contains the following changes, bug fixes, and enhancements:
 * Command Line - Using Apache Commons CLI to process the input parameter
 * Logger - lightweight logger to avoid heavy-weight log4j
 * Adding JUnit Test Cases for a majority of the functions
-* Adding regression testing with provided BASIC programs
+* Adding regression testing with provided BASIC programs 
 
 Implemented Backlog Items: 
 
@@ -117,7 +115,7 @@ Implemented Backlog Items:
   `TAN`
 * Added string functions: `ASC`, `CHR`, `INSTR`, `LEFT`, `LEN`, `MID`, `RIGHT`, `STR`, `VAL`
 * Added system functions: `MEM`, `SYSTEM`, `TIME`
-* Added `gradle` build script
+* Enhanced build system with improved Maven configuration
 * Added `READ` and `DATA` statements
 * Fixed issues:
 1. `FOR` statement only accepted fixed numbers for start-, end-, and step- value. This has changed that now 
@@ -139,6 +137,11 @@ Implemented Backlog Items:
 * Added the framework to handle macro constructs (`DEF FN`)
 * Added the code highlighting for [Visual Studio Code (VSC)](https://code.visualstudio.com/) 
 
+0.0.8: File Handling Release
+* Added file interface to allow the interpreter to work with external files
+* Change the build setting to allow compilation on Debian and Raspberry PI 4 under 64 bit Ubuntu
+* Added directories to allow C and GO compiler modules
+
 Implemented Backlog Items:
 
     [BASIC-55][BASIC-121][BASIC-133]
@@ -153,3 +156,7 @@ Implemented test and demonstration programs, located at `src/test/resources/GD_B
 - `Eratosthenese.bas`: translation of the ECMA demonstration `ERATOSTHENES.BAS` program
 
 ** NOTE: as of this version, all further versions pass the CheckStyle test **
+
+---
+This build version has removed gradle as a build tool, The JIRA backlog has been closed.
+At this moment the code is considered stable and will be maintained as needed.

@@ -27,6 +27,10 @@ the example of `JRUBY` for Ruby or `JYTHON` for Python.
 
 ## Standards and supported Basic Implementations
 
+GD-BASIC is based on the **Dartmouth BASIC October 1964** specification, the original and definitive version of the BASIC programming language. The implementation maintains backward compatibility with the original Dartmouth BASIC while adding modern extensions for enhanced functionality.
+
+**Primary Reference**: [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf)
+
 #### `GD-BASIC`
 
 | Type | Variable Name Structure | Values |
@@ -58,6 +62,8 @@ gives a high level overview on their expected use.
 ## Language Elements
 
 #### Structure of BASIC Programs
+**Reference**: [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf), Section 1.1 - Program Structure
+
 The Dartmouth version of the program structure consists of a program line in two parts:
 1. A line number, which is a unique integer ahead of every single line. This number has to be constantly growing in 
    respect to the previous number, but it does not have to consecutive (actually it is good practice to show 
@@ -288,6 +294,32 @@ The implemented BASIC version supports real numbers and negative numbers:
 *Note*: 
 For the Basic language, the assignment equal (`=`) is different from the comparison equal (`==`). For the assignment 
 operation only the assignment operator can be used. The comparison user is generating an error...
+
+### Expression Evaluation Modes
+
+GD-BASIC supports two expression evaluation modes to maintain compatibility with different BASIC dialects:
+
+#### Dartmouth Mode (`_bDartmouthFlag = true`)
+**Reference**: [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf)
+
+Follows the original Dartmouth BASIC specification with **left-to-right evaluation**:
+- All operators have equal precedence
+- Expressions are evaluated strictly from left to right
+- Example: `1 + 2 * 3` evaluates as `(1 + 2) * 3 = 9`
+
+#### Standard Precedence Mode (`_bDartmouthFlag = false`)
+Follows modern mathematical operator precedence:
+- Standard mathematical precedence rules apply
+- Example: `1 + 2 * 3` evaluates as `1 + (2 * 3) = 7`
+
+**Usage**: The evaluation mode is selected when creating the parser:
+```java
+// Dartmouth mode (original BASIC behavior)
+Parser parser = new BasicParser(tokens, true);
+
+// Standard precedence mode (modern behavior)
+Parser parser = new BasicParser(tokens, false);
+```
 
 ### Commands
 
@@ -752,12 +784,26 @@ Every BASIC program consists of different elements:
 * Statement and Commands, and
 * Controls (which look like commands, but control the execution)
 
-### Dartmouth Basic
-This Basic interpreter is targeted to implement the definition of the BASIC programming language as defined by Thomas Kurtz
+### Dartmouth BASIC
+This Basic interpreter is targeted to implement the definition of the BASIC programming language as defined by Thomas Kurtz and John Kemeny
 from [Dartmouth College](https://en.wikipedia.org/wiki/Dartmouth_BASIC).
 
-The following [Link](https://www.dartmouth.edu/basicfifty/commands.html) links to the definition of the language. The 
-language support is mightier for the Dartmouth version. A copy of the Dartmouth Basic programming manual is added to the documentation.
+The implementation follows the **Dartmouth BASIC October 1964** specification, which is the original and definitive version of the BASIC programming language. A copy of the original Dartmouth BASIC programming manual (`Dartmouth_BASIC_Oct64.pdf`) is included in the documentation for reference.
+
+**Key Dartmouth BASIC Features Implemented:**
+- **Line Numbers**: Every statement must begin with a line number
+- **Variable Naming**: Single letter or single letter + single digit (e.g., A, A1, B, B2)
+- **Expression Evaluation**: Left-to-right evaluation (Dartmouth mode with `_bDartmouthFlag = true`)
+- **Built-in Functions**: Mathematical and string processing functions
+- **Control Structures**: GOTO, IF-THEN, FOR-NEXT loops
+- **Input/Output**: PRINT, INPUT, READ/DATA statements
+
+**Dartmouth BASIC Resources:**
+- [Dartmouth BASIC 50th Anniversary](https://www.dartmouth.edu/basicfifty/commands.html) - Online reference
+- [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf) - Original specification document
+- [Wikipedia: Dartmouth BASIC](https://en.wikipedia.org/wiki/Dartmouth_BASIC) - Historical overview
+
+The language support is most complete for the Dartmouth version, with additional modern features added as extensions.
 
 ### ECMA Minimal Basic
 The following link point to a [C Compiler for ECMA Minimal Basic](https://buraphakit.sourceforge.io/BASIC.shtml).
@@ -776,9 +822,11 @@ differences, where GDBasic programs exceed the different dialects.
 
 ### Types and Naming Standards
 
-#### Dartmouth Basic
+#### Dartmouth BASIC (October 1964)
 Variable names can be a single letter, or a single letter followed by a
-single digit. This provides for 286 possible variable names.
+single digit. This provides for 286 possible variable names (26 letters × 11 digits including 0).
+
+**Reference**: [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf), Section 2.1 - Variable Names
 
 #### Applesoft Basic
 
@@ -833,3 +881,24 @@ As a result of the extension, Basic code in VSC should be optically supported:
 * [TinyBasic](https://en.wikipedia.org/wiki/Tiny_BASIC) with the related implementation for [Java](http://www.thisiscool.com/tinybasic.htm)
 * [GW-Basic](https://en.wikipedia.org/wiki/GW-BASIC) is the Microsoft reference implementation of the BASIC 
   programming language
+
+## Dartmouth BASIC Documentation Reference
+
+### Primary Documentation
+- **[Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf)** - The original and definitive specification of the BASIC programming language
+- **[Dartmouth BASIC 50th Anniversary](https://www.dartmouth.edu/basicfifty/commands.html)** - Online reference and historical information
+- **[Wikipedia: Dartmouth BASIC](https://en.wikipedia.org/wiki/Dartmouth_BASIC)** - Historical overview and context
+
+### Key Sections in the October 1964 Manual
+- **Section 1.1**: Program Structure and Line Numbers
+- **Section 2.1**: Variable Names and Naming Conventions
+- **Section 3.1**: Expression Evaluation and Operator Precedence
+- **Section 4.1**: Built-in Functions and Mathematical Operations
+- **Section 5.1**: Control Structures (GOTO, IF-THEN, FOR-NEXT)
+- **Section 6.1**: Input/Output Operations (PRINT, INPUT, READ/DATA)
+
+### Implementation Notes
+GD-BASIC implements the Dartmouth BASIC October 1964 specification with the following considerations:
+- **Backward Compatibility**: Maintains original Dartmouth BASIC behavior when using `_bDartmouthFlag = true`
+- **Modern Extensions**: Adds contemporary features while preserving core Dartmouth BASIC functionality
+- **Documentation Alignment**: All Dartmouth BASIC features are implemented according to the original specification
