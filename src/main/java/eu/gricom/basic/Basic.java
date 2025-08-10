@@ -38,10 +38,12 @@ public class Basic {
     private Program _oProgram = new Program();
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private static String _strCompileLanguage = "java";
+    private static String _strCompileTemplate = "src/templates/" + _strCompileLanguage + "/eu/gricom/basic/compile.template";
     private static boolean _bCompile = false;
     private static boolean _bBeautified = false;
     private static boolean _bDartmouthFlag = false;
     private static boolean _bPCode = false;
+    private static boolean _bStoreIntermediateFiles = false;
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of the interpreter such as the values of
@@ -262,16 +264,18 @@ public class Basic {
         // Generate and store object code.
         _oLogger.info("Create the object code...");
         if (!_bPCode) {
-            Generator.createJSONCode(_oProgram, _bBeautified);
+            String strJSONCode = Generator.createJSONCode(_oProgram, _bBeautified, _bStoreIntermediateFiles);
 
             // Generate target code.
             _oLogger.info("Create the target code...");
             if (strLanguage.equals("java")) {
-                Generator.createJavaCode();
+                Generator.createJavaCode(strJSONCode, _strCompileTemplate);
+                //TODO For Test Purpose only - remove when code works
+                // Program oNewProgram = Generator.createProgram(strJSONCode); <--- continue when JAVA code generation completed
             }
 
             // compile.
-
+            Printer.println("Please compile the generated code...");
         } else {
             Generator.createObjectCode(_oProgram);
         }
@@ -310,6 +314,8 @@ public class Basic {
             options.addOption("p", false, "experimental: build p-code for later runtime component");
             options.addOption("l", true, "compile language <java>");
             options.addOption("d", false, "dartmouth mode");
+            options.addOption("n", false, "store intermediate files");
+            options.addOption("t", true, "template for the compiler");
 
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(options, args);
@@ -354,9 +360,20 @@ public class Basic {
             oLogger.debug("Compile Language:" + strLanguage + "...");
         }
 
+        if (oCommandLine != null && oCommandLine.hasOption("t")) {
+            _strCompileTemplate = oCommandLine.getOptionValue("t");
+
+            oLogger.debug("Compile Template:" + _strCompileTemplate + "...");
+        }
+
         if (oCommandLine != null && oCommandLine.hasOption("c")) {
             _bCompile = true;
             oLogger.debug("Compiler selected...");
+        }
+
+        if (oCommandLine != null && oCommandLine.hasOption("n")) {
+            _bStoreIntermediateFiles = true;
+            oLogger.debug("Store Intermediate Files selected...");
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("b")) {
