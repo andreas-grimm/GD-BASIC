@@ -47,7 +47,7 @@ public class GenerateJavaCode {
         _oLogger.debug("Creating POM File");
         String strPOMTemplate = strCompileTemplate.replace("compile.template", "compile.pom");
         String strPOMFileName = strJavaProgramName.substring(0,strJavaProgramName.lastIndexOf("/")) + "/pom.xml";
-        _oLogger.info("POM Filename :" + strPOMFileName);
+        _oLogger.debug("POM Filename :" + strPOMFileName);
 
         try {
             BufferedReader oBufferedReader = new BufferedReader(new FileReader(strPOMTemplate));

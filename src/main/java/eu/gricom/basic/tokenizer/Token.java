@@ -1,5 +1,7 @@
 package eu.gricom.basic.tokenizer;
 
+import java.util.Objects;
+
 /**
  * Token.java
  * <p>
@@ -93,6 +95,34 @@ public final class Token {
         _strText = strText;
 
         return _strText;
+    }
+
+    /**
+     * Return the content of the Token object in JSON format.
+     *
+     * @return JSON Block
+     */
+    public String structure() {
+        String strReturn = "{\"TOKEN\": {";
+        strReturn += "\"LINE_NR\": \""+ _iLineNumber +"\",";
+        strReturn += "\"TYPE\": \""+ _oType.name() +"\",";
+        strReturn += "\"COMMAND_SEQUENCE_NUMBER\": \""+ _iCommandSequenceNumber +"\",";
+        strReturn += "\"TEXT\": \""+ _strText +"\"";
+        strReturn += "}}";
+
+        return strReturn;
+    }
+
+    /**
+     * Compare two Token objects
+     *
+     * @return boolean - true if Token identical
+     */
+    public boolean equals(Token oCompareToken) {
+        return (_oType == oCompareToken._oType) &&
+                (_iLineNumber == oCompareToken._iLineNumber) &&
+                (_iCommandSequenceNumber == oCompareToken._iCommandSequenceNumber) &&
+                (Objects.equals(_strText, oCompareToken._strText));
     }
 }
 

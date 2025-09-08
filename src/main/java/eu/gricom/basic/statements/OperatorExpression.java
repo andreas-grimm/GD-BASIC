@@ -156,7 +156,7 @@ public class OperatorExpression implements Expression {
         strReturn += "\"LEFT_EXPRESSION\": " + _oLeft.structure() + ",";
 
         if (_strOperator != null) {
-            strReturn += "\"OPERATOR_STRING\": \""+ _strOperator +"\"";
+            strReturn += "\"OPERATOR_STRING\": \""+ _strOperator +"\",";
         }
         if (_oOperator != null) {
             strReturn += "\"OPERATOR_OBJECT\": \""+ _oOperator + "\",";

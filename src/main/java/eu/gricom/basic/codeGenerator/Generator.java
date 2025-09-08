@@ -1,5 +1,7 @@
 package eu.gricom.basic.codeGenerator;
 
+import eu.gricom.basic.codeGenerator.JSON.JSONCodeGenerator;
+import eu.gricom.basic.codeGenerator.JSON.JSONDecoder;
 import eu.gricom.basic.codeGenerator.java.GenerateJavaCode;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.memoryManager.Program;
@@ -75,10 +77,10 @@ public class Generator {
         oGenerateJavaCode.generate(strJSONCode, strJavaProgramName, strCompileTemplate);
     }
 
-    public static Program createProgram(String strJSONProgram) {
+    public static Program createProgramObject(String strJSONProgram) {
         Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createProgram");
 
-        JSONCodeGenerator oGenerateProgram = new JSONCodeGenerator(strJSONProgram);
-        return (oGenerateProgram.transferJSONCodeToProgram());
+        JSONDecoder oGenerateProgram = new JSONDecoder(strJSONProgram);
+        return (oGenerateProgram.decode());
     }
 }

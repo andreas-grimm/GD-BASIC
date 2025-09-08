@@ -146,7 +146,60 @@ public class Program {
         return _aoPreRunStatements;
     }
 
+    /**
+     * set Line Numbers.
+     * Add the link to the line number object. Needed for unit testing.
+     *
+     * @param oLineNumbers object to reference the line number
+     */
     public final void setLineNumber(LineNumberXRef oLineNumbers) {
         _oLineNumbers = oLineNumbers;
+    }
+
+    /**
+     * equals.
+     * Add the link to the line number object. Needed for unit testing.
+     *
+     * @param oCompare - Program object to compare to...
+     */
+    public final boolean equals(Program oCompare) {
+        boolean bEqual = true;
+
+        String          strProgramName            = oCompare.getProgramName();
+        String          strProgramSource          = oCompare.getProgram();
+        List<Statement> aoComparePreRunStatements = oCompare.getPreRunStatements();
+        List<Statement> aoCompareStatements       = oCompare.getStatements();
+        List<Token>     aoCompareTokens           = oCompare.getTokens();
+
+        if (!_strProgramName.equals(strProgramName)) {
+            bEqual = false;
+        }
+
+        if (!_strProgramSource.equals(strProgramSource)) {
+            bEqual = false;
+        }
+
+        for (Statement aoPreRunStatement : _aoPreRunStatements) {
+            if (!aoComparePreRunStatements.contains(aoPreRunStatement)) {
+                bEqual = false;
+                break;
+            }
+        }
+
+        for (Statement aoStatement : _aoStatements) {
+            if (!aoCompareStatements.contains(aoStatement)) {
+                bEqual = false;
+                break;
+            }
+        }
+
+        for (Token oToken : _aoTokens) {
+            if (!aoCompareTokens.contains(oToken)) {
+                bEqual = false;
+                break;
+            }
+        }
+
+        return bEqual;
     }
 }

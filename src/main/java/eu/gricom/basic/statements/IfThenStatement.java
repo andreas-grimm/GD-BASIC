@@ -62,7 +62,7 @@ public final class IfThenStatement implements Statement {
         _oCondition = oCondition;
         _strLabel = "";
         _iElseStatement = iELseStatement;
-            _iEndIfLine = iEndIfLine;
+        _iEndIfLine = iEndIfLine;
         _iTargetLineNumber = iTargetLineNumber;
     }
 
