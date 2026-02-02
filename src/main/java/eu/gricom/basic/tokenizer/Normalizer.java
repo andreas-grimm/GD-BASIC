@@ -4,13 +4,12 @@ import eu.gricom.basic.error.SyntaxErrorException;
 
 /**
  * Normalizer.java
- *
- * Description:
- *
- * The Normalizer class formats the string received in such a way that the string is prepared for consumption by the
- * Lexer.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
+ * Description: The Normalizer class preprocesses BASIC source code lines before tokenisation. It standardises spacing
+ * around operators and delimiters, handles array index notation, and ensures consistent formatting that the Lexer can
+ * reliably parse.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Normalizer {
 

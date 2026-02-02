@@ -9,13 +9,13 @@ import java.io.InputStreamReader;
 import java.util.Locale;
 
 /**
- * System Function.
- *
- * Description:
- *
- * The System function returns the string value of an input value.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * System.java
+ * <p>
+ * Description: The System class implements the BASIC SYSTEM function, which executes operating system commands and
+ * returns their output. It allows BASIC programs to interact with the underlying system shell for tasks such as file
+ * operations or running external programs.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class System {
 

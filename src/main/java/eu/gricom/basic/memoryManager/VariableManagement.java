@@ -17,12 +17,12 @@ import java.util.Map;
 /**
  * VariableManagement.java
  * <p>
- * Description:
- * This structure holds all variables used in the Basic program.
+ * Description: The VariableManagement class provides centralised storage and retrieval for all variables used during
+ * BASIC program execution. It maintains separate hash maps for different variable types (strings, integers, reals,
+ * booleans, and untyped values) and handles variable type inference based on BASIC naming conventions such as $ for
+ * strings and % for integers.
  * <p>
- * The Program Pointer contains the current position of the program.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class VariableManagement {
     private static Map<String, Value> _aoUntyped = new HashMap<>();

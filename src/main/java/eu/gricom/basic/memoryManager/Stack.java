@@ -6,11 +6,11 @@ import eu.gricom.basic.error.EmptyStackException;
 /**
  * Stack.java
  * <p>
- * Description:
+ * Description: The Stack class provides a LIFO (Last In, First Out) data structure used by the interpreter for
+ * managing return addresses during GOSUB/RETURN operations and loop control in FOR-NEXT and WHILE-ENDWHILE constructs.
+ * It wraps Java's built-in Stack class with singleton pattern access.
  * <p>
- * This class is implements the local used stack.
- * <p>
- * (c) = 2020 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class Stack {
     private static java.util.Stack _oStack = null;

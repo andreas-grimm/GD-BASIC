@@ -5,13 +5,11 @@ import java.util.Objects;
 /**
  * Token.java
  * <p>
- * Description:
+ * Description: The Token class represents a single lexical unit produced by the Lexer during tokenisation. Each token
+ * contains the original source text, its type classification, the source line number, and its position in the command
+ * sequence for error reporting and navigation.
  * <p>
- * The Lexer is responsible for translating the source code into a chain of Token. When recognizing a token, this
- * object is created, consisting of the found token and the text in the source code. Using this class wrapper, the
- * parser can identify the token and process it.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Token {
     private String _strText;

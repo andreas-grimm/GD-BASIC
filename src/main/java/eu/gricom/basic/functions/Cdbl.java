@@ -7,13 +7,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * CDBL Function.
- *
- * Description:
- *
- * The CDBL function delivers the REAL value of the parameter. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Cdbl.java
+ * <p>
+ * Description: The Cdbl class implements the BASIC CDBL function, which converts a numeric value to a double-precision
+ * floating-point (real) number. The input parameter must be a numeric value (integer, long, or real).
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Cdbl {
 

@@ -1,5 +1,8 @@
 # GD-BASIC Java Style Guide
 
+This version of the style guide is the basis for any Vibe based development. Following the rules of the styleguide is a mandatory requirement for any agent or tool
+working on the project. Discrepancies between the styleguide and the code will be addressed by the project maintainers and should cause a rewrite of the failed code.
+
 ## Overview
 
 This style guide ensures consistent, readable code across the GD-BASIC project. Our primary goals are **conciseness**, **readability**, and **simplicity**.
@@ -142,7 +145,7 @@ int x;
 ```java
 String strUsername;
 int iCounter;
-for (int iX = 0; iZ < oItems.size(); iX++) { }  // Loop variable is acceptable
+for (int iX = 0; iX < oItems.size(); iX++) { }  // Loop variable is acceptable
 ```
 
 ### Acronyms
@@ -253,9 +256,9 @@ private enum CompassDirection { EAST, NORTH, WEST, SOUTH }
 
 ```java
 public void method() {
-  if (condition) {
-    doSomething();
-  }
+    if (condition) {
+        doSomething();
+    }
 }
 ```
 
@@ -268,7 +271,7 @@ public void method() {
 ```java
 public void longMethodName(String parameter1, String parameter2,
     String parameter3) {
-  // Method body
+    // Method body
 }
 ```
 
@@ -284,11 +287,11 @@ public void longMethodName(String parameter1, String parameter2,
 
 ```java
 public void method1() {
-  // Implementation
+    // Implementation
 }
 
 public void method2() {
-  // Implementation
+    // Implementation
 }
 ```
 
@@ -298,17 +301,17 @@ public void method2() {
 
 ```java
 public void complexMethod() {
-  // Section 1: Variable initialization
-  String strInput = getInput();
-  int iCount = parseCount(strInput);
-  
-  // Section 2: Validation
-  if (iCount < 0) {
-    throw new IllegalArgumentException("Count must be positive");
-  }
-  
-  // Section 3: Processing
-  processItems(iCount);
+    // Section 1: Variable initialization
+    String strInput = getInput();
+    int iCount = parseCount(strInput);
+    
+    // Section 2: Validation
+    if (iCount < 0) {
+        throw new IllegalArgumentException("Count must be positive");
+    }
+    
+    // Section 3: Processing
+    processItems(iCount);
 }
 ```
 
@@ -320,11 +323,11 @@ public void complexMethod() {
 
 ```java
 public void method() {
-  if (condition) {
-    doSomething();
-  } else {
-    doSomethingElse();
-  }
+    if (condition) {
+        doSomething();
+    } else {
+        doSomethingElse();
+    }
 }
 ```
 
@@ -341,7 +344,7 @@ if (condition)
 
 ```java
 if (condition) {
-  doSomething();
+    doSomething();
 }
 ```
 
@@ -353,18 +356,18 @@ if (condition) {
 
 ```java
 switch (value) {
-  case 1:
-    doSomething();
-    break;
-  case 2:
-    doSomething();
-    // Intentional fall-through
-  case 3:
-    doSomethingElse();
-    break;
-  default:
-    handleDefault();
-    break;
+    case 1:
+        doSomething();
+        break;
+    case 2:
+        doSomething();
+        // Intentional fall-through
+    case 3:
+        doSomethingElse();
+        break;
+    default:
+        handleDefault();
+        break;
 }
 ```
 
@@ -377,12 +380,12 @@ switch (value) {
 ```java
 @Override
 public String toString() {
-  return "MyClass";
+    return "MyClass";
 }
 
 @Deprecated
 public void oldMethod() {
-  // Implementation
+    // Implementation
 }
 ```
 
@@ -397,23 +400,23 @@ public void oldMethod() {
 
 ```java
 public class MyClass {
-  private String strName;
-  
-  // External access
-  public String getName() {
-    return strName;
-  }
-  
-  public void setName(String strName) {
-    this.strName = strName;
-  }
-  
-  // Internal access (direct field access for performance)
-  public void processName() {
-    if (strName != null) {  // Direct access
-      // Process the name
+    private String strName;
+    
+    // External access
+    public String getName() {
+        return strName;
     }
-  }
+    
+    public void setName(String strName) {
+        this.strName = strName;
+    }
+    
+    // Internal access (direct field access for performance)
+    public void processName() {
+        if (strName != null) {  // Direct access
+            // Process the name
+        }
+    }
 }
 ```
 
@@ -431,11 +434,11 @@ public class MyClass {
 
 ```java
 if (input == null) {
-  throw new IllegalArgumentException("Input cannot be null");
+    throw new IllegalArgumentException("Input cannot be null");
 }
 
 if (count < 0) {
-  throw new IllegalArgumentException("Count must be non-negative, got: " + count);
+    throw new IllegalArgumentException("Count must be non-negative, got: " + count);
 }
 ```
 
@@ -459,7 +462,6 @@ if (count < 0) {
 - `GRXX` - Reference data project
 
 ### Required Project Files
-ect-files)
 
 **Rule**: Every project must include:
 

@@ -7,22 +7,11 @@ import eu.gricom.basic.statements.Expression;
 /**
  * Value.java
  * <p>
- * Description:
- * This is the base interface for a value. Values are the data that the
- * interpreter processes. They are what gets stored in variables, printed,
- * and operated on.
- *
- * There is an implementation of this interface for each of the different
- * primitive types (really just double and string) that Jasic supports.
- * Wrapping them in a single Value interface lets Jasic be dynamically-typed
- * and convert between different representations as needed.
- *
- * Note that Value extends Expression. This is a bit of a hack, but it lets
- * us use values (which are typically only ever seen by the interpreter and
- * not the parser) as both runtime values, and as object representing
- * literals in code.
+ * Description: The Value interface is the base type for all data values in the BASIC interpreter. It defines the
+ * contract for arithmetic operations, comparisons, and type conversions between different value types (string,
+ * integer, real, long, boolean). By extending Expression, values can also serve as literal expressions in the AST.
  * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public interface Value extends Expression {
 

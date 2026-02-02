@@ -8,14 +8,11 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 /**
  * NextStatement.java
  * <p>
- * Description:
+ * Description: The NextStatement class implements the closing part of a FOR-NEXT loop. It retrieves the loop control
+ * information from the stack, increments the counter by the step value, and either continues the loop by jumping back
+ * to the FOR statement or exits when the end condition is met.
  * <p>
- * A "Next" statement closes the most outside open "For" loop and triggers the next run of the "For"
- * loop.
- * <p>
- * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2021
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class NextStatement implements Statement {
     private final ProgramPointer _oProgramPointer = new ProgramPointer();

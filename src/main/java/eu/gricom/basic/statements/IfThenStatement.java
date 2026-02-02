@@ -10,15 +10,11 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 /**
  * IfThenStatement.java
  * <p>
- * Description:
+ * Description: The IfThenStatement class implements BASIC conditional branching. It evaluates a boolean condition and
+ * either executes the THEN block, branches to a specified line, or falls through to an ELSE block if the condition is
+ * false. Supports both single-line and block IF structures.
  * <p>
- * An "IF" then statement jumps execution to another place in the program, but only if an expression evaluates to
- * something other than 0.
- * <p>
- * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2021
- *
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class IfThenStatement implements Statement {
     private final Expression _oCondition;

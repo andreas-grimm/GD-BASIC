@@ -11,12 +11,11 @@ import java.nio.charset.Charset;
 /**
  * FileHandler.java
  * <p>
- * Description:
+ * Description: The FileHandler class provides utility methods for reading BASIC source code files from the file
+ * system. It loads the entire file content into a single string for subsequent tokenisation and parsing by the
+ * interpreter.
  * <p>
- * The FileHandler class has a single function: read a source code file and move the content into a single string.
- * This might cause problems in case of really big programs, so this needs to be addressed later.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class FileHandler {
     private static final Logger _oLogger = new Logger(FileHandler.class.getClass().getName());

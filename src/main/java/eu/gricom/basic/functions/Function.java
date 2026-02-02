@@ -9,13 +9,11 @@ import eu.gricom.basic.variableTypes.Value;
 /**
  * Function.java
  * <p>
- * Description:
+ * Description: The Function class serves as a dispatcher for all built-in BASIC functions. It accepts a token
+ * identifying the function and up to three parameters, then routes the call to the appropriate function implementation
+ * and returns the computed result.
  * <p>
- * Function dispatcher: Execute the selected function and return the result.
- * <p>
- * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2020
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class Function implements Expression {
     private final Token _oToken;

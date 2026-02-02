@@ -8,10 +8,11 @@ import java.util.Queue;
 /**
  * FiFoQueue.java
  * <p>
- * Description:
+ * Description: The FiFoQueue class implements a First In, First Out queue used primarily by the DATA and READ
+ * statements. Values defined in DATA statements are enqueued, and READ statements dequeue them in order. The queue
+ * uses singleton pattern access for global availability.
  * <p>
- * This class is implements the local used fifo queue. The fifo queue is used for the DATA command and later functions.  * <p>
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class FiFoQueue {
     private static Queue<Value> _oFiFo = null;

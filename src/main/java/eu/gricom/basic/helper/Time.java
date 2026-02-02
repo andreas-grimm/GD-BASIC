@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 
 /**
  * Time.java
- * (c) = 2004,..,2007 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  *
  * This software is protected according to Dutch and International Law. Certain components of this package might have
  * been released under terms of conditions of the General Public License of the GNU organization. Those modules are

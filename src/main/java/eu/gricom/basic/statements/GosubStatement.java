@@ -8,16 +8,13 @@ import eu.gricom.basic.memoryManager.Stack;
 import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
- * GoSubStatement.java
+ * GosubStatement.java
  * <p>
- * Description:
+ * Description: The GosubStatement class implements the BASIC GOSUB command for subroutine calls. It pushes the current
+ * program position onto the stack as a return address, then transfers control to the specified line number or label.
+ * Execution resumes after the GOSUB when a RETURN statement is encountered.
  * <p>
- * A "GOSUB" statement jumps execution to another place in the program and returns to this location after reaching the
- * return command.
- * <p>
- * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2021
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class GosubStatement implements Statement {
     private final String _strTarget;

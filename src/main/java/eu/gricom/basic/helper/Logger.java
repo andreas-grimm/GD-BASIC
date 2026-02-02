@@ -8,20 +8,17 @@ import java.io.PrintWriter;
 /**
  * Logger.java
  * <p>
- * Description:
+ * Description: The Logger class provides lightweight logging functionality similar to Log4j but with minimal overhead.
+ * It supports multiple log levels (trace, debug, info, warning) and can output to both console and file destinations.
+ * Each class instantiates its own logger with its class name for identification.
  * <p>
- * Light weight logger object as part of the infrastructure. This logger works similar to the log4j logger, but does provide less overhead.
- * <p>
- * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2003
- *
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class Logger {
 
-  private static PrintWriter           _oLogFile           = null;
-  private String                       _strClassName       = this.getClass().getName();
-  private static String                _strLogLevel        = "trace|debug|info|warning";
+    private static PrintWriter           _oLogFile           = null;
+    private String                       _strClassName       = this.getClass().getName();
+    private static String                _strLogLevel        = "trace|debug|info|warning";
 
     /**
    * Constructor of the Logger class.
@@ -40,17 +37,17 @@ public class Logger {
    * @param strLogFileBaseName - name of the log file
    */
   public final void setFileName(final String strLogFileBaseName) {
-    boolean bFileNameOK              = false;
-    Time    oRightNow                = new Time();
-    File    oLogFile;
-    String  strFileName              = "";
-    int     iSeqNo                   = 0;
+      boolean bFileNameOK              = false;
+      Time    oRightNow                = new Time();
+      File    oLogFile;
+      String  strFileName              = "";
+      int     iSeqNo                   = 0;
     
-    _oLogFile           = null;
+      _oLogFile           = null;
 
-    if (strLogFileBaseName == null) {
+      if (strLogFileBaseName == null) {
     // using an empty base name does not make sense - we stop here
-        return;
+          return;
     }
 
     while (!bFileNameOK) {

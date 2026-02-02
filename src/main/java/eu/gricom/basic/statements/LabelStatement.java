@@ -4,14 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Label.java
+ * LabelStatement.java
  * <p>
- * Description:
+ * Description: The LabelStatement class manages symbolic labels used as targets for GOTO and GOSUB statements. It
+ * maintains a mapping between label names and their corresponding statement positions, allowing the interpreter to
+ * resolve jump destinations at runtime.
  * <p>
- * The Label structure contained a list of the different labels found in the source code. This structure is now part
- * of the memory management function and has been deprecated.
- * <p>
- * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class LabelStatement implements Statement {
     private static final Map<String, Integer> _aoLabels = new HashMap<>();

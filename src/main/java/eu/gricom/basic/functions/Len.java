@@ -6,13 +6,12 @@ import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * LEN Function.
- *
- * Description:
- *
- * The LEN function delivers the lenght of the parameter value. This parameter has to be of type String.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Len.java
+ * <p>
+ * Description: The Len class implements the BASIC LEN function, which returns the length (number of characters) of
+ * the input string. The input parameter must be a string value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Len {
 

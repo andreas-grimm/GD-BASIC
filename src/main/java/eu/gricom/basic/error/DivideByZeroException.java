@@ -3,12 +3,11 @@ package eu.gricom.basic.error;
 /**
  * DivideByZeroException.java
  * <p>
- * Description:
+ * Description: The DivideByZeroException is thrown when a division operation encounters a zero divisor. This runtime
+ * error prevents undefined mathematical behaviour and propagates to the main class for error handling and program
+ * termination.
  * <p>
- * The divide by zero exception is thrown when ever the interpreter are running into a programmed mathematical
- * error: a division by zero. The error is then moved to the main classes to terminate the running program.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class DivideByZeroException extends Exception {
 

@@ -5,13 +5,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * TAN Function.
- *
- * Description:
- *
- * The TAN function returns the tangent of an angle. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Tan.java
+ * <p>
+ * Description: The Tan class implements the BASIC TAN function, which returns the tangent of an angle specified in
+ * radians. The input parameter must be a numeric value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Tan {
 

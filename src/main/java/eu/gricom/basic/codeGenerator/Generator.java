@@ -8,6 +8,15 @@ import eu.gricom.basic.memoryManager.Program;
 
 import java.io.PrintWriter;
 
+/**
+ * Generator.java
+ * <p>
+ * Description: The Generator class serves as the central coordinator for code generation. It provides methods to
+ * create JSON intermediate representation of parsed BASIC programs and to generate executable Java source code from
+ * the intermediate representation.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
+ */
 public class Generator {
     private static String _strObjectName = "";
 
@@ -54,33 +63,30 @@ public class Generator {
         return strJSONCode;
     }
 
-    public static void createObjectCode(Program oProgram) {
-        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createObjectCode");
-
-        ObjectCodeGenerator.createObjectCode(oProgram);
-    }
-
-        /**
-         * Create and store the target Java code.
-         * Return the name of the program loaded.
-         *
-         */
-    public static void createJavaCode(String strJSONCode, String strCompileTemplate) {
+    /**
+     * Create and store the target Java code.
+     * Return the name of the program loaded.
+     *
+     */
+    public static void createCode(String strBASICProgramName, String strBASICCode, String strCompileTemplate) {
         Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createJavaCode");
 
-        String strJavaProgramName = _strObjectName.replace(".json", ".comp.java");
+        if (strBASICProgramName.endsWith(".bas")) {
+            _strObjectName = strBASICProgramName.replace(".bas", ".comp.java");
+        } else {
+            if (!strBASICProgramName.endsWith(".basic")) {
+                _strObjectName = strBASICProgramName.replace(".basic", ".comp.java");
+            } else {
+                _strObjectName = strBASICProgramName.concat(".comp.java");
+            }
+        }
+        oLogger.debug("Name of object file: " + _strObjectName);
+
+
+        String strJavaProgramName = _strObjectName;
         oLogger.debug("Name of target Java file: " + strJavaProgramName);
-        oLogger.debug("Name of target Java file: " + strJavaProgramName);
-        oLogger.debug("Content of the JSON Program: " + strJSONCode);
 
         GenerateJavaCode oGenerateJavaCode = new GenerateJavaCode();
-        oGenerateJavaCode.generate(strJSONCode, strJavaProgramName, strCompileTemplate);
-    }
-
-    public static Program createProgramObject(String strJSONProgram) {
-        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createProgram");
-
-        JSONDecoder oGenerateProgram = new JSONDecoder(strJSONProgram);
-        return (oGenerateProgram.decode());
+        oGenerateJavaCode.generate(strBASICCode, strJavaProgramName, strCompileTemplate);
     }
 }

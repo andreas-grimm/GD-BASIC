@@ -8,16 +8,13 @@ import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
- *
- * Description:
- *
- * A While statement loops thru the block from the While statement to the next End-While statement as long as the
- * condition in the While statement is True. When the condition defined is changing from True to False, the program
- * flow will jump to the next statement past the End-While statement.
- *
- * (c) = 2004,..,2021 by Andreas Grimm, Den Haag, The Netherlands
- *
- * Created in 2021
+ * UntilStatement.java
+ * <p>
+ * Description: The UntilStatement class implements the closing part of a DO-UNTIL loop. It evaluates a condition and,
+ * if false, retrieves the return address from the stack to jump back to the corresponding DO statement for another
+ * iteration. When the condition becomes true, the loop exits and execution continues with the next statement.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class UntilStatement implements Statement {
     private final int _iTokenNumber;

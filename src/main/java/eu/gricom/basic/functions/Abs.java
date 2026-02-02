@@ -7,13 +7,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * ABS Function.
- *
- * Description:
- *
- * The ABS function delivers the absolute value of the parameter. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Abs.java
+ * <p>
+ * Description: The Abs class implements the BASIC ABS function, which returns the absolute (non-negative) value of a
+ * numeric parameter. It handles integer, long, and real value types.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Abs {
 

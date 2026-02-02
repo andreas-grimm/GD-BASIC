@@ -7,11 +7,11 @@ import eu.gricom.basic.helper.Logger;
 /**
  * CleanStatement.java
  * <p>
- * Description:
+ * Description: The CleanStatement class removes stale entries from the interpreter stack when program flow exits a
+ * block (such as a loop or subroutine) prematurely. This ensures the stack remains consistent after GOTO statements
+ * that jump out of structured blocks.
  * <p>
- * The DimStatement class defines all kinds of arrays.
- * <p>
- * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class CleanStatement implements Statement {
     private final int _iTokenNumber;

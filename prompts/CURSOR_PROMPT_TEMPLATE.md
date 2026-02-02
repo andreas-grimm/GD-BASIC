@@ -4,7 +4,7 @@ This template provides guidelines for AI-assisted development in the GD-BASIC pr
 
 ## Style Guide Reference
 
-**MANDATORY**: All code must strictly adhere to the style guide defined in `Prompts/STYLEGUIDE.md`. This includes:
+**MANDATORY**: All code must strictly adhere to the style guide defined in `prompts/STYLEGUIDE.md`. This includes:
 
 - Naming conventions (Hungarian notation for member variables, camelCase for methods)
 - Code structure and formatting (4-space indentation, brace style, etc.)

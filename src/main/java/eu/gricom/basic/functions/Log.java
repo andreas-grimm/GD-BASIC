@@ -5,14 +5,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * EXP Function.
- *
- * Description:
- *
- * The LOG function returns the logarithm naturalis (to the basis 'e') of the input value. This parameter has to be
- * numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Log.java
+ * <p>
+ * Description: The Log class implements the BASIC LOG function, which returns the natural logarithm (base e) of the
+ * input value. The input parameter must be a positive numeric value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Log {
 

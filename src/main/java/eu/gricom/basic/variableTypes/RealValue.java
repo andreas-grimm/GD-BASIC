@@ -10,12 +10,12 @@ import java.math.RoundingMode;
 
 /**
  * RealValue.java
- *
- * Description:
- *
- * The NumberValue is the container to hold all numeric values.
- *
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
+ * Description: The RealValue class implements the Value interface for floating-point numeric data types. It stores
+ * double-precision values and provides arithmetic operations, comparisons, and type conversions. Real variables in
+ * BASIC are identified by the # or ! suffix and support BCD representation for precision.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class RealValue implements Value {
     private double _fValue;

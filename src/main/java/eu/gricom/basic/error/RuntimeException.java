@@ -3,15 +3,11 @@ package eu.gricom.basic.error;
 /**
  * RuntimeException.java
  * <p>
- * Description:
+ * Description: The RuntimeException class is thrown when the interpreter encounters an error during program execution.
+ * This includes situations such as broken navigation links between BASIC line numbers, token numbers, and statement
+ * numbers, invalid array index access, or other runtime errors that prevent normal program execution.
  * <p>
- * The runtime exception is thrown if
- *  - the link between BASIC line number, token number, and statement number is broken - the program is unable to
- *  navigate
- *  - ...
- *
- * <p>
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class RuntimeException extends Exception {
 

@@ -5,11 +5,11 @@ import java.util.Locale;
 /**
  * ReservedWords.java
  * <p>
- * Description:
+ * Description: The ReservedWords class maintains the dictionary of all BASIC language keywords and their corresponding
+ * token types. During lexical analysis, the lexer uses this class to identify whether a word is a reserved keyword
+ * (such as PRINT, GOTO, IF) or a user-defined identifier.
  * <p>
- * The list of reserved words and the matching token.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class ReservedWords {
 

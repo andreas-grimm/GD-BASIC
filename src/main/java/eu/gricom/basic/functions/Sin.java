@@ -5,13 +5,12 @@ import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * SIN Function.
- *
- * Description:
- *
- * The SIN function returns the sinus of an angle. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Sin.java
+ * <p>
+ * Description: The Sin class implements the BASIC SIN function, which returns the sine of an angle specified in
+ * radians. The input parameter must be a numeric value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Sin {
 

@@ -7,16 +7,13 @@ import eu.gricom.basic.memoryManager.LineNumberXRef;
 import eu.gricom.basic.memoryManager.ProgramPointer;
 
 /**
- * GoToStatement.java
+ * GotoStatement.java
  * <p>
- * Description:
+ * Description: The GotoStatement class implements the BASIC GOTO command for unconditional jumps. It transfers program
+ * control to the specified line number or label, updating the program pointer to continue execution from the new
+ * location.
  * <p>
- * A "goto" statement jumps execution to another place in the program.
- * <p>
- * (c) = 2004,...,2016 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2003
- *
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class GotoStatement implements Statement {
     private final Logger _oLogger = new Logger(this.getClass().getName());

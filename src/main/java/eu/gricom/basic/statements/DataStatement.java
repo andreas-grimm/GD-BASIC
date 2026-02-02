@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * DataStatement.java
  * <p>
- * Description:
+ * Description: The DataStatement class implements the BASIC DATA command, which defines constant values that can be
+ * retrieved sequentially by READ statements. During execution, the values are pushed into a FIFO queue for later
+ * consumption by READ.
  * <p>
- * The Data Statement class provides the input values for the READ statement.
- * <p>
- * (c) = 2021,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class DataStatement implements Statement {
     private final int _iTokenNumber;

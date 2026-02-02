@@ -8,13 +8,11 @@ import java.util.List;
 /**
  * Program.java
  * <p>
- * Description:
+ * Description: The Program class serves as the central storage container for a BASIC program throughout its lifecycle.
+ * It holds the program source, tokenised representation, parsed statements, and maintains line number cross-references
+ * for runtime navigation.
  * <p>
- * This is the storage class for the Basic program to be executed. This is the main place of persistent information for
- * the different stages of the code: loaded, tokenized, and parsed. This allows the use of intermediate storage during
- * execution.
- * <p>
- * (c) = 2021,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class Program {
     private final transient Logger _oLogger = new Logger(this.getClass().getName());

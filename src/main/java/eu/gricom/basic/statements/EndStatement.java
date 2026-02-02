@@ -3,11 +3,10 @@ package eu.gricom.basic.statements;
 /**
  * EndStatement.java
  * <p>
- * Description:
+ * Description: The EndStatement class implements the BASIC END command, which terminates program execution. When
+ * reached, it signals the interpreter to stop processing statements and exit the program cleanly.
  * <p>
- * The EndStatement class terminates the running Basic program.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class EndStatement implements Statement {
     private final int _iTokenNumber;

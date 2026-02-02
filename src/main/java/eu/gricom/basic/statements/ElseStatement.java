@@ -8,16 +8,11 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 /**
  * ElseStatement.java
  * <p>
- * Description:
+ * Description: The ElseStatement class provides the alternative branch in IF-THEN-ELSE constructs. When the IF
+ * condition is false, execution jumps to the ELSE block. When reached during normal flow (after executing the THEN
+ * block), it skips to the END-IF to prevent executing both branches.
  * <p>
- * An ELSE statement only appears in connection with the IF command. It has two functions: the IF command will use the
- * location of the ELSE command in case the condition is not met. The second function is for the program flow. When
- * the program flow, after successful evaluation of the IF command, hits the ELSE function, the program flow jumps to
- * the command past the END-IF command.
- * <p>
- * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2021
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class ElseStatement implements Statement {
     private final ProgramPointer _oProgramPointer = new ProgramPointer();

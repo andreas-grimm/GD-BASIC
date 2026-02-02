@@ -9,14 +9,11 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 /**
  * ReturnStatement.java
  * <p>
- * Description:
+ * Description: The ReturnStatement class implements the BASIC RETURN command, which exits a subroutine called by
+ * GOSUB. It pops the return address from the stack and transfers control back to the statement immediately following
+ * the original GOSUB call.
  * <p>
- * The Return command retrieves the caller address from the stack and calculates the next statement as return address.
- * It then changes the program pointer to that address.
- * <p>
- * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2021
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class ReturnStatement implements Statement {
     private final int _iTokenNumber;

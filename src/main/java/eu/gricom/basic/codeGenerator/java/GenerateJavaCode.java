@@ -7,18 +7,28 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 
+/**
+ * GenerateJavaCode.java
+ * <p>
+ * Description: The GenerateJavaCode class transpiles BASIC programs into Java source code. It uses a template file to
+ * generate a complete Java class that embeds the BASIC program as JSON and includes the necessary runtime support for
+ * execution.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
+ */
 public class GenerateJavaCode {
     private Logger _oLogger = new Logger(this.getClass().getName());
 
     public GenerateJavaCode() {
     }
 
-    public void generate(String strJSONProgram, String strJavaProgramName, String strCompileTemplate) {
+    public void generate(String strBASICProgram, String strJavaProgramName, String strCompileTemplate) {
         _oLogger.debug("Creating Java Code");
-        String strJSONCode = "private final String strJSONProgram = " + "\"" + strJSONProgram + "\";";
-        _oLogger.debug("Java Code:         "  + strJSONCode);
+        String strBASICCode = "private final String strJSONProgram = " + "\"" + strBASICProgram + "\";";
+        _oLogger.debug("Java Code:         "  + strBASICCode);
         _oLogger.info("Java Program Name: "  + strJavaProgramName);
 
+        /*
         try {
             BufferedReader oBufferedReader = new BufferedReader(new FileReader(strCompileTemplate));
             PrintWriter oOutput = new PrintWriter(strJavaProgramName);
@@ -39,13 +49,14 @@ public class GenerateJavaCode {
             _oLogger.error("Cannot generate file, error: " + eException.getMessage());
             System.exit(-1);
         }
+        */
 
         generatePomFile(strCompileTemplate, strJavaProgramName);
     }
 
     public void generatePomFile(String strCompileTemplate, String strJavaProgramName) {
         _oLogger.debug("Creating POM File");
-        String strPOMTemplate = strCompileTemplate.replace("compile.template", "compile.pom");
+        String strPOMTemplate = strCompileTemplate.replace("compile.java", "compile.pom");
         String strPOMFileName = strJavaProgramName.substring(0,strJavaProgramName.lastIndexOf("/")) + "/pom.xml";
         _oLogger.debug("POM Filename :" + strPOMFileName);
 

@@ -5,13 +5,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * COS Function.
- *
- * Description:
- *
- * The COS function returns the cosinus of an angle. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Cos.java
+ * <p>
+ * Description: The Cos class implements the BASIC COS function, which returns the cosine of an angle specified in
+ * radians. The input parameter must be a numeric value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Cos {
 

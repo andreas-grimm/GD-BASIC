@@ -8,14 +8,11 @@ import eu.gricom.basic.variableTypes.Value;
 /**
  * VariableExpression.java
  * <p>
- * Description:
+ * Description: The VariableExpression class represents a variable reference in an expression. When evaluated, it
+ * retrieves the current value of the named variable from the VariableManagement store. It also handles array element
+ * access through index expressions.
  * <p>
- * A variable expression evaluates to the current value stored in that variable.
- * <p>
- * (c) = 2004,...,2016 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2020
- *
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class VariableExpression implements Expression {
 

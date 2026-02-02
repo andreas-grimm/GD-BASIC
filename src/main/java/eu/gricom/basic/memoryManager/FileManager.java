@@ -7,11 +7,11 @@ import java.util.Map;
 /**
  * FileManager.java
  * <p>
- * Description:
+ * Description: The FileManager class handles file I/O operations for the BASIC interpreter. It maintains mappings
+ * between file numbers and actual file handles, tracks read/write modes, and provides methods for opening, closing,
+ * reading from, and writing to files used by OPEN, CLOSE, INPUT#, and PRINT# statements.
  * <p>
- * This class is implements the management functionality for used files.
- * <p>
- * (c) = 2021 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class FileManager {
     private static final Map<Integer, String> _aoFileIDMap = new HashMap<>();

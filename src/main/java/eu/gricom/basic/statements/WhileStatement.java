@@ -10,15 +10,11 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 /**
  * WhileStatement.java
  * <p>
- * Description:
+ * Description: The WhileStatement class implements the BASIC WHILE-ENDWHILE loop construct. It evaluates a condition
+ * at the start of each iteration and continues executing the loop body while the condition is true. When false, control
+ * passes to the statement following ENDWHILE.
  * <p>
- * A While statement loops through the block from the While statement to the next End-While statement as long as the
- * condition in the While statement is True. When the condition defined is changing from True to False, the program
- * flow will jump to the next statement past the End-While statement.
- * <p>
- * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2021
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class WhileStatement implements Statement {
     private final int _iEndWhileLine;

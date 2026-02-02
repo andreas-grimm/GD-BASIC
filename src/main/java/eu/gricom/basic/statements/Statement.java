@@ -1,13 +1,12 @@
 package eu.gricom.basic.statements;
 
 /**
- * Statement Interface.
+ * Statement.java
  * <p>
- * Description:
+ * Description: The Statement interface defines the contract that all BASIC statement implementations must follow. It
+ * declares methods for execution, code generation, and accessing the token number for error reporting and navigation.
  * <p>
- * The Statement interface defines the methods needed for the different statements to be executed
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public interface Statement {
 

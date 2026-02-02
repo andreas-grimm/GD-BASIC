@@ -7,13 +7,13 @@ import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * ABS Function.
- *
- * Description:
- *
- * The ABS function delivers the absolute value of the parameter. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Mid.java
+ * <p>
+ * Description: The Mid class implements the BASIC MID$ function, which extracts a substring from a string starting at
+ * a specified position for a specified length. The first parameter is the source string, the second is the starting
+ * position, and the third is the number of characters to extract.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Mid {
 
