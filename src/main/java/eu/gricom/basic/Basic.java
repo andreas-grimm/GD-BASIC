@@ -36,7 +36,6 @@ import java.util.Locale;
 public class Basic {
     private Program _oProgram = new Program();
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
-    private static String _strCompileLanguage = "java";
     private static String _strCompileTemplate = "/resources/template/compile.java";
     private static boolean _bCompile = false;
     private static boolean _bBeautified = false;

@@ -7,15 +7,16 @@
 3. [Core Components](#core-components)
 4. [Processing Pipeline](#processing-pipeline)
 5. [Memory Management](#memory-management)
-6. [Type System](#type-system)
-7. [Parser Implementation](#parser-implementation)
-8. [Runtime Execution](#runtime-execution)
-9. [Error Handling](#error-handling)
-10. [Extension Points](#extension-points)
-11. [Development Guidelines](#development-guidelines)
-12. [Testing Strategy](#testing-strategy)
-13. [Performance Considerations](#performance-considerations)
-14. [Troubleshooting](#troubleshooting)
+6. [File Handling](#file-handling)
+7. [Type System](#type-system)
+8. [Parser Implementation](#parser-implementation)
+9. [Runtime Execution](#runtime-execution)
+10. [Error Handling](#error-handling)
+11. [Extension Points](#extension-points)
+12. [Development Guidelines](#development-guidelines)
+13. [Testing Strategy](#testing-strategy)
+14. [Performance Considerations](#performance-considerations)
+15. [Troubleshooting](#troubleshooting)
 
 ## Overview
 
@@ -280,6 +281,87 @@ Program State:
 ├── Line Number Cross-Reference
 └── Current Execution State
 ```
+
+## File Handling
+
+### FileManager Class
+
+**Location**: `src/main/java/eu/gricom/basic/memoryManager/FileManager.java`
+
+The FileManager class handles file I/O operations for the BASIC interpreter. It maintains mappings between file numbers (as used in BASIC `OPEN`, `CLOSE`, `INPUT#`, and `PRINT#` statements) and actual file handles, tracks read/write modes, and provides methods for opening, closing, reading from, and writing to files.
+
+### Responsibilities
+
+- **File lifecycle management**: Open files for read or write, close files, and optionally delete files on close
+- **File number mapping**: Map BASIC file numbers (integers) to underlying `BufferedReader` and `BufferedWriter` instances
+- **End-of-file tracking**: Track EOF state for read operations to support BASIC `EOF()` function
+- **Duplicate prevention**: Reject opening a file when the file number or file path is already in use
+
+### Key Methods
+
+| Method | Parameters | Description |
+|-------|------------|-------------|
+| `openFile` | `strFileName`, `iFileID`, `eReadWrite` | Opens a file for read or write. Returns `true` if successful, `false` if file ID or path already in use. |
+| `closeFile` | `iFileID`, `bDeleteFile` | Closes the file and removes it from management. If `bDeleteFile` is true, deletes the file after closing. |
+| `read` | `iFileId` | Reads one line from a file opened for read. Returns `StringValue` with the line content, or empty string at EOF. Returns `null` if file is not open for read. |
+| `write` | `iFileId`, `strData` | Writes data to a file opened for write. No effect if file is not open for write. |
+| `getEOF` | `iFileId` | Returns `IntegerValue` (1 = not at EOF, 0 = at EOF or unknown file). |
+| `getFileName` | `iFileID` | Returns the file path for the given file ID, or `null` if unknown. |
+| `getFileStatus` | `iFileID` | Returns `true` if the file ID is managed (open), `false` otherwise. |
+| `getFileRead` | `iFileID` | Returns the `BufferedReader` for read operations, or `null`. |
+| `getFileWrite` | `iFileID` | Returns the `BufferedWriter` for write operations, or `null`. |
+| `getFileType` | `iFileID` | Returns `FileOpenType.READ`, `FileOpenType.WRITE`, or `null` if unknown. |
+
+### FileOpenType Enum
+
+**Location**: `src/main/java/eu/gricom/basic/memoryManager/FileOpenType.java`
+
+```java
+public enum FileOpenType {
+    READ,   // Open for reading (INPUT#)
+    WRITE   // Open for writing (PRINT#)
+}
+```
+
+### Internal Data Structures
+
+The FileManager uses static maps to maintain state across instances:
+
+- `_moFileIDMap`: Maps file ID to file path
+- `_moEoFMap`: Maps file ID to EOF flag (for read files)
+- `_moFileRead`: Maps file ID to `BufferedReader`
+- `_moFileWrite`: Maps file ID to `BufferedWriter`
+
+### Usage Example
+
+```basic
+REM Open file #1 for reading
+OPEN "data.txt" FOR INPUT AS #1
+
+REM Read until EOF
+WHILE EOF(1) = 0
+    INPUT #1, A$
+    PRINT A$
+WEND
+
+REM Close file
+CLOSE #1
+```
+
+```basic
+REM Open file #2 for writing
+OPEN "output.txt" FOR OUTPUT AS #2
+
+REM Write data
+PRINT #2, "Hello, World!"
+
+REM Close and optionally delete
+CLOSE #2
+```
+
+### Character Encoding
+
+All file operations use UTF-8 encoding (`StandardCharsets.UTF_8`).
 
 ## Type System
 
