@@ -65,7 +65,10 @@ public class MacroList {
 
                 // Loop through the vectors and find the values to replace
                 if (vstrParametersFromDEF.size() != vstrParametersFromSource.size()) {
-                    _oLogger.error("Incorrect number of parameters in macro call. Expected: " + vstrParametersFromDEF.size() + ", provided: " + vstrParametersFromSource.size());
+                    _oLogger.error("Incorrect number of parameters in macro call. Expected: "
+                            + vstrParametersFromDEF.size()
+                            + ", provided: "
+                            + vstrParametersFromSource.size());
                 }
 
                 for (int iCounter = 0; iCounter < vstrParametersFromDEF.size(); iCounter++) {

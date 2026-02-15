@@ -1,10 +1,9 @@
-package eu.gricom.basic.codeGenerator.JSON;
+package eu.gricom.basic.codeGenerator.json;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import eu.gricom.basic.statements.Expression;
 import eu.gricom.basic.tokenizer.Token;
 import org.junit.jupiter.api.Test;
 
@@ -18,11 +17,11 @@ public class JSONTokenDeCoderTest {
         Gson oGsonProcessor = new Gson();
         try {
             oJsonElement = oGsonProcessor.fromJson(strJsonString, JsonElement.class);
-            oToken = TokenDeCoder.decode((JsonObject) oJsonElement);
+            oToken = TokenDecoder.decode((JsonObject) oJsonElement);
 
             assert oToken.structure().equals(strJsonString);
         } catch (JsonSyntaxException e) {
-            System.err.println("Error parsing JSON string: " + e.getMessage());
+            System.err.println("Error parsing json string: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

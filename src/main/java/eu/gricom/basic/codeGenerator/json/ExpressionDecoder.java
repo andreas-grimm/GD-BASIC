@@ -1,4 +1,4 @@
-package eu.gricom.basic.codeGenerator.JSON;
+package eu.gricom.basic.codeGenerator.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -9,9 +9,9 @@ import eu.gricom.basic.statements.VariableExpression;
 import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.variableTypes.StringValue;
 
-public final class ExpressionDeCoder {
+public final class ExpressionDecoder {
     public static Expression expressionDeCoder(JsonPrimitive oJSONExpression) {
-        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.JSON.ExpressionDeCoder.expressionDeCoder(primitive)");
+        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.json.ExpressionDecoder.expressionDeCoder(primitive)");
         Expression oExpression = null;
 
         if (oJSONExpression.isString()) {
@@ -30,7 +30,7 @@ public final class ExpressionDeCoder {
     }
 
     public static Expression expressionDeCoder(JsonObject oJSONExpression) {
-        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.JSON.ExpressionDeCoder.expressionDeCoder(object)");
+        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.json.ExpressionDecoder.expressionDeCoder(object)");
         Expression oExpression = null;
 
         oLogger.debug("Expression: " + oJSONExpression);
@@ -44,7 +44,7 @@ public final class ExpressionDeCoder {
 
             if (oJsonExpression != null) {
                 oLogger.debug("Found JSONObject of type OPERATOR: " + oJsonExpression);
-                OperatorDeCoder oOperatorDecoder = new OperatorDeCoder();
+                OperatorDecoder oOperatorDecoder = new OperatorDecoder();
                 oExpression = oOperatorDecoder.deCodeOperator(oJsonExpression.getAsJsonObject());
                 return oExpression;
             }
@@ -52,8 +52,8 @@ public final class ExpressionDeCoder {
             oJsonExpression = oJSONExpression.get("EXPRESSION");
 
             if (oJsonExpression != null) {
-                ExpressionDeCoder oExpressionDeCoder = new ExpressionDeCoder();
-                oExpression = oExpressionDeCoder.expressionDeCoder(oJsonExpression.getAsJsonPrimitive());
+                ExpressionDecoder oExpressionDecoder = new ExpressionDecoder();
+                oExpression = oExpressionDecoder.expressionDeCoder(oJsonExpression.getAsJsonPrimitive());
                 return oExpression;
             }
 
@@ -61,7 +61,7 @@ public final class ExpressionDeCoder {
 
             if (oJsonExpression != null) {
                 oLogger.debug("Found JSONObject of type VARIABLE: " + oJsonExpression);
-                OperatorDeCoder oOperatorDecoder = new OperatorDeCoder();
+                OperatorDecoder oOperatorDecoder = new OperatorDecoder();
                 oExpression = new VariableExpression(oJsonExpression.getAsJsonObject().get("NAME").getAsString());
                 try {
                     oLogger.debug("VARIABLE: " + oExpression.structure());
@@ -75,10 +75,10 @@ public final class ExpressionDeCoder {
     }
 
     /**
-     * Decode a JSON Document that represents a "CONDITION" block.
+     * Decode a json Document that represents a "CONDITION" block.
      *
-     * @param oJSONCondition - JSON Object, inside of a condition block
-     * @return Expression - Condition Object generated from JSON Object
+     * @param oJSONCondition - json Object, inside of a condition block
+     * @return Expression - Condition Object generated from json Object
      */
     public static Expression conditionDeCoder(JsonObject oJSONCondition) {
         Expression oCondition = null;
@@ -90,7 +90,7 @@ public final class ExpressionDeCoder {
             JsonElement oJsonExpression = oJSONCondition.get("OPERATOR");
 
             if (oJsonExpression != null) {
-                OperatorDeCoder oOperatorDecoder = new OperatorDeCoder();
+                OperatorDecoder oOperatorDecoder = new OperatorDecoder();
                 oCondition = oOperatorDecoder.deCodeOperator(oJsonExpression.getAsJsonObject());
             }
 

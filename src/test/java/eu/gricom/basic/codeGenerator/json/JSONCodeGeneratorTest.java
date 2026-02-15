@@ -1,7 +1,6 @@
-package eu.gricom.basic.codeGenerator.JSON;
+package eu.gricom.basic.codeGenerator.json;
 
 import com.google.gson.*;
-import eu.gricom.basic.statements.*;
 import org.junit.jupiter.api.Test;
 
 public class JSONCodeGeneratorTest {

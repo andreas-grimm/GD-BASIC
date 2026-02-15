@@ -544,7 +544,7 @@ wip
 /**
  * BasicParser.java
  * 
- * (c) 2020-2024 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 ```
 

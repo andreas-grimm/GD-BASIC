@@ -1,4 +1,4 @@
-package eu.gricom.basic.codeGenerator.JSON;
+package eu.gricom.basic.codeGenerator.json;
 
 import com.google.gson.*;
 import eu.gricom.basic.helper.Logger;
@@ -28,7 +28,7 @@ public class JSONDecoder {
         JsonObject oJSONFile = JsonParser.parseString(_strProgram).getAsJsonObject();
         Set<String> aoListOfFileName = oJSONFile.keySet();
 
-        // Process each file in the JSON (ignoring the first level key)
+        // Process each file in the json (ignoring the first level key)
         for (String strFileName : aoListOfFileName) {
             _oLogger.info("Reading file: " + strFileName);
 
@@ -72,7 +72,7 @@ public class JSONDecoder {
                     oProgram.setTokens(processToken(oTokenComponent));
                 }
             } else {
-                _oLogger.error("Expected JSON array but found: " + oFileElement.getClass().getSimpleName());
+                _oLogger.error("Expected json array but found: " + oFileElement.getClass().getSimpleName());
             }
         }
 
@@ -114,7 +114,7 @@ public class JSONDecoder {
         for (JsonElement oTokenElement : aoJSONTokenArray) {
             if (oTokenElement.isJsonObject()) {
                 JsonObject oTokenObj = oTokenElement.getAsJsonObject();
-                Token oToken = TokenDeCoder.decode(oTokenObj);
+                Token oToken = TokenDecoder.decode(oTokenObj);
                 aoTokenList.add(oToken);
             }
         }
@@ -180,9 +180,9 @@ public class JSONDecoder {
         List<Expression> aoExpression = new ArrayList<>();
 
         if (oValue.get("EXPRESSION").isJsonPrimitive()) {
-            oExpression = ExpressionDeCoder.expressionDeCoder(oValue.getAsJsonPrimitive("EXPRESSION"));
+            oExpression = ExpressionDecoder.expressionDeCoder(oValue.getAsJsonPrimitive("EXPRESSION"));
         } else {
-            oExpression = ExpressionDeCoder.expressionDeCoder(oValue.getAsJsonObject("EXPRESSION"));
+            oExpression = ExpressionDecoder.expressionDeCoder(oValue.getAsJsonObject("EXPRESSION"));
         }
 
         aoExpression.add(oExpression);
@@ -215,10 +215,10 @@ public class JSONDecoder {
 
             return new AssignStatement(oValue.get("TOKEN_NR").getAsInt(), oValue.get("NAME").getAsString(), oExpression);
         } else if (!oValue.get("EXPRESSION").isJsonObject()) {
-            oLogger.error("Ill-formated JSON Assign Statement - Token: " + oValue.get("TOKEN_NR").getAsInt());
+            oLogger.error("Ill-formated json Assign Statement - Token: " + oValue.get("TOKEN_NR").getAsInt());
         }
 
-        oExpression = ExpressionDeCoder.expressionDeCoder((JsonObject) oValue.get("EXPRESSION"));
+        oExpression = ExpressionDecoder.expressionDeCoder((JsonObject) oValue.get("EXPRESSION"));
         return new AssignStatement(oValue.get("TOKEN_NR").getAsInt(), oValue.get("NAME").getAsString(), oExpression);
     }
 
@@ -245,7 +245,7 @@ public class JSONDecoder {
 
         oLogger.info("IF statement - Token: " + iTokenNr + ", Target: " + iTargetLine + ", End: " + iEndIfLine);
 
-        Expression oCondition = ExpressionDeCoder.conditionDeCoder(oValue.get("CONDITION").getAsJsonObject());
+        Expression oCondition = ExpressionDecoder.conditionDeCoder(oValue.get("CONDITION").getAsJsonObject());
 
         if (oCondition == null) {
             oLogger.error("Condition object is null");

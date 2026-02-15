@@ -158,15 +158,15 @@ public final class Normalizer {
 
         if (iIndexStart < 0 && iIndexEnd < 0) {
             return strWork;
-        // if there is only one then I see a problem and throw an exception
+        // if there is only one, then I see a problem and throw an exception
         } else {
             if (iIndexStart < 0 || iIndexEnd < 0) {
                 throw new SyntaxErrorException("Parenthesis incorrectly set: " + strInput);
             }
         }
 
-        // ok - I know there are two parenthesis. Now lets see whether the word immediately connected to the
-        // parenthesis is a keyword. This is also done in the Lexer, but here we need it to put appropiate spaces in
+        // ok - I know there are two parentheses. Now let's see whether the word immediately connected to the
+        // parenthesis is a keyword. This is also done in the Lexer, but here we need it to put appropriate spaces in
         // place
 
         // reduce the found word from the left parenthesis

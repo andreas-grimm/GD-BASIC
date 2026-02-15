@@ -1,4 +1,4 @@
-package eu.gricom.basic.codeGenerator.JSON;
+package eu.gricom.basic.codeGenerator.json;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -24,7 +24,7 @@ public class JSONProgramDeCoderTest {
 
             assert oRemStatement.structure().equals(strJsonString);
         } catch (JsonSyntaxException e) {
-            System.err.println("Error parsing JSON string: " + e.getMessage());
+            System.err.println("Error parsing json string: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +54,7 @@ public class JSONProgramDeCoderTest {
 
                 assert oPrintStatement.structure().equals(strJsonString);
             } catch (JsonSyntaxException e) {
-                System.err.println("Error parsing JSON string: " + e.getMessage());
+                System.err.println("Error parsing json string: " + e.getMessage());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -80,7 +80,7 @@ public class JSONProgramDeCoderTest {
 
                 assert oAssignStatement.structure().equals(strJsonString);
             } catch (JsonSyntaxException e) {
-                System.err.println("Error parsing JSON string: " + e.getMessage());
+                System.err.println("Error parsing json string: " + e.getMessage());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -102,7 +102,7 @@ public class JSONProgramDeCoderTest {
 
             assert !oAssignStatement.structure().equals(strJsonString);
         } catch (JsonSyntaxException e) {
-            System.err.println("Error parsing JSON string: " + e.getMessage());
+            System.err.println("Error parsing json string: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -126,7 +126,7 @@ public class JSONProgramDeCoderTest {
 
                 assert oAssignStatement.structure().equals(strJsonString);
             } catch (JsonSyntaxException e) {
-                System.err.println("Error parsing JSON string: " + e.getMessage());
+                System.err.println("Error parsing json string: " + e.getMessage());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -151,7 +151,7 @@ public class JSONProgramDeCoderTest {
 
             assert oAssignStatement.structure().equals(strJsonString);
         } catch (JsonSyntaxException e) {
-            System.err.println("Error parsing JSON string: " + e.getMessage());
+            System.err.println("Error parsing json string: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -172,7 +172,7 @@ public class JSONProgramDeCoderTest {
 
             assert oGotoStatement.structure().equals(strJsonString);
         } catch (JsonSyntaxException e) {
-            System.err.println("Error parsing JSON string: " + e.getMessage());
+            System.err.println("Error parsing json string: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -192,7 +192,7 @@ public class JSONProgramDeCoderTest {
 
             assert oIfStatement.structure().equals(strJsonString);
         } catch (JsonSyntaxException e) {
-            System.err.println("Error parsing JSON string: " + e.getMessage());
+            System.err.println("Error parsing json string: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -212,7 +212,7 @@ public class JSONProgramDeCoderTest {
 
             assert oEndStatement.structure().equals(strJsonString);
         } catch (JsonSyntaxException e) {
-            System.err.println("Error parsing JSON string: " + e.getMessage());
+            System.err.println("Error parsing json string: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -227,11 +227,11 @@ public class JSONProgramDeCoderTest {
         Gson oGsonProcessor = new Gson();
         try {
             oJsonElement = oGsonProcessor.fromJson(strJsonString, JsonElement.class);
-            oExpression = ExpressionDeCoder.expressionDeCoder((JsonObject) oJsonElement);
+            oExpression = ExpressionDecoder.expressionDeCoder((JsonObject) oJsonElement);
 
             assert oExpression.structure().equals("5.0");
         } catch (JsonSyntaxException e) {
-            System.err.println("Error parsing JSON string: " + e.getMessage());
+            System.err.println("Error parsing json string: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

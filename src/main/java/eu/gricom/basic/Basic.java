@@ -75,7 +75,7 @@ public class Basic {
 
     /**
      * Process.
-     * This is where the magic happens. This runs the code through the parsing pipeline to generator the AST. Then it
+     * This is where the magic happens. This runs the code through the parsing pipeline to generate the AST. Then it
      * executes each statement. It keeps track of the current line in a member variable that the statement objects
      * have access to. This lets "goto" and "if then" do flow control by simply setting the index of the current statement.
      * <p>
@@ -259,7 +259,7 @@ public class Basic {
         }
 
         // Generate and store object code.
-        _oLogger.info("Converting basic program into JSON...");
+        _oLogger.info("Converting basic program into json...");
         Generator.createJSONCode(_oProgram, _bBeautified, _bStoreIntermediateFiles);
 
         // Generate target code.
@@ -291,23 +291,23 @@ public class Basic {
         CommandLine oCommandLine = null;
 
         // create the Options object
-        Options options = new Options();
+        Options oOptions = new Options();
 
         try {
-            options.addOption("h", false, "help (This screen)");
-            options.addOption("i", true, "define input file");
-            options.addOption("q", false, "quiet mode");
-            options.addOption("v", true, "verbose level: (info, debug, trace, or error)");
-            options.addOption("c", false, "compile");
-            options.addOption("b", false, "beautified JSON intermediate code for compilation");
-            options.addOption("p", false, "experimental: build p-code for later runtime component");
-            options.addOption("l", true, "compile language <java>");
-            options.addOption("d", false, "dartmouth mode");
-            options.addOption("n", false, "store intermediate files");
-            options.addOption("t", true, "template for the compiler");
+            oOptions.addOption("h", false, "help (This screen)");
+            oOptions.addOption("i", true, "define input file");
+            oOptions.addOption("q", false, "quiet mode");
+            oOptions.addOption("v", true, "verbose level: (info, debug, trace, or error)");
+            oOptions.addOption("c", false, "compile");
+            oOptions.addOption("b", false, "beautified json intermediate code for compilation");
+            oOptions.addOption("p", false, "experimental: build p-code for later runtime component");
+            oOptions.addOption("l", true, "compile language <java>");
+            oOptions.addOption("d", false, "dartmouth mode");
+            oOptions.addOption("n", false, "store intermediate files");
+            oOptions.addOption("t", true, "template for the compiler");
 
             CommandLineParser parser = new DefaultParser();
-            oCommandLine = parser.parse(options, args);
+            oCommandLine = parser.parse(oOptions, args);
         } catch (ParseException eParseException) {
             System.out.println(eParseException.getMessage());
             System.exit(-1);
@@ -342,10 +342,6 @@ public class Basic {
             String strLanguage = oCommandLine.getOptionValue("l");
             String strLanguageList = "java";
 
-            if (strLanguageList.contains(strLanguage.toLowerCase(Locale.ROOT))) {
-                _strCompileLanguage = strLanguage;
-            }
-
             oLogger.debug("Compile Language:" + strLanguage + "...");
         }
 
@@ -367,7 +363,7 @@ public class Basic {
 
         if (oCommandLine != null && oCommandLine.hasOption("b")) {
             _bBeautified = true;
-            oLogger.debug("Compiler is generating beautified JSON intermediate code...");
+            oLogger.debug("Compiler is generating beautified json intermediate code...");
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("h")) {
@@ -375,7 +371,7 @@ public class Basic {
             oLogger.debug("Display help message...");
 
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("java -jar BASIC-<build-name>.jar <filename.bas>", options);
+            formatter.printHelp("java -jar BASIC-<build-name>.jar <filename.bas>", oOptions);
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("d")) {

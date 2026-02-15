@@ -96,9 +96,9 @@ public final class Token {
     }
 
     /**
-     * Return the content of the Token object in JSON format.
+     * Return the content of the Token object in json format.
      *
-     * @return JSON Block
+     * @return json Block
      */
     public String structure() {
         String strReturn = "{\"TOKEN\": {";

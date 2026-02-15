@@ -1,7 +1,6 @@
 package eu.gricom.basic.codeGenerator;
 
-import eu.gricom.basic.codeGenerator.JSON.JSONCodeGenerator;
-import eu.gricom.basic.codeGenerator.JSON.JSONDecoder;
+import eu.gricom.basic.codeGenerator.json.JSONCodeGenerator;
 import eu.gricom.basic.codeGenerator.java.GenerateJavaCode;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.memoryManager.Program;
@@ -12,7 +11,7 @@ import java.io.PrintWriter;
  * Generator.java
  * <p>
  * Description: The Generator class serves as the central coordinator for code generation. It provides methods to
- * create JSON intermediate representation of parsed BASIC programs and to generate executable Java source code from
+ * create json intermediate representation of parsed BASIC programs and to generate executable Java source code from
  * the intermediate representation.
  * <p>
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway

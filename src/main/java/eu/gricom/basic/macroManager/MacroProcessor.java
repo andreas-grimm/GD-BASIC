@@ -33,7 +33,7 @@ public class MacroProcessor {
      */
     public String process (String strProgram) throws SyntaxErrorException {
         Vector<String> vstrParameter = new Vector<>();
-        MacroList oMarcoList = new MacroList();
+        MacroList oMacroList = new MacroList();
         String strConvertedProgram = new String();
 
         // Step 1: Tokenize the source code
@@ -66,7 +66,7 @@ public class MacroProcessor {
                 _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: ["
                                        + oToken.getType() + "] Function: <" + strFunction + ">");
 
-                oMarcoList.add(strName, vstrParameter, strFunction);
+                oMacroList.add(strName, vstrParameter, strFunction);
                 vstrParameter.clear();
             } else {
                 _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType() + "]: []");
@@ -74,7 +74,7 @@ public class MacroProcessor {
             iCounter++;
         }
 
-        oMarcoList.print();
+        oMacroList.print();
 
         // Step 3: Run thru the source code again and find macro usage to replace it...
         // Convert the program into a list of lines
@@ -87,7 +87,7 @@ public class MacroProcessor {
                 strConvertedProgram += strProgramLine + '\n';
                 strStatus = "ignored: [DEF] found";
             } else
-            if (oMarcoList.containsMacro(strProgramLine) == null) {
+            if (oMacroList.containsMacro(strProgramLine) == null) {
                 strConvertedProgram += strProgramLine + '\n';
                 strStatus = "ignored: no macro found";
             } else {
@@ -129,7 +129,8 @@ public class MacroProcessor {
             String strGetParameters = strRest.substring(strRest.indexOf("(") + 1, strRest.indexOf(")"));
             String strGetMacroName = strRest.substring(0, strRest.indexOf("("));
 
-            strChanged += oMarcoList.getFunction(strGetParameters, strGetMacroName) + strRest.substring(strRest.indexOf(")") + 1);
+            strChanged += oMarcoList.getFunction(strGetParameters, strGetMacroName)
+                    + strRest.substring(strRest.indexOf(")") + 1);
 
             strWork = strChanged;
             strFoundMacro = oMarcoList.containsMacro(strChanged);

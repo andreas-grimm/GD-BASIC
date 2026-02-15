@@ -25,11 +25,11 @@ import java.util.Map;
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class VariableManagement {
-    private static Map<String, Value> _aoUntyped = new HashMap<>();
-    private static Map<String, BooleanValue> _aoBooleans = new HashMap<>();
-    private static Map<String, IntegerValue> _aoIntegers = new HashMap<>();
-    private static Map<String, RealValue> _aoReals = new HashMap<>();
-    private static Map<String, StringValue> _aoStrings = new HashMap<>();
+    private final static Map<String, Value> _moUntyped = new HashMap<>();
+    private final static Map<String, BooleanValue> _moBooleans = new HashMap<>();
+    private final static Map<String, IntegerValue> _moIntegers = new HashMap<>();
+    private final static Map<String, RealValue> _moReals = new HashMap<>();
+    private final static Map<String, StringValue> _moStrings = new HashMap<>();
 
     /**
      * Default Constructor.
@@ -42,8 +42,8 @@ public class VariableManagement {
      * Put a key - value pair into the variable map structure.
      *
      * @param strKey key part of the pair
-     * @param oValue value part of the pair, here as an Value object
-     * @throws SyntaxErrorException if the parenthesis are not set correctly
+     * @param oValue value part of the pair, here as a Value object
+     * @throws SyntaxErrorException if the parenthesis is not set correctly
      */
     public final void putMap(final String strKey, final Value oValue) throws SyntaxErrorException {
         VariableType eVariableType = VariableType.UNDEFINED;
@@ -64,22 +64,22 @@ public class VariableManagement {
 
         switch (eVariableType) {
             case STRING:
-                _aoStrings.put(Normalizer.normalizeIndex(strKey), (StringValue) oValue);
+                _moStrings.put(Normalizer.normalizeIndex(strKey), (StringValue) oValue);
                 break;
 
             case INTEGER:
             case LONG:
-                _aoIntegers.put(Normalizer.normalizeIndex(strKey), new IntegerValue((int) oValue.toReal()));
+                _moIntegers.put(Normalizer.normalizeIndex(strKey), new IntegerValue((int) oValue.toReal()));
                 break;
             case REAL:
             case DOUBLE:
-                _aoReals.put(Normalizer.normalizeIndex(strKey), (RealValue) oValue);
+                _moReals.put(Normalizer.normalizeIndex(strKey), (RealValue) oValue);
                 break;
             case BOOLEAN:
-                _aoBooleans.put(Normalizer.normalizeIndex(strKey), (BooleanValue) oValue);
+                _moBooleans.put(Normalizer.normalizeIndex(strKey), (BooleanValue) oValue);
                 break;
             default:
-                _aoUntyped.put(Normalizer.normalizeIndex(strKey), oValue);
+                _moUntyped.put(Normalizer.normalizeIndex(strKey), oValue);
         }
     }
 
@@ -89,12 +89,11 @@ public class VariableManagement {
      * @param strKey - key part of the pair
      * @param dValue - value part of the pair, here as an double
      * @throws SyntaxErrorException variable is not marked as real
-     * @throws RuntimeException incorrect format of the parenthesis
      */
-    public final void putMap(final String strKey, final double dValue) throws SyntaxErrorException, RuntimeException {
+    public final void putMap(final String strKey, final double dValue) throws SyntaxErrorException {
         if (strKey.contains("!") || strKey.contains("#")) {
             RealValue oValue = new RealValue(dValue);
-            _aoReals.put(Normalizer.normalizeIndex(strKey), oValue);
+            _moReals.put(Normalizer.normalizeIndex(strKey), oValue);
             return;
         }
 
@@ -108,12 +107,11 @@ public class VariableManagement {
      * @param strKey key part of the pair
      * @param strValue value part of the pair, here as a string
      * @throws SyntaxErrorException variable is not marked as string
-     * @throws RuntimeException incorrect format of the parenthesis
      */
-    public final void putMap(final String strKey, final String strValue) throws SyntaxErrorException, RuntimeException {
+    public final void putMap(final String strKey, final String strValue) throws SyntaxErrorException {
         if (strKey.contains("$")) {
             StringValue oValue = new StringValue(strValue);
-            _aoStrings.put(Normalizer.normalizeIndex(strKey), oValue);
+            _moStrings.put(Normalizer.normalizeIndex(strKey), oValue);
             return;
         }
 
@@ -126,12 +124,11 @@ public class VariableManagement {
      * @param strKey - key part of the pair
      * @param iValue - value part of the pair, here as an integer
      * @throws SyntaxErrorException variable is not marked as integer
-     * @throws RuntimeException incorrect format of the parenthesis
      */
-    public final void putMap(final String strKey, final int iValue) throws SyntaxErrorException, RuntimeException {
+    public final void putMap(final String strKey, final int iValue) throws SyntaxErrorException {
         if (strKey.contains("%") || strKey.contains("&")) {
             IntegerValue oValue = new IntegerValue(iValue);
-            _aoIntegers.put(Normalizer.normalizeIndex(strKey), oValue);
+            _moIntegers.put(Normalizer.normalizeIndex(strKey), oValue);
             return;
         }
 
@@ -144,7 +141,7 @@ public class VariableManagement {
      *
      * @param strKey - Key used for retrieval
      * @return Value object to be returned
-     * @throws SyntaxErrorException if the parenthesis are not set correctly
+     * @throws SyntaxErrorException if the parenthesis is not set correctly
      * @throws RuntimeException escalated exception
      */
     public final Value getMap(final String strKey) throws SyntaxErrorException, RuntimeException {
@@ -161,35 +158,35 @@ public class VariableManagement {
 
         strWork = Normalizer.normalizeIndex(strWork);
 
-        if (_aoUntyped.containsKey(strWork)) {
+        if (_moUntyped.containsKey(strWork)) {
             oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [untyped] ");
-            return _aoUntyped.get(strWork);
+            return _moUntyped.get(strWork);
         }
 
-        if (_aoStrings.containsKey(strWork)) {
-            oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [string] " + _aoStrings.get(strWork));
-            Value oString = _aoStrings.get(strWork);
+        if (_moStrings.containsKey(strWork)) {
+            oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [string] " + _moStrings.get(strWork));
+            Value oString = _moStrings.get(strWork);
 
             if (bProcess) {
                 return ((StringValue) oString).process(strKey);
             }
 
-            return _aoStrings.get(strWork);
+            return _moStrings.get(strWork);
         }
 
-        if (_aoIntegers.containsKey(strWork)) {
+        if (_moIntegers.containsKey(strWork)) {
             oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [integer] ");
-            return _aoIntegers.get(strWork);
+            return _moIntegers.get(strWork);
         }
 
-        if (_aoReals.containsKey(strWork)) {
+        if (_moReals.containsKey(strWork)) {
             oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [real] ");
-            return _aoReals.get(strWork);
+            return _moReals.get(strWork);
         }
 
-        if (_aoBooleans.containsKey(strWork)) {
+        if (_moBooleans.containsKey(strWork)) {
             oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [boolean] ");
-            return _aoBooleans.get(strWork);
+            return _moBooleans.get(strWork);
         }
 
         return null;
@@ -200,7 +197,7 @@ public class VariableManagement {
      *
      * @param strKey Key to be verified
      * @return true, if key is in the data structure
-     * @throws SyntaxErrorException if the parenthesis are not set correctly
+     * @throws SyntaxErrorException if the parenthesis is not set correctly
      */
     public final boolean mapContainsKey(final String strKey) throws SyntaxErrorException {
         String strWork = strKey;
@@ -212,11 +209,11 @@ public class VariableManagement {
 
         strWork = Normalizer.normalizeIndex(strWork);
 
-        if (_aoUntyped.containsKey(strWork)
-                || _aoBooleans.containsKey(strWork)
-                || _aoIntegers.containsKey(strWork)
-                || _aoReals.containsKey(strWork)
-                || _aoStrings.containsKey(strWork)) {
+        if (_moUntyped.containsKey(strWork)
+                || _moBooleans.containsKey(strWork)
+                || _moIntegers.containsKey(strWork)
+                || _moReals.containsKey(strWork)
+                || _moStrings.containsKey(strWork)) {
             return true;
         }
 

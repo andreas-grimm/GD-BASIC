@@ -1,13 +1,13 @@
-package eu.gricom.basic.codeGenerator.JSON;
+package eu.gricom.basic.codeGenerator.json;
 
 import com.google.gson.JsonObject;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.tokenizer.BasicTokenType;
 import eu.gricom.basic.tokenizer.Token;
 
-public class TokenDeCoder {
+public class TokenDecoder {
     public static Token decode(JsonObject oTokenData) {
-        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.JSON.TokenDeCoder.decode(object)");
+        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.json.TokenDecoder.decode(object)");
         JsonObject oValue = oTokenData.get("TOKEN").getAsJsonObject();
 
         int iLineNr = oValue.get("LINE_NR").getAsInt();

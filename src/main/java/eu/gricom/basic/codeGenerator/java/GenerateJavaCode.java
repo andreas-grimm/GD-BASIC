@@ -11,7 +11,7 @@ import java.io.PrintWriter;
  * GenerateJavaCode.java
  * <p>
  * Description: The GenerateJavaCode class transpiles BASIC programs into Java source code. It uses a template file to
- * generate a complete Java class that embeds the BASIC program as JSON and includes the necessary runtime support for
+ * generate a complete Java class that embeds the BASIC program as json and includes the necessary runtime support for
  * execution.
  * <p>
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway

@@ -22,7 +22,7 @@ public class Function implements Expression {
     private final Expression _oThirdParam;
 
     /**
-     * Contructor for functions without parameter.
+     * Constructor for functions without parameter.
      *
      * @param oToken token to be executed.
      */
@@ -34,7 +34,7 @@ public class Function implements Expression {
     }
 
     /**
-     * Contructor for functions with one parameter.
+     * Constructor for functions with one parameter.
      *
      * @param oToken      token to be executed
      * @param oExpression parameter of the function
@@ -48,7 +48,7 @@ public class Function implements Expression {
     }
 
     /**
-     * Contructor for functions with one parameter.
+     * Constructor for functions with one parameter.
      *
      * @param oToken      token to be executed
      * @param oFirstParam parameter of the function
@@ -64,7 +64,7 @@ public class Function implements Expression {
     }
 
     /**
-     * Contructor for functions with three parameter.
+     * Constructor for functions with three parameters.
      *
      * @param oToken      token to be executed
      * @param oFirstParam parameter of the function
@@ -211,7 +211,7 @@ public class Function implements Expression {
                 yield Str.execute(_oFirstParam.evaluate());
             }
 
-            // SYSTEM Token: Call operation system function
+            // SYSTEM Token: Call operating system function
             case SYSTEM -> {
                 assert _oFirstParam != null;
                 assert _oSecondParam != null;

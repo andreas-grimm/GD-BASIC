@@ -1,4 +1,4 @@
-package eu.gricom.basic.codeGenerator.JSON;
+package eu.gricom.basic.codeGenerator.json;
 
 import com.google.gson.JsonObject;
 import eu.gricom.basic.helper.Logger;
@@ -9,15 +9,15 @@ import eu.gricom.basic.tokenizer.BasicTokenType;
 import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.variableTypes.StringValue;
 
-public class OperatorDeCoder {
+public class OperatorDecoder {
     Logger _oLogger;
 
-    public OperatorDeCoder() {
+    public OperatorDecoder() {
     }
 
     public Expression deCodeOperator(JsonObject oOperatorData) {
         _oLogger = new Logger(this.getClass().getName());
-        ExpressionDeCoder oExpressionDeCoder = new ExpressionDeCoder();
+        ExpressionDecoder oExpressionDecoder = new ExpressionDecoder();
 
         _oLogger.debug("JSONOperator: " + oOperatorData);
 
@@ -26,7 +26,7 @@ public class OperatorDeCoder {
 
         if (oOperatorData.get("LEFT_EXPRESSION").isJsonObject()) {
             _oLogger.debug("Left Expression is Json Object: " + oOperatorData.get("LEFT_EXPRESSION"));
-            oLeftExpression = oExpressionDeCoder.expressionDeCoder(oOperatorData.get("LEFT_EXPRESSION").getAsJsonObject());
+            oLeftExpression = oExpressionDecoder.expressionDeCoder(oOperatorData.get("LEFT_EXPRESSION").getAsJsonObject());
         } else if (oOperatorData.get("LEFT_EXPRESSION").isJsonPrimitive()) {
             _oLogger.debug("Left Expression is Json Primitive: " + oOperatorData.get("LEFT_EXPRESSION"));
             if (oOperatorData.get("LEFT_EXPRESSION").getAsJsonPrimitive().isString()) {
@@ -41,7 +41,7 @@ public class OperatorDeCoder {
 
         if (oOperatorData.get("RIGHT_EXPRESSION").isJsonObject()) {
             _oLogger.debug("Right Expression is Json Object: " + oOperatorData.get("RIGHT_EXPRESSION"));
-            oRightExpression = oExpressionDeCoder.expressionDeCoder(oOperatorData.get("RIGHT_EXPRESSION").getAsJsonObject());
+            oRightExpression = oExpressionDecoder.expressionDeCoder(oOperatorData.get("RIGHT_EXPRESSION").getAsJsonObject());
         } else if (oOperatorData.get("RIGHT_EXPRESSION").isJsonPrimitive()) {
             _oLogger.debug("Right Expression is Json Primitive: " + oOperatorData.get("RIGHT_EXPRESSION"));
             if (oOperatorData.get("RIGHT_EXPRESSION").getAsJsonPrimitive().isString()) {
