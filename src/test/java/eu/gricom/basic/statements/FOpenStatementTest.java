@@ -1,5 +1,7 @@
 package eu.gricom.basic.statements;
 
+import eu.gricom.basic.memoryManager.FileManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +31,17 @@ public class FOpenStatementTest {
         _oTempFile1 = Files.createTempFile("fopen-test-1-", ".txt");
         _oTempFile2 = Files.createTempFile("fopen-test-2-", ".txt");
         _oTempFile3 = Files.createTempFile("fopen-test-3-", ".txt");
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        FileManager oFileManager = new FileManager();
+        oFileManager.closeFile(FILE_ID_1, false);
+        oFileManager.closeFile(FILE_ID_2, false);
+        oFileManager.closeFile(FILE_ID_3, false);
+        Files.deleteIfExists(_oTempFile1);
+        Files.deleteIfExists(_oTempFile2);
+        Files.deleteIfExists(_oTempFile3);
     }
 
     // -------------------------------------------------------------------------
@@ -177,6 +190,8 @@ public class FOpenStatementTest {
         FOpenStatement oStatement = new FOpenStatement(1, FILE_ID_1, _oTempFile1.toString(), "read");
 
         oStatement.execute();
+
+        assertTrue(Files.exists(_oTempFile1), "File should exist after open for read");
     }
 
     @Test
@@ -184,6 +199,8 @@ public class FOpenStatementTest {
         FOpenStatement oStatement = new FOpenStatement(1, FILE_ID_2, _oTempFile2.toString(), "write");
 
         oStatement.execute();
+
+        assertTrue(Files.exists(_oTempFile2), "File should exist after open for write");
     }
 
     @Test
@@ -191,6 +208,8 @@ public class FOpenStatementTest {
         FOpenStatement oStatement = new FOpenStatement(1, FILE_ID_3, _oTempFile3.toString(), "WRITE");
 
         oStatement.execute();
+
+        assertTrue(Files.exists(_oTempFile3), "File should exist after open for write");
     }
 
     // -------------------------------------------------------------------------

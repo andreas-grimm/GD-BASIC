@@ -95,8 +95,6 @@ public class FileManager {
      * @param bDeleteFile true if the file should be deleted after closing
      */
     public final void closeFile(final int iFileID, final boolean bDeleteFile) {
-        System.out.println("Closing file: " + _moFileIDMap.get(iFileID));
-
         // Cleanup memory
         if (_moFileRead.containsKey(iFileID)) {
             try {

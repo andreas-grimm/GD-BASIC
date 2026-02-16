@@ -22,7 +22,7 @@ public final class Eof {
      * @return Value the return message of the function
      * @throws Exception as any execution error found during execution
      */
-    public static Value execute(final Value oValue) throws Exception {
+    public static IntegerValue execute(final Value oValue) throws Exception {
         if (oValue instanceof IntegerValue) {
             FileManager oFileManager = new FileManager();
 
