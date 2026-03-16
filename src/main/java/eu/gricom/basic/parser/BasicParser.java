@@ -993,7 +993,7 @@ public class BasicParser implements Parser {
                 consumeToken(BasicTokenType.RIGHT_PAREN);
                 return oTwoParameterFunction;
 
-            // single parameter function calls
+            // single parameter function calls. Add all functions that contain only one parameter.
             case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case EOF: case EXP: case LEN:
                 case LOG: case LOG10: case NOT: case SIN: case SQR: case STR: case TAN: case VAL:
                 oToken = getToken(0);
