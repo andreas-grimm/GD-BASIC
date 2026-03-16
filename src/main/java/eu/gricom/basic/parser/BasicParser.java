@@ -1,37 +1,13 @@
 package eu.gricom.basic.parser;
 
 import eu.gricom.basic.functions.Function;
-import eu.gricom.basic.statements.ColonStatement;
-import eu.gricom.basic.statements.DataStatement;
-import eu.gricom.basic.statements.ElseStatement;
-import eu.gricom.basic.statements.ForStatement;
-import eu.gricom.basic.statements.GosubStatement;
-import eu.gricom.basic.statements.GotoStatement;
-import eu.gricom.basic.statements.IfThenStatement;
-import eu.gricom.basic.statements.InputStatement;
-import eu.gricom.basic.statements.OperatorExpression;
-import eu.gricom.basic.statements.PrintStatement;
-import eu.gricom.basic.statements.RemStatement;
+import eu.gricom.basic.statements.*;
 import eu.gricom.basic.tokenizer.BasicTokenType;
 import eu.gricom.basic.tokenizer.Token;
 import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.statements.AssignStatement;
-import eu.gricom.basic.statements.DoStatement;
-import eu.gricom.basic.statements.EndStatement;
-import eu.gricom.basic.statements.Expression;
-import eu.gricom.basic.statements.LabelStatement;
-import eu.gricom.basic.statements.NextStatement;
-import eu.gricom.basic.statements.PragmaStatement;
-import eu.gricom.basic.statements.ReadStatement;
-import eu.gricom.basic.statements.ReturnStatement;
-import eu.gricom.basic.statements.Statement;
-import eu.gricom.basic.statements.UnaryOperatorExpression;
-import eu.gricom.basic.statements.UntilStatement;
-import eu.gricom.basic.statements.VariableExpression;
-import eu.gricom.basic.statements.WhileStatement;
 import eu.gricom.basic.variableTypes.StringValue;
 
 import eu.gricom.basic.variableTypes.Value;
@@ -152,6 +128,7 @@ public class BasicParser implements Parser {
 
         int iOrgPosition;
         String strTargetLineNumber;
+        int iFileId;
 
         _oLogger.debug("Start parsing...");
         boolean bContinue = true;
@@ -267,6 +244,106 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
+                // FCLOSE Token: close a previously opened file
+                case FCLOSE: {
+                    boolean bDeleteIndicator = false;
+
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FCLOSE] ");
+                    iOrgPosition = _iPosition;
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FCLOSE: FileId] <" + iFileId + "> ");
+                    _iPosition++;
+
+                    String strDeleteIndicator = consumeToken(BasicTokenType.STRING).getText();
+                    if (strDeleteIndicator.equals("DELETE")) {
+                        _oLogger.debug("-parse-> [FCLOSE: File to be deleted] ");
+                        bDeleteIndicator = true;
+                    }
+                    _iPosition++;
+
+                    aoStatements.add(new FCloseStatement(iOrgPosition, iFileId, bDeleteIndicator));
+                }
+                break;
+
+                // FINPUT Token: Read the line from a file for processing
+                case FINPUT: {
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FINPUT] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    _iPosition++;
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
+                    _iPosition++;
+
+                    aoStatements.add(new FInputStatement(_iPosition - 1, iFileId, consumeToken(BasicTokenType.WORD).getText()));
+                }
+                break;
+
+
+                // FOPEN Token: Open a file for read or write purpose
+                case FOPEN: {
+                    String strFileName;
+                    String strReadWriteIndicator;
+
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FOPEN] ");
+                    iOrgPosition = _iPosition;
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
+                    _iPosition++;
+
+                    strFileName = consumeToken(BasicTokenType.STRING).getText();
+                    _oLogger.debug("-parse-> [FOPEN: FileName] <" + strFileName + "> ");
+                    _iPosition++;
+
+                    strReadWriteIndicator = consumeToken(BasicTokenType.STRING).getText();
+                    _oLogger.debug("-parse-> [FOPEN: ReadWrite Indicator] <" + strReadWriteIndicator + "> ");
+                    _iPosition++;
+
+                    aoStatements.add(new FOpenStatement(iOrgPosition, iFileId, strFileName, strReadWriteIndicator));
+                }
+                break;
+
+                // FPRINT Token: print to a file
+                case FPRINT: {
+                    int iFPrintPosition = _iPosition;
+                    List<Expression> aoFPrintExpression = new ArrayList<>();
+                    boolean bCRLF = true;
+
+                    _oLogger.debug("-parse-> found Token: <" + iFPrintPosition + "> [PRINT] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), iFPrintPosition);
+                    _iPosition++;
+
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
+                    _iPosition++;
+
+
+                    if (getToken(0).getType() != BasicTokenType.NUMBER
+                            && getToken(0).getType() != BasicTokenType.STRING
+                            && getToken(0).getType() != BasicTokenType.WORD) {
+                        aoFPrintExpression.add(new StringValue(" "));
+                    } else {
+                        aoFPrintExpression.add(expression());
+                    }
+
+                    while (getToken(0).getType() == BasicTokenType.COMMA) {
+                        _iPosition++;
+                        aoFPrintExpression.add(expression());
+                    }
+
+                    if (getToken(0).getType() == BasicTokenType.SEMICOLON) {
+                        _iPosition++;
+                        bCRLF = false;
+                    }
+
+                    aoStatements.add(new FPrintStatement(iFPrintPosition, iFileId, aoFPrintExpression, bCRLF));
+                }
+                break;
+
+
                 // FOR Token: Start of the FOR-NEXT loop
                 case FOR:
                     Expression oStartValueExpression;
@@ -312,7 +389,7 @@ public class BasicParser implements Parser {
                     Token oNextToken = findToken(BasicTokenType.NEXT);
                     _oLogger.debug("-parse-> followed Token: <" + oNextToken.getLine() + "> [NEXT]");
 
-                    // add FOR statement to statement list
+                    // add FOR statement to a statement list
                     try {
                         ForStatement oForStatement = new ForStatement(iForPosition, strForVariable, oStartValueExpression,
                                                                       oEndValueExpression, oStepSize, oNextToken.getLine());
@@ -917,8 +994,8 @@ public class BasicParser implements Parser {
                 return oTwoParameterFunction;
 
             // single parameter function calls
-            case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case EXP: case LEN: case LOG:
-                case LOG10: case NOT: case SIN: case SQR: case STR: case TAN: case VAL:
+            case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case EOF: case EXP: case LEN:
+                case LOG: case LOG10: case NOT: case SIN: case SQR: case STR: case TAN: case VAL:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
