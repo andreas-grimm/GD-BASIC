@@ -1,65 +1,65 @@
-REM ========================================================================
-REM Test: Comparison Operators
-REM Description: Tests all comparison operators (==, !=, <, >, <=, >=)
-REM Expected: All comparisons should evaluate correctly
-REM ========================================================================
+1 REM ========================================================================
+2 REM Test: Comparison Operators
+3 REM Description: Tests all comparison operators (==, !=, <, >, <=, >=)
+4 REM Expected: All comparisons should evaluate correctly
+5 REM ========================================================================
 
 10 PRINT "=== Testing Comparison Operators ==="
 20 PRINT ""
 
-REM Test equality
-30 PRINT "Testing Equality (==):"
-40 IF 5 == 5 THEN PRINT "5 == 5: TRUE (correct)"
-50 IF 5 == 5 THEN GOTO 60
-55 GOTO 9000
-60 IF 5 == 6 THEN GOTO 9000
-70 PRINT "5 == 6: FALSE (correct)"
+30 REM Test equality
+40 PRINT "Testing Equality (==):"
+50 IF 5 == 5 THEN PRINT "5 == 5: TRUE (correct)"
+60 IF 5 == 5 THEN GOTO 70
+65 GOTO 9000
+70 IF 5 == 6 THEN GOTO 9000
+80 PRINT "5 == 6: FALSE (correct)"
 
-REM Test inequality
-80 PRINT "Testing Inequality (!=):"
-90 IF 5 != 6 THEN PRINT "5 != 6: TRUE (correct)"
-100 IF 5 != 6 THEN GOTO 110
-105 GOTO 9000
-110 IF 5 != 5 THEN GOTO 9000
-120 PRINT "5 != 5: FALSE (correct)"
+90 REM Test inequality
+100 PRINT "Testing Inequality (!=):"
+110 IF 5 != 6 THEN PRINT "5 != 6: TRUE (correct)"
+120 IF 5 != 6 THEN GOTO 130
+125 GOTO 9000
+130 IF 5 != 5 THEN GOTO 9000
+140 PRINT "5 != 5: FALSE (correct)"
 
-REM Test less than
-130 PRINT "Testing Less Than (<):"
-140 IF 3 < 5 THEN PRINT "3 < 5: TRUE (correct)"
-150 IF 3 < 5 THEN GOTO 160
-155 GOTO 9000
-160 IF 5 < 3 THEN GOTO 9000
-170 PRINT "5 < 3: FALSE (correct)"
+150 REM Test less than
+160 PRINT "Testing Less Than (<):"
+170 IF 3 < 5 THEN PRINT "3 < 5: TRUE (correct)"
+180 IF 3 < 5 THEN GOTO 190
+185 GOTO 9000
+190 IF 5 < 3 THEN GOTO 9000
+200 PRINT "5 < 3: FALSE (correct)"
 
-REM Test greater than
-180 PRINT "Testing Greater Than (>):"
-190 IF 7 > 4 THEN PRINT "7 > 4: TRUE (correct)"
-200 IF 7 > 4 THEN GOTO 210
-205 GOTO 9000
-210 IF 4 > 7 THEN GOTO 9000
-220 PRINT "4 > 7: FALSE (correct)"
+210 REM Test greater than
+220 PRINT "Testing Greater Than (>):"
+230 IF 7 > 4 THEN PRINT "7 > 4: TRUE (correct)"
+240 IF 7 > 4 THEN GOTO 250
+245 GOTO 9000
+250 IF 4 > 7 THEN GOTO 9000
+260 PRINT "4 > 7: FALSE (correct)"
 
-REM Test less than or equal
-230 PRINT "Testing Less Than or Equal (<=):"
-240 IF 3 <= 5 THEN PRINT "3 <= 5: TRUE (correct)"
-250 IF 5 <= 5 THEN PRINT "5 <= 5: TRUE (correct)"
-260 IF 3 <= 5 THEN GOTO 270
-265 GOTO 9000
-270 IF 6 <= 5 THEN GOTO 9000
-280 PRINT "6 <= 5: FALSE (correct)"
+270 REM Test less than or equal
+280 PRINT "Testing Less Than or Equal (<=):"
+290 IF 3 <= 5 THEN PRINT "3 <= 5: TRUE (correct)"
+300 IF 5 <= 5 THEN PRINT "5 <= 5: TRUE (correct)"
+310 IF 3 <= 5 THEN GOTO 320
+315 GOTO 9000
+320 IF 6 <= 5 THEN GOTO 9000
+330 PRINT "6 <= 5: FALSE (correct)"
 
-REM Test greater than or equal
-290 PRINT "Testing Greater Than or Equal (>=):"
-300 IF 7 >= 4 THEN PRINT "7 >= 4: TRUE (correct)"
-310 IF 4 >= 4 THEN PRINT "4 >= 4: TRUE (correct)"
-320 IF 7 >= 4 THEN GOTO 330
-325 GOTO 9000
-330 IF 3 >= 5 THEN GOTO 9000
-340 PRINT "3 >= 5: FALSE (correct)"
+340 REM Test greater than or equal
+350 PRINT "Testing Greater Than or Equal (>=):"
+360 IF 7 >= 4 THEN PRINT "7 >= 4: TRUE (correct)"
+370 IF 4 >= 4 THEN PRINT "4 >= 4: TRUE (correct)"
+380 IF 7 >= 4 THEN GOTO 390
+385 GOTO 9000
+390 IF 3 >= 5 THEN GOTO 9000
+400 PRINT "3 >= 5: FALSE (correct)"
 
-350 PRINT ""
-360 PRINT "=== All Comparison Operator Tests PASSED ==="
-370 END
+410 PRINT ""
+420 PRINT "=== All Comparison Operator Tests PASSED ==="
+430 END
 
 9000 PRINT "ERROR: Test failed!"
 9010 END

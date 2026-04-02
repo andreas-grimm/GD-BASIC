@@ -1,29 +1,29 @@
-REM ========================================================================
-REM Test: String Character Indexing
-REM Description: Tests accessing individual characters in strings using [index]
-REM Expected: Individual characters should be accessible by index
-REM ========================================================================
+1 REM ========================================================================
+2 REM Test: String Character Indexing
+3 REM Description: Tests accessing individual characters in strings using [index]
+4 REM Expected: Individual characters should be accessible by index
+5 REM ========================================================================
 
 10 PRINT "=== Testing String Character Indexing ==="
 20 PRINT ""
 
-REM Test basic string indexing
-30 PRINT "Testing Basic String Indexing:"
-40 str$ = "BASIC"
-50 PRINT "str$ = "; str$
-60 char1$ = str$[1]
-70 PRINT "str$[1] = "; char1$
-80 char3$ = str$[3]
-90 PRINT "str$[3] = "; char3$
+30 REM Test basic string indexing
+40 PRINT "Testing Basic String Indexing:"
+50 str$ = "BASIC"
+60 PRINT "str$ = "; str$
+70 char1$ = str$[1]
+80 PRINT "str$[1] = "; char1$
+90 char3$ = str$[3]
+100 PRINT "str$[3] = "; char3$
 
-REM Test string indexing in loop
-100 PRINT "Testing String Indexing in Loop:"
-110 word$ = "TEST"
-120 FOR i% = 1 TO LEN(word$)
-130   PRINT word$[i%];
-140 NEXT i%
-150 PRINT ""
+110 REM Test string indexing in loop
+120 PRINT "Testing String Indexing in Loop:"
+130 word$ = "TEST"
+140 FOR i% = 1 TO LEN(word$)
+150   PRINT word$[i%];
+160 NEXT i%
+170 PRINT ""
 
-160 PRINT ""
-170 PRINT "=== All String Indexing Tests PASSED ==="
-180 END
+180 PRINT ""
+190 PRINT "=== All String Indexing Tests PASSED ==="
+200 END

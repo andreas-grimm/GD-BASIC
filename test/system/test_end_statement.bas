@@ -1,8 +1,8 @@
-REM ========================================================================
-REM Test: END Statement
-REM Description: Tests the END statement for program termination
-REM Expected: Program should terminate at END statement
-REM ========================================================================
+1 REM ========================================================================
+2 REM Test: END Statement
+3 REM Description: Tests the END statement for program termination
+4 REM Expected: Program should terminate at END statement
+5 REM ========================================================================
 
 10 PRINT "=== Testing END Statement ==="
 20 PRINT ""
