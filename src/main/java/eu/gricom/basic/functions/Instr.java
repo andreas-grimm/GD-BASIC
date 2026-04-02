@@ -6,13 +6,12 @@ import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * INSTR Function.
- *
- * Description:
- *
- * The INSTR function delivers the absolute value of the parameter. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Instr.java
+ * <p>
+ * Description: The Instr class implements the BASIC INSTR function, which searches for a substring within a string and
+ * returns its position. It returns 0 if the substring is not found, or the one-based index of the first occurrence.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Instr {
 

@@ -11,12 +11,11 @@ import java.util.regex.Pattern;
 /**
  * BasicLexer.java
  * <p>
- * Description:
+ * Description: The BasicLexer class implements the Lexer interface for BASIC source code. It scans the input character
+ * by character, recognising keywords, identifiers, numbers, strings, and operators, and produces a list of Token
+ * objects for the parser to consume.
  * <p>
- * The BasicLexer class converts the source code into a list of tokens. The read a source code file and move the content
- * into a single string. This might cause problems in case of really big programs, so this needs to be addressed later.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class BasicLexer implements Lexer {
     private final Logger _oLogger = new Logger(this.getClass().getName());

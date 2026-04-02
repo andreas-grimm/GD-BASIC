@@ -8,13 +8,11 @@ import java.util.List;
 /**
  * Program.java
  * <p>
- * Description:
+ * Description: The Program class serves as the central storage container for a BASIC program throughout its lifecycle.
+ * It holds the program source, tokenised representation, parsed statements, and maintains line number cross-references
+ * for runtime navigation.
  * <p>
- * This is the storage class for the Basic program to be executed. This is the main place of persistent information for
- * the different stages of the code: loaded, tokenized, and parsed. This allows the use of intermediate storage during
- * execution.
- * <p>
- * (c) = 2021,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class Program {
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
@@ -146,7 +144,60 @@ public class Program {
         return _aoPreRunStatements;
     }
 
+    /**
+     * set Line Numbers.
+     * Add the link to the line number object. Needed for unit testing.
+     *
+     * @param oLineNumbers object to reference the line number
+     */
     public final void setLineNumber(LineNumberXRef oLineNumbers) {
         _oLineNumbers = oLineNumbers;
+    }
+
+    /**
+     * equals.
+     * Add the link to the line number object. Needed for unit testing.
+     *
+     * @param oCompare - Program object to compare to...
+     */
+    public final boolean equals(Program oCompare) {
+        boolean bEqual = true;
+
+        String          strProgramName            = oCompare.getProgramName();
+        String          strProgramSource          = oCompare.getProgram();
+        List<Statement> aoComparePreRunStatements = oCompare.getPreRunStatements();
+        List<Statement> aoCompareStatements       = oCompare.getStatements();
+        List<Token>     aoCompareTokens           = oCompare.getTokens();
+
+        if (!_strProgramName.equals(strProgramName)) {
+            bEqual = false;
+        }
+
+        if (!_strProgramSource.equals(strProgramSource)) {
+            bEqual = false;
+        }
+
+        for (Statement aoPreRunStatement : _aoPreRunStatements) {
+            if (!aoComparePreRunStatements.contains(aoPreRunStatement)) {
+                bEqual = false;
+                break;
+            }
+        }
+
+        for (Statement aoStatement : _aoStatements) {
+            if (!aoCompareStatements.contains(aoStatement)) {
+                bEqual = false;
+                break;
+            }
+        }
+
+        for (Token oToken : _aoTokens) {
+            if (!aoCompareTokens.contains(oToken)) {
+                bEqual = false;
+                break;
+            }
+        }
+
+        return bEqual;
     }
 }

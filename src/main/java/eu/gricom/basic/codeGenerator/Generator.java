@@ -1,10 +1,21 @@
 package eu.gricom.basic.codeGenerator;
 
+import eu.gricom.basic.codeGenerator.json.JSONCodeGenerator;
+import eu.gricom.basic.codeGenerator.java.GenerateJavaCode;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.memoryManager.Program;
 
 import java.io.PrintWriter;
 
+/**
+ * Generator.java
+ * <p>
+ * Description: The Generator class serves as the central coordinator for code generation. It provides methods to
+ * create json intermediate representation of parsed BASIC programs and to generate executable Java source code from
+ * the intermediate representation.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
+ */
 public class Generator {
     private static String _strObjectName = "";
 
@@ -14,14 +25,13 @@ public class Generator {
      *
      * @param oProgram the parsed program to be stored.
      */
-    public static void createJSONCode(Program oProgram, boolean bBeautified) {
+    public static String createJSONCode(Program oProgram, boolean bBeautified, boolean bStoreJSONObject) {
         Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createJSONCode");
-        boolean bGenerateObjectCode = true;
 
         String strJSONCode = "";
         String strProgramName = oProgram.getProgramName();
 
-        oLogger.info("Loaded program: " + strProgramName);
+        oLogger.debug("Loaded program: " + strProgramName);
         if (strProgramName.endsWith(".bas")) {
             _strObjectName = strProgramName.replace(".bas", ".json");
         } else {
@@ -31,41 +41,51 @@ public class Generator {
                 _strObjectName = strProgramName.concat(".json");
             }
         }
-        oLogger.info("Name of object file: " + _strObjectName);
+        oLogger.debug("Name of object file: " + _strObjectName);
 
         JSONCodeGenerator oJSONCodeGenerator = new JSONCodeGenerator(_strObjectName, oProgram);
         strJSONCode += oJSONCodeGenerator.create(bBeautified);
-//        strJSONCode += "}";
 
-        if (strJSONCode != null) {
-            oLogger.info(strJSONCode);
+        oLogger.debug(strJSONCode);
+
+        if (bStoreJSONObject) {
+            try {
+                PrintWriter out = new PrintWriter(_strObjectName);
+                out.println(strJSONCode);
+                out.close();
+            } catch (Exception eException) {
+                oLogger.error("Cannot generate file, error: " + eException.getMessage());
+                System.exit(-1);
+            }
         }
 
-        try {
-            PrintWriter out = new PrintWriter(_strObjectName);
-            out.println(strJSONCode);
-            out.close();
-        } catch (Exception eException) {
-            oLogger.error("Cannot generate file, error: " + eException.getMessage());
-            System.exit(-1);
-        }
+        return strJSONCode;
     }
 
-    public static void createObjectCode(Program oProgram) {
-        Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createObjectCode");
-
-        ObjectCodeGenerator.createObjectCode(oProgram);
-    }
-
-        /**
-         * Create and store the target Java code.
-         * Return the name of the program loaded.
-         *
-         */
-    public static void createJavaCode() {
+    /**
+     * Create and store the target Java code.
+     * Return the name of the program loaded.
+     *
+     */
+    public static void createCode(String strBASICProgramName, String strBASICCode, String strCompileTemplate) {
         Logger oLogger = new Logger("eu.gricom.basic.codeGenerator.Generator.createJavaCode");
 
-        String strJavaProgramName = _strObjectName.replace(".json", ".comp.java");
-        oLogger.info("Name of target Java file: " + strJavaProgramName);
+        if (strBASICProgramName.endsWith(".bas")) {
+            _strObjectName = strBASICProgramName.replace(".bas", ".comp.java");
+        } else {
+            if (!strBASICProgramName.endsWith(".basic")) {
+                _strObjectName = strBASICProgramName.replace(".basic", ".comp.java");
+            } else {
+                _strObjectName = strBASICProgramName.concat(".comp.java");
+            }
+        }
+        oLogger.debug("Name of object file: " + _strObjectName);
+
+
+        String strJavaProgramName = _strObjectName;
+        oLogger.debug("Name of target Java file: " + strJavaProgramName);
+
+        GenerateJavaCode oGenerateJavaCode = new GenerateJavaCode();
+        oGenerateJavaCode.generate(strBASICCode, strJavaProgramName, strCompileTemplate);
     }
 }

@@ -5,13 +5,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * EXP Function.
- *
- * Description:
- *
- * The EXP function returns the exponent naturalis (to the basis 'e'). This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Exp.java
+ * <p>
+ * Description: The Exp class implements the BASIC EXP function, which returns e raised to the power of the input
+ * value (natural exponential function). The input parameter must be a numeric value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Exp {
 

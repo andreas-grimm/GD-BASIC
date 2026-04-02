@@ -6,17 +6,13 @@ import eu.gricom.basic.memoryManager.Stack;
 import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
- * NextStatement.java
+ * EndWhileStatement.java
  * <p>
- * Description:
+ * Description: The EndWhileStatement class marks the end of a WHILE loop block. When the program flow reaches this
+ * statement, it retrieves the return address from the stack and jumps back to the corresponding WHILE statement to
+ * re-evaluate the loop condition.
  * <p>
- * A For statement counts an integer or real value from a start value to an end value - and with every increase it
- * loops through the block from the "For" statement to the next "Next" statement. When the target value is reached, the
- * program flow will jump to the statement past the next statement.
- * <p>
- * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2021
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class EndWhileStatement implements Statement {
     private final ProgramPointer _oProgramPointer = new ProgramPointer();

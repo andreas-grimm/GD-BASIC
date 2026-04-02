@@ -8,15 +8,13 @@ import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * NOT Function.
- *
- * Description:
- *
- * The NOT function revereses the true / false content of a variable, ie. true becomes false and vice versa. For
- * numerical values, any value that is smaller or equal to 0 becomes 1, every value that is larger than 0 becomes 0.
- * For boolean variables the content is swapped. This parameter has to be numeric or boolean.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Not.java
+ * <p>
+ * Description: The Not class implements the BASIC NOT function for logical negation. For boolean values, it reverses
+ * true to false and vice versa. For numeric values, zero or negative becomes 1, and positive becomes 0. The input
+ * must be a numeric or boolean value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Not {
 

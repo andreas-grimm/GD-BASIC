@@ -3,11 +3,11 @@ package eu.gricom.basic.memoryManager;
 /**
  * ProgramPointer.java
  * <p>
- * Description:
+ * Description: The ProgramPointer class tracks the current execution position within the BASIC program. It provides
+ * methods to get and set the current statement index, and to calculate the next statement for sequential execution.
+ * Control flow statements modify this pointer to implement jumps, loops, and subroutine calls.
  * <p>
- * The Program Pointer contains the current position of the program.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class ProgramPointer {
     private static int _iCurrentStatement = 0;

@@ -8,13 +8,12 @@ import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * STR Function.
- *
- * Description:
- *
- * The STR function returns the string value of an input value.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Str.java
+ * <p>
+ * Description: The Str class implements the BASIC STR$ function, which converts a numeric value into its string
+ * representation. It handles integers, longs, and real numbers, returning the appropriate string format.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Str {
 

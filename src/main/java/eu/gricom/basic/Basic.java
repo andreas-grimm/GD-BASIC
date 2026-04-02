@@ -26,25 +26,24 @@ import java.util.Locale;
 /**
  * Basic.java
  * <p>
- * Description:
+ * Description: The Basic class is the main entry point for the GD-BASIC interpreter and compiler. It orchestrates the
+ * complete execution pipeline including file loading, lexical analysis (tokenisation), parsing, and either
+ * interpretation or code generation based on command-line options.
  * <p>
- * This is the main class of the Basic interpreter. It manages the execution flow of the program: read, tokenize,
- * parse, and interpret.
- * <p>
- * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 @SuppressWarnings("SpellCheckingInspection")
 public class Basic {
     private Program _oProgram = new Program();
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
-    private static String _strCompileLanguage = "java";
+    private static String _strCompileTemplate = "/resources/template/compile.java";
     private static boolean _bCompile = false;
     private static boolean _bBeautified = false;
     private static boolean _bDartmouthFlag = false;
-    private static boolean _bPCode = false;
+    private static boolean _bStoreIntermediateFiles = false;
 
     /**
-     * Constructs a new Basic instance. The instance stores the global state of the interpreter such as the values of
+     * Constructs a new Basic instance. The instance stores the global state of the interpreter, such as the values of
      * all the variables and the current statement.
      */
     public Basic() {
@@ -66,8 +65,8 @@ public class Basic {
 
         try {
             oProgram.setProgram(oMacroProcessor.process(oProgram.getProgram()));
-        } catch (SyntaxErrorException e) {
-            System.out.println(e.getMessage());
+        } catch (SyntaxErrorException eSyntaxErrorException) {
+            System.out.println(eSyntaxErrorException.getMessage());
             System.exit(1);
         }
         return oProgram;
@@ -76,7 +75,7 @@ public class Basic {
 
     /**
      * Process.
-     * This is where the magic happens. This runs the code through the parsing pipeline to generator the AST. Then it
+     * This is where the magic happens. This runs the code through the parsing pipeline to generate the AST. Then it
      * executes each statement. It keeps track of the current line in a member variable that the statement objects
      * have access to. This lets "goto" and "if then" do flow control by simply setting the index of the current statement.
      * <p>
@@ -93,8 +92,8 @@ public class Basic {
 
         try {
             _oProgram.setProgram(oMacroProcessor.process(oProgram.getProgram()));
-        } catch (SyntaxErrorException e) {
-            System.out.println(e.getMessage());
+        } catch (SyntaxErrorException eSyntaxErrorException) {
+            System.out.println(eSyntaxErrorException.getMessage());
             System.exit(1);
         }
 
@@ -106,10 +105,10 @@ public class Basic {
         try {
             _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
-        } catch (SyntaxErrorException e) {
+        } catch (SyntaxErrorException eSyntaxErrorException) {
             // This syntax error has to generate due to the use of the macro. Original code errors in the lexer are
             // discovered in the previous step.
-            System.out.println(e.getMessage());
+            System.out.println(eSyntaxErrorException.getMessage());
             System.exit(1);
         }
 
@@ -154,8 +153,8 @@ public class Basic {
 
         try {
             _oProgram.setProgram(oMacroProcessor.process(oProgram.getProgram()));
-        } catch (SyntaxErrorException e) {
-            System.out.println(e.getMessage());
+        } catch (SyntaxErrorException eSyntaxErrorException) {
+            System.out.println(eSyntaxErrorException.getMessage());
             System.exit(1);
         }
 
@@ -167,10 +166,10 @@ public class Basic {
         try {
             _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
-        } catch (SyntaxErrorException e) {
+        } catch (SyntaxErrorException eSyntaxErrorException) {
             // This syntax error has to generate due to the use of the macro. Original code errors in the lexer are
             // discovered in the previous step.
-            System.out.println(e.getMessage());
+            System.out.println(eSyntaxErrorException.getMessage());
             System.exit(1);
         }
 
@@ -214,10 +213,10 @@ public class Basic {
      * which it then will compile to execute.
      *
      * @param oProgram The program object, containing the source code of a .bas script to interpret.
-     * @param strLanguage Define the target programming language, default is "Java"
      */
-    public final void compile(final Program oProgram, final String strLanguage) {
-        _oLogger.info("Compiler started, using " + strLanguage + "...");
+    public final void compile(final Program oProgram) {
+        // The initial step of the interpreter is executed. This is done for the sole purpose of making sure that
+        // later the compiler will not have problems with the macro processing, tokenization, and parsing.
 
         // Find and process Macros.
         _oLogger.info("Processing macros...");
@@ -231,10 +230,10 @@ public class Basic {
         try {
             _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
-        } catch (SyntaxErrorException e) {
+        } catch (SyntaxErrorException eSyntaxErrorException) {
             // This syntax error has to generate due to the use of the macro. Original code errors in the lexer are
             // discovered in the previous step.
-            System.out.println(e.getMessage());
+            System.out.println(eSyntaxErrorException.getMessage());
             System.exit(1);
         }
 
@@ -260,21 +259,15 @@ public class Basic {
         }
 
         // Generate and store object code.
-        _oLogger.info("Create the object code...");
-        if (!_bPCode) {
-            Generator.createJSONCode(_oProgram, _bBeautified);
+        _oLogger.info("Converting basic program into json...");
+        Generator.createJSONCode(_oProgram, _bBeautified, _bStoreIntermediateFiles);
 
-            // Generate target code.
-            _oLogger.info("Create the target code...");
-            if (strLanguage.equals("java")) {
-                Generator.createJavaCode();
-            }
+        // Generate target code.
+        _oLogger.info("Create the target code...");
+        Generator.createCode(_oProgram.getProgramName(), _oProgram.getProgram(), _strCompileTemplate);
 
-            // compile.
-
-        } else {
-            Generator.createObjectCode(_oProgram);
-        }
+        // compile.
+        Printer.println("Please compile the generated code...");
 
         // Complete.
         System.exit(0);
@@ -298,21 +291,23 @@ public class Basic {
         CommandLine oCommandLine = null;
 
         // create the Options object
-        Options options = new Options();
+        Options oOptions = new Options();
 
         try {
-            options.addOption("h", false, "help (This screen)");
-            options.addOption("i", true, "define input file");
-            options.addOption("q", false, "quiet mode");
-            options.addOption("v", true, "verbose level: (info, debug, trace, or error)");
-            options.addOption("c", false, "compile");
-            options.addOption("b", false, "beautified JSON intermediate code for compilation");
-            options.addOption("p", false, "experimental: build p-code for later runtime component");
-            options.addOption("l", true, "compile language <java>");
-            options.addOption("d", false, "dartmouth mode");
+            oOptions.addOption("h", false, "help (This screen)");
+            oOptions.addOption("i", true, "define input file");
+            oOptions.addOption("q", false, "quiet mode");
+            oOptions.addOption("v", true, "verbose level: (info, debug, trace, or error)");
+            oOptions.addOption("c", false, "compile");
+            oOptions.addOption("b", false, "beautified json intermediate code for compilation");
+            oOptions.addOption("p", false, "experimental: build p-code for later runtime component");
+            oOptions.addOption("l", true, "compile language <java>");
+            oOptions.addOption("d", false, "dartmouth mode");
+            oOptions.addOption("n", false, "store intermediate files");
+            oOptions.addOption("t", true, "template for the compiler");
 
             CommandLineParser parser = new DefaultParser();
-            oCommandLine = parser.parse(options, args);
+            oCommandLine = parser.parse(oOptions, args);
         } catch (ParseException eParseException) {
             System.out.println(eParseException.getMessage());
             System.exit(-1);
@@ -347,11 +342,13 @@ public class Basic {
             String strLanguage = oCommandLine.getOptionValue("l");
             String strLanguageList = "java";
 
-            if (strLanguageList.contains(strLanguage.toLowerCase(Locale.ROOT))) {
-                _strCompileLanguage = strLanguage;
-            }
-
             oLogger.debug("Compile Language:" + strLanguage + "...");
+        }
+
+        if (oCommandLine != null && oCommandLine.hasOption("t")) {
+            _strCompileTemplate = oCommandLine.getOptionValue("t");
+
+            oLogger.debug("Compile Template:" + _strCompileTemplate + "...");
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("c")) {
@@ -359,14 +356,14 @@ public class Basic {
             oLogger.debug("Compiler selected...");
         }
 
-        if (oCommandLine != null && oCommandLine.hasOption("b")) {
-            _bBeautified = true;
-            oLogger.debug("Compiler is generating beautified JSON intermediate code...");
+        if (oCommandLine != null && oCommandLine.hasOption("n")) {
+            _bStoreIntermediateFiles = true;
+            oLogger.debug("Store Intermediate Files selected...");
         }
 
-        if (oCommandLine != null && oCommandLine.hasOption("p")) {
-            _bPCode = true;
-            oLogger.debug("Compiler is generating object code for runtime component...");
+        if (oCommandLine != null && oCommandLine.hasOption("b")) {
+            _bBeautified = true;
+            oLogger.debug("Compiler is generating beautified json intermediate code...");
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("h")) {
@@ -374,7 +371,7 @@ public class Basic {
             oLogger.debug("Display help message...");
 
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("java -jar BASIC-<build-name>.jar <filename.bas>", options);
+            formatter.printHelp("java -jar BASIC-<build-name>.jar <filename.bas>", oOptions);
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("d")) {
@@ -404,7 +401,7 @@ public class Basic {
 
             if (_bCompile) {
                 oLogger.info("Run the compiler...");
-                oBasic.compile(oProgram, _strCompileLanguage);
+                oBasic.compile(oProgram);
             } else {
                 oLogger.info("Run the interpreter...");
                 oBasic.interpret(oProgram);

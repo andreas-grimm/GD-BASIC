@@ -8,12 +8,12 @@ import java.util.Objects;
 
 /**
  * StringValue.java
- *
- * Description:
- *
- * The StringValue is the container to hold all strings.
- *
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
+ * Description: The StringValue class implements the Value interface for string data types. It provides storage for
+ * string values and implements operations such as concatenation, substring extraction, comparison, and conversion to
+ * other types. String variables in BASIC are identified by the $ suffix.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class StringValue implements Value {
     private final String _strValue;

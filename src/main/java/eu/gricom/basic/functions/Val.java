@@ -6,13 +6,12 @@ import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * VAL Function.
- *
- * Description:
- *
- * The VAL function returns the parsed value of an input string.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Val.java
+ * <p>
+ * Description: The Val class implements the BASIC VAL function, which converts a string representation of a number
+ * into its numeric value. The input must be a string containing a valid numeric format.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Val {
 

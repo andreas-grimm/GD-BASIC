@@ -6,11 +6,11 @@ import eu.gricom.basic.error.SyntaxErrorException;
 /**
  * LongValue.java
  * <p>
- * Description:
+ * Description: The LongValue class implements the Value interface for long integer data types. It stores 64-bit
+ * integer values and provides arithmetic operations, comparisons, and type conversions. Long variables in BASIC are
+ * identified by the {@literal &} suffix and support larger numeric ranges than standard integers.
  * <p>
- * The NumberValue is the container to hold all numeric values.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class LongValue implements Value {
     private final long _lValue;

@@ -9,13 +9,11 @@ import eu.gricom.basic.variableTypes.Value;
 /**
  * Function.java
  * <p>
- * Description:
+ * Description: The Function class serves as a dispatcher for all built-in BASIC functions. It accepts a token
+ * identifying the function and up to three parameters, then routes the call to the appropriate function implementation
+ * and returns the computed result.
  * <p>
- * Function dispatcher: Execute the selected function and return the result.
- * <p>
- * (c) = 2004,..,2016 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2020
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class Function implements Expression {
     private final Token _oToken;
@@ -24,7 +22,7 @@ public class Function implements Expression {
     private final Expression _oThirdParam;
 
     /**
-     * Contructor for functions without parameter.
+     * Constructor for functions without parameter.
      *
      * @param oToken token to be executed.
      */
@@ -36,7 +34,7 @@ public class Function implements Expression {
     }
 
     /**
-     * Contructor for functions with one parameter.
+     * Constructor for functions with one parameter.
      *
      * @param oToken      token to be executed
      * @param oExpression parameter of the function
@@ -50,7 +48,7 @@ public class Function implements Expression {
     }
 
     /**
-     * Contructor for functions with one parameter.
+     * Constructor for functions with one parameter.
      *
      * @param oToken      token to be executed
      * @param oFirstParam parameter of the function
@@ -66,7 +64,7 @@ public class Function implements Expression {
     }
 
     /**
-     * Contructor for functions with three parameter.
+     * Constructor for functions with three parameters.
      *
      * @param oToken      token to be executed
      * @param oFirstParam parameter of the function
@@ -213,7 +211,7 @@ public class Function implements Expression {
                 yield Str.execute(_oFirstParam.evaluate());
             }
 
-            // SYSTEM Token: Call operation system function
+            // SYSTEM Token: Call operating system function
             case SYSTEM -> {
                 assert _oFirstParam != null;
                 assert _oSecondParam != null;

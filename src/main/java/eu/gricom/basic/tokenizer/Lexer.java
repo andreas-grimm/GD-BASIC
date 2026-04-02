@@ -7,13 +7,11 @@ import java.util.List;
 /**
  * Lexer.java
  * <p>
- * Description:
+ * Description: The Lexer interface defines the contract for tokenising BASIC source code. Implementations convert raw
+ * source text into a sequence of Token objects, each representing a meaningful unit of the program such as keywords,
+ * identifiers, operators, numbers, and strings.
  * <p>
- * The Lexer class converts the source code into a list of tokens. Question here is whether we should convert
- * the Lexer class not into a Token factory class. The read a source code file and move the content into a single
- * string. This might cause problems in case of really big programs, so this needs to be addressed later.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public interface Lexer {
     /**

@@ -1,0 +1,10 @@
+All operations are performed in the workspace organization.
+
+Always use the workspace organization.
+project/
+|- src/                 # all source code, resource files, and tests.
+|- bin/                 # support scripts to run and test the project.
+|- docs/                # project documentation and design. All documentation is written in Markdown, all graphics are in Mermaid format. All documentation is in British English.
+|- pom.xml              # build configuration.
+
+NEVER delete code without approval, mark redundant code as deprecated, comment out code that is not used anymore and mark it with a TODO tag.

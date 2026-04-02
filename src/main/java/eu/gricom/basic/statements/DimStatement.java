@@ -3,11 +3,10 @@ package eu.gricom.basic.statements;
 /**
  * DimStatement.java
  * <p>
- * Description:
+ * Description: The DimStatement class implements the BASIC DIM command, which declares and allocates arrays of any
+ * type. It reserves memory for the specified number of elements and initialises the array for use in the program.
  * <p>
- * The DimStatement class defines all kinds of arrays.
- * <p>
- * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class DimStatement implements Statement {
     private final int _iTokenNumber;

@@ -8,15 +8,12 @@ import java.util.List;
 
 /**
  * FnFunction.java
- *
- * Description:
- *
- * FN Function execute: Uses the name of the function and a list of parameter to find the prior defined function,
- * replace the parameter, and evaluate the result.
- *
- * (c) = 2021 by Andreas Grimm, Den Haag, The Netherlands
- *
- * Created in 2021
+ * <p>
+ * Description: The FnFunction class executes user-defined functions created with DEF FN. It locates the function
+ * definition by name, substitutes the provided parameters, evaluates the function expression, and returns the
+ * computed result value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class FnFunction implements Expression {
     private final String _strFunctionId;

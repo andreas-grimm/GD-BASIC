@@ -6,14 +6,13 @@ import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * LEFT Function.
- *
- * Description:
- *
- * The LEFT function delivers a left substring of a string of a given length. This first parameter has to be a string,
- * the second has to be an integer.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Left.java
+ * <p>
+ * Description: The Left class implements the BASIC LEFT$ function, which extracts a specified number of characters
+ * from the beginning (left side) of a string. The first parameter is the source string, the second is the number of
+ * characters to extract.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Left {
 

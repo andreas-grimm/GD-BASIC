@@ -6,14 +6,13 @@ import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * RIGHT Function.
- *
- * Description:
- *
- * The RIGHT function delivers a substring of the first, string value with length as a second parameter. The first
- * parameter has to be of type string, the second parameter has to be an integer.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Right.java
+ * <p>
+ * Description: The Right class implements the BASIC RIGHT$ function, which extracts a specified number of characters
+ * from the end (right side) of a string. The first parameter is the source string, the second is the number of
+ * characters to extract.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Right {
 

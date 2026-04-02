@@ -1,4 +1,4 @@
-# Ignore for the Java main Components (blocking IntelliJ, Eclipse, and Maven and Gradle targets
+# Ignore for the Java main Components (blocking IntelliJ, Eclipse, and Maven targets)
 app
 .classpath
 .project
@@ -6,8 +6,8 @@ app
 target
 build
 *.iml
-.gradle
 .idea
+@eaDir
 
 # Ignore of the VSC Extension
 node_modules

@@ -4,16 +4,39 @@ VERSION=0.1.0
 RELEASE_LEVEL=java21
 
 echo "--- Basic Regression Test ---"
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -h
+read -p "Press any [enter] to resume ..."
+
 echo "Test run: src/test/resources/test_basic_jasic_1_recoded.bas"
-java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c -b src/test/basic/test_basic_jasic_1_recoded.bas
-cat src/test/basic/test_basic_jasic_1_recoded.json
-rm src/test/basic/test_basic_jasic_1_recoded.json
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c -v=info -b src/test/basic/test_basic_jasic_1_recoded.bas
+if [ -e "src/test/basic/test_basic_jasic_1_recoded.json" ]; then
+  cat src/test/basic/test_basic_jasic_1_recoded.json
+  rm src/test/basic/test_basic_jasic_1_recoded.json
+fi
+if [ -e "src/test/basic/test_basic_jasic_1_recoded.comp.java" ]; then
+  cat src/test/basic/test_basic_jasic_1_recoded.comp.java
+  rm src/test/basic/test_basic_jasic_1_recoded.comp.java
+fi
+if [ -e "src/test/basic/pom.xml" ]; then
+  cat src/test/basic/pom.xml
+  rm src/test/basic/pom.xml
+fi
 read -p "Press any [enter] to resume ..."
 
 echo "Test run: src/test/resources/test_basic1_Q1_dev.bas"
-java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c -b src/test/basic/test_basic_Q1_dev.bas
-cat src/test/basic/test_basic_Q1_dev.json
-rm src/test/basic/test_basic_Q1_dev.json
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c -v=info -b src/test/basic/test_basic_Q1_dev.bas
+if [ -e "src/test/basic/test_basic_Q1_dev.json" ]; then
+  cat src/test/basic/test_basic_Q1_dev.json
+  rm src/test/basic/test_basic_Q1_dev.json
+fi
+if [ -e "src/test/basic/test_basic_Q1_dev.comp.java" ]; then
+  cat src/test/basic/test_basic_Q1_dev.comp.java
+  rm src/test/basic/test_basic_Q1_dev.comp.java
+fi
+if [ -e "src/test/basic/pom.xml" ]; then
+  cat src/test/basic/pom.xml
+  rm src/test/basic/pom.xml
+fi
 read -p "Press any [enter] to resume ..."
 
 #echo "Test run: src/test/resources/test_basic1_Q2_dev.bas"

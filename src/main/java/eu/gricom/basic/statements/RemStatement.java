@@ -3,11 +3,11 @@ package eu.gricom.basic.statements;
 /**
  * RemStatement.java
  * <p>
- * Description:
+ * Description: The RemStatement class represents a comment line in the BASIC program. When executed, it performs no
+ * operation and simply allows the program flow to continue to the next statement. Comments are preserved for
+ * documentation purposes.
  * <p>
- * The EndStatement class terminates the running Basic program.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class RemStatement implements Statement {
     private final int _iTokenNumber;

@@ -3,11 +3,11 @@ package eu.gricom.basic.helper;
 /**
  * Printer.java
  * <p>
- * Description:
+ * Description: The Printer class provides static utility methods for all program output operations. It abstracts the
+ * output destination, allowing BASIC PRINT statements to write to the console or potentially other output targets. It
+ * handles both line-terminated and continuous output.
  * <p>
- * Static class to bundle all outputs as part of the program execution.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Printer {
     private static String _strTarget = "Console";

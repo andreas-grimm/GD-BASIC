@@ -1,15 +1,15 @@
 package eu.gricom.basic.tokenizer;
 
+import java.util.Objects;
+
 /**
  * Token.java
  * <p>
- * Description:
+ * Description: The Token class represents a single lexical unit produced by the Lexer during tokenisation. Each token
+ * contains the original source text, its type classification, the source line number, and its position in the command
+ * sequence for error reporting and navigation.
  * <p>
- * The Lexer is responsible for translating the source code into a chain of Token. When recognizing a token, this
- * object is created, consisting of the found token and the text in the source code. Using this class wrapper, the
- * parser can identify the token and process it.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Token {
     private String _strText;
@@ -93,6 +93,34 @@ public final class Token {
         _strText = strText;
 
         return _strText;
+    }
+
+    /**
+     * Return the content of the Token object in json format.
+     *
+     * @return json Block
+     */
+    public String structure() {
+        String strReturn = "{\"TOKEN\": {";
+        strReturn += "\"LINE_NR\": \""+ _iLineNumber +"\",";
+        strReturn += "\"TYPE\": \""+ _oType.name() +"\",";
+        strReturn += "\"COMMAND_SEQUENCE_NUMBER\": \""+ _iCommandSequenceNumber +"\",";
+        strReturn += "\"TEXT\": \""+ _strText +"\"";
+        strReturn += "}}";
+
+        return strReturn;
+    }
+
+    /**
+     * Compare two Token objects
+     *
+     * @return boolean - true if Token identical
+     */
+    public boolean equals(Token oCompareToken) {
+        return (_oType == oCompareToken._oType) &&
+                (_iLineNumber == oCompareToken._iLineNumber) &&
+                (_iCommandSequenceNumber == oCompareToken._iCommandSequenceNumber) &&
+                (Objects.equals(_strText, oCompareToken._strText));
     }
 }
 

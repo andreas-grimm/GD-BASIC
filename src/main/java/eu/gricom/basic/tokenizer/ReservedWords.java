@@ -5,11 +5,11 @@ import java.util.Locale;
 /**
  * ReservedWords.java
  * <p>
- * Description:
+ * Description: The ReservedWords class maintains the dictionary of all BASIC language keywords and their corresponding
+ * token types. During lexical analysis, the lexer uses this class to identify whether a word is a reserved keyword
+ * (such as PRINT, GOTO, IF) or a user-defined identifier.
  * <p>
- * The list of reserved words and the matching token.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class ReservedWords {
 
@@ -52,8 +52,8 @@ public final class ReservedWords {
         BasicTokenType.CALL, BasicTokenType.CDBL, BasicTokenType.CHR, BasicTokenType.CINT, BasicTokenType.CLEAN,
             BasicTokenType.CLOSE, BasicTokenType.CLS, BasicTokenType.CMD, BasicTokenType.CONT, BasicTokenType.COS,
         BasicTokenType.DATA, BasicTokenType.DEF, BasicTokenType.DIM, BasicTokenType.DO,
-        BasicTokenType.ELSE, BasicTokenType.END, BasicTokenType.ENDIF, BasicTokenType.ENDWHILE, BasicTokenType.EOF, BasicTokenType.EOL,
-            BasicTokenType.ERL, BasicTokenType.ERR, BasicTokenType.EXIT, BasicTokenType.EXP,
+        BasicTokenType.ELSE, BasicTokenType.END, BasicTokenType.ENDIF, BasicTokenType.ENDWHILE, BasicTokenType.EOF,
+            BasicTokenType.EOL, BasicTokenType.ERL, BasicTokenType.ERR, BasicTokenType.EXIT, BasicTokenType.EXP,
         BasicTokenType.FCLOSE, BasicTokenType.FOPEN, BasicTokenType.FOR, BasicTokenType.FPRINT, BasicTokenType.FREAD,
             BasicTokenType.FREE,
         BasicTokenType.GOSUB, BasicTokenType.GOTO,

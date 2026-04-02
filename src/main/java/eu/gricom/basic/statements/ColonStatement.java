@@ -3,11 +3,11 @@ package eu.gricom.basic.statements;
 /**
  * ColonStatement.java
  * <p>
- * Description:
+ * Description: The ColonStatement class represents the colon separator that allows multiple BASIC statements on a
+ * single line. When executed, it acts as a no-operation placeholder that allows program flow to continue to the next
+ * statement.
  * <p>
- * The ColonStatement class provides the necessary information for the runtime to get all required information.
- * <p>
- * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class ColonStatement implements Statement {
     private final int _iTokenNumber;

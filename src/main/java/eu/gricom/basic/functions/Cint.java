@@ -7,13 +7,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * CINT Function.
- *
- * Description:
- *
- * The CINT function delivers the integer value of the parameter. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Cint.java
+ * <p>
+ * Description: The Cint class implements the BASIC CINT function, which converts a numeric value to an integer by
+ * truncating any fractional part. The input parameter must be a numeric value (integer, long, or real).
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Cint {
 

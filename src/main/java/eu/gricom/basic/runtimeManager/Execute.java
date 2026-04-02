@@ -40,7 +40,7 @@ public class Execute {
                 }
             } else {
                 _oLogger.error("Parsing delivered empty program");
-                System.exit(- 1);
+                System.exit(-1);
             }
         } catch (Exception eException) {
             eException.printStackTrace();

@@ -7,13 +7,11 @@ import java.util.Locale;
 /**
  * PragmaStatement.java
  * <p>
- * Description:
+ * Description: The PragmaStatement class implements the @PRAGMA directive, which modifies interpreter or compiler
+ * behaviour at runtime. Supported parameters include debug level, trace mode, and other execution settings that can
+ * be toggled during program execution.
  * <p>
- * The Pragma Statement changes the behavior of the interpreter / compiler during execution from the moment it is
- * found. Currently, the following parameter can be modified:
- * Debug Level
- * <p>
- * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class PragmaStatement implements Statement {
     private final String _strParameter;

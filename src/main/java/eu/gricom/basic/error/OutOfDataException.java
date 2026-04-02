@@ -3,12 +3,11 @@ package eu.gricom.basic.error;
 /**
  * OutOfDataException.java
  * <p>
- * Description:
+ * Description: The OutOfDataException is thrown when a READ statement attempts to retrieve a value from the DATA queue
+ * but no more values are available. This indicates the program has consumed all DATA values without a corresponding
+ * RESTORE or sufficient DATA statements.
  * <p>
- * The Out Of Data exception is thrown when ever the read command is trying to retrieve a value from a FiFo queue while
- * the queue is empty.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class OutOfDataException extends Exception {
 

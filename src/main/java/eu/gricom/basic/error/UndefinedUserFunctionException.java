@@ -3,12 +3,11 @@ package eu.gricom.basic.error;
 /**
  * UndefinedUserFunctionException.java
  * <p>
- * Description:
+ * Description: The UndefinedUserFunctionException is thrown when the interpreter attempts to call a user-defined
+ * function (created with DEF FN) that has not been previously defined. This ensures that all function references are
+ * validated before execution.
  * <p>
- * The Exception is thrown if the program is trying to execute a function that is not previous defined by the DEF
- * command.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class UndefinedUserFunctionException extends Exception {
 

@@ -10,15 +10,11 @@ import eu.gricom.basic.variableTypes.RealValue;
 /**
  * ForStatement.java
  * <p>
- * Description:
+ * Description: The ForStatement class implements the BASIC FOR-NEXT loop construct. It initialises a loop counter,
+ * evaluates the end condition and optional step value, and manages iteration through the loop body until the target
+ * value is reached. The loop state is maintained on the stack for nested loop support.
  * <p>
- * A For statement counts an integer or real value from a start value to an end value - and with every increase it
- * loops through the block from the "For" statement to the next "Next" statement. When the target value is reached, the
- * program flow will jump to the statement past the next statement.
- * <p>
- * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2021
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class ForStatement implements Statement {
     private boolean _bForStarted = false;

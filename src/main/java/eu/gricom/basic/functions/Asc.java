@@ -6,13 +6,12 @@ import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * ASC Function.
- *
- * Description:
- *
- * The ASC function returns the ASCII code of the first character of a string. This parameter has to be a string.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Asc.java
+ * <p>
+ * Description: The Asc class implements the BASIC ASC function, which returns the ASCII character code of the first
+ * character in the input string. The input parameter must be a non-empty string value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Asc {
 

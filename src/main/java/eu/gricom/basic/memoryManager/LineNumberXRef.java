@@ -7,14 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Label.java
+ * LineNumberXRef.java
  * <p>
- * Description:
+ * Description: The LineNumberXRef class maintains cross-reference tables that map between BASIC source line numbers,
+ * token positions, and statement indices. This enables the interpreter to navigate program flow for GOTO, GOSUB, and
+ * loop constructs by translating line numbers to executable statement positions.
  * <p>
- * The Label structure contained a list of the different labels found in the source code. This structure is now part
- * of the memory management function and has been deprecated.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class LineNumberXRef {
     private final Logger _oLogger = new Logger(this.getClass().getName());

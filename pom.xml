@@ -81,7 +81,7 @@
                 </executions>
             </plugin>
 
-            <!-- Generate javadoc. Bound into the package phase for deployment purposes -->
+            <!-- Generate Javadoc. Bound into the package phase for deployment purposes -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -101,7 +101,7 @@
                 </executions>
             </plugin>
 
-            <!-- disable deployment plugin and replace it with the Nexus plugin -->
+            <!-- disable the deployment plugin and replace it with the Nexus plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>

@@ -10,12 +10,11 @@ import java.util.List;
 /**
  * ReadStatement.java
  * <p>
- * Description:
+ * Description: The ReadStatement class implements the BASIC READ command, which retrieves values from the FIFO queue
+ * (populated by DATA statements) and assigns them to the specified variables. It supports reading multiple values in
+ * a single statement.
  * <p>
- * The ReadStatement class has a single function: read the FiFo queue and move the content into a set of named
- * variables.
- * <p>
- * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class ReadStatement implements Statement {
     private final int _iTokenNumber;

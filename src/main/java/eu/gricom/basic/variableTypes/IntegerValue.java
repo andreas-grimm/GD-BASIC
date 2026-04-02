@@ -4,13 +4,13 @@ import eu.gricom.basic.error.DivideByZeroException;
 import eu.gricom.basic.error.SyntaxErrorException;
 
 /**
- * RealValue.java
+ * IntegerValue.java
  * <p>
- * Description:
+ * Description: The IntegerValue class implements the Value interface for integer data types. It stores 32-bit integer
+ * values and provides arithmetic operations, comparisons, and type conversions. Integer variables in BASIC are
+ * identified by the % suffix and offer faster computation than floating-point types.
  * <p>
- * The NumberValue is the container to hold all numeric values.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class IntegerValue implements Value {
     private final int _iValue;

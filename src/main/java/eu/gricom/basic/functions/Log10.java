@@ -5,14 +5,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * LOG10 Function.
- *
- * Description:
- *
- * The LOG10 function returns the logarithm decimalis (to the basis '10') of the input value. This parameter has to be
- * numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Log10.java
+ * <p>
+ * Description: The Log10 class implements the BASIC LOG10 function, which returns the base-10 (common) logarithm of
+ * the input value. The input parameter must be a positive numeric value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Log10 {
 

@@ -5,14 +5,11 @@ import java.util.List;
 /**
  * PrintStatement.java
  * <p>
- * Description:
+ * Description: The PrintStatement class implements the BASIC PRINT command. It evaluates one or more expressions,
+ * converts the results to string format, and outputs them to the console. It supports multiple expressions separated
+ * by semicolons or commas, with optional line termination suppression.
  * <p>
- * A "print" statement evaluates an expression, converts the result to a string, and displays it to the user.
- * <p>
- * (c) = 2004,...,2016 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2003
- *
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class PrintStatement implements Statement {
     private final Expression _oExpression;

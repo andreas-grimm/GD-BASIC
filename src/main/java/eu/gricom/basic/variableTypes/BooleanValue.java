@@ -5,11 +5,11 @@ import eu.gricom.basic.error.SyntaxErrorException;
 /**
  * BooleanValue.java
  * <p>
- * Description:
+ * Description: The BooleanValue class implements the Value interface for boolean data types. It stores true/false
+ * values and provides logical operations and comparisons. Boolean variables in BASIC are identified by the @ suffix
+ * and are used in conditional expressions and logical operations.
  * <p>
- * The BooleanValue is the container to manage all boolean values.
- * <p>
- * (c) = 2020,.., by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class BooleanValue implements Value {
     private final boolean _bValue;

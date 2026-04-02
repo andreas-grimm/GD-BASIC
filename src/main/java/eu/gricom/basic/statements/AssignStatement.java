@@ -6,14 +6,11 @@ import eu.gricom.basic.tokenizer.Normalizer;
 /**
  * AssignStatement.java
  * <p>
- * Description:
+ * Description: The AssignStatement class implements BASIC variable assignment using the LET command (implicit or
+ * explicit). It evaluates the right-hand expression and stores the result in the named variable through the
+ * VariableManagement system.
  * <p>
- * An assignment statement evaluates an expression and stores the result in a variable.
- * <p>
- * (c) = 2004,...,2016 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2003
- *
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class AssignStatement implements Statement {
     private final String _strKey;

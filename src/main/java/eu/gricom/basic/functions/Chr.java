@@ -6,13 +6,12 @@ import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * CHR Function.
- *
- * Description:
- *
- * The CHR function returns the character related to an ASCII code. This parameter has to be an integer.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Chr.java
+ * <p>
+ * Description: The Chr class implements the BASIC CHR$ function, which returns the character corresponding to the
+ * specified ASCII code value. The input parameter must be an integer in the valid ASCII range (0-255).
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Chr {
 

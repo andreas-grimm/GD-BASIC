@@ -2,14 +2,12 @@ package eu.gricom.basic.helper;
 
 /**
  * Trace.java
- *
- * Description:
- *
- * The trace object provides a simple static method to print the BASIC line number of the statement given as a
- * parameter. It is toggled by the @PRAGMA command or the BASIC TRON and TROFF command.
- *
- * (c) = 2021 by Andreas Grimm, Den Haag, The Netherlands
- *
+ * <p>
+ * Description: The Trace class provides execution tracing capabilities for debugging BASIC programs. When enabled
+ * through the @PRAGMA directive or TRON command, it prints the current BASIC line number during execution, helping
+ * developers follow program flow.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class Trace {
 

@@ -2,12 +2,12 @@ package eu.gricom.basic.helper;
 
 /**
  * ConsoleColors.java
- *
- * Description:
- *
- * Escape Sequences to display colored output.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * <p>
+ * Description: The ConsoleColors class provides ANSI escape sequence constants for coloured terminal output. It
+ * includes definitions for text colours, background colours, and text styles (bold, underline) used by the Logger
+ * and other output components for enhanced readability.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class ConsoleColors {
     // Reset

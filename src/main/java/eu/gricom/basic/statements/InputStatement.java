@@ -13,11 +13,11 @@ import java.io.InputStreamReader;
 /**
  * InputStatement.java
  * <p>
- * Description:
+ * Description: The InputStatement class implements the BASIC INPUT command, which reads user input from the console
+ * and stores it in a specified variable. It handles type conversion based on the variable type suffix (string, integer,
+ * or real).
  * <p>
- * The InputStatement class has a single function: read the console and move the content into a named variable.
- * <p>
- * (c) = 2020,...,2025 by Andreas Grimm, Den Haag, The Netherlands
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class InputStatement implements Statement {
     private final String _strName;

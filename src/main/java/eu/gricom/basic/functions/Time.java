@@ -3,13 +3,12 @@ package eu.gricom.basic.functions;
 import eu.gricom.basic.variableTypes.LongValue;
 
 /**
- * TIME Function.
- *
- * Description:
- *
- * The TIME function returns the current time in milli seconds.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Time.java
+ * <p>
+ * Description: The Time class implements the BASIC TIME function, which returns the current system time in
+ * milliseconds since the Unix epoch. This is useful for timing operations or generating time-based seed values.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Time {
 

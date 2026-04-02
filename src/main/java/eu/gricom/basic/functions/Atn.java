@@ -5,13 +5,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * ABS Function.
- *
- * Description:
- *
- * The ATN function returns the arc tangent of an angle, in the range of -pi/2 through pi/2. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Atn.java
+ * <p>
+ * Description: The Atn class implements the BASIC ATN function, which returns the arctangent (inverse tangent) of the
+ * input value in radians, with results in the range -pi/2 through pi/2. The input parameter must be a numeric value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Atn {
 

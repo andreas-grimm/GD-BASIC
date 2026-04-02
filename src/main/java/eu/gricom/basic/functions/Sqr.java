@@ -5,13 +5,12 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
- * SQR Function.
- *
- * Description:
- *
- * The SQR function returns the square root of a parameter. This parameter has to be numeric.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Sqr.java
+ * <p>
+ * Description: The Sqr class implements the BASIC SQR function, which returns the square root of the input value.
+ * The input parameter must be a non-negative numeric value.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Sqr {
 

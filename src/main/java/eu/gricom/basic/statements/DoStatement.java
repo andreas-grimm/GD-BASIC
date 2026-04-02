@@ -6,14 +6,11 @@ import eu.gricom.basic.variableTypes.IntegerValue;
 /**
  * DoStatement.java
  * <p>
- * Description:
+ * Description: The DoStatement class implements the start of a DO-UNTIL loop construct. Unlike WHILE loops, DO-UNTIL
+ * executes the loop body at least once before checking the exit condition. This statement marks the loop entry point
+ * and stores its position on the stack for the UNTIL statement to reference.
  * <p>
- * A 'Do' statement counts is an accepting loop, executing first ('Do') and checks the result and exit
- * condition at the end ('Until').
- * <p>
- * (c) = 2004,...,2021 by Andreas Grimm, Den Haag, The Netherlands
- * <p>
- * Created in 2021
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class DoStatement implements Statement {
     private final int _iTokenNumber;

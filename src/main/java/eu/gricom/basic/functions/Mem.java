@@ -3,13 +3,12 @@ package eu.gricom.basic.functions;
 import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
- * MEM Function.
- *
- * Description:
- *
- * The MEM function returns the available memory.
- *
- * (c) = 2021,.., by Andreas Grimm, Den Haag, The Netherlands
+ * Mem.java
+ * <p>
+ * Description: The Mem class implements the BASIC MEM function, which returns the amount of free memory available to
+ * the Java Virtual Machine in bytes. This is useful for monitoring memory usage during program execution.
+ * <p>
+ * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Mem {
 
