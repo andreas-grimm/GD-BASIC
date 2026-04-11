@@ -636,6 +636,10 @@ which dimensions a string array for `J` elements of length `I`, should be remove
 `GD-BASIC` does not support prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
 shrinking.
 
+>[!Warning]
+> Two dimensional arrays must not have any space or tab characters between the denominators of the array:
+> `A$(X,Y)` is supported, but `A$(X, Y)` is not and is causing an execution error.
+
 ### String Functions
 Some Basic languages use a comma `,` or ampersand `&` for string concatenation. Each of these must be changed to a plus sign `+`,
 which is the operator for `GD-BASIC` string concatenation.
@@ -780,7 +784,7 @@ The macros are called in the program as follows:
 The following standard Basic commands are depreciated and should not be used.
 
 - The `LET` command is depreciated and will be ignored
-- The `DIM` command is depreciated and will cause a Syntax Error
+- The `DIM` command is depreciated and will be ignored
 
 The `SINGLE` data type of the old BASIC implementations does not exist in `GD-BASIC`. The developer is asked to use 
 the simple integer data type. Therefore, the conversions functions are not implemented:

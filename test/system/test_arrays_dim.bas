@@ -58,21 +58,21 @@
 530 NEXT
 540 REM Test 2D array
 550 PRINT "Testing 2D Array:"
-560 DIM matrix%(3, 3)
-570 matrix%(1, 1) = 1
-580 matrix%(1, 2) = 2
-590 matrix%(2, 1) = 3
-600 matrix%(2, 2) = 4
+560 DIM matrix%(3,3)
+570 matrix%(1,1) = 1
+580 matrix%(1,2) = 2
+590 matrix%(2,1) = 3
+600 matrix%(2,2) = 4
 610 PRINT "matrix%(1,1) = ";
-620 PRINT matrix%(1, 1)
+620 PRINT matrix%(1,1)
 630 PRINT "matrix%(1,2) = ";
-640 PRINT matrix%(1, 2)
+640 PRINT matrix%(1,2)
 650 PRINT "matrix%(2,1) = ";
-660 PRINT matrix%(2, 1)
+660 PRINT matrix%(2,1)
 670 PRINT "matrix%(2,2) = ";
-680 PRINT matrix%(2, 2)
-690 IF matrix%(1, 1) != 1 THEN 9000
-700 IF matrix%(2, 2) != 4 THEN 9000
+680 PRINT matrix%(2,2)
+690 IF matrix%(1,1) != 1 THEN 9000
+700 IF matrix%(2,2) != 4 THEN 9000
 710 REM Test array variable as index
 720 PRINT "Testing Array Variable as Index:"
 730 DIM data%(10)

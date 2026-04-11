@@ -216,6 +216,14 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
+                // DIM Token: the DIM command is not supported, ignore the rest of the line
+                case DIM:
+                    _oLogger.warning("-parse-> found Token: <" + _iPosition + "> [DIM], not supported ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    aoStatements.add(new DimStatement(_iPosition));
+                    _iPosition++;
+                    break;
+
                 // DO Token: Define the anchor point for the DO - UNTIL loop
                 case DO:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [DO] ");
