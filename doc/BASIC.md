@@ -402,7 +402,13 @@ Example for a FOR loop counting downwards from 2 to -2 in decrements of -0.2 and
 The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
 The following chart describes the loop structure:
 
-![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/While-Loop.jpg)
+```mermaid
+flowchart TD
+    Start([Start]) --> Condition{Condition?}
+    Condition -- True --> Body[Loop Body]
+    Body --> Condition
+    Condition -- False --> End([End])
+```
 
 The syntax of the `WHILE` loop is as follows:
 

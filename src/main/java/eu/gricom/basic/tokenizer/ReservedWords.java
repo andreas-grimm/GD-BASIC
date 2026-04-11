@@ -80,7 +80,7 @@ public final class ReservedWords {
         BasicTokenType.SHIFT_RIGHT, BasicTokenType.SHIFT_LEFT};
 
     /**
-     * getIndex returns the index of the token based on an entered token type.
+     * getIndex returns the index of the token based on an entered reserved word.
      *
      * @param strTokenType name of the token
      * @return index found for the token
@@ -102,6 +102,28 @@ public final class ReservedWords {
     }
 
     /**
+     * getTokenIndex returns the index of the token based on an entered token type.
+     *
+     * @param strTokenType name of the token
+     * @return index found for the token
+     */
+    public static int getTokenIndex(final String strTokenType) {
+        int iReturn = -1;
+        int iIndex = 0;
+
+        for (BasicTokenType oReserveWord: _aeTokenTypes) {
+            if (strTokenType.toUpperCase(Locale.ROOT).matches(oReserveWord.toString())) {
+                iReturn = iIndex;
+                break;
+            }
+
+            iIndex++;
+        }
+
+        return iReturn;
+    }
+
+    /**
      * getTokenType returns the type of the token based on an entered index value.
      *
      * @param iIndex index of the token
@@ -109,5 +131,15 @@ public final class ReservedWords {
      */
     public static BasicTokenType getTokenType(final int iIndex) {
         return _aeTokenTypes[iIndex];
+    }
+
+    /**
+     * getReservedWord returns the reserved word based on an entered index value.
+     *
+     * @param iIndex index of the token
+     * @return reserved word found for the index
+     */
+    public static String getReservedWord(final int iIndex) {
+        return _astrReservedWords[iIndex];
     }
 }
