@@ -404,10 +404,10 @@ The following chart describes the loop structure:
 
 ```mermaid
 flowchart TD
-    Start([Start]) --> Condition{Condition?}
+    Start([Start]) --> Condition{Exit Condition?}
     Condition -- True --> Body[Loop Body]
     Body --> Condition
-    Condition -- False --> End([End])
+    Condition -- False --> End([End of Loop])
 ```
 
 The syntax of the `WHILE` loop is as follows:
