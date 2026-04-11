@@ -348,7 +348,13 @@ in other BASIC dialects - and proven useful.
 The `DO` - Loop has a different nature. This loop will execute the loop at least once, before verifying the continuation of the loop at the
 end. The structure of the loop can be seen in the following chart:
 
-![Do-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/Do-Loop.jpg)
+```mermaid
+flowchart TD
+    Start([Start]) --> Body[Loop Body]
+    Body --> Condition{Until Condition?}
+    Condition -- False --> Body
+    Condition -- True --> End([End of Loop])
+```
 
 `DO <statement> EXIT <statement> UNTIL <condition>`
 
