@@ -149,6 +149,13 @@ Under Development:
 
     [BASIC-48][BASIC-76][BASIC-79][BASIC-82][BASIC-83][BASIC-88][BASIC-115][BASIC-124]
 
+0.1.0: Stable Release for Testing
+* Added file functions to the BASIC interpreter
+* Added system tests to the project
+* Removed GRADLE build system
+* Updated the documentation to reflect the new features
+* Replaced third party graphs in the documentation with `mermaid` diagrams
+
 ---
 Implemented test and demonstration programs, located at `src/test/resources/GD_Basic_Examples`:
 - `Fibonacci.bas`: translation of the ECMA demonstration `FIBONACCI.BAS` program

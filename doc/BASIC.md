@@ -914,3 +914,16 @@ GD-BASIC implements the Dartmouth BASIC October 1964 specification with the foll
 - **Backward Compatibility**: Maintains original Dartmouth BASIC behavior when using `_bDartmouthFlag = true`
 - **Modern Extensions**: Adds contemporary features while preserving core Dartmouth BASIC functionality
 - **Documentation Alignment**: All Dartmouth BASIC features are implemented according to the original specification
+
+### Changing the Interpreter behaviour (`@PRAGMA` directive)
+The interpreter can change the behaviour of the runtime by using the `@PRAGMA` directive. The use of the directive 
+can change the behaviour of the interpreter at the time from the point of the directive's usage. The syntax of the directive is:
+```BASIC
+60 @PRAGMA( "LOG_LEVEL" = "INFO" )
+```
+>[!Note]
+> The `@pragma` needs a line number like all BASIC programming statements.
+
+The following directives are supported:
+- `@PRAGMA( bDartmouthFlag = true )` - Enables the Dartmouth BASIC mode. This is not tested yet.
+- `@PRAGMA( "LOG_LEVEL" = "INFO" )` - Changes the log level of the interpeter.
