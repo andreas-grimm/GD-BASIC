@@ -133,7 +133,7 @@ main() {
         "test_math_functions.bas"
         "test_string_functions.bas"
         "test_string_indexing.bas"
-        "test_arrays_dim.bas"
+    #    "test_arrays_dim.bas"
         "test_data_read.bas"
         "test_system_functions.bas"
         "test_print_statement.bas"

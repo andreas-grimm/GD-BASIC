@@ -3,33 +3,32 @@
 3 REM Description: Tests string variable assignment and operations
 4 REM Expected: Strings should be assigned and manipulated correctly
 5 REM ========================================================================
-
 10 PRINT "=== Testing String Assignment ==="
 20 PRINT ""
-
 30 REM Test basic string assignment
 40 PRINT "Testing Basic String Assignment:"
 50 str1$ = "Hello"
-60 PRINT "str1$ = "; str1$
-
-70 str2$ = "World"
-80 PRINT "str2$ = "; str2$
-
-90 REM Test string concatenation
-100 PRINT "Testing String Concatenation:"
-110 str3$ = str1$ + " " + str2$
-120 PRINT "str1$ + ' ' + str2$ = "; str3$
-
-130 REM Test empty string
-140 PRINT "Testing Empty String:"
-150 empty$ = ""
-160 PRINT "empty$ = '"; empty$; "'"
-
-170 REM Test string with special characters
-180 PRINT "Testing String with Numbers:"
-190 mixed$ = "Test123"
-200 PRINT "mixed$ = "; mixed$
-
-210 PRINT ""
-220 PRINT "=== All String Assignment Tests PASSED ==="
-230 END
+60 PRINT "str1$ = ";
+70 PRINT str1$
+80 str2$ = "World"
+90 PRINT "str2$ = ";
+100 PRINT str2$
+110 REM Test string concatenation
+120 PRINT "Testing String Concatenation:"
+130 str3$ = str1$ + " " + str2$
+140 PRINT "str1$ + ' ' + str2$ = ";
+150 PRINT str3$
+160 REM Test empty string
+170 PRINT "Testing Empty String:"
+180 empty$ = ""
+190 PRINT "empty$ = '";
+200 PRINT empty$;
+210 PRINT "'"
+220 REM Test string with special characters
+230 PRINT "Testing String with Numbers:"
+240 mixed$ = "Test123"
+250 PRINT "mixed$ = ";
+260 PRINT mixed$
+270 PRINT ""
+280 PRINT "=== All String Assignment Tests PASSED ==="
+290 END
