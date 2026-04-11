@@ -3,6 +3,7 @@ package eu.gricom.basic.parser;
 import eu.gricom.basic.functions.Function;
 import eu.gricom.basic.statements.*;
 import eu.gricom.basic.tokenizer.BasicTokenType;
+import eu.gricom.basic.tokenizer.ReservedWords;
 import eu.gricom.basic.tokenizer.Token;
 import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.error.SyntaxErrorException;
@@ -1095,7 +1096,8 @@ public class BasicParser implements Parser {
             }
         }
 
-        throw new SyntaxErrorException("Missing statement " + oType + ".");
+        String strReservedWord = ReservedWords.getReservedWord(ReservedWords.getTokenIndex(oType.toString()));
+        throw new SyntaxErrorException("Missing statement " + strReservedWord + "."); //TO-DO Replace to reserved word
     }
 
     /**
