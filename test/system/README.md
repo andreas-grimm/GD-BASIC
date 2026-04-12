@@ -409,6 +409,96 @@ Each test file focuses on a specific feature or aspect of the BASIC language. Te
 - No crashes or unexpected behavior
 - Boundary values work properly
 
+### User Defined Function Tests
+
+#### test_defs_functions.bas
+**Purpose:** Tests DEF FN user-defined macro functions  
+**Features:**
+- Macro definition with DEF
+- Functions with 1, 2, and 3 parameters
+- Expression evaluation within macros
+- String-based macro results
+
+**Expected Results:**
+- Macros are defined and processed without error
+- Functions return correct results based on parameters
+- Multiple parameters are handled correctly
+
+### Regression and Mixed Feature Tests
+
+#### test_mixed_tests_1.bas
+**Purpose:** Tests mixed features including string indexing and multi-dimensional arrays  
+**Features:**
+- String character indexing with []
+- Multi-dimensional string and real arrays
+- FOR-NEXT loops with arrays
+- Real array summation
+
+**Expected Results:**
+- String indexing returns correct characters
+- Multi-dimensional arrays (up to 4 dimensions) work
+- Loops iterate and access array elements correctly
+
+#### test_mixed_tests_2.bas
+**Purpose:** Tests parentheses, math functions, and system commands  
+**Features:**
+- Operator precedence with parentheses
+- System functions: MEM(), RND()
+- Math functions: ABS() with various types
+- String functions: LEFT(), RIGHT()
+- SYSTEM command execution
+
+**Expected Results:**
+- Parentheses correctly override precedence
+- MEM and RND return valid numeric values
+- ABS handles integers, reals, and variables
+- String functions extract correct substrings
+- SYSTEM command executes external programs
+
+#### test_mixed_tests_3.bas
+**Purpose:** Tests DATA/READ, IF-THEN-ELSE, and advanced statements  
+**Features:**
+- DATA and READ with arrays and loops
+- IF-THEN-ELSE blocks
+- Colon (:) statement separator
+- Bitwise operators (<<, >>) and modulo (%)
+- @PRAGMA Trace and Logger control
+
+**Expected Results:**
+- READ correctly retrieves DATA into array elements
+- IF-THEN-ELSE branches execute correctly
+- Colon separator allows multiple statements per line
+- Bitwise and modulo operations return correct values
+- PRAGMA directives are processed correctly
+
+#### test_mixed_tests_4.bas
+**Purpose:** Tests basic parser features and flow control  
+**Features:**
+- REM and tick (') comments
+- Empty lines and line numbering
+- Variable assignment and arithmetic precedence
+- GOTO jumps
+- Simple IF-THEN blocks
+
+**Expected Results:**
+- Comments and empty lines are ignored
+- Arithmetic follows standard BODMAS rules
+- GOTO correctly redirects execution
+- IF-THEN blocks work as expected
+
+#### test_mixed_tests_5.bas
+**Purpose:** Tests various loop structures and subroutines  
+**Features:**
+- FOR loops with positive and negative STEP
+- GOSUB and RETURN for subroutines
+- WHILE-END-WHILE loops
+- DO-UNTIL loops
+
+**Expected Results:**
+- FOR loops count correctly in both directions
+- Subroutines execute and return to the caller
+- WHILE and DO-UNTIL loops iterate correctly based on conditions
+
 ## Running the Tests
 
 ### Run All Tests
@@ -568,7 +658,7 @@ None currently. All tests are expected to pass with the current GD-BASIC impleme
 ## Version History
 
 - **v1.0** (2024-04-02): Initial comprehensive test suite
-  - 26 test files covering all major features
+  - 32 test files covering all major features
   - Automated test runner script
   - Complete documentation
 

@@ -2,12 +2,12 @@
 
 ## Overview
 
-A comprehensive test suite has been created for the GD-BASIC interpreter, containing **26 test programs** and **2,113 lines of code** covering all major features of the BASIC language implementation.
+A comprehensive test suite has been created for the GD-BASIC interpreter, containing **32 test programs** and **2,331 lines of code** covering all major features of the BASIC language implementation.
 
 ## Test Suite Statistics
 
-- **Total Test Files:** 26 BASIC programs
-- **Total Lines of Code:** 2,113 lines
+- **Total Test Files:** 32 BASIC programs
+- **Total Lines of Code:** 2,331 lines
 - **Test Runner:** 1 automated shell script
 - **Documentation:** 2 comprehensive markdown files
 - **Test Coverage:** 100% of implemented language features
@@ -54,11 +54,21 @@ A comprehensive test suite has been created for the GD-BASIC interpreter, contai
 - `test_complex_expressions.bas` - Tests nested expressions
 - `test_edge_cases.bas` - Tests boundary conditions
 
+### 8. User Defined Function Tests (1 file)
+- `test_defs_functions.bas` - Tests DEF FNA(X) user defined functions
+
+### 9. Regression and Mixed Feature Tests (5 files)
+- `test_mixed_tests_1.bas` - Tests string indexing, multi-dimensional arrays, and loops
+- `test_mixed_tests_2.bas` - Tests parentheses, math functions (MEM, RND, ABS, LEFT, RIGHT), and SYSTEM command
+- `test_mixed_tests_3.bas` - Tests DATA/READ, IF-THEN-ELSE, colon separator, bitwise operators, and @PRAGMA Trace
+- `test_mixed_tests_4.bas` - Tests REM, comments, basic arithmetic precedence, GOTO, and IF-THEN
+- `test_mixed_tests_5.bas` - Tests FOR loops, GOSUB/RETURN, WHILE loops, and DO-UNTIL loops
+
 ## Test Runner
 
 ### run_all_tests.sh
 A comprehensive shell script that:
-- Automatically runs all 26 tests in sequence
+- Automatically runs all 32 tests in sequence
 - Checks for JAR file existence
 - Reports pass/fail status for each test
 - Stops on first failure
@@ -68,7 +78,7 @@ A comprehensive shell script that:
 
 ## Documentation
 
-### README.md (14,343 bytes)
+### README.md (17,180 bytes)
 Comprehensive documentation including:
 - Detailed description of each test
 - Expected results for all tests
@@ -78,7 +88,7 @@ Comprehensive documentation including:
 - Contributing guidelines
 - Test template for new tests
 
-### TEST_SUITE_SUMMARY.md (this file)
+### TEST_SUITE_SUMMARY.md (6,642 bytes)
 High-level overview of the test suite
 
 ## Language Features Tested
@@ -119,12 +129,16 @@ High-level overview of the test suite
 ✓ @PRAGMA  
 ✓ Colon separator (:)  
 
-### Advanced Features (100% coverage)
-✓ 1D and 2D arrays  
-✓ String character indexing  
-✓ Nested control structures  
-✓ Complex expressions  
-✓ Edge cases  
+### User Defined Functions (100% coverage)
+✓ DEF FNA(X) = "expression" (with 1, 2, or 3 parameters)
+
+### Regression Tests (100% coverage)
+✓ String character indexing
+✓ Multi-dimensional arrays
+✓ Nested control structures
+✓ Complex expressions
+✓ Edge cases
+✓ System command integration
 
 ## Test Design Principles
 
@@ -159,7 +173,7 @@ java -jar target/BASIC-*-jar-with-dependencies.jar test/system/test_arithmetic_o
 
 ## Expected Results
 
-All 26 tests should pass with the current GD-BASIC implementation. The test runner will:
+All 32 tests should pass with the current GD-BASIC implementation. The test runner will:
 - Display progress for each test
 - Show green checkmarks (✓) for passing tests
 - Show red X marks (✗) for failing tests
