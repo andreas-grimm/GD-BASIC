@@ -18,8 +18,8 @@ separate component.
 
 `GD-BASIC` is also not a compiler as it does not generate machine code, but `JAVA` objects that are executed in 
 sequence. At this time of the work that saves the translation into
-platform dependent code and keeps the platform migrate-able - it shall run on Windows, Linux, and Mac OSX. The change to low level machine code might happen at a later stage.
-It is not planned, as the performance of a standard laptop or even Raspberry Pi is sufficient to outperform any 
+platform-dependent code and keeps the platform migrate-able - it shall run on Windows, Linux, and Mac OSX. The change to low level machine code might happen at a later stage.
+It is not planned, as the performance of a standard laptop or even Raspberry Pi is enough to outperform any 
 classical BASIC computer.
 
 The focus at this time of the work is to provide a function complete, extended `JAVA` based interpreter that can work standalone or can be embedded in `JAVA` programs, following
@@ -120,6 +120,10 @@ Example of Arrays:
 
     A$(10) = "This is the 10th field of the array"
     A#(5) = a#(4) + 1
+
+>[!Warning]
+> Two dimensional arrays must not have any space or tab characters between the denominators of the array:
+> `A$(X,Y)` is supported, but `A$(X, Y)` is not and is causing an execution error.
 
 Constants are not supported. All variables are globally scoped.
 
