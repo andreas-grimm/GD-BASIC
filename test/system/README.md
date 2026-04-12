@@ -285,6 +285,24 @@ Each test file focuses on a specific feature or aspect of the BASIC language. Te
 - Mixed types handled correctly
 - Sequential reading maintains position
 
+### File I/O Tests
+
+#### test_file_io.bas
+**Purpose:** Tests File I/O operations  
+**Statements/Functions Tested:** `FOPEN`, `FCLOSE`, `FINPUT`, `FPRINT`, `EOF`  
+**Features:**
+- Opening files for reading and writing
+- Writing data to files with FPRINT
+- Reading data from files with FINPUT
+- End-of-File detection with EOF function
+- Closing files and deleting temporary files
+
+**Expected Results:**
+- Files are created and written to successfully
+- Data read back matches the data written
+- EOF is correctly detected at the end of the file
+- Files are closed and can be optionally deleted
+
 ### System Function Tests
 
 #### test_system_functions.bas
@@ -657,10 +675,11 @@ None currently. All tests are expected to pass with the current GD-BASIC impleme
 
 ## Version History
 
-- **v1.0** (2024-04-02): Initial comprehensive test suite
-  - 32 test files covering all major features
-  - Automated test runner script
-  - Complete documentation
+- **v1.1** (2026-04-12): Expanded test suite
+  - 33 test files including new File I/O coverage
+  - Fixed bugs in File I/O implementation (Parser, FPRINT, EOF)
+  - Added cleanup to test runner
+  - Updated documentation
 
 ## Contributing
 

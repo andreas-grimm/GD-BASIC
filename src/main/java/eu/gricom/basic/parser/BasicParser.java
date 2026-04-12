@@ -258,18 +258,18 @@ public class BasicParser implements Parser {
                     boolean bDeleteIndicator = false;
 
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FCLOSE] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     iOrgPosition = _iPosition;
+                    _iPosition++;
 
                     iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
                     _oLogger.debug("-parse-> [FCLOSE: FileId] <" + iFileId + "> ");
-                    _iPosition++;
 
                     String strDeleteIndicator = consumeToken(BasicTokenType.STRING).getText();
                     if (strDeleteIndicator.equals("DELETE")) {
                         _oLogger.debug("-parse-> [FCLOSE: File to be deleted] ");
                         bDeleteIndicator = true;
                     }
-                    _iPosition++;
 
                     aoStatements.add(new FCloseStatement(iOrgPosition, iFileId, bDeleteIndicator));
                 }
@@ -279,13 +279,13 @@ public class BasicParser implements Parser {
                 case FINPUT: {
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FINPUT] ");
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    iOrgPosition = _iPosition;
                     _iPosition++;
 
                     iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
                     _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
-                    _iPosition++;
 
-                    aoStatements.add(new FInputStatement(_iPosition - 1, iFileId, consumeToken(BasicTokenType.WORD).getText()));
+                    aoStatements.add(new FInputStatement(iOrgPosition, iFileId, consumeToken(BasicTokenType.WORD).getText()));
                 }
                 break;
 
@@ -296,19 +296,18 @@ public class BasicParser implements Parser {
                     String strReadWriteIndicator;
 
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FOPEN] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     iOrgPosition = _iPosition;
+                    _iPosition++;
 
                     iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
                     _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
-                    _iPosition++;
 
                     strFileName = consumeToken(BasicTokenType.STRING).getText();
                     _oLogger.debug("-parse-> [FOPEN: FileName] <" + strFileName + "> ");
-                    _iPosition++;
 
                     strReadWriteIndicator = consumeToken(BasicTokenType.STRING).getText();
                     _oLogger.debug("-parse-> [FOPEN: ReadWrite Indicator] <" + strReadWriteIndicator + "> ");
-                    _iPosition++;
 
                     aoStatements.add(new FOpenStatement(iOrgPosition, iFileId, strFileName, strReadWriteIndicator));
                 }
@@ -327,7 +326,6 @@ public class BasicParser implements Parser {
 
                     iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
                     _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
-                    _iPosition++;
 
 
                     if (getToken(0).getType() != BasicTokenType.NUMBER

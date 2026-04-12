@@ -79,13 +79,21 @@ public final class FPrintStatement implements Statement {
 
         // the BASIC version uses this more complex version
         if (_aoExpression != null) {
+            FileManager oFileManager = new FileManager();
             for (Expression oExpression : _aoExpression) {
                 try {
-                    FileManager oFileManager = new FileManager();
                     oFileManager.write(_iFileId, oExpression.evaluate().toString());
                 } catch (IOException eIoException) {
                     Logger oLogger = new Logger("eu.gricom.basic.statements.FPrintStatement");
                     oLogger.error(eIoException.getMessage() + "oExpression.evaluate()");
+                }
+            }
+            if (_bCRLF) {
+                try {
+                    oFileManager.write(_iFileId, "\n");
+                } catch (IOException eIoException) {
+                    Logger oLogger = new Logger("eu.gricom.basic.statements.FPrintStatement");
+                    oLogger.error(eIoException.getMessage() + " CRLF write failed");
                 }
             }
         }

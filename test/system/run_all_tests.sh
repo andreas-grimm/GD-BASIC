@@ -145,6 +145,7 @@ main() {
         "test_edge_cases.bas"
         "test_end_statement.bas"
         "test_defs_functions.bas"
+        "test_file_io.bas"
         "test_mixed_tests_1.bas"
         "test_mixed_tests_2.bas"
         "test_mixed_tests_3.bas"
@@ -180,6 +181,12 @@ main() {
     
     # Print summary
     print_header "TEST SUITE COMPLETED SUCCESSFULLY"
+    
+    # Cleanup temporary files
+    echo "Cleaning up temporary files..."
+    rm -f test_io.txt
+    echo ""
+    
     echo -e "${GREEN}All tests passed!${NC}"
     echo ""
     echo "Summary:"

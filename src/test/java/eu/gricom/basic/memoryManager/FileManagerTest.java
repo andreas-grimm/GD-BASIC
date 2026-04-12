@@ -205,7 +205,7 @@ public class FileManagerTest {
 
         IntegerValue oEof = _oFileManager.getEOF(FILE_ID_READ);
 
-        assertEquals(1, oEof.toInt());
+        assertEquals(0, oEof.toInt());
     }
 
     @Test
@@ -217,7 +217,7 @@ public class FileManagerTest {
 
         IntegerValue oEof = _oFileManager.getEOF(FILE_ID_READ);
 
-        assertEquals(1, oEof.toInt());
+        assertEquals(0, oEof.toInt());
     }
 
     @Test

@@ -165,7 +165,7 @@ public class FileManager {
     public final IntegerValue getEOF(int iFileId) {
         int iEOF = 0;
 
-        if (_moEoFMap.getOrDefault(iFileId, true) == false) {
+        if (_moEoFMap.getOrDefault(iFileId, false) == true) {
             iEOF = 1;
         }
 

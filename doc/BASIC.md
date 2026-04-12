@@ -195,18 +195,18 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `END` | implemented | |
 | `END-IF` | implemented | |
 | `END-WHILE` | implemented | |
-| `EOF` | reserved | |
+| `EOF` | implemented | |
 | `EOL` | reserved | |
 | `ERL` | reserved | |
 | `ERR` | reserved | |
 | `EXIT` | planned | |
 | `EXP` | implemented | |
-| `FCLOSE` | planned | |
-| `FOPEN` | planned | |
+| `FCLOSE` | implemented | |
+| `FOPEN` | implemented | |
 | `FOR` | implemented | |
-| `FREAD` | planned | |
+| `FINPUT` | implemented | |
 | `FREE` | reserved | |
-| `FPRINT` | planned | |
+| `FPRINT` | implemented | |
 | `GOSUB` | implemented | |
 | `GOTO` | implemented | implemented |
 | `IF` | implemented | implemented |
@@ -277,6 +277,87 @@ of the line numbers is not allowed. The structure of a statement is:
 Example:
 
     100 PRINT "This is an example"
+
+### File I/O
+
+GD-BASIC provides a set of commands for file operations, allowing programs to create, write, read, and manage files on the system.
+
+#### FOPEN
+
+The `FOPEN` command opens a file for either reading or writing.
+
+###### BASIC Syntax
+`FOPEN <file_id> "<filename>" "<mode>"`
+
+- `<file_id>`: An integer (1-9) used to identify the file in subsequent commands.
+- `<filename>`: The name of the file to open (string).
+- `<mode>`: Either `"read"` to open an existing file for reading, or `"write"` to create a new file (or overwrite an existing one) for writing.
+
+Example:
+```basic
+10 FOPEN 1 "data.txt" "write"
+```
+
+#### FPRINT
+
+The `FPRINT` command writes data to an open file.
+
+###### BASIC Syntax
+`FPRINT <file_id> <expression> [, <expression> ...] [;]`
+
+- `<file_id>`: The ID of a file opened in `"write"` mode.
+- `<expression>`: One or more expressions (strings, numbers, etc.) to write to the file.
+- `;`: A trailing semicolon prevents the command from writing a newline (CRLF) at the end.
+
+Example:
+```basic
+20 FPRINT 1 "Name: ", N$, " Age: ", A%
+30 FPRINT 1 "No newline after this";
+```
+
+#### FINPUT
+
+The `FINPUT` command reads a single line from an open file into a variable.
+
+###### BASIC Syntax
+`FINPUT <file_id> <variable>`
+
+- `<file_id>`: The ID of a file opened in `"read"` mode.
+- `<variable>`: The variable where the read line will be stored.
+
+Example:
+```basic
+40 FINPUT 1 L$
+```
+
+#### FCLOSE
+
+The `FCLOSE` command closes a previously opened file.
+
+###### BASIC Syntax
+`FCLOSE <file_id> "<action>"`
+
+- `<file_id>`: The ID of the file to close.
+- `<action>`: Either `"KEEP"` to save the file, or `"DELETE"` to remove the file from the system after closing.
+
+Example:
+```basic
+50 FCLOSE 1 "KEEP"
+```
+
+#### EOF
+
+The `EOF` function checks if the end of a file has been reached.
+
+###### BASIC Syntax
+`EOF(<file_id>)`
+
+Returns `1` if the end of the specified file has been reached, or `0` otherwise.
+
+Example:
+```basic
+60 IF EOF(1) == 1 THEN PRINT "End of file reached"
+```
 
 ### Comments
 Comments start with ' and proceed to the end of the line:
