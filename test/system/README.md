@@ -517,6 +517,20 @@ Each test file focuses on a specific feature or aspect of the BASIC language. Te
 - Subroutines execute and return to the caller
 - WHILE and DO-UNTIL loops iterate correctly based on conditions
 
+#### test_large_program.bas
+**Purpose:** Stress test the interpreter with a large BASIC program  
+**Features:**
+- Over 10,000 lines of code
+- Large line numbers
+- Massive accumulation of statements
+- Final verification loop and assertions
+
+**Expected Results:**
+- The interpreter successfully parses and executes the program
+- Performance remains stable
+- Memory usage is handled correctly
+- All assertions and loops at the end of the file pass
+
 ## Running the Tests
 
 ### Run All Tests

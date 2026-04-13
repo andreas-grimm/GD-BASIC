@@ -987,7 +987,7 @@ public class BasicParser implements Parser {
                 return oThreeParameterFunction;
 
             // two parameter function calls
-            case INSTR: case LEFT: case RIGHT: case SYSTEM:
+            case INSTR: case LEFT: case RIGHT: case SYSTEM: case CALL:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                                        + oToken.getText() + "' [" + oToken.getLine() + "]");

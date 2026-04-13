@@ -151,6 +151,7 @@ Under Development:
 
 0.1.0: Stable Release for Testing
 * Added file functions to the BASIC interpreter
+* Added `CALL` function to call external RESTful APIs
 * Added system tests to the project
 * Removed GRADLE build system
 * Updated the documentation to reflect the new features

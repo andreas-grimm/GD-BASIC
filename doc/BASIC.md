@@ -178,7 +178,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `AND` | implemented | |
 | `ASC` | implemented | |
 | `ATN` | implemented | |
-| `CALL` | reserved | |
+| `CALL` | implemented | |
 | `CDBL` | implemented | |
 | `CHR` | implemented | |
 | `CINT` | implemented | |
@@ -415,8 +415,8 @@ In sequence, this section describes:
 - Control Structures / Process Control
 - Expressions and Mathematical Functions
 
-Finally, special function of the `GD-BASIC` implementations are discussed, such as the `SYSTEM` interface and the `CALL` function
-Those features will be implemented potentially in the Q2 release.
+Finally, special function of the `GD-BASIC` implementations are discussed, such as the `SYSTEM` interface and the `CALL` function.
+Those features are implemented in the current release.
 
 #### Loops and Iterations
 
@@ -828,7 +828,25 @@ Convert a string to a real number
 ### System Functions
 
 #### `CALL`
-Call an external function
+The `CALL` function performs an HTTP POST request to a specified URL with a payload. It returns the response body as a string.
+
+###### BASIC Syntax
+`10 Return$ = CALL("<url>", "<payload>")`
+
+- `url`: The full URL of the API endpoint (string).
+- `payload`: The data to be sent in the POST request body (string).
+
+The function sets the `Content-Type` and `Accept` headers to `application/json` by default. It has a default timeout of 10 seconds.
+
+If the HTTP response status code is not in the 2xx range (e.g., 404, 500), the function throws a `RuntimeException` containing the status code and response body.
+
+Example:
+```basic
+10 URL$ = "https://httpbin.org/post"
+20 PAYLOAD$ = "{\"name\": \"GD-BASIC\", \"version\": \"0.1.0\"}"
+30 RESPONSE$ = CALL(URL$, PAYLOAD$)
+40 PRINT "API Response: ", RESPONSE$
+```
 
 #### `MEM`
 The `MEM` function returns the size of the available memory as an integer. The function does not require any parameter.

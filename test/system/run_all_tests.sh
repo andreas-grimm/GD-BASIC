@@ -151,6 +151,7 @@ main() {
         "test_mixed_tests_3.bas"
         "test_mixed_tests_4.bas"
         "test_mixed_tests_5.bas"
+        "test_large_program.bas"
     )
     
     # Run each test
