@@ -746,16 +746,16 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression logicalOr() throws SyntaxErrorException {
-        Expression left = logicalAnd();
+        Expression oLeft = logicalAnd();
 
         while (getToken(0).getType() == BasicTokenType.OR) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = logicalAnd();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = logicalAnd();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -765,16 +765,16 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression logicalAnd() throws SyntaxErrorException {
-        Expression left = equality();
+        Expression oLeft = equality();
 
         while (getToken(0).getType() == BasicTokenType.AND) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = equality();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = equality();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -784,17 +784,17 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression equality() throws SyntaxErrorException {
-        Expression left = comparison();
+        Expression oLeft = comparison();
 
         while (getToken(0).getType() == BasicTokenType.COMPARE_EQUAL ||
                 getToken(0).getType() == BasicTokenType.COMPARE_NOT_EQUAL) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = comparison();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = comparison();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -804,19 +804,19 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression comparison() throws SyntaxErrorException {
-        Expression left = shift();
+        Expression oLeft = shift();
 
         while (getToken(0).getType() == BasicTokenType.SMALLER ||
                 getToken(0).getType() == BasicTokenType.SMALLER_EQUAL ||
                 getToken(0).getType() == BasicTokenType.GREATER ||
                 getToken(0).getType() == BasicTokenType.GREATER_EQUAL) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = shift();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = shift();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -826,17 +826,17 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression shift() throws SyntaxErrorException {
-        Expression left = addition();
+        Expression oLeft = addition();
 
         while (getToken(0).getType() == BasicTokenType.SHIFT_LEFT ||
                 getToken(0).getType() == BasicTokenType.SHIFT_RIGHT) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = addition();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = addition();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -846,17 +846,17 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression addition() throws SyntaxErrorException {
-        Expression left = multiplication();
+        Expression oLeft = multiplication();
 
         while (getToken(0).getType() == BasicTokenType.PLUS ||
                 getToken(0).getType() == BasicTokenType.MINUS) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = multiplication();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = multiplication();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -866,18 +866,18 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression multiplication() throws SyntaxErrorException {
-        Expression left = exponentiation();
+        Expression oLeft = exponentiation();
 
         while (getToken(0).getType() == BasicTokenType.MULTIPLY ||
                 getToken(0).getType() == BasicTokenType.DIVIDE ||
                 getToken(0).getType() == BasicTokenType.MODULO) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = exponentiation();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = exponentiation();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -887,17 +887,17 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression exponentiation() throws SyntaxErrorException {
-        Expression left = unary();
+        Expression oLeft = unary();
 
         if (getToken(0).getType() == BasicTokenType.POWER) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
             // Exponentiation is right-associative, so we call exponentiation() recursively
-            Expression right = exponentiation();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = exponentiation();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -910,10 +910,10 @@ public class BasicParser implements Parser {
         if (getToken(0).getType() == BasicTokenType.PLUS ||
                 getToken(0).getType() == BasicTokenType.MINUS ||
                 getToken(0).getType() == BasicTokenType.NOT) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression operand = unary();
-            return new UnaryOperatorExpression(operator.getType(), operand);
+            Expression oOperand = unary();
+            return new UnaryOperatorExpression(oOperator.getType(), oOperand);
         }
 
         return atomic();
@@ -1126,3 +1126,4 @@ public class BasicParser implements Parser {
         return _aoTokens.get(_iPosition + iOffset);
     }
 }
+
