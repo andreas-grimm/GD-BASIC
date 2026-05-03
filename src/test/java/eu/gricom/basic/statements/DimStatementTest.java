@@ -25,7 +25,7 @@ public class DimStatementTest {
     @Test
     public void testStructure() throws Exception {
         DimStatement dimStatement = new DimStatement(10);
-        String expected = "{\"DIM\": {\"TOKEN_NR\": \"10\", \"ARRAY_NAME\": \"\", \"SIZE\": \"0\"}}";
+        String expected = "{\"DIM\": {\"TOKEN_NR\": \"10\"}}";
         assertEquals(expected, dimStatement.structure());
     }
 

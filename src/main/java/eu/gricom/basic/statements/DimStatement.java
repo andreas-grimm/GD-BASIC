@@ -1,21 +1,18 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.VariableManagement;
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.error.SyntaxErrorException;
+import eu.gricom.basic.helper.Logger;
 
 /**
  * DimStatement.java
  * <p>
- * Description: The DimStatement class implements the BASIC DIM command, which declares and allocates arrays of any
- * type. It reserves memory for the specified number of elements and initialises the array for use in the program.
+ * Description: The DimStatement class represents the BASIC DIM command. Currently, array support is not implemented
+ * in this interpreter. When a DIM statement is encountered, a warning is logged and the statement is skipped.
  * <p>
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class DimStatement implements Statement {
     private final int _iTokenNumber;
-    private final String _strArrayName;
-    private final int _iSize;
+    private final Logger _oLogger = new Logger(this.getClass().getName());
 
     /**
      * Default constructor.
@@ -25,22 +22,6 @@ public class DimStatement implements Statement {
      */
     public DimStatement(final int iTokenNumber) {
         _iTokenNumber = iTokenNumber;
-        _strArrayName = "";
-        _iSize = 0;
-    }
-
-    /**
-     * Constructor with array name and size.
-     * <p>
-     * A "DIM" statement initializes an array of specified size.
-     * @param iTokenNumber - number of the command in the basic program
-     * @param strArrayName - name of the array (e.g. "F#")
-     * @param iSize - size of the array
-     */
-    public DimStatement(final int iTokenNumber, final String strArrayName, final int iSize) {
-        _iTokenNumber = iTokenNumber;
-        _strArrayName = strArrayName;
-        _iSize = iSize;
     }
 
     /**
@@ -56,20 +37,10 @@ public class DimStatement implements Statement {
     /**
      * Execute.
      * <p>
-     * Initialize array elements with 0.
+     * Log a warning that DIM is not supported and skip execution.
      */
-    public final void execute() throws SyntaxErrorException {
-        if (_strArrayName.isEmpty() || _iSize <= 0) {
-            return;
-        }
-
-        VariableManagement oVariableManager = new VariableManagement();
-
-        // Initialize all array elements to 0
-        for (int i = 0; i < _iSize; i++) {
-            String strKey = _strArrayName + "-" + i;
-            oVariableManager.putMap(strKey, new RealValue(0.0));
-        }
+    public final void execute() {
+        _oLogger.warning("DIM statement is not supported in this BASIC interpreter");
     }
 
     /**
@@ -89,15 +60,13 @@ public class DimStatement implements Statement {
      * <p>
      * Method for the compiler to get the structure of the program.
      *
-     * @return gives the name of the statement ("DIM") and a list of the parameters
+     * @return gives the name of the statement ("DIM")
      * @throws Exception based on errors in the implementation classes
      */
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"DIM\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
-        strReturn += ", \"ARRAY_NAME\": \"" + _strArrayName + "\"";
-        strReturn += ", \"SIZE\": \"" + _iSize + "\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\"";
         strReturn += "}}";
         return strReturn;
     }

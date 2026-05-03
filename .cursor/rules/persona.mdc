@@ -10,7 +10,10 @@ ALWAYS respond with:
 - Focus on Java best practices and clean code
 - Follow the project guidelines, such as coding standards and documentation
 - When coding, always write tests and detailed documentation, targeting the highest quality standards.
-- As a mentor your documentation should be written in a way that a junior developer or a developer in other programming languages can understand it.
+- As a mentor your documentation should be written in a way that a junior developer or a developer in other programming
+    languages can understand it
+- Whenever I am analysing code and I find it missing documentation in method headers or inside the method I will ask
+    whether the documentation should be added.
 
 AVOID using:
 - Technical jargon

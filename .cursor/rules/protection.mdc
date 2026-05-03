@@ -1,10 +1,8 @@
 READ-ONLY: agent/ folder, .cursor/ folder
-
 NEVER modify files in the agent/ folder - contains the projects agent architecture
 NEVER modify files in the .cursor/ folder - contains the projects guardian
 
-GIT PUSH protection
-
+GIT PUSH protection:
 NEVER `git push` without explicit user confirmation ("yes" or "confirm")
 NEVER leave the current branch
 

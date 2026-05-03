@@ -216,40 +216,12 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
-                // DIM Token: Declare an array with specified size
+                // DIM Token: the DIM command is not supported, ignore the rest of the line
                 case DIM:
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [DIM] ");
-                    int iDimPosition = _iPosition;
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), iDimPosition);
+                    _oLogger.warning("-parse-> found Token: <" + _iPosition + "> [DIM], not supported ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    aoStatements.add(new DimStatement(_iPosition));
                     _iPosition++;
-
-                    // Get array name (e.g., F#)
-                    String strDimArrayName = consumeToken(BasicTokenType.WORD).getText();
-                    _oLogger.debug("-parse-> [DIM: Array Name] <" + strDimArrayName + "> ");
-
-                    // Expect ( for array size
-                    if (getToken(0).getType() != BasicTokenType.LEFT_PAREN) {
-                        throw new SyntaxErrorException("Expected ( after array name in DIM statement at Line ["
-                                + getToken(0).getLine() + "]");
-                    }
-                    _iPosition++;
-
-                    // Get array size (should be a NUMBER)
-                    if (getToken(0).getType() != BasicTokenType.NUMBER) {
-                        throw new SyntaxErrorException("Expected array size in DIM statement at Line ["
-                                + getToken(0).getLine() + "]");
-                    }
-                    int iDimSize = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
-                    _oLogger.debug("-parse-> [DIM: Array Size] <" + iDimSize + "> ");
-
-                    // Expect ) to close array size
-                    if (getToken(0).getType() != BasicTokenType.RIGHT_PAREN) {
-                        throw new SyntaxErrorException("Expected ) after array size in DIM statement at Line ["
-                                + getToken(0).getLine() + "]");
-                    }
-                    _iPosition++;
-
-                    aoStatements.add(new DimStatement(iDimPosition, strDimArrayName, iDimSize));
                     break;
 
                 // DO Token: Define the anchor point for the DO - UNTIL loop
@@ -655,41 +627,13 @@ public class BasicParser implements Parser {
 
                     _oLineNumber.putLineNumber(getToken(0).getLine(), iCurrPosition);
 
-                    String strName = getToken(0).getText();
-                    int iNextPos = 1;
-
-                    // Handle array syntax: WORD ( index ) = value
-                    if (getToken(1).getType() == BasicTokenType.LEFT_PAREN) {
-                        strName += " ( ";
-                        iNextPos = 2;
-                        int iParenDepth = 1;
-
-                        // Collect all tokens until matching RIGHT_PAREN
-                        while (iParenDepth > 0 && iNextPos < 100) {
-                            Token oArrayToken = getToken(iNextPos);
-                            if (oArrayToken.getType() == BasicTokenType.LEFT_PAREN) {
-                                iParenDepth++;
-                                strName += "( ";
-                            } else if (oArrayToken.getType() == BasicTokenType.RIGHT_PAREN) {
-                                iParenDepth--;
-                                if (iParenDepth > 0) {
-                                    strName += ") ";
-                                } else {
-                                    strName += " )";
-                                }
-                            } else {
-                                strName += oArrayToken.getText() + " ";
-                            }
-                            iNextPos++;
-                        }
-                    }
-
-                    if (getToken(iNextPos).getType() == BasicTokenType.ASSIGN_EQUAL) {
-                        _iPosition = _iPosition + iNextPos + 1;
+                    if (getToken(1).getType() == BasicTokenType.ASSIGN_EQUAL) {
+                        String strName = getToken(0).getText();
+                        _iPosition = _iPosition + 2;
                         Expression oExpression = expression();
-                        aoStatements.add(new AssignStatement(iCurrPosition, strName.trim(), oExpression));
+                        aoStatements.add(new AssignStatement(iCurrPosition, strName, oExpression));
                     } else {
-                        throw new SyntaxErrorException("Incorrect Operator: " + getToken(iNextPos).getType().toString()
+                        throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString()
                                 + " in Line [" + getToken(0).getLine() + "]");
                     }
                     break;
