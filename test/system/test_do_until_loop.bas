@@ -1,48 +1,45 @@
-REM ========================================================================
-REM Test: DO-UNTIL Loop
-REM Description: Tests DO-UNTIL loop with various exit conditions
-REM Expected: Loops should execute until condition becomes true
-REM ========================================================================
-
+1 REM ========================================================================
+2 REM Test: DO-UNTIL Loop
+3 REM Description: Tests DO-UNTIL loop with various exit conditions
+4 REM Expected: Loops should execute until condition becomes true
+5 REM ========================================================================
 10 PRINT "=== Testing DO-UNTIL Loop ==="
 20 PRINT ""
-
-REM Test basic DO-UNTIL loop
-30 PRINT "Testing Basic DO-UNTIL (count to 5):"
-40 counter% = 1
-50 DO
-60   PRINT counter%;
-70   counter% = counter% + 1
-80 UNTIL counter% > 5
-90 PRINT ""
-
-REM Test DO-UNTIL with condition check
-100 PRINT "Testing DO-UNTIL with Condition:"
-110 sum% = 0
-120 i% = 1
-130 DO
-140   sum% = sum% + i%
-150   i% = i% + 1
-160 UNTIL sum% >= 10
-170 PRINT "Sum reached: "; sum%
-180 IF sum% < 10 THEN GOTO 9000
-
-REM Test nested DO-UNTIL loops
-190 PRINT "Testing Nested DO-UNTIL:"
-200 outer% = 1
-210 DO
-220   PRINT "Outer: "; outer%
-230   inner% = 1
-240   DO
-250     PRINT "  Inner: "; inner%
-260     inner% = inner% + 1
-270   UNTIL inner% > 2
-280   outer% = outer% + 1
-290 UNTIL outer% > 2
-
-300 PRINT ""
-310 PRINT "=== All DO-UNTIL Loop Tests PASSED ==="
-320 END
-
+30 REM Test basic DO-UNTIL loop
+40 PRINT "Testing Basic DO-UNTIL (count to 5):"
+50 counter% = 1
+60 DO
+70   PRINT counter%;
+80   counter% = counter% + 1
+90 UNTIL counter% > 5
+100 PRINT ""
+110 REM Test DO-UNTIL with condition check
+120 PRINT "Testing DO-UNTIL with Condition:"
+130 sum% = 0
+140 i% = 1
+150 DO
+160   sum% = sum% + i%
+170   i% = i% + 1
+180 UNTIL sum% >= 10
+190 PRINT "Sum reached: ";
+200 PRINT sum%
+210 IF sum% < 10 THEN 9000
+220 REM Test nested DO-UNTIL loops
+230 PRINT "Testing Nested DO-UNTIL:"
+240 outer% = 1
+250 DO
+260   PRINT "Outer: ";
+270   PRINT outer%
+280   inner% = 1
+290   DO
+300     PRINT "  Inner: ";
+310     PRINT inner%
+320     inner% = inner% + 1
+330   UNTIL inner% > 2
+340   outer% = outer% + 1
+350 UNTIL outer% > 2
+360 PRINT ""
+370 PRINT "=== All DO-UNTIL Loop Tests PASSED ==="
+380 END
 9000 PRINT "ERROR: Test failed!"
 9010 END

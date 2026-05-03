@@ -22,10 +22,9 @@ projects.
 
 Project Planning and Control
 
----
 Build Process:
 
-This package has been tested to build with Maven 3.6.3, using Oracle Java 17.0.1 under Mac OS X 14.5, and Debian 10 or higher
+This package has been tested to build with Maven 3.6.3, using Oracle Java 1.8.0_131 under Mac OS X 10.15.7
 
 Use the following command line:
 
@@ -150,13 +149,17 @@ Under Development:
 
     [BASIC-48][BASIC-76][BASIC-79][BASIC-82][BASIC-83][BASIC-88][BASIC-115][BASIC-124]
 
+0.1.0: Stable Release for Testing
+* Added file functions to the BASIC interpreter
+* Added `CALL` function to call external RESTful APIs
+* Added system tests to the project
+* Removed GRADLE build system
+* Updated the documentation to reflect the new features
+* Replaced third party graphs in the documentation with `mermaid` diagrams
+
 ---
 Implemented test and demonstration programs, located at `src/test/resources/GD_Basic_Examples`:
 - `Fibonacci.bas`: translation of the ECMA demonstration `FIBONACCI.BAS` program
 - `Eratosthenese.bas`: translation of the ECMA demonstration `ERATOSTHENES.BAS` program
 
 ** NOTE: as of this version, all further versions pass the CheckStyle test **
-
----
-This build version has removed gradle as a build tool, The JIRA backlog has been closed.
-At this moment the code is considered stable and will be maintained as needed.

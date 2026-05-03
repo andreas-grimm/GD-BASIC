@@ -18,8 +18,8 @@ separate component.
 
 `GD-BASIC` is also not a compiler as it does not generate machine code, but `JAVA` objects that are executed in 
 sequence. At this time of the work that saves the translation into
-platform dependent code and keeps the platform migrate-able - it shall run on Windows, Linux, and Mac OSX. The change to low level machine code might happen at a later stage.
-It is not planned, as the performance of a standard laptop or even Raspberry Pi is sufficient to outperform any 
+platform-dependent code and keeps the platform migrate-able - it shall run on Windows, Linux, and Mac OSX. The change to low level machine code might happen at a later stage.
+It is not planned, as the performance of a standard laptop or even Raspberry Pi is enough to outperform any 
 classical BASIC computer.
 
 The focus at this time of the work is to provide a function complete, extended `JAVA` based interpreter that can work standalone or can be embedded in `JAVA` programs, following
@@ -121,6 +121,10 @@ Example of Arrays:
     A$(10) = "This is the 10th field of the array"
     A#(5) = a#(4) + 1
 
+>[!Warning]
+> Two dimensional arrays must not have any space or tab characters between the denominators of the array:
+> `A$(X,Y)` is supported, but `A$(X, Y)` is not and is causing an execution error.
+
 Constants are not supported. All variables are globally scoped.
 
 Variables are case-sensitive, so the variables `A%` and `a%` are different.
@@ -174,7 +178,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `AND` | implemented | |
 | `ASC` | implemented | |
 | `ATN` | implemented | |
-| `CALL` | reserved | |
+| `CALL` | implemented | |
 | `CDBL` | implemented | |
 | `CHR` | implemented | |
 | `CINT` | implemented | |
@@ -191,18 +195,18 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `END` | implemented | |
 | `END-IF` | implemented | |
 | `END-WHILE` | implemented | |
-| `EOF` | reserved | |
+| `EOF` | implemented | |
 | `EOL` | reserved | |
 | `ERL` | reserved | |
 | `ERR` | reserved | |
 | `EXIT` | planned | |
 | `EXP` | implemented | |
-| `FCLOSE` | planned | |
-| `FOPEN` | planned | |
+| `FCLOSE` | implemented | |
+| `FOPEN` | implemented | |
 | `FOR` | implemented | |
-| `FREAD` | planned | |
+| `FINPUT` | implemented | |
 | `FREE` | reserved | |
-| `FPRINT` | planned | |
+| `FPRINT` | implemented | |
 | `GOSUB` | implemented | |
 | `GOTO` | implemented | implemented |
 | `IF` | implemented | implemented |
@@ -274,6 +278,87 @@ Example:
 
     100 PRINT "This is an example"
 
+### File I/O
+
+GD-BASIC provides a set of commands for file operations, allowing programs to create, write, read, and manage files on the system.
+
+#### FOPEN
+
+The `FOPEN` command opens a file for either reading or writing.
+
+###### BASIC Syntax
+`FOPEN <file_id> "<filename>" "<mode>"`
+
+- `<file_id>`: An integer (1-9) used to identify the file in subsequent commands.
+- `<filename>`: The name of the file to open (string).
+- `<mode>`: Either `"read"` to open an existing file for reading, or `"write"` to create a new file (or overwrite an existing one) for writing.
+
+Example:
+```basic
+10 FOPEN 1 "data.txt" "write"
+```
+
+#### FPRINT
+
+The `FPRINT` command writes data to an open file.
+
+###### BASIC Syntax
+`FPRINT <file_id> <expression> [, <expression> ...] [;]`
+
+- `<file_id>`: The ID of a file opened in `"write"` mode.
+- `<expression>`: One or more expressions (strings, numbers, etc.) to write to the file.
+- `;`: A trailing semicolon prevents the command from writing a newline (CRLF) at the end.
+
+Example:
+```basic
+20 FPRINT 1 "Name: ", N$, " Age: ", A%
+30 FPRINT 1 "No newline after this";
+```
+
+#### FINPUT
+
+The `FINPUT` command reads a single line from an open file into a variable.
+
+###### BASIC Syntax
+`FINPUT <file_id> <variable>`
+
+- `<file_id>`: The ID of a file opened in `"read"` mode.
+- `<variable>`: The variable where the read line will be stored.
+
+Example:
+```basic
+40 FINPUT 1 L$
+```
+
+#### FCLOSE
+
+The `FCLOSE` command closes a previously opened file.
+
+###### BASIC Syntax
+`FCLOSE <file_id> "<action>"`
+
+- `<file_id>`: The ID of the file to close.
+- `<action>`: Either `"KEEP"` to save the file, or `"DELETE"` to remove the file from the system after closing.
+
+Example:
+```basic
+50 FCLOSE 1 "KEEP"
+```
+
+#### EOF
+
+The `EOF` function checks if the end of a file has been reached.
+
+###### BASIC Syntax
+`EOF(<file_id>)`
+
+Returns `1` if the end of the specified file has been reached, or `0` otherwise.
+
+Example:
+```basic
+60 IF EOF(1) == 1 THEN PRINT "End of file reached"
+```
+
 ### Comments
 Comments start with ' and proceed to the end of the line:
 
@@ -330,8 +415,8 @@ In sequence, this section describes:
 - Control Structures / Process Control
 - Expressions and Mathematical Functions
 
-Finally, special function of the `GD-BASIC` implementations are discussed, such as the `SYSTEM` interface and the `CALL` function
-Those features will be implemented potentially in the Q2 release.
+Finally, special function of the `GD-BASIC` implementations are discussed, such as the `SYSTEM` interface and the `CALL` function.
+Those features are implemented in the current release.
 
 #### Loops and Iterations
 
@@ -348,7 +433,13 @@ in other BASIC dialects - and proven useful.
 The `DO` - Loop has a different nature. This loop will execute the loop at least once, before verifying the continuation of the loop at the
 end. The structure of the loop can be seen in the following chart:
 
-![Do-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/Do-Loop.jpg)
+```mermaid
+flowchart TD
+    Start([Start]) --> Body[Loop Body]
+    Body --> Condition{Until Condition?}
+    Condition -- False --> Body
+    Condition -- True --> End([End of Loop])
+```
 
 `DO <statement> EXIT <statement> UNTIL <condition>`
 
@@ -402,7 +493,13 @@ Example for a FOR loop counting downwards from 2 to -2 in decrements of -0.2 and
 The `WHILE` - loop is a head-checking loop, i.e. the condition to execute the loop is checked before the loop is executed.
 The following chart describes the loop structure:
 
-![While-Loop](https://github.com/andreas-grimm/Interpreters/blob/development/doc/jpg/While-Loop.jpg)
+```mermaid
+flowchart TD
+    Start([Start]) --> Condition{Exit Condition?}
+    Condition -- True --> Body[Loop Body]
+    Body --> Condition
+    Condition -- False --> End([End of Loop])
+```
 
 The syntax of the `WHILE` loop is as follows:
 
@@ -624,6 +721,10 @@ which dimensions a string array for `J` elements of length `I`, should be remove
 `GD-BASIC` does not support prior declaration of arrays and string sizes. Both are implemented as dynamically growing and
 shrinking.
 
+>[!Warning]
+> Two dimensional arrays must not have any space or tab characters between the denominators of the array:
+> `A$(X,Y)` is supported, but `A$(X, Y)` is not and is causing an execution error.
+
 ### String Functions
 Some Basic languages use a comma `,` or ampersand `&` for string concatenation. Each of these must be changed to a plus sign `+`,
 which is the operator for `GD-BASIC` string concatenation.
@@ -727,7 +828,25 @@ Convert a string to a real number
 ### System Functions
 
 #### `CALL`
-Call an external function
+The `CALL` function performs an HTTP POST request to a specified URL with a payload. It returns the response body as a string.
+
+###### BASIC Syntax
+`10 Return$ = CALL("<url>", "<payload>")`
+
+- `url`: The full URL of the API endpoint (string).
+- `payload`: The data to be sent in the POST request body (string).
+
+The function sets the `Content-Type` and `Accept` headers to `application/json` by default. It has a default timeout of 10 seconds.
+
+If the HTTP response status code is not in the 2xx range (e.g., 404, 500), the function throws a `RuntimeException` containing the status code and response body.
+
+Example:
+```basic
+10 URL$ = "https://httpbin.org/post"
+20 PAYLOAD$ = "{\"name\": \"GD-BASIC\", \"version\": \"0.1.0\"}"
+30 RESPONSE$ = CALL(URL$, PAYLOAD$)
+40 PRINT "API Response: ", RESPONSE$
+```
 
 #### `MEM`
 The `MEM` function returns the size of the available memory as an integer. The function does not require any parameter.
@@ -768,7 +887,7 @@ The macros are called in the program as follows:
 The following standard Basic commands are depreciated and should not be used.
 
 - The `LET` command is depreciated and will be ignored
-- The `DIM` command is depreciated and will cause a Syntax Error
+- The `DIM` command is depreciated and will be ignored
 
 The `SINGLE` data type of the old BASIC implementations does not exist in `GD-BASIC`. The developer is asked to use 
 the simple integer data type. Therefore, the conversions functions are not implemented:
@@ -902,3 +1021,16 @@ GD-BASIC implements the Dartmouth BASIC October 1964 specification with the foll
 - **Backward Compatibility**: Maintains original Dartmouth BASIC behavior when using `_bDartmouthFlag = true`
 - **Modern Extensions**: Adds contemporary features while preserving core Dartmouth BASIC functionality
 - **Documentation Alignment**: All Dartmouth BASIC features are implemented according to the original specification
+
+### Changing the Interpreter behaviour (`@PRAGMA` directive)
+The interpreter can change the behaviour of the runtime by using the `@PRAGMA` directive. The use of the directive 
+can change the behaviour of the interpreter at the time from the point of the directive's usage. The syntax of the directive is:
+```BASIC
+60 @PRAGMA( "LOG_LEVEL" = "INFO" )
+```
+>[!Note]
+> The `@pragma` needs a line number like all BASIC programming statements.
+
+The following directives are supported:
+- `@PRAGMA( bDartmouthFlag = true )` - Enables the Dartmouth BASIC mode. This is not tested yet.
+- `@PRAGMA( "LOG_LEVEL" = "INFO" )` - Changes the log level of the interpeter.

@@ -285,6 +285,24 @@ Each test file focuses on a specific feature or aspect of the BASIC language. Te
 - Mixed types handled correctly
 - Sequential reading maintains position
 
+### File I/O Tests
+
+#### test_file_io.bas
+**Purpose:** Tests File I/O operations  
+**Statements/Functions Tested:** `FOPEN`, `FCLOSE`, `FINPUT`, `FPRINT`, `EOF`  
+**Features:**
+- Opening files for reading and writing
+- Writing data to files with FPRINT
+- Reading data from files with FINPUT
+- End-of-File detection with EOF function
+- Closing files and deleting temporary files
+
+**Expected Results:**
+- Files are created and written to successfully
+- Data read back matches the data written
+- EOF is correctly detected at the end of the file
+- Files are closed and can be optionally deleted
+
 ### System Function Tests
 
 #### test_system_functions.bas
@@ -408,6 +426,110 @@ Each test file focuses on a specific feature or aspect of the BASIC language. Te
 - Edge cases handled correctly
 - No crashes or unexpected behavior
 - Boundary values work properly
+
+### User Defined Function Tests
+
+#### test_defs_functions.bas
+**Purpose:** Tests DEF FN user-defined macro functions  
+**Features:**
+- Macro definition with DEF
+- Functions with 1, 2, and 3 parameters
+- Expression evaluation within macros
+- String-based macro results
+
+**Expected Results:**
+- Macros are defined and processed without error
+- Functions return correct results based on parameters
+- Multiple parameters are handled correctly
+
+### Regression and Mixed Feature Tests
+
+#### test_mixed_tests_1.bas
+**Purpose:** Tests mixed features including string indexing and multi-dimensional arrays  
+**Features:**
+- String character indexing with []
+- Multi-dimensional string and real arrays
+- FOR-NEXT loops with arrays
+- Real array summation
+
+**Expected Results:**
+- String indexing returns correct characters
+- Multi-dimensional arrays (up to 4 dimensions) work
+- Loops iterate and access array elements correctly
+
+#### test_mixed_tests_2.bas
+**Purpose:** Tests parentheses, math functions, and system commands  
+**Features:**
+- Operator precedence with parentheses
+- System functions: MEM(), RND()
+- Math functions: ABS() with various types
+- String functions: LEFT(), RIGHT()
+- SYSTEM command execution
+
+**Expected Results:**
+- Parentheses correctly override precedence
+- MEM and RND return valid numeric values
+- ABS handles integers, reals, and variables
+- String functions extract correct substrings
+- SYSTEM command executes external programs
+
+#### test_mixed_tests_3.bas
+**Purpose:** Tests DATA/READ, IF-THEN-ELSE, and advanced statements  
+**Features:**
+- DATA and READ with arrays and loops
+- IF-THEN-ELSE blocks
+- Colon (:) statement separator
+- Bitwise operators (<<, >>) and modulo (%)
+- @PRAGMA Trace and Logger control
+
+**Expected Results:**
+- READ correctly retrieves DATA into array elements
+- IF-THEN-ELSE branches execute correctly
+- Colon separator allows multiple statements per line
+- Bitwise and modulo operations return correct values
+- PRAGMA directives are processed correctly
+
+#### test_mixed_tests_4.bas
+**Purpose:** Tests basic parser features and flow control  
+**Features:**
+- REM and tick (') comments
+- Empty lines and line numbering
+- Variable assignment and arithmetic precedence
+- GOTO jumps
+- Simple IF-THEN blocks
+
+**Expected Results:**
+- Comments and empty lines are ignored
+- Arithmetic follows standard BODMAS rules
+- GOTO correctly redirects execution
+- IF-THEN blocks work as expected
+
+#### test_mixed_tests_5.bas
+**Purpose:** Tests various loop structures and subroutines  
+**Features:**
+- FOR loops with positive and negative STEP
+- GOSUB and RETURN for subroutines
+- WHILE-END-WHILE loops
+- DO-UNTIL loops
+
+**Expected Results:**
+- FOR loops count correctly in both directions
+- Subroutines execute and return to the caller
+- WHILE and DO-UNTIL loops iterate correctly based on conditions
+
+#### test_large_program.bas
+**Purpose:** Stress test the interpreter with a large BASIC program  
+**Features:**
+- Over 10,000 lines of code
+- Large line numbers
+- Massive accumulation of statements
+- Final verification loop and assertions
+
+**Expected Results:**
+- The interpreter successfully parses and executes the program
+- Performance remains stable
+- Memory usage is handled correctly
+- All assertions and loops at the end of the file pass
 
 ## Running the Tests
 
@@ -567,10 +689,11 @@ None currently. All tests are expected to pass with the current GD-BASIC impleme
 
 ## Version History
 
-- **v1.0** (2024-04-02): Initial comprehensive test suite
-  - 26 test files covering all major features
-  - Automated test runner script
-  - Complete documentation
+- **v1.1** (2026-04-12): Expanded test suite
+  - 33 test files including new File I/O coverage
+  - Fixed bugs in File I/O implementation (Parser, FPRINT, EOF)
+  - Added cleanup to test runner
+  - Updated documentation
 
 ## Contributing
 

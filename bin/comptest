@@ -24,7 +24,7 @@ fi
 read -p "Press any [enter] to resume ..."
 
 echo "Test run: src/test/resources/test_basic1_Q1_dev.bas"
-java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c -v=info -b src/test/basic/test_basic_Q1_dev.bas
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar -c -v=info -b src/test/basic/test_mixed_tests_4.bas
 if [ -e "src/test/basic/test_basic_Q1_dev.json" ]; then
   cat src/test/basic/test_basic_Q1_dev.json
   rm src/test/basic/test_basic_Q1_dev.json
@@ -40,16 +40,16 @@ fi
 read -p "Press any [enter] to resume ..."
 
 #echo "Test run: src/test/resources/test_basic1_Q2_dev.bas"
-#java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_basic_Q2_dev.bas
+#java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_mixed_tests_5.bas
 #read -p "Press any [enter] to resume ..."
 
 #echo "Test run: src/test/resources/test_basic1_Q2_1_dev.bas"
-#java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_basic_Q2_1_dev.bas
+#java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_mixed_tests_1.bas
 #read -p "Press any [enter] to resume ..."
 
 #echo "Test run: src/test/resources/test_basic1_Q2_2_dev.bas"
-#java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_basic_Q2_2_dev.bas
+#java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_mixed_tests_2.bas
 #read -p "Press any [enter] to resume ..."
 
 #echo "Test run: src/test/resources/test_basic1_Q2_3_dev.bas"
-#java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_basic_Q2_3_dev.bas
+#java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_mixed_tests_3.bas

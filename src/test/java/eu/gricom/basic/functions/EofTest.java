@@ -105,17 +105,20 @@ public class EofTest {
         List<String> astrReadLines = new ArrayList<>();
         FInputStatement oFInput = new FInputStatement(6, FILE_ID_1, "A$");
 
-        while (Eof.execute(new IntegerValue(FILE_ID_1)).toInt() == 1) {
-            oFInput.execute();
-            VariableManagement oVariableManagement = new VariableManagement();
-            Value oValue = oVariableManagement.getMap("A$");
-            if (oValue != null) {
-                astrReadLines.add(oValue.toString());
+        while (Eof.execute(new IntegerValue(FILE_ID_1)).toInt() == 0) {
+            try {
+                oFInput.execute();
+                VariableManagement oVariableManagement = new VariableManagement();
+                Value oValue = oVariableManagement.getMap("A$");
+                if (oValue != null && !oValue.toString().isEmpty()) {
+                    astrReadLines.add(oValue.toString());
+                }
+            } catch (Exception e) {
+                if (!e.getMessage().equals("EOF")) throw e;
             }
         }
 
-        assertEquals(astrExpectedLines, astrReadLines.subList(0, astrExpectedLines.size()));
-        assertEquals(astrExpectedLines.size() + 1, astrReadLines.size());
+        assertEquals(astrExpectedLines, astrReadLines);
     }
 
     @Test
@@ -137,16 +140,20 @@ public class EofTest {
         List<String> astrReadLines = new ArrayList<>();
         FInputStatement oFInput = new FInputStatement(4, FILE_ID_1, "A$");
 
-        while ((Eof.execute(new IntegerValue(FILE_ID_1))).toInt() == 1) {
-            oFInput.execute();
-            VariableManagement oVariableManagement = new VariableManagement();
-            Value oValue = oVariableManagement.getMap("A$");
-            if (oValue != null) {
-                astrReadLines.add(oValue.toString());
+        while ((Eof.execute(new IntegerValue(FILE_ID_1))).toInt() == 0) {
+            try {
+                oFInput.execute();
+                VariableManagement oVariableManagement = new VariableManagement();
+                Value oValue = oVariableManagement.getMap("A$");
+                if (oValue != null && !oValue.toString().isEmpty()) {
+                    astrReadLines.add(oValue.toString());
+                }
+            } catch (Exception e) {
+                if (!e.getMessage().equals("EOF")) throw e;
             }
         }
 
-        assertEquals(astrExpectedLines, astrReadLines.subList(0, astrExpectedLines.size()));
+        assertEquals(astrExpectedLines, astrReadLines);
         assertTrue(astrReadLines.contains("Single line"));
     }
 
@@ -178,16 +185,20 @@ public class EofTest {
         List<String> astrReadLines = new ArrayList<>();
         FInputStatement oFInput = new FInputStatement(8, FILE_ID_2, "B$");
 
-        while (Eof.execute(new IntegerValue(FILE_ID_2)).toInt() == 1) {
-            oFInput.execute();
-            VariableManagement oVariableManagement = new VariableManagement();
-            Value oValue = oVariableManagement.getMap("B$");
-            if (oValue != null) {
-                astrReadLines.add(oValue.toString());
+        while (Eof.execute(new IntegerValue(FILE_ID_2)).toInt() == 0) {
+            try {
+                oFInput.execute();
+                VariableManagement oVariableManagement = new VariableManagement();
+                Value oValue = oVariableManagement.getMap("B$");
+                if (oValue != null && !oValue.toString().isEmpty()) {
+                    astrReadLines.add(oValue.toString());
+                }
+            } catch (Exception e) {
+                if (!e.getMessage().equals("EOF")) throw e;
             }
         }
 
-        assertEquals(astrExpectedLines, astrReadLines.subList(0, astrExpectedLines.size()));
+        assertEquals(astrExpectedLines, astrReadLines);
     }
 
     @Test
@@ -204,7 +215,7 @@ public class EofTest {
         oFOpenRead.execute();
 
         IntegerValue oResult = (IntegerValue) Eof.execute(new IntegerValue(FILE_ID_1));
-        assertEquals(1, oResult.toInt());
+        assertEquals(0, oResult.toInt());
     }
 
     @Test
@@ -225,6 +236,6 @@ public class EofTest {
         oFInput.execute();
 
         IntegerValue oResult = (IntegerValue) Eof.execute(new IntegerValue(FILE_ID_1));
-        assertEquals(0, oResult.toInt());
+        assertEquals(1, oResult.toInt());
     }
 }

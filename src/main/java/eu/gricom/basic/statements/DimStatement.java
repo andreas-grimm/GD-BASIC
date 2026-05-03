@@ -1,15 +1,18 @@
 package eu.gricom.basic.statements;
 
+import eu.gricom.basic.helper.Logger;
+
 /**
  * DimStatement.java
  * <p>
- * Description: The DimStatement class implements the BASIC DIM command, which declares and allocates arrays of any
- * type. It reserves memory for the specified number of elements and initialises the array for use in the program.
+ * Description: The DimStatement class represents the BASIC DIM command. Currently, array support is not implemented
+ * in this interpreter. When a DIM statement is encountered, a warning is logged and the statement is skipped.
  * <p>
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class DimStatement implements Statement {
     private final int _iTokenNumber;
+    private final Logger _oLogger = new Logger(this.getClass().getName());
 
     /**
      * Default constructor.
@@ -34,10 +37,10 @@ public class DimStatement implements Statement {
     /**
      * Execute.
      * <p>
-     * Terminate the running program.
+     * Log a warning that DIM is not supported and skip execution.
      */
     public final void execute() {
-        System.exit(0);
+        _oLogger.warning("DIM statement is not supported in this BASIC interpreter");
     }
 
     /**
@@ -45,12 +48,11 @@ public class DimStatement implements Statement {
      * <p>
      * Method for JUnit to return the content of the statement.
      *
-     * @return - gives the name of the statement ("END")
+     * @return - gives the name of the statement ("DIM")
      */
     @Override
     public final String content() {
-
-        return "END";
+        return "DIM";
     }
 
     /**
@@ -58,13 +60,13 @@ public class DimStatement implements Statement {
      * <p>
      * Method for the compiler to get the structure of the program.
      *
-     * @return gives the name of the statement ("INPUT") and a list of the parameters
+     * @return gives the name of the statement ("DIM")
      * @throws Exception based on errors in the implementation classes
      */
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"DIM\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\"";
         strReturn += "}}";
         return strReturn;
     }

@@ -109,7 +109,8 @@ public class BasicLexer implements Lexer {
 
                             // this block handles all comments
                             if (oTokenType == BasicTokenType.REM
-                                    || oTokenType == BasicTokenType.COMMENT)  {
+                                    || oTokenType == BasicTokenType.COMMENT
+                                    || oTokenType == BasicTokenType.DIM)  {
                                 aoTokens.add(new Token(strProgramLine, oTokenType, iLineNumber));
 
                                 break;

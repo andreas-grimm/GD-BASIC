@@ -161,7 +161,9 @@ public class Program {
      * @param oCompare - Program object to compare to...
      */
     public final boolean equals(Program oCompare) {
-        boolean bEqual = true;
+        if (oCompare == null) {
+            return false;
+        }
 
         String          strProgramName            = oCompare.getProgramName();
         String          strProgramSource          = oCompare.getProgram();
@@ -169,35 +171,61 @@ public class Program {
         List<Statement> aoCompareStatements       = oCompare.getStatements();
         List<Token>     aoCompareTokens           = oCompare.getTokens();
 
-        if (!_strProgramName.equals(strProgramName)) {
-            bEqual = false;
-        }
-
-        if (!_strProgramSource.equals(strProgramSource)) {
-            bEqual = false;
-        }
-
-        for (Statement aoPreRunStatement : _aoPreRunStatements) {
-            if (!aoComparePreRunStatements.contains(aoPreRunStatement)) {
-                bEqual = false;
-                break;
+        if (_strProgramName == null) {
+            if (strProgramName != null) {
+                return false;
             }
+        } else if (!_strProgramName.equals(strProgramName)) {
+            return false;
         }
 
-        for (Statement aoStatement : _aoStatements) {
-            if (!aoCompareStatements.contains(aoStatement)) {
-                bEqual = false;
-                break;
+        if (_strProgramSource == null) {
+            if (strProgramSource != null) {
+                return false;
             }
+        } else if (!_strProgramSource.equals(strProgramSource)) {
+            return false;
         }
 
-        for (Token oToken : _aoTokens) {
-            if (!aoCompareTokens.contains(oToken)) {
-                bEqual = false;
-                break;
+        if (_aoPreRunStatements != null) {
+            if (aoComparePreRunStatements == null) {
+                return false;
             }
+            for (Statement aoPreRunStatement : _aoPreRunStatements) {
+                if (!aoComparePreRunStatements.contains(aoPreRunStatement)) {
+                    return false;
+                }
+            }
+        } else if (aoComparePreRunStatements != null) {
+            return false;
         }
 
-        return bEqual;
+        if (_aoStatements != null) {
+            if (aoCompareStatements == null) {
+                return false;
+            }
+            for (Statement aoStatement : _aoStatements) {
+                if (!aoCompareStatements.contains(aoStatement)) {
+                    return false;
+                }
+            }
+        } else if (aoCompareStatements != null) {
+            return false;
+        }
+
+        if (_aoTokens != null) {
+            if (aoCompareTokens == null) {
+                return false;
+            }
+            for (Token oToken : _aoTokens) {
+                if (!aoCompareTokens.contains(oToken)) {
+                    return false;
+                }
+            }
+        } else if (aoCompareTokens != null) {
+            return false;
+        }
+
+        return true;
     }
 }

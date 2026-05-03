@@ -16,6 +16,10 @@ echo "Test run: src/test/resources/test_basic1_Q2_dev.bas"
 java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_basic_Q2_dev.bas
 read -p "Press any [enter] to resume ..."
 
+echo "Test run: src/test/resources/test_basic1_Q3_dev.bas"
+java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_basic_Q3_dev.bas
+read -p "Press any [enter] to resume ..."
+
 echo "Test run: src/test/resources/test_basic1_Q2_1_dev.bas"
 java -jar target/BASIC-$VERSION-$RELEASE_LEVEL-jar-with-dependencies.jar src/test/basic/test_basic_Q2_1_dev.bas
 read -p "Press any [enter] to resume ..."
