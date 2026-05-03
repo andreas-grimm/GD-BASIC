@@ -4,21 +4,6 @@
 **Interpreter:** GriCom Basic Interpreter  
 **Last Updated:** 2026-04-30
 
----
-
-## Important: Scalar Variables Only
-
-⚠️ **This BASIC interpreter does NOT support arrays.** Unlike traditional BASIC implementations:
-
-- **No DIM statement** - Not needed because arrays are not supported
-- **No array variables** - Syntax like `A(5)` or `B(I,J)` is invalid
-- **Scalar only** - All variables hold single values
-- **Type suffixes** - Use variable suffixes (#, $, %, etc.) for type declaration
-
-This design choice simplifies memory management but restricts data structure capabilities.
-
----
-
 ## Table of Contents
 
 1. [Program Structure](#program-structure)
@@ -88,16 +73,6 @@ Variables are identified by their suffix character:
   30 COUNT% = 42
   ```
 
-### Array Variables
-
-**Important Note:** This version of GD-BASIC **does not support arrays**. Therefore:
-- ✅ **Single scalar variables** are fully supported
-- ❌ **Arrays (including DIM declarations) are not supported**
-- ❌ **Multi-dimensional indexing is not supported**
-- The **DIM command is not required and not supported**
-
-Unlike traditional BASIC, this interpreter does not provide array data structures or memory allocation commands. All variables are scalar (single-valued).
-
 ### Valid Variable Names
 - Alphanumeric characters (A-Z, 0-9)
 - Underscores (_)
@@ -108,6 +83,50 @@ Unlike traditional BASIC, this interpreter does not provide array data structure
   20 firstName$ = "Alice"
   30 my_flag@ = true
   ```
+
+### Array Variables
+
+**Arrays ARE Supported** ✅
+
+This BASIC interpreter supports arrays with automatic allocation:
+- **No DIM required** - Arrays are created on first use (DIM statement not supported)
+- **Array syntax** - Use parentheses for indexing: `VARIABLE(index)`
+- **Auto-allocation** - Array elements are created automatically when referenced
+- **Type suffixes apply** - Array elements inherit the type from the variable suffix
+
+**Array Examples:**
+```basic
+10 REM Arrays work without DIM declaration
+20 F#(0) = 0
+30 F#(1) = 1
+40 F#(2) = F#(0) + F#(1)
+50 PRINT F#(2)
+
+100 REM Array with string elements
+110 NAME$(1) = "Alice"
+120 NAME$(2) = "Bob"
+130 PRINT NAME$(1), NAME$(2)
+
+200 REM Array with loop
+210 FOR I% = 1 TO 10
+220   VALUES#(I%) = I% * 2
+230 NEXT
+240 PRINT VALUES#(5)           REM Output: 10
+```
+
+**Multi-dimensional access:**
+```basic
+10 REM Simulate 2D arrays using string notation
+20 DATA$(1,1) = "A1"
+30 DATA$(1,2) = "A2"
+40 DATA$(2,1) = "B1"
+```
+
+**Notes:**
+- Arrays expand dynamically as needed
+- No size limits need to be pre-declared
+- Negative indices are allowed
+- Each array element follows the type rules of its parent variable
 
 ---
 
@@ -436,26 +455,28 @@ INPUT Variable
 
 ### NOT IMPLEMENTED:
 
-#### Arrays (Fundamental Limitation)
-- ❌ **Arrays** - Not supported in this BASIC version
-- ❌ **DIM statement** - Not supported (not needed because arrays don't exist)
-- ❌ **Array indexing** - Syntax like `A(5)` or `B(I,J)` is not supported
-- ❌ **Multi-dimensional access** - No array support means no multi-dimensional structures
-
-**Why:** This interpreter uses only scalar variables. Memory allocation via DIM is not required or available.
+#### DIM Statement (Arrays Don't Need Pre-declaration)
+- ❌ **DIM statement** - Not supported (not needed because arrays auto-allocate)
+- ✅ **Array indexing** - Fully supported without DIM
+- ✅ **Dynamic arrays** - Arrays grow automatically as needed
 
 **What You CAN Do:**
 ```basic
-10 X# = 5              REM Single scalar variable
-20 Y$ = "Hello"        REM Single scalar string
-30 Z% = 10             REM Single scalar integer
+10 X# = 5              REM Scalar variable
+20 Y$ = "Hello"        REM Scalar string
+30 Z% = 10             REM Scalar integer
+40 A#(5) = 42          REM SUPPORTED - array element assignment
+50 B$(1) = "Test"      REM SUPPORTED - array string element
+60 FOR I% = 1 TO 10
+70   C#(I%) = I% * 2   REM SUPPORTED - array in loop
+80 NEXT
 ```
 
 **What You CANNOT Do:**
 ```basic
 10 DIM A#(100)         REM NOT SUPPORTED - DIM not available
-20 A#(5) = 42          REM NOT SUPPORTED - array indexing not available
-30 B$(1,2) = "Test"    REM NOT SUPPORTED - multi-dimensional arrays not available
+REM But arrays work without it:
+20 A#(100) = 999       REM This works fine without DIM
 ```
 
 #### Other Unsupported Features
@@ -609,32 +630,32 @@ INPUT Variable
 
 ## Summary
 
-This BASIC interpreter supports a substantial subset of BASIC functionality, but uses **scalar variables only** (no arrays):
+This BASIC interpreter supports a substantial subset of BASIC functionality with **arrays and scalars**:
 
 ### What IS Supported ✅
 - **Scalar variables** with type suffixes (# for real, $ for string, % for integer, etc.)
+- **Arrays with auto-allocation** - Array elements are created on first use (no DIM needed)
 - Arithmetic and logical operations
 - Control flow statements (IF-THEN-ELSE, GOTO)
 - Loop constructs (FOR-NEXT, WHILE-END-WHILE, DO-UNTIL)
 - Subroutines (GOSUB-RETURN)
 - 20+ built-in mathematical and string functions
-- Basic input/output operations (PRINT, INPUT, file I/O)
+- Input/output operations (PRINT, INPUT, file I/O)
 - String manipulation (LEN, LEFT$, RIGHT$, MID$, etc.)
 
 ### What IS NOT Supported ❌
-- **Arrays and DIM statements** - This version uses only scalar variables
-- **Multi-dimensional data structures** - No array indexing
-- **Array memory allocation** - DIM command not available (not needed)
+- **DIM statement** - Not available (not needed because arrays auto-allocate)
+- **Pre-declaration of array sizes** - Arrays grow dynamically as needed
 - User-defined functions (use GOSUB instead)
 - Advanced file I/O (append mode, random access, seek operations)
 
 ### Design Philosophy
-This interpreter focuses on **simple scalar programming** without complex memory management. All variables are single-valued. If you need to work with multiple related values, use individual variables or GOSUB subroutines.
+This interpreter supports **both scalar and array variables** with automatic memory allocation. Unlike traditional BASIC, there is no need to declare array sizes with DIM—arrays grow dynamically. This simplifies array usage and eliminates memory pre-planning requirements.
 
-### Array Workarounds
-For programs that require array-like functionality:
-1. Use individual variables: `VALUE_1#`, `VALUE_2#`, `VALUE_3#`, etc.
-2. Use GOSUB subroutines to process multiple similar operations
-3. Use string operations (LEFT$, RIGHT$, MID$) to simulate indexed character access
+### Key Differences from Traditional BASIC
+- ✅ **No DIM required** - Arrays work immediately without declaration
+- ✅ **Dynamic sizing** - Arrays grow as needed
+- ✅ **Simpler syntax** - No memory management needed
+- ❌ **No DIM support** - The DIM keyword is not recognized (but not needed)
 
 For examples and test programs, see the `src/test/basic/` directory in the project repository.
