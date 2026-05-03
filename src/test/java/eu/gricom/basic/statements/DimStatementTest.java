@@ -19,13 +19,13 @@ public class DimStatementTest {
     @Test
     public void testContent() {
         DimStatement dimStatement = new DimStatement(10);
-        assertEquals("END", dimStatement.content());
+        assertEquals("DIM", dimStatement.content());
     }
 
     @Test
     public void testStructure() throws Exception {
         DimStatement dimStatement = new DimStatement(10);
-        String expected = "{\"DIM\": {\"TOKEN_NR\": \"10\"}}";
+        String expected = "{\"DIM\": {\"TOKEN_NR\": \"10\", \"ARRAY_NAME\": \"\", \"SIZE\": \"0\"}}";
         assertEquals(expected, dimStatement.structure());
     }
 
