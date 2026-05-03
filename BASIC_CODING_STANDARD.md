@@ -6,6 +6,19 @@
 
 ---
 
+## Important: Scalar Variables Only
+
+⚠️ **This BASIC interpreter does NOT support arrays.** Unlike traditional BASIC implementations:
+
+- **No DIM statement** - Not needed because arrays are not supported
+- **No array variables** - Syntax like `A(5)` or `B(I,J)` is invalid
+- **Scalar only** - All variables hold single values
+- **Type suffixes** - Use variable suffixes (#, $, %, etc.) for type declaration
+
+This design choice simplifies memory management but restricts data structure capabilities.
+
+---
+
 ## Table of Contents
 
 1. [Program Structure](#program-structure)
@@ -75,7 +88,15 @@ Variables are identified by their suffix character:
   30 COUNT% = 42
   ```
 
-**Note:** The `DIM` statement for array declaration is **NOT SUPPORTED** in this interpreter.
+### Array Variables
+
+**Important Note:** This version of GD-BASIC **does not support arrays**. Therefore:
+- ✅ **Single scalar variables** are fully supported
+- ❌ **Arrays (including DIM declarations) are not supported**
+- ❌ **Multi-dimensional indexing is not supported**
+- The **DIM command is not required and not supported**
+
+Unlike traditional BASIC, this interpreter does not provide array data structures or memory allocation commands. All variables are scalar (single-valued).
 
 ### Valid Variable Names
 - Alphanumeric characters (A-Z, 0-9)
@@ -414,7 +435,30 @@ INPUT Variable
 ## Unsupported Features
 
 ### NOT IMPLEMENTED:
-- **DIM** - Array declaration (not supported in this version)
+
+#### Arrays (Fundamental Limitation)
+- ❌ **Arrays** - Not supported in this BASIC version
+- ❌ **DIM statement** - Not supported (not needed because arrays don't exist)
+- ❌ **Array indexing** - Syntax like `A(5)` or `B(I,J)` is not supported
+- ❌ **Multi-dimensional access** - No array support means no multi-dimensional structures
+
+**Why:** This interpreter uses only scalar variables. Memory allocation via DIM is not required or available.
+
+**What You CAN Do:**
+```basic
+10 X# = 5              REM Single scalar variable
+20 Y$ = "Hello"        REM Single scalar string
+30 Z% = 10             REM Single scalar integer
+```
+
+**What You CANNOT Do:**
+```basic
+10 DIM A#(100)         REM NOT SUPPORTED - DIM not available
+20 A#(5) = 42          REM NOT SUPPORTED - array indexing not available
+30 B$(1,2) = "Test"    REM NOT SUPPORTED - multi-dimensional arrays not available
+```
+
+#### Other Unsupported Features
 - **READ/DATA** - Data blocks (limited support)
 - **LET** - Statement keyword (use direct assignment instead)
   ```basic
@@ -422,7 +466,7 @@ INPUT Variable
   REM Not: LET X# = 5
   ```
 - **User-defined functions** - Use GOSUB for subroutines instead
-- **File I/O** - OPEN, CLOSE, READ FILE, etc. (partial support)
+- **File I/O** - Advanced operations like APPEND, SEEK, random access (see FILE_IO_STATUS.md)
 
 ---
 
@@ -565,17 +609,32 @@ INPUT Variable
 
 ## Summary
 
-This BASIC interpreter supports a substantial subset of BASIC functionality:
+This BASIC interpreter supports a substantial subset of BASIC functionality, but uses **scalar variables only** (no arrays):
 
-- ✅ Variables with type suffixes
-- ✅ Arithmetic and logical operations
-- ✅ Control flow (IF-THEN-ELSE, GOTO)
-- ✅ Loops (FOR-NEXT, WHILE-END-WHILE, DO-UNTIL)
-- ✅ Subroutines (GOSUB-RETURN)
-- ✅ Built-in mathematical and string functions
-- ✅ Input/Output operations
-- ❌ Arrays (DIM statement not supported)
-- ❌ User-defined functions
-- ❌ Full file I/O
+### What IS Supported ✅
+- **Scalar variables** with type suffixes (# for real, $ for string, % for integer, etc.)
+- Arithmetic and logical operations
+- Control flow statements (IF-THEN-ELSE, GOTO)
+- Loop constructs (FOR-NEXT, WHILE-END-WHILE, DO-UNTIL)
+- Subroutines (GOSUB-RETURN)
+- 20+ built-in mathematical and string functions
+- Basic input/output operations (PRINT, INPUT, file I/O)
+- String manipulation (LEN, LEFT$, RIGHT$, MID$, etc.)
+
+### What IS NOT Supported ❌
+- **Arrays and DIM statements** - This version uses only scalar variables
+- **Multi-dimensional data structures** - No array indexing
+- **Array memory allocation** - DIM command not available (not needed)
+- User-defined functions (use GOSUB instead)
+- Advanced file I/O (append mode, random access, seek operations)
+
+### Design Philosophy
+This interpreter focuses on **simple scalar programming** without complex memory management. All variables are single-valued. If you need to work with multiple related values, use individual variables or GOSUB subroutines.
+
+### Array Workarounds
+For programs that require array-like functionality:
+1. Use individual variables: `VALUE_1#`, `VALUE_2#`, `VALUE_3#`, etc.
+2. Use GOSUB subroutines to process multiple similar operations
+3. Use string operations (LEFT$, RIGHT$, MID$) to simulate indexed character access
 
 For examples and test programs, see the `src/test/basic/` directory in the project repository.
