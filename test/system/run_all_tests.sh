@@ -133,7 +133,7 @@ main() {
         "test_math_functions.bas"
         "test_string_functions.bas"
         "test_string_indexing.bas"
-    #    "test_arrays_dim.bas"
+        "test_arrays_dim.bas"
         "test_data_read.bas"
         "test_system_functions.bas"
         "test_print_statement.bas"
@@ -144,6 +144,14 @@ main() {
         "test_complex_expressions.bas"
         "test_edge_cases.bas"
         "test_end_statement.bas"
+        "test_defs_functions.bas"
+        "test_file_io.bas"
+        "test_mixed_tests_1.bas"
+        "test_mixed_tests_2.bas"
+        "test_mixed_tests_3.bas"
+        "test_mixed_tests_4.bas"
+        "test_mixed_tests_5.bas"
+        "test_large_program.bas"
     )
     
     # Run each test
@@ -174,6 +182,12 @@ main() {
     
     # Print summary
     print_header "TEST SUITE COMPLETED SUCCESSFULLY"
+    
+    # Cleanup temporary files
+    echo "Cleaning up temporary files..."
+    rm -f test_io.txt
+    echo ""
+    
     echo -e "${GREEN}All tests passed!${NC}"
     echo ""
     echo "Summary:"

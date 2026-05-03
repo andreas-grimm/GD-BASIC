@@ -216,6 +216,14 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
+                // DIM Token: the DIM command is not supported, ignore the rest of the line
+                case DIM:
+                    _oLogger.warning("-parse-> found Token: <" + _iPosition + "> [DIM], not supported ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    aoStatements.add(new DimStatement(_iPosition));
+                    _iPosition++;
+                    break;
+
                 // DO Token: Define the anchor point for the DO - UNTIL loop
                 case DO:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [DO] ");
@@ -250,18 +258,18 @@ public class BasicParser implements Parser {
                     boolean bDeleteIndicator = false;
 
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FCLOSE] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     iOrgPosition = _iPosition;
+                    _iPosition++;
 
                     iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
                     _oLogger.debug("-parse-> [FCLOSE: FileId] <" + iFileId + "> ");
-                    _iPosition++;
 
                     String strDeleteIndicator = consumeToken(BasicTokenType.STRING).getText();
                     if (strDeleteIndicator.equals("DELETE")) {
                         _oLogger.debug("-parse-> [FCLOSE: File to be deleted] ");
                         bDeleteIndicator = true;
                     }
-                    _iPosition++;
 
                     aoStatements.add(new FCloseStatement(iOrgPosition, iFileId, bDeleteIndicator));
                 }
@@ -271,13 +279,13 @@ public class BasicParser implements Parser {
                 case FINPUT: {
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FINPUT] ");
                     _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    iOrgPosition = _iPosition;
                     _iPosition++;
 
                     iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
                     _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
-                    _iPosition++;
 
-                    aoStatements.add(new FInputStatement(_iPosition - 1, iFileId, consumeToken(BasicTokenType.WORD).getText()));
+                    aoStatements.add(new FInputStatement(iOrgPosition, iFileId, consumeToken(BasicTokenType.WORD).getText()));
                 }
                 break;
 
@@ -288,19 +296,18 @@ public class BasicParser implements Parser {
                     String strReadWriteIndicator;
 
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FOPEN] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
                     iOrgPosition = _iPosition;
+                    _iPosition++;
 
                     iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
                     _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
-                    _iPosition++;
 
                     strFileName = consumeToken(BasicTokenType.STRING).getText();
                     _oLogger.debug("-parse-> [FOPEN: FileName] <" + strFileName + "> ");
-                    _iPosition++;
 
                     strReadWriteIndicator = consumeToken(BasicTokenType.STRING).getText();
                     _oLogger.debug("-parse-> [FOPEN: ReadWrite Indicator] <" + strReadWriteIndicator + "> ");
-                    _iPosition++;
 
                     aoStatements.add(new FOpenStatement(iOrgPosition, iFileId, strFileName, strReadWriteIndicator));
                 }
@@ -319,7 +326,6 @@ public class BasicParser implements Parser {
 
                     iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
                     _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
-                    _iPosition++;
 
 
                     if (getToken(0).getType() != BasicTokenType.NUMBER
@@ -740,16 +746,16 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression logicalOr() throws SyntaxErrorException {
-        Expression left = logicalAnd();
+        Expression oLeft = logicalAnd();
 
         while (getToken(0).getType() == BasicTokenType.OR) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = logicalAnd();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = logicalAnd();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -759,16 +765,16 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression logicalAnd() throws SyntaxErrorException {
-        Expression left = equality();
+        Expression oLeft = equality();
 
         while (getToken(0).getType() == BasicTokenType.AND) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = equality();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = equality();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -778,17 +784,17 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression equality() throws SyntaxErrorException {
-        Expression left = comparison();
+        Expression oLeft = comparison();
 
         while (getToken(0).getType() == BasicTokenType.COMPARE_EQUAL ||
                 getToken(0).getType() == BasicTokenType.COMPARE_NOT_EQUAL) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = comparison();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = comparison();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -798,19 +804,19 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression comparison() throws SyntaxErrorException {
-        Expression left = shift();
+        Expression oLeft = shift();
 
         while (getToken(0).getType() == BasicTokenType.SMALLER ||
                 getToken(0).getType() == BasicTokenType.SMALLER_EQUAL ||
                 getToken(0).getType() == BasicTokenType.GREATER ||
                 getToken(0).getType() == BasicTokenType.GREATER_EQUAL) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = shift();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = shift();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -820,17 +826,17 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression shift() throws SyntaxErrorException {
-        Expression left = addition();
+        Expression oLeft = addition();
 
         while (getToken(0).getType() == BasicTokenType.SHIFT_LEFT ||
                 getToken(0).getType() == BasicTokenType.SHIFT_RIGHT) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = addition();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = addition();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -840,17 +846,17 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression addition() throws SyntaxErrorException {
-        Expression left = multiplication();
+        Expression oLeft = multiplication();
 
         while (getToken(0).getType() == BasicTokenType.PLUS ||
                 getToken(0).getType() == BasicTokenType.MINUS) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = multiplication();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = multiplication();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -860,18 +866,18 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression multiplication() throws SyntaxErrorException {
-        Expression left = exponentiation();
+        Expression oLeft = exponentiation();
 
         while (getToken(0).getType() == BasicTokenType.MULTIPLY ||
                 getToken(0).getType() == BasicTokenType.DIVIDE ||
                 getToken(0).getType() == BasicTokenType.MODULO) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression right = exponentiation();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = exponentiation();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -881,17 +887,17 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException for syntax errors
      */
     private Expression exponentiation() throws SyntaxErrorException {
-        Expression left = unary();
+        Expression oLeft = unary();
 
         if (getToken(0).getType() == BasicTokenType.POWER) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
             // Exponentiation is right-associative, so we call exponentiation() recursively
-            Expression right = exponentiation();
-            left = new OperatorExpression(left, operator.getType(), right);
+            Expression oRight = exponentiation();
+            oLeft = new OperatorExpression(oLeft, oOperator.getType(), oRight);
         }
 
-        return left;
+        return oLeft;
     }
 
     /**
@@ -904,10 +910,10 @@ public class BasicParser implements Parser {
         if (getToken(0).getType() == BasicTokenType.PLUS ||
                 getToken(0).getType() == BasicTokenType.MINUS ||
                 getToken(0).getType() == BasicTokenType.NOT) {
-            Token operator = getToken(0);
+            Token oOperator = getToken(0);
             _iPosition++;
-            Expression operand = unary();
-            return new UnaryOperatorExpression(operator.getType(), operand);
+            Expression oOperand = unary();
+            return new UnaryOperatorExpression(oOperator.getType(), oOperand);
         }
 
         return atomic();
@@ -981,7 +987,7 @@ public class BasicParser implements Parser {
                 return oThreeParameterFunction;
 
             // two parameter function calls
-            case INSTR: case LEFT: case RIGHT: case SYSTEM:
+            case INSTR: case LEFT: case RIGHT: case SYSTEM: case CALL:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                                        + oToken.getText() + "' [" + oToken.getLine() + "]");
@@ -1120,3 +1126,4 @@ public class BasicParser implements Parser {
         return _aoTokens.get(_iPosition + iOffset);
     }
 }
+

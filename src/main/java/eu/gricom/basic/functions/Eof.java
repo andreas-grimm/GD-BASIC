@@ -28,7 +28,12 @@ public final class Eof {
 
             return oFileManager.getEOF(((IntegerValue) oValue).toInt());
         }
+        if (oValue instanceof eu.gricom.basic.variableTypes.RealValue) {
+             FileManager oFileManager = new FileManager();
 
-        throw new RuntimeException("Input value not of type Real: " + oValue);
+             return oFileManager.getEOF((int)((eu.gricom.basic.variableTypes.RealValue) oValue).toReal());
+        }
+
+        throw new RuntimeException("Input value not of type Numeric: " + oValue);
     }
 }

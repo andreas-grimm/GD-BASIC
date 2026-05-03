@@ -132,6 +132,12 @@ public class Function implements Expression {
                 yield Cos.execute(_oFirstParam.evaluate());
             }
 
+            // EOF Token: Return End-of-File indicator for the requested file ID
+            case EOF -> {
+                assert _oFirstParam != null;
+                yield Eof.execute(_oFirstParam.evaluate());
+            }
+
             // EXP Token: Return the Exponent to the base e of the value parameter
             case EXP -> {
                 assert _oFirstParam != null;

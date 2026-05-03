@@ -235,7 +235,7 @@ public class FPrintStatementTest {
         oFileManager.closeFile(FILE_ID_1, false);
 
         String strContent = Files.readString(_oTempFile1);
-        assertEquals("", strContent);
+        assertEquals("\n", strContent);
     }
 
     // -------------------------------------------------------------------------
