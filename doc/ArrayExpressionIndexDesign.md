@@ -62,7 +62,9 @@ sequenceDiagram
 
 ### 2.3 Root Cause
 
-`BasicLexer` splits on whitespace. When the Normalizer sees a type-suffix (`%`, `$`, etc.) immediately followed by `(`, it **preserves all content inside the parentheses as a single WORD token** — including operators and sub-expressions. Consequently the parser never sees individual tokens for the index expression, so it cannot evaluate it.
+`Normalizer.normalize()` is the root cause. When it detects a type-suffix (`%`, `$`, etc.) immediately followed by `(`, it sets `bArrayParenthenes = true` and copies all characters inside the parentheses verbatim — including operators and sub-expressions — bypassing the normal `(` / `)` spacing logic. The Lexer then splits on whitespace and sees the entire `arr%(V% + 1)` as **one WORD token**. Consequently the parser never sees individual tokens for the index expression and cannot evaluate it.
+
+> **Note on operator spacing:** The Normalizer does not insert spaces around arithmetic operators (`+`, `-`, `*`, `/`). The token stream for an expression such as `V% + 1` is correct only when the BASIC source already contains spaces around the operator. Operators inside array indices **must therefore be space-separated** in BASIC source code, consistent with the general coding standard.
 
 ---
 
@@ -70,13 +72,13 @@ sequenceDiagram
 
 ### 3.1 New Processing Pipeline
 
-No pipeline stages are added or removed. Changes are made **inside** the Lexer, Parser, and two Statement classes.
+No pipeline stages are added or removed. Changes are made **inside** the Normalizer, Parser, and two new Statement classes. `BasicLexer` is **not changed** — the Normalizer already inserts spaces around `(` and `)` for all non-array cases; removing the `bArrayParenthenes` guard makes that same spacing apply to array subscripts.
 
 ```mermaid
 flowchart LR
     src[".bas source"]
-    norm["Normalizer\n(simplified)"]
-    lex["BasicLexer\n(tokenize — CHANGED)"]
+    norm["Normalizer\n(simplified — CHANGED)"]
+    lex["BasicLexer\n(tokenize — unchanged)"]
     par["BasicParser\n(parse — CHANGED)"]
     exec["Execute\n(run)"]
 
@@ -177,7 +179,7 @@ sequenceDiagram
 ### 4.1 Normalizer — `src/main/java/eu/gricom/basic/tokenizer/Normalizer.java`
 
 **What changes and why:**  
-`normalize()` currently collapses the content inside array parentheses into a single word so that the Lexer does not break it up. Once the Lexer is changed to tokenize the index separately (Section 4.2), this special treatment must be removed. The static helper `normalizeIndex()` is still used by `VariableManagement` for backward-compatible key formatting; it must not be deleted.
+`normalize()` currently collapses the content inside array parentheses into a single word so that the Lexer does not split it. This special treatment must be removed. Once the guard is gone, the existing `case '('` / `case ')'` branches in the switch statement (which already emit ` ( ` and ` ) ` for all other contexts) apply to array subscripts as well — no Lexer change is needed. The static helper `normalizeIndex()` is still used by `VariableManagement` for key formatting and must not be deleted.
 
 **Change 1 — Remove array-parenthesis preservation in `normalize()`**
 
@@ -217,33 +219,11 @@ Delete:
 
 ### 4.2 BasicLexer — `src/main/java/eu/gricom/basic/tokenizer/BasicLexer.java`
 
-**What changes and why:**  
-The Lexer receives the output of `Normalizer.normalize()`. After change 4.1, array index content is no longer collapsed. The Lexer must now **split on the parentheses and operators that appear inside an array index**.
+**No changes required.**
 
-The current strategy is to split the line on whitespace and classify each resulting chunk. Parentheses that are not already separated by spaces (e.g., `N%(V%`) end up combined inside a single token. Two targeted fixes are required.
+`Normalizer.normalize()` already emits ` ( ` and ` ) ` (with surrounding spaces) for every `(` and `)` it encounters via the `default` switch path. The `bArrayParenthenes` guard was the only reason array subscript parentheses were not getting that treatment. After removing that guard (Section 4.1), the Lexer receives correctly spaced tokens and needs no modification.
 
-**Change 1 — Insert spaces around `(` and `)` before splitting**
-
-In the method that pre-processes the input line (around line 72), add a step **after** the Normalizer has run but **before** the `split("\\s")` call:
-
-```java
-// Separate parentheses from adjacent tokens so the split produces correct individual tokens.
-// Only applies to parentheses that are NOT inside string literals.
-strLine = strLine.replaceAll("(?<!['\"])(\\()", " ( ");
-strLine = strLine.replaceAll("(?<!['\"])(\\))", " ) ");
-```
-
-> **Note:** The replacements must not touch parentheses that appear inside string literals.  
-> A simpler approach that is safe for this grammar: perform the replacement only when the
-> character to the left of `(` / `)` is not `"` or `'`.
-
-**Change 2 — Keep `+` and `-` separated (they are already operators)**
-
-The existing Lexer already handles `PLUS`, `MINUS`, `MULTIPLY`, `DIVIDE` as individual tokens in the classification switch. No additional changes are needed for operators.
-
-**Change 3 — Ensure `%`, `$`, `#`, `&`, `!` at the end of a variable name are retained**
-
-The variable name `N%` must remain a single token after the split. Because the type-suffix is a non-space character that is part of the variable name, the existing split logic already keeps it together. Verify by reviewing lines 104–149: the classification falls through to `WORD` for any token that is not a reserved word, number, string, or boolean. `"N%"` will correctly be classified as `WORD`.
+Variable names that include a type suffix (`N%`, `S$`, etc.) remain single `WORD` tokens because the type-suffix character is not whitespace and is not recognised as a reserved word on its own.
 
 ---
 
@@ -528,9 +508,15 @@ public final class ArrayAssignStatement implements Statement {
 
 ### 4.7 VariableExpression — existing class — no change required
 
-`VariableExpression` continues to handle scalar variable reads. Array reads now go via `ArrayAccessExpression`. The parenthesis-handling code that was the workaround for simple variable indices can be left in place for backward compatibility with any code path that still produces the old token format; it will simply be dead code once the Lexer and Normalizer changes are in place.
+`VariableExpression` continues to handle scalar variable reads. Array reads now go via `ArrayAccessExpression`. The parenthesis-handling code that was the workaround for simple variable indices will simply be dead code once the Normalizer change is in place.
 
 > **Optional cleanup:** Once all tests pass, the parenthesis-handling block in `VariableExpression.evaluate()` (lines 42–79) can be removed in a follow-up commit.
+
+### 4.8 READ into array element — known limitation
+
+The `READ` statement parser (BasicParser.java lines 560–589) currently reads a bare `WORD` token as its target variable and does not handle a following `LEFT_PAREN`. After the Normalizer change, `READ arr%(1)` would tokenise as `READ WORD("arr%") LEFT_PAREN NUMBER(1) RIGHT_PAREN`, causing the parser to store only `arr%` (wrong key) and leave three unconsumed tokens in the stream.
+
+**Scope decision:** Extending READ to support array targets (`READ arr%(expr)`) is out of scope for this feature. If the project currently uses `READ` into array elements, that support must be added as a separate task before this feature is merged. Existing system tests should be checked for this pattern.
 
 ---
 
@@ -556,60 +542,60 @@ Tests to write:
 
 **Skeleton:**
 
+> **Test isolation:** `VariableManagement` uses static maps shared across all instances. There is no `clearAll()` method. Use a **unique variable name prefix per test** (e.g., `t1arr%`, `t2arr%`) so that values stored in one test cannot interfere with another.
+
+> **Numeric literals:** The project has no `NumberExpression` class. Use `new RealValue(n)` (which implements `Expression`) to represent a numeric literal in tests.
+
+> **Operator expression:** The parser produces `OperatorExpression(left, BasicTokenType, right)`. Use `BasicTokenType.PLUS`, `BasicTokenType.MINUS`, etc. as the operator argument.
+
 ```java
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.memoryManager.VariableManagement;
+import eu.gricom.basic.tokenizer.BasicTokenType;
 import eu.gricom.basic.variableTypes.IntegerValue;
-import org.junit.jupiter.api.BeforeEach;
+import eu.gricom.basic.variableTypes.RealValue;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArrayAccessExpressionTest {
 
-    private VariableManagement _oVarMgr;
-
-    @BeforeEach
-    void setUp() throws Exception {
-        _oVarMgr = new VariableManagement();
-        _oVarMgr.clearAll();   // ensure clean state between tests
-    }
-
     @Test
     void testLiteralIndex() throws Exception {
-        _oVarMgr.putMap("arr%-2", new IntegerValue(99));
-        Expression oLiteral = new NumberExpression(2);   // or IntegerValue literal expression
-        ArrayAccessExpression oExpr = new ArrayAccessExpression("arr%", List.of(oLiteral));
+        VariableManagement oVarMgr = new VariableManagement();
+        oVarMgr.putMap("t1arr%-2", new IntegerValue(99));
+        // RealValue implements Expression — use it directly as a literal
+        Expression oLiteral = new RealValue(2.0);
+        ArrayAccessExpression oExpr = new ArrayAccessExpression("t1arr%", List.of(oLiteral));
         assertEquals(99, (int) oExpr.evaluate().toReal());
     }
 
     @Test
     void testVariableIndex() throws Exception {
-        _oVarMgr.putMap("i%", new IntegerValue(3));
-        _oVarMgr.putMap("arr%-3", new IntegerValue(77));
-        Expression oIdx = new VariableExpression("i%");
-        ArrayAccessExpression oExpr = new ArrayAccessExpression("arr%", List.of(oIdx));
+        VariableManagement oVarMgr = new VariableManagement();
+        oVarMgr.putMap("t2i%", new IntegerValue(3));
+        oVarMgr.putMap("t2arr%-3", new IntegerValue(77));
+        Expression oIdx = new VariableExpression("t2i%");
+        ArrayAccessExpression oExpr = new ArrayAccessExpression("t2arr%", List.of(oIdx));
         assertEquals(77, (int) oExpr.evaluate().toReal());
     }
 
     @Test
     void testAdditionIndex() throws Exception {
-        _oVarMgr.putMap("i%", new IntegerValue(4));
-        _oVarMgr.putMap("arr%-5", new IntegerValue(55));
-        // i% + 1  →  BinaryExpression(VariableExpression("i%"), PLUS, NumberExpression(1))
+        VariableManagement oVarMgr = new VariableManagement();
+        oVarMgr.putMap("t3i%", new IntegerValue(4));
+        oVarMgr.putMap("t3arr%-5", new IntegerValue(55));
+        // i% + 1  →  OperatorExpression(VariableExpression("t3i%"), PLUS, RealValue(1))
         Expression oIdx = new OperatorExpression(
-            new VariableExpression("i%"), "+", new NumberExpression(1));
-        ArrayAccessExpression oExpr = new ArrayAccessExpression("arr%", List.of(oIdx));
+            new VariableExpression("t3i%"), BasicTokenType.PLUS, new RealValue(1.0));
+        ArrayAccessExpression oExpr = new ArrayAccessExpression("t3arr%", List.of(oIdx));
         assertEquals(55, (int) oExpr.evaluate().toReal());
     }
 
-    // ... remaining tests following the same pattern
+    // ... remaining tests following the same pattern, each using a unique variable prefix
 }
 ```
-
-> **Note:** Adapt the expression construction to the actual class names used in the project.
-> The `OperatorExpression` / `BinaryExpression` used above is whichever class `BasicParser.addition()` produces.
 
 ---
 
@@ -617,15 +603,20 @@ class ArrayAccessExpressionTest {
 
 **File:** `src/test/java/eu/gricom/basic/statements/ArrayAssignStatementTest.java`
 
+> **Test isolation:** Use a unique variable name prefix per test method (e.g. `s1N%`, `s2N%`) — there is no `clearAll()` method on `VariableManagement`.
+>
+> **Numeric literals:** Use `new RealValue(n)` for numeric literal expressions.  
+> **Operator expressions:** Use `new OperatorExpression(left, BasicTokenType.PLUS, right)` etc.
+
 ```
 Tests to write:
- 1. testLiteralIndex            — N%(1) = 10  → key "N%-1" = 10
- 2. testVariableIndex           — N%(i%) = 20, i%=3 → key "N%-3" = 20
- 3. testAdditionIndex           — N%(i%+1) = 30, i%=4 → key "N%-5" = 30
- 4. testSubtractionIndex        — N%(i%-1) = 40, i%=2 → key "N%-1" = 40
- 5. testMultiplicationIndex     — N%(i%*2) = 50, i%=3 → key "N%-6" = 50
- 6. testMultiDimensionalLiteral — M%(1,2) = 99 → key "M%-1,2" = 99
- 7. testMultiDimensionalExpr    — M%(i%+1,j%) = 88, i%=0,j%=2 → key "M%-1,2" = 88
+ 1. testLiteralIndex            — s1N%(1) = 10  → key "s1N%-1" = 10
+ 2. testVariableIndex           — s2N%(s2i%) = 20, s2i%=3 → key "s2N%-3" = 20
+ 3. testAdditionIndex           — s3N%(s3i%+1) = 30, s3i%=4 → key "s3N%-5" = 30
+ 4. testSubtractionIndex        — s4N%(s4i%-1) = 40, s4i%=2 → key "s4N%-1" = 40
+ 5. testMultiplicationIndex     — s5N%(s5i%*2) = 50, s5i%=3 → key "s5N%-6" = 50
+ 6. testMultiDimensionalLiteral — s6M%(1,2) = 99 → key "s6M%-1,2" = 99
+ 7. testMultiDimensionalExpr    — s7M%(s7i%+1,s7j%) = 88, s7i%=0,s7j%=2 → key "s7M%-1,2" = 88
  8. testOverwriteExisting       — write twice to same index, second value wins
 ```
 
@@ -715,14 +706,13 @@ Follow the standard system test pattern: each step prints a description; failure
 ```mermaid
 flowchart TD
     N1["Normalizer.normalize()\nRemove array-parenthesis preservation"]
-    L1["BasicLexer\nInsert spaces around ( and ) before split"]
     P1["BasicParser.parseStatements()\nDetect LEFT_PAREN after WORD → ArrayAssignStatement"]
     P2["BasicParser.atomic()\nDetect LEFT_PAREN after WORD → ArrayAccessExpression"]
     C1["NEW: ArrayAssignStatement\nEvaluates index expressions at runtime"]
     C2["NEW: ArrayAccessExpression\nEvaluates index expressions at runtime"]
     VM["VariableManagement\nNo change"]
 
-    N1 --> L1 --> P1 & P2
+    N1 --> P1 & P2
     P1 --> C1 --> VM
     P2 --> C2 --> VM
 ```
@@ -730,33 +720,36 @@ flowchart TD
 | File | Change type | Summary |
 |---|---|---|
 | `tokenizer/Normalizer.java` | Modify | Remove `bArrayParenthenes` block in `normalize()` |
-| `tokenizer/BasicLexer.java` | Modify | Insert spaces around `(` and `)` before whitespace split |
+| `tokenizer/BasicLexer.java` | **None** | No change — Normalizer already spaces `(` and `)` |
 | `parser/BasicParser.java` | Modify | Two sites: `parseStatements()` and `atomic()` |
 | `statements/ArrayAssignStatement.java` | **New** | Array element assignment with expression index |
 | `statements/ArrayAccessExpression.java` | **New** | Array element read with expression index |
 | `statements/AssignStatement.java` | None | Unchanged |
-| `statements/VariableExpression.java` | None | Unchanged (old parenthesis code becomes dead code) |
+| `statements/VariableExpression.java` | None | Unchanged (parenthesis-handling block becomes dead code) |
 | `memoryManager/VariableManagement.java` | None | Unchanged |
 | `statements/ArrayAssignStatementTest.java` | **New** | Unit tests for new statement class |
 | `statements/ArrayAccessExpressionTest.java` | **New** | Unit tests for new expression class |
 | `parser/BasicParserTest.java` | Extend | Add four array parse test cases |
 | `test/system/test_array_expr_index.bas` | **New** | 8-step system integration test |
 
+### Out-of-scope limitation
+
+`READ` into an array element (`READ arr%(expr)`) is not covered by this feature. The `READ` parser reads only a bare `WORD` token as its target. After the Normalizer change, `READ arr%(1)` would tokenise into five tokens, leaving `(`, `1`, `)` unconsumed and corrupting the parse stream. Extending `READ` for array targets must be handled as a separate task.
+
 ---
 
 ## 7. Implementation Checklist
 
-Follow this order to minimise regressions.
+> **Important:** The Normalizer change (step 1) breaks all array operations at the parser level until the two Parser changes (steps 4 and 5) are also in place. Do **not** run the test suite between step 1 and step 6 — it will fail. Complete all code changes first, then run tests.
 
-- [ ] 1. Modify `Normalizer.normalize()` — remove `bArrayParenthenes`
-- [ ] 2. Modify `BasicLexer` — space-pad `(` and `)` before split
-- [ ] 3. Run full test suite: `mvn clean test` — all 419 existing tests must still pass
-- [ ] 4. Create `ArrayAccessExpression` and write `ArrayAccessExpressionTest`
-- [ ] 5. Create `ArrayAssignStatement` and write `ArrayAssignStatementTest`
-- [ ] 6. Modify `BasicParser.parseStatements()` for array assignment
-- [ ] 7. Modify `BasicParser.atomic()` for array read
-- [ ] 8. Extend `BasicParserTest` with the four new parse cases
-- [ ] 9. Create `test/system/test_array_expr_index.bas`
-- [ ] 10. Run full test suite: `mvn clean test` — all tests including new ones must pass
-- [ ] 11. Run system test: `java -jar target/BASIC-*-jar-with-dependencies.jar test/system/test_array_expr_index.bas`
-- [ ] 12. Run existing array system tests to confirm no regression
+- [ ] 1. Modify `Normalizer.normalize()` — remove `bArrayParenthenes` field and its two `if` blocks
+- [ ] 2. Create `ArrayAccessExpression.java` and write `ArrayAccessExpressionTest`
+- [ ] 3. Create `ArrayAssignStatement.java` and write `ArrayAssignStatementTest`
+- [ ] 4. Modify `BasicParser.parseStatements()` — add `LEFT_PAREN` branch for array assignment
+- [ ] 5. Modify `BasicParser.atomic()` — add `LEFT_PAREN` check after `WORD` for array read
+- [ ] 6. Extend `BasicParserTest` with the four new parse cases
+- [ ] 7. Create `test/system/test_array_expr_index.bas`
+- [ ] 8. Run full test suite: `mvn clean test` — all tests including new ones must pass (baseline: 419)
+- [ ] 9. Run new system test: `java -jar target/BASIC-*-jar-with-dependencies.jar test/system/test_array_expr_index.bas` — must print `PASSED`
+- [ ] 10. Run all existing array system tests to confirm no regression
+- [ ] 11. Check existing system tests for `READ arr%(...)` usage — if found, open a separate task before merging

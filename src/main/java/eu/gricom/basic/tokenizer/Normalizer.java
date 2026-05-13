@@ -32,7 +32,6 @@ public final class Normalizer {
         String strOutput = new String();
 
         boolean bQuotationMark = false;
-        boolean bArrayParenthenes = false;
         boolean bSquareBrackets = false;
 
         // replace tabs with spaces
@@ -50,16 +49,6 @@ public final class Normalizer {
                 bSquareBrackets = true;
             }
 
-            if (cCurrentChar == '('
-                    && (cPreviousChar == '$'
-                        || cPreviousChar == '#'
-                        || cPreviousChar == '!'
-                        || cPreviousChar == '%'
-                        || cPreviousChar == '&'
-                        || cPreviousChar == '@')) {
-                bArrayParenthenes = true;
-            }
-
             // if the quotation mark is not set, then just pass thru...
             if (cCurrentChar == '"') {
                 bQuotationMark = !bQuotationMark;
@@ -74,12 +63,8 @@ public final class Normalizer {
                 if (cCurrentChar == ']') {
                     bSquareBrackets = false;
                 }
-            } else if (bQuotationMark || bArrayParenthenes) {
+            } else if (bQuotationMark) {
                 strOutput += cCurrentChar;
-                if (cCurrentChar == ')'
-                        && bArrayParenthenes) {
-                    bArrayParenthenes = false;
-                }
             } else {
                 // else apply filters
                 switch (cCurrentChar) {

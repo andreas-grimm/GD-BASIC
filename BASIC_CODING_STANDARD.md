@@ -88,11 +88,12 @@ Variables are identified by their suffix character:
 
 **Arrays ARE Supported** ✅
 
-This BASIC interpreter supports arrays with automatic allocation:
+This BASIC interpreter supports arrays with automatic allocation and expression-based indices:
 - **No DIM required** - Arrays are created on first use (DIM statement not supported)
 - **Array syntax** - Use parentheses for indexing: `VARIABLE(index)`
 - **Auto-allocation** - Array elements are created automatically when referenced
 - **Type suffixes apply** - Array elements inherit the type from the variable suffix
+- **Expression indices** - Array indices can include mathematical expressions (requires proper spacing)
 
 **Array Examples:**
 ```basic
@@ -122,11 +123,51 @@ This BASIC interpreter supports arrays with automatic allocation:
 40 DATA$(2,1) = "B1"
 ```
 
+**Array Indices with Expressions** (NEW)
+
+The interpreter supports calculated expressions as array indices, enabling dynamic array access:
+
+```basic
+10 REM Expression-based array indices
+20 F%(0) = 0
+30 F%(1) = 1
+40 N% = 2
+50 F%(N%) = F%(N% - 1) + F%(N% - 2)    REM Calculate Fibonacci
+60 PRINT F%(N%)
+```
+
+**IMPORTANT: Operator Spacing in Array Indices**
+
+When using mathematical expressions inside array indices, **operators must be separated from operands by spaces**. This is critical for the parser to correctly recognize calculated indices:
+
+| Format | Correct? | Example | Notes |
+|--------|----------|---------|-------|
+| Spaces around operators | ✅ YES | `A$(X% + 1)` | Correct: operators separated by spaces |
+| No spaces | ❌ NO | `A$(X%+1)` | **Incorrect**: treated as literal variable name |
+| Mixed spacing | ❌ NO | `A$(X% +1)` | **Incorrect**: asymmetric spacing not recognized |
+
+**Correct Usage:**
+```basic
+10 X% = 5
+20 ARR%(X% + 1) = 100        REM ✅ Correct: spaces around +
+30 ARR%(X% - 1) = 200        REM ✅ Correct: spaces around -
+40 ARR%(X% * 2) = 300        REM ✅ Correct: spaces around *
+50 PRINT ARR%(X% + 1)        REM ✅ Correct: reads from index 6
+```
+
+**Incorrect Usage:**
+```basic
+10 X% = 5
+20 ARR%(X%+1) = 100          REM ❌ Wrong: no spaces, treats "X%+1" as variable name
+30 ARR%(X%+1) = 200          REM ❌ Wrong: will fail at runtime
+```
+
 **Notes:**
 - Arrays expand dynamically as needed
 - No size limits need to be pre-declared
 - Negative indices are allowed
 - Each array element follows the type rules of its parent variable
+- **Expression indices require spaces around operators** — this follows the general BASIC operator spacing standard
 
 ---
 

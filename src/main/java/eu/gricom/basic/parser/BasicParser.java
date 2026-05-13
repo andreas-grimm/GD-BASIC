@@ -633,6 +633,34 @@ public class BasicParser implements Parser {
                         _iPosition = _iPosition + 2;
                         Expression oExpression = expression();
                         aoStatements.add(new AssignStatement(iCurrPosition, strName, oExpression));
+
+                    } else if (getToken(1).getType() == BasicTokenType.LEFT_PAREN) {
+                        String strName = getToken(0).getText();
+                        _iPosition = _iPosition + 2;          // consume NAME and (
+
+                        List<Expression> aoIndices = new ArrayList<>();
+                        aoIndices.add(expression());           // parse first index expression
+
+                        while (getToken(0).getType() == BasicTokenType.COMMA) {
+                            _iPosition++;                      // consume ,
+                            aoIndices.add(expression());       // parse next index expression
+                        }
+
+                        if (getToken(0).getType() != BasicTokenType.RIGHT_PAREN) {
+                            throw new SyntaxErrorException("Expected ) after array index in Line ["
+                                    + getToken(0).getLine() + "]");
+                        }
+                        _iPosition++;                          // consume )
+
+                        if (getToken(0).getType() != BasicTokenType.ASSIGN_EQUAL) {
+                            throw new SyntaxErrorException("Expected = after array subscript in Line ["
+                                    + getToken(0).getLine() + "]");
+                        }
+                        _iPosition++;                          // consume =
+
+                        Expression oValue = expression();
+                        aoStatements.add(new ArrayAssignStatement(iCurrPosition, strName, aoIndices, oValue));
+
                     } else {
                         throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getText()
                                 + " followed by "+ getToken(1).getType().toString()
@@ -937,12 +965,34 @@ public class BasicParser implements Parser {
 
         switch (oToken.getType()) {
 
-            // If the current token is of type WORD, then we assume it is a variable.
+            // If the current token is of type WORD, then we assume it is a variable or array access.
             case WORD:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
                 _iPosition++;
+
+                if (getToken(0).getType() == BasicTokenType.LEFT_PAREN) {
+                    String strArrayName = oToken.getText();
+                    _iPosition++;                          // consume (
+
+                    List<Expression> aoIndices = new ArrayList<>();
+                    aoIndices.add(expression());           // parse first index expression
+
+                    while (getToken(0).getType() == BasicTokenType.COMMA) {
+                        _iPosition++;                      // consume ,
+                        aoIndices.add(expression());
+                    }
+
+                    if (getToken(0).getType() != BasicTokenType.RIGHT_PAREN) {
+                        throw new SyntaxErrorException("Expected ) after array index in Line ["
+                                + getToken(0).getLine() + "]");
+                    }
+                    _iPosition++;                          // consume )
+
+                    return new ArrayAccessExpression(strArrayName, aoIndices);
+                }
+
                 return new VariableExpression(oToken.getText());
 
             // If the current token is of type NUMBER, then return the value as a double value

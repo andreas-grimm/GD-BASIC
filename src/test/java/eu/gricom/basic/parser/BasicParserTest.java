@@ -4,8 +4,10 @@ import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.helper.FileHandler;
 import eu.gricom.basic.memoryManager.Program;
 import eu.gricom.basic.runtimeManager.Execute;
+import eu.gricom.basic.statements.ArrayAssignStatement;
 import eu.gricom.basic.statements.Expression;
 import eu.gricom.basic.statements.PrintStatement;
+import eu.gricom.basic.statements.Statement;
 import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.Lexer;
 import eu.gricom.basic.tokenizer.Token;
@@ -178,6 +180,115 @@ public class BasicParserTest {
 
         double dValue = oValue.toReal();
         assertEquals(6, dValue);
+    }
+
+    /**
+     * Verify that "pa1N%(1) = 5" parses into an ArrayAssignStatement and executes
+     * to produce the value 5 when the element is read back via PRINT.
+     */
+    @Test
+    public void testParseArrayAssignLiteral() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+
+        String strTestProgramName = "src/test/basic/test_array_assign_literal.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
+        Program oProgram = new Program();
+        oProgram.load(strTestProgramName, strReadText);
+        oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
+
+        BasicParser oTestParser = new BasicParser(oProgram.getTokens(), false);
+        List<Statement> aoStatements = oTestParser.parse();
+
+        assertTrue(aoStatements.get(0) instanceof ArrayAssignStatement);
+
+        oProgram.setStatements(aoStatements);
+        Execute oRun = new Execute(oProgram);
+        oRun.runProgram();
+
+        PrintStatement oLastStatement = (PrintStatement) oRun.getFinalStatement();
+        Value oValue = oLastStatement.getExpression().evaluate();
+        assertEquals(5.0, oValue.toReal());
+    }
+
+    /**
+     * Verify that "pa2N%(pa2I%) = 15" with pa2I% = 3 parses into an ArrayAssignStatement and
+     * executes to produce the value 15 when the element is read back via PRINT.
+     */
+    @Test
+    public void testParseArrayAssignVariable() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+
+        String strTestProgramName = "src/test/basic/test_array_assign_variable.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
+        Program oProgram = new Program();
+        oProgram.load(strTestProgramName, strReadText);
+        oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
+
+        BasicParser oTestParser = new BasicParser(oProgram.getTokens(), false);
+        List<Statement> aoStatements = oTestParser.parse();
+
+        assertTrue(aoStatements.get(1) instanceof ArrayAssignStatement);
+
+        oProgram.setStatements(aoStatements);
+        Execute oRun = new Execute(oProgram);
+        oRun.runProgram();
+
+        PrintStatement oLastStatement = (PrintStatement) oRun.getFinalStatement();
+        Value oValue = oLastStatement.getExpression().evaluate();
+        assertEquals(15.0, oValue.toReal());
+    }
+
+    /**
+     * Verify that "pa3N%(pa3I% + 1) = 25" with pa3I% = 4 parses into an ArrayAssignStatement and
+     * executes to produce the value 25 when element 5 is read back via PRINT.
+     */
+    @Test
+    public void testParseArrayAssignExpr() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+
+        String strTestProgramName = "src/test/basic/test_array_assign_expr.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
+        Program oProgram = new Program();
+        oProgram.load(strTestProgramName, strReadText);
+        oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
+
+        BasicParser oTestParser = new BasicParser(oProgram.getTokens(), false);
+        List<Statement> aoStatements = oTestParser.parse();
+
+        assertTrue(aoStatements.get(1) instanceof ArrayAssignStatement);
+
+        oProgram.setStatements(aoStatements);
+        Execute oRun = new Execute(oProgram);
+        oRun.runProgram();
+
+        PrintStatement oLastStatement = (PrintStatement) oRun.getFinalStatement();
+        Value oValue = oLastStatement.getExpression().evaluate();
+        assertEquals(25.0, oValue.toReal());
+    }
+
+    /**
+     * Verify that "PRINT pa4N%(pa4I% + 2)" with pa4I% = 1 and pa4N%(3) = 35 reads the correct
+     * element via an expression index and prints 35.
+     */
+    @Test
+    public void testParseArrayReadExpr() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+
+        String strTestProgramName = "src/test/basic/test_array_read_expr.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
+        Program oProgram = new Program();
+        oProgram.load(strTestProgramName, strReadText);
+        oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
+
+        BasicParser oTestParser = new BasicParser(oProgram.getTokens(), false);
+        oProgram.setStatements(oTestParser.parse());
+
+        Execute oRun = new Execute(oProgram);
+        oRun.runProgram();
+
+        PrintStatement oLastStatement = (PrintStatement) oRun.getFinalStatement();
+        Value oValue = oLastStatement.getExpression().evaluate();
+        assertEquals(35.0, oValue.toReal());
     }
 
     /**
