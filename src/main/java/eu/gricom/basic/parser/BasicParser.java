@@ -621,7 +621,8 @@ public class BasicParser implements Parser {
 
                 // WORD Token: This word is a variable or function, anything following is variable manipulation
                 case WORD:
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [WORD] ");
+                    _oLogger.debug("-parse-> found Token: " + getToken(0).getText()
+                            + " <" + _iPosition + "> [WORD] ");
 
                     int iCurrPosition = _iPosition;
 
@@ -633,7 +634,8 @@ public class BasicParser implements Parser {
                         Expression oExpression = expression();
                         aoStatements.add(new AssignStatement(iCurrPosition, strName, oExpression));
                     } else {
-                        throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString()
+                        throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getText()
+                                + " followed by "+ getToken(1).getType().toString()
                                 + " in Line [" + getToken(0).getLine() + "]");
                     }
                     break;

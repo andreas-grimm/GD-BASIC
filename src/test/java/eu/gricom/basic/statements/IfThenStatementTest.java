@@ -97,7 +97,9 @@ public class IfThenStatementTest {
         LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
         oLineNumberObject.putLineNumber(5, 1);
+        oLineNumberObject.putLineNumber(7, 2);
         oLineNumberObject.putStatementNumber(1, 6);
+        oLineNumberObject.putStatementNumber(2, 7);
         oProgramPointer.setCurrentStatement(4);
 
         RealValue oLeftValue = new RealValue(2);

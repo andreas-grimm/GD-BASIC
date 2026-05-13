@@ -28,6 +28,7 @@ public class FOpenStatementTest {
 
     @BeforeEach
     public void setUp() throws Exception {
+        System.out.println("Setting up test environment...");
         _oTempFile1 = Files.createTempFile("fopen-test-1-", ".txt");
         _oTempFile2 = Files.createTempFile("fopen-test-2-", ".txt");
         _oTempFile3 = Files.createTempFile("fopen-test-3-", ".txt");
@@ -35,6 +36,7 @@ public class FOpenStatementTest {
 
     @AfterEach
     public void tearDown() throws Exception {
+        System.out.println("Tearing down test environment...");
         FileManager oFileManager = new FileManager();
         oFileManager.closeFile(FILE_ID_1, false);
         oFileManager.closeFile(FILE_ID_2, false);
