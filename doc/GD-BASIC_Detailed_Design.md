@@ -56,7 +56,7 @@ After `mvn clean package`, produces:
 
 ### System Components
 
-GD-BASIC is a complete BASIC interpreter and compiler architecture with the following major subsystems:
+GD-BASIC is a complete BASIC interpreter with the following major subsystems:
 
 | Component | Purpose | Key Classes |
 |-----------|---------|-------------|
@@ -66,7 +66,6 @@ GD-BASIC is a complete BASIC interpreter and compiler architecture with the foll
 | **Parsing (Syntax Analysis)** | Tokens → abstract syntax tree | `BasicParser` |
 | **Memory/State Management** | Program structure, variables, execution state | `Program`, `VariableManagement`, `Stack`, `ProgramPointer` |
 | **Execution Engine** | Runtime execution of statements | `Execute` |
-| **Code Generation** | BASIC → JSON intermediate → Java source | `Generator`, `JSONCodeGenerator`, `GenerateJavaCode` |
 | **Built-in Functions** | Math, string, system functions | `Function`, `Abs`, `Sin`, `Len`, etc. |
 | **Type System** | Value representation and operations | `Value`, `RealValue`, `IntegerValue`, `StringValue`, etc. |
 | **Error Handling** | Exception types for runtime/syntax errors | Custom exception classes in `error/` package |
@@ -94,33 +93,26 @@ GD-BASIC is a complete BASIC interpreter and compiler architecture with the foll
 │ - Classify tokens    │
 └────────┬─────────────┘
          │
-    ┌────┴────┐
-    │          │
-    ▼          ▼
-┌─────────┐ ┌──────────┐
-│ Compile │ │Interpret │
-└────┬────┘ └─────┬────┘
-     │            │
-     ▼            ▼
+         ▼
 ┌──────────────────────┐
 │ Parsing (BasicParser)│
 │ - Tokens → AST       │
 │ - Line numbering     │
 └────────┬─────────────┘
          │
-    ┌────┴───────────────────┐
-    │                         │
-    ▼                         ▼
-┌─────────────┐       ┌─────────────────┐
-│   Execute   │       │    Generator    │
-│   Runtime   │       │ JSON + Java Gen │
-└─────┬───────┘       └────────┬────────┘
-      │                        │
-      ▼                        ▼
-┌──────────┐           ┌──────────────┐
-│ Program  │           │ Java Source  │
-│ Results  │           │  Code Files  │
-└──────────┘           └──────────────┘
+         ▼
+┌──────────────────────┐
+│   Execution Engine   │ (Execute)
+│ - Runtime execution  │
+│ - Statement dispatch │
+│ - Variable management│
+└────────┬─────────────┘
+         │
+         ▼
+┌──────────┐
+│ Program  │
+│ Results  │
+└──────────┘
 ```
 
 ### Program State Container
@@ -160,7 +152,7 @@ try {
 
 ### 2. Tokenization (Lexical Analysis) Phase
 
-**Entry Point**: `Basic.java::interpret/compile/process`
+**Entry Point**: `Basic.java::interpret/process`
 
 The lexer converts source text into a sequence of tokens:
 
@@ -219,22 +211,6 @@ oRun.runProgram();         // Run main program
 - Variable state maintained in `VariableManagement`
 - Call stack in `Stack` for GOSUB/RETURN
 
-### 5. Code Generation Phase (Compilation)
-
-**Entry Point**: `Basic.java::compile(Program)`
-
-Generates Java source from parsed AST:
-
-1. **JSON Intermediate** (via `JSONCodeGenerator`):
-   - Serializes AST to JSON intermediate representation
-   - Option for prettified output (`-b` flag)
-   - Option to store intermediate files (`-n` flag)
-
-2. **Java Code Generation** (via `GenerateJavaCode`):
-   - Reads JSON intermediate
-   - Generates executable Java class
-   - Uses template from `-t` option
-
 ---
 
 ## Package-Level Documentation
@@ -243,19 +219,17 @@ Generates Java source from parsed AST:
 
 **Primary Class**: `Basic.java`
 
-Main entry point implementing the complete interpreter/compiler pipeline:
+Main entry point implementing the complete interpreter pipeline:
 
 | Method | Purpose | Calls |
 |--------|---------|-------|
-| `main(String[])` | CLI entry point, argument parsing | interpret, compile, process |
+| `main(String[])` | CLI entry point, argument parsing | interpret, process |
 | `interpret(Program)` | Run BASIC program in interpreter mode | parse, Execute::runProgram |
-| `compile(Program)` | Generate Java code from BASIC | parse, Generator::createCode |
 | `process(Program)` | Tokenize and parse (no execution) | BasicLexer, BasicParser |
 | `macroProcessing(Program)` | Apply macro preprocessing | MacroProcessor::process |
 
 **Key State**:
 - `_oProgram: Program` - Current program being processed
-- `_bCompile: boolean` - Compilation flag
 - `_bDartmouthFlag: boolean` - Evaluation mode flag
 - `_bBeautified: boolean` - JSON prettification flag
 
@@ -721,7 +695,7 @@ public interface Expression {
 | `EndWhileStatement` | End of WHILE block |
 | `ColonStatement` | Multiple statements per line |
 | `CleanStatement` | Reset program state |
-| `PragmaStatement` | Compiler directives |
+| `PragmaStatement` | Preprocessor directives (e.g., `#DEFINE`) |
 
 #### Expression Types
 
@@ -1135,7 +1109,7 @@ Used for high-precision arithmetic in financial calculations.
 
 ### `macroManager` Package
 
-Preprocessor for compile-time macro expansion.
+Preprocessor for macro expansion. Processes macro definitions before tokenization.
 
 #### `MacroProcessor` Class
 
@@ -1171,117 +1145,6 @@ public class MacroList {
 ```basic
 #DEFINE SQUARE(x) x * x
 10 PRINT SQUARE(5)    ! Expands to: PRINT 5 * 5
-```
-
----
-
-### `codeGenerator` Package
-
-Compilation pipeline: AST → JSON intermediate → Java source.
-
-#### `Generator` Class (Orchestrator)
-
-```java
-public class Generator {
-    public static void createJSONCode(Program oProgram, 
-                                      boolean bBeautified, 
-                                      boolean bStoreIntermediate)
-    
-    public static void createCode(String strProgramName,
-                                  String strSource,
-                                  String strTemplate)
-}
-```
-
-**Compilation Flow**:
-1. Parse BASIC to AST (in `Basic.java::compile()`)
-2. Generate JSON intermediate (via `JSONCodeGenerator`)
-3. Read template
-4. Generate Java source (via `GenerateJavaCode`)
-5. Write output files
-
-#### `JSONCodeGenerator` Class
-
-Serializes AST to JSON:
-
-```java
-public class JSONCodeGenerator {
-    public String generateJSON(List<Statement> aoStatements,
-                              boolean bBeautified)
-}
-```
-
-**JSON Structure**:
-```json
-{
-  "program": {
-    "statements": [
-      {
-        "type": "PRINT",
-        "expressions": [
-          {"type": "LITERAL", "value": "Hello World"}
-        ]
-      }
-    ]
-  }
-}
-```
-
-#### `JSONDecoder` Class
-
-Parses JSON intermediate:
-
-```java
-public class JSONDecoder {
-    public Program decode(String strJSON)
-}
-```
-
-Companion to `JSONCodeGenerator`.
-
-#### `ExpressionDecoder`, `TokenDecoder`, `OperatorDecoder` Classes
-
-Specialized decoders for JSON components:
-
-```java
-public class ExpressionDecoder {
-    public Expression decode(JsonObject oJson)
-}
-
-public class TokenDecoder {
-    public Token decode(JsonObject oJson)
-}
-
-public class OperatorDecoder {
-    public BasicTokenType decode(String strOperator)
-}
-```
-
-#### `GenerateJavaCode` Class
-
-Generates executable Java from JSON:
-
-```java
-public class GenerateJavaCode {
-    public String generate(String strProgramName,
-                          String strJSON,
-                          String strTemplate)
-}
-```
-
-**Template Substitution**:
-- Reads template from resource path
-- Replaces placeholders: `${PROGRAM_NAME}`, `${STATEMENTS}`, etc.
-- Returns complete Java source
-
-#### `ObjectCodeGenerator` Class
-
-Base class for code generation strategies:
-
-```java
-public abstract class ObjectCodeGenerator {
-    abstract String generate(List<Statement> aoStatements)
-}
 ```
 
 ---
@@ -1374,7 +1237,7 @@ main(String[])
   ├─ parseCommandLine()
   ├─ FileHandler.readFile()
   ├─ Program.load()
-  └─ Basic.interpret() OR Basic.compile()
+  └─ Basic.interpret()
       │
       ├─ macroProcessing()
       │   └─ MacroProcessor.process()
@@ -1487,12 +1350,6 @@ ArrayAssignStatement.execute()
 ```
 src/test/java/eu/gricom/basic/
 ├── BasicTest.java                      (main integration tests)
-├── codeGenerator/
-│   ├── GeneratorTest.java
-│   └── json/
-│       ├── ExpressionDecoderTest.java
-│       ├── JSONDecoderTest.java
-│       └── TokenDecoderTest.java
 ├── functions/
 │   ├── AbsTest.java
 │   ├── LenTest.java
@@ -1596,12 +1453,7 @@ java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar [options] <filenam
 | `-i` | `--input` | `<file>` | Input file path (redundant with positional arg) |
 | `-q` | `--quiet` | None | Quiet mode: suppress interpreter messages, show only program output |
 | `-v` | `--verbose` | `<level>` | Verbose/debug level: `trace`, `debug`, `info`, `warning`, `error` |
-| `-c` | `--compile` | None | Compile mode: generate Java source code instead of interpreting |
-| `-b` | `--beautify` | None | Beautified JSON output (used with `-c` for readable intermediate format) |
-| `-n` | `--intermediate` | None | Store intermediate files: `.json` (AST) and `.java` (generated code) |
 | `-d` | `--dartmouth` | None | Dartmouth mode: left-to-right operator evaluation (legacy compatibility) |
-| `-l` | `--language` | `<lang>` | Target language for code generation (currently `java` only) |
-| `-t` | `--template` | `<file>` | Template file for code generation (custom output format) |
 
 ### Usage Examples
 
@@ -1615,14 +1467,9 @@ java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar program.bas
 java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -v debug program.bas
 ```
 
-**Compile to Java with intermediate files stored:**
+**Quiet mode (suppress interpreter output, show only program results):**
 ```bash
-java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -c -n -b program.bas
-```
-
-**Produce prettified JSON intermediate representation:**
-```bash
-java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -c -b program.bas
+java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -q program.bas
 ```
 
 **Dartmouth BASIC compatibility mode (left-to-right evaluation):**
@@ -1683,18 +1530,7 @@ switch (getToken(0).getType()) {
 }
 ```
 
-### 4. Strategy Pattern (Code Generation)
-
-Different backends (JSON, Java, P-code) via `ObjectCodeGenerator` hierarchy:
-
-```
-ObjectCodeGenerator (abstract)
-  ├── JSONCodeGenerator
-  ├── GenerateJavaCode
-  └── [P-code generator - future]
-```
-
-### 5. Type System with Dynamic Coercion
+### 4. Type System with Dynamic Coercion
 
 Values implement a unified arithmetic interface:
 
@@ -1741,12 +1577,12 @@ VariableManagement
 
 Variables route to appropriate map based on BASIC suffix convention.
 
-### 8. Two-Pass Compilation
+### 8. Line Number Indexing
 
 Line number cross-reference built during parse, used during execution:
 
-**Pass 1** (Parser): `LineNumberXRef.putLineNumber(lineNum, tokenIndex)`
-**Pass 2** (Execute): `GotoStatement` uses `getTokenIndex(targetLine)`
+**Parse Phase**: `LineNumberXRef.putLineNumber(lineNum, tokenIndex)` - Build index of all line numbers
+**Execution Phase**: `GotoStatement` uses `getTokenIndex(targetLine)` - Jump to indexed line
 
 ### 9. Program Pointer Abstraction
 
@@ -2278,7 +2114,7 @@ After 2nd RETURN: Stack = [], jump to 20
 
 #### Macro Processing (`MacroProcessor`)
 
-**Purpose**: Compile-time text substitution via `#DEFINE` directives. Macros are processed before tokenization.
+**Purpose**: Preprocessing text substitution via `#DEFINE` directives. Macros are processed before tokenization.
 
 **Supported Syntax**:
 ```basic
@@ -2342,19 +2178,6 @@ public class MacroList {
 - Affects interpreter behavior only
 - Similar to `TRON`/`TROFF` in TRS-80 BASIC Level II
 
-### Code Generation Workflow
-
-1. **Parse**: `BasicParser` builds AST (same as interpret)
-2. **Serialize**: AST → JSON via `JSONCodeGenerator`
-3. **Code Gen**: JSON → Java source via `GenerateJavaCode`
-4. **Compile**: Generated Java compiled by javac
-5. **Run**: Resulting .class executed
-
-**Intermediate Files** (with `-n` flag):
-- `program.json` - JSON AST
-- `program.java` - Generated Java source
-- `program.class` - Compiled bytecode
-
 ### Type Coercion Rules
 
 **Numeric Operations** (when mixing types):
@@ -2376,16 +2199,11 @@ public class MacroList {
 java -jar BASIC-0.1.0-java21-jar-with-dependencies.jar [options] <filename.bas>
 
 Options:
-  -h              Help
-  -i <file>       Input file (redundant with positional arg)
-  -q              Quiet mode (suppress banner)
-  -v <level>      Verbose: trace, debug, info, warning, error
-  -c              Compile (generate Java)
-  -b              Beautified JSON (with -c)
-  -n              Store intermediate files (with -c)
+  -h              Help message
+  -i <file>       Input file (alternative to positional argument)
+  -q              Quiet mode (suppress interpreter messages)
+  -v <level>      Verbose level: trace, debug, info, warning, error
   -d              Dartmouth mode (left-to-right evaluation)
-  -l <lang>       Language for compilation (currently 'java')
-  -t <template>   Template file for code generation
 ```
 
 ### File Handling (FileManager Class)
@@ -2745,11 +2563,6 @@ src/main/java/eu/gricom/basic/
 │   └── FiFoQueue.java
 ├── runtimeManager/                      # Execution engine
 │   └── Execute.java
-├── codeGenerator/                       # Compilation
-│   ├── Generator.java (orchestrator)
-│   ├── ObjectCodeGenerator.java (abstract)
-│   ├── JSONCodeGenerator.java
-│   └── GenerateJavaCode.java
 ├── macroManager/                        # Preprocessor
 │   ├── MacroProcessor.java
 │   └── MacroList.java
@@ -3007,7 +2820,7 @@ mvn test jacoco:report
 | Bottleneck | Cause | Mitigation |
 |-----------|-------|-----------|
 | Variable Lookup | HashMap overhead | Use caching for frequently accessed variables |
-| Expression Evaluation | Recursive tree traversal | Pre-compile expressions if evaluated multiple times |
+| Expression Evaluation | Recursive tree traversal | Cache results for repeated evaluations of same expression |
 | Array Access | HashMap + string key generation | Consider specialized array classes for dense arrays |
 | File I/O | Buffering overhead | FileManager already uses BufferedReader/Writer |
 
@@ -3304,11 +3117,6 @@ case NEWTYPE:
 2. Implement all arithmetic/comparison operations
 3. Register in `VariableManagement` type routing
 4. Add type suffix character (e.g., `var~` for new type)
-
-**Custom Code Generator**:
-1. Extend `ObjectCodeGenerator`
-2. Implement `generate()` to produce target code
-3. Integrate in `Generator` orchestrator
 
 ---
 
@@ -3686,39 +3494,6 @@ classDiagram
     Program --> LineNumberXRef
 ```
 
-### Code Generation Pipeline
-
-```mermaid
-classDiagram
-    class Generator {
-        +static void createJSONCode(Program)
-        +static void createCode(String, String, String)
-    }
-    
-    class JSONCodeGenerator {
-        +String generateJSON(List~Statement~, boolean)
-    }
-    
-    class JSONDecoder {
-        +Program decode(String)
-    }
-    
-    class GenerateJavaCode {
-        +String generate(String, String, String)
-    }
-    
-    class ObjectCodeGenerator {
-        <<abstract>>
-        +String generate(List~Statement~)*
-    }
-    
-    Generator --> JSONCodeGenerator
-    Generator --> GenerateJavaCode
-    JSONCodeGenerator --> JSONDecoder
-    JSONCodeGenerator --|> ObjectCodeGenerator
-    GenerateJavaCode --|> ObjectCodeGenerator
-```
-
 ---
 
 ## Complete Architecture Diagram
@@ -3740,9 +3515,8 @@ graph TD
         Parser["BasicParser<br/>Parse AST"]
     end
     
-    subgraph Runtime["Execution/Compilation"]
+    subgraph Runtime["Execution"]
         Execute["Execute<br/>Interpret AST"]
-        Generator["Generator<br/>Compile to Java"]
     end
     
     subgraph State["State Management"]
@@ -3753,8 +3527,7 @@ graph TD
     end
     
     subgraph Output["Output"]
-        Output1["Program Results"]
-        Output2["Java Source Code"]
+        Output1["Program Results<br/>Console Output"]
     end
     
     Main --> FileHandler
@@ -3765,7 +3538,6 @@ graph TD
     Lexer --> Parser
     
     Parser --> Execute
-    Parser --> Generator
     
     Execute --> VarMgr
     Execute --> Stack
@@ -3773,7 +3545,6 @@ graph TD
     Execute --> LinXRef
     
     Execute --> Output1
-    Generator --> Output2
 ```
 
 ---
