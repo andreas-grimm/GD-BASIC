@@ -23,7 +23,7 @@ Release focusing on advanced language features, operator precedence, and mathema
 
 ---
 
-## Development Period 1: 2025-05-11 to 2025-07-12 (Java 17 Stabilization)
+## Development Period 7: 2025-05-11 to 2025-07-12 (Java 17 Stabilization)
 
 Focused on stabilizing Java 17 support and build infrastructure.
 
@@ -50,7 +50,7 @@ Focused on stabilizing Java 17 support and build infrastructure.
 
 ---
 
-## Development Period 2: 2024-02-13 to 2024-05-27 (Gradle Migration)
+## Development Period 6: 2024-02-13 to 2024-05-27 (Gradle Migration)
 
 Transitioned from Gradle to Maven build system.
 
@@ -71,7 +71,7 @@ Security and dependency updates.
 
 ---
 
-## Development Period 3: 2022-07-24 to 2023-06-06 (BCD Mathematics)
+## Development Period 5: 2022-07-24 to 2023-06-06 (BCD Mathematics)
 
 Explored Binary Coded Decimal mathematics implementation.
 
@@ -136,7 +136,7 @@ Major focus on READ/DATA statements and GOSUB implementation.
 
 ---
 
-## Development Period 5: 2021-02-15 to 2021-03-06 (Math & String Functions)
+## Development Period 3: 2021-02-15 to 2021-03-06 (Math & String Functions)
 
 Comprehensive builtin functions implementation.
 
@@ -159,7 +159,7 @@ Comprehensive builtin functions implementation.
 
 ---
 
-## Development Period 6: 2021-01-24 to 2021-02-14 (Loops & Arrays)
+## Development Period 2: 2021-01-24 to 2021-02-14 (Loops & Arrays)
 
 Implemented FOR loops, WHILE loops, DO loops, and array indexing.
 
@@ -217,7 +217,7 @@ Parser enhancements and improved comparison operators.
 
 ---
 
-## Development Period 7: 2020-12-29 to 2021-01-19 (Type System Refactor)
+## Development Period 1: 2020-12-29 to 2021-01-19 (Type System Refactor)
 
 Major refactoring of operator expressions and type system.
 
