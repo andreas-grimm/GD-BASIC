@@ -7,6 +7,35 @@
 
 ---
 
+## System Requirements
+
+### Java Version
+- **Minimum**: Java 8 (JDK 1.8.0_131+)
+- **Recommended**: Java 21+
+- **Current Target**: Java 21 (as declared in `pom.xml` → `maven.compiler.source`)
+
+### Build Tool
+- **Build System**: Apache Maven 3.6.3 or higher
+- **Primary Build Command**: `mvn clean test package`
+
+### Memory & Platform
+- **Memory**: Minimum 128MB RAM
+- **Platforms Supported**: Windows, Linux, macOS
+- **Cross-Platform**: Yes (pure Java implementation)
+
+### Dependencies
+- **Minimal External Dependencies**: By design, limited to essential packages only
+- **Apache CLI**: Only major third-party dependency (for command-line parsing)
+- **JUnit 5**: For testing (test scope)
+- **No heavyweight frameworks**: Avoids Spring, Log4j, etc. for portability
+
+### Build Artifacts
+After `mvn clean package`, produces:
+- `target/BASIC-0.1.0-java21-jar-with-dependencies.jar` — Standalone executable JAR with all dependencies bundled
+- `target/BASIC-0.1.0-java21.jar` — Primary JAR (requires separate classpath)
+
+---
+
 ## Table of Contents
 
 1. [Architecture Overview](#architecture-overview)
@@ -1548,6 +1577,74 @@ public void testCompleteProgram() throws Exception {
 
 ---
 
+## Command-Line Interface
+
+### Basic Usage
+
+```bash
+java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar [options] <filename.bas>
+```
+
+### Mandatory Parameters
+- **`<filename.bas>`** — Input BASIC program file (must be last argument)
+
+### Optional Parameters
+
+| Short | Long | Parameter | Description |
+|-------|------|-----------|-------------|
+| `-h` | `--help` | None | Display help message and exit |
+| `-i` | `--input` | `<file>` | Input file path (redundant with positional arg) |
+| `-q` | `--quiet` | None | Quiet mode: suppress interpreter messages, show only program output |
+| `-v` | `--verbose` | `<level>` | Verbose/debug level: `trace`, `debug`, `info`, `warning`, `error` |
+| `-c` | `--compile` | None | Compile mode: generate Java source code instead of interpreting |
+| `-b` | `--beautify` | None | Beautified JSON output (used with `-c` for readable intermediate format) |
+| `-n` | `--intermediate` | None | Store intermediate files: `.json` (AST) and `.java` (generated code) |
+| `-d` | `--dartmouth` | None | Dartmouth mode: left-to-right operator evaluation (legacy compatibility) |
+| `-l` | `--language` | `<lang>` | Target language for code generation (currently `java` only) |
+| `-t` | `--template` | `<file>` | Template file for code generation (custom output format) |
+
+### Usage Examples
+
+**Interpret a BASIC program:**
+```bash
+java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar program.bas
+```
+
+**Verbose output with debug tracing:**
+```bash
+java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -v debug program.bas
+```
+
+**Compile to Java with intermediate files stored:**
+```bash
+java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -c -n -b program.bas
+```
+
+**Produce prettified JSON intermediate representation:**
+```bash
+java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -c -b program.bas
+```
+
+**Dartmouth BASIC compatibility mode (left-to-right evaluation):**
+```bash
+java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -d program.bas
+```
+
+**Quiet mode (program output only):**
+```bash
+java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -q program.bas
+```
+
+### Verbose Levels
+
+- **`trace`**: Most detailed output; traces method entry/exit and variable state
+- **`debug`**: Debug-level information; useful for diagnosing parsing and execution issues
+- **`info`**: Informational messages; high-level progress (default non-quiet mode)
+- **`warning`**: Warnings and errors only
+- **`error`**: Errors only; minimal output
+
+---
+
 ## Design Patterns and Key Algorithms
 
 ### 1. Interpreter Pattern (Core Architecture)
@@ -2177,19 +2274,73 @@ After 1st RETURN: Stack = [20], jump to 110
 After 2nd RETURN: Stack = [], jump to 20
 ```
 
-### Macro Processing
+### Macro Processing and Pragmas
 
-Compile-time text substitution:
+#### Macro Processing (`MacroProcessor`)
 
+**Purpose**: Compile-time text substitution via `#DEFINE` directives. Macros are processed before tokenization.
+
+**Supported Syntax**:
 ```basic
-#DEFINE PI 3.14159
-#DEFINE SQUARE(x) x * x
-
-10 PRINT PI             ! Expanded: PRINT 3.14159
-20 PRINT SQUARE(5)      ! Expanded: PRINT 5 * 5
+#DEFINE PI 3.14159              ! Simple constant macro
+#DEFINE SQUARE(x) x * x         ! Function-like macro with parameters
 ```
 
-Not scope-aware; global text replacement.
+**Usage**:
+```basic
+10 PRINT PI             ! Expanded: PRINT 3.14159
+20 PRINT SQUARE(5)      ! Expanded: PRINT 5 * 5
+30 A# = SQUARE(10)      ! Expanded: A# = 10 * 10
+```
+
+**Key Characteristics**:
+- **Scope**: Global (not scope-aware)
+- **Expansion**: Full text substitution before parsing
+- **Recursion**: Single-pass expansion (no nested macro expansion)
+- **Registration**: Maintained in `MacroList` class
+
+**Implementation Details**:
+```java
+public class MacroProcessor {
+    public String process(String strSource) throws SyntaxErrorException
+}
+
+public class MacroList {
+    public void define(String strName, String strReplacement)
+    public boolean isDefined(String strName)
+    public String expand(String strName, String... strArgs)
+}
+```
+
+#### PRAGMA Directives (`@PRAGMA`)
+
+**Purpose**: Runtime interpreter configuration directives. Do NOT affect BASIC program logic.
+
+**Syntax**:
+```
+@PRAGMA( <parameter> = <value> )
+```
+
+**Supported Parameters**:
+
+| Parameter | Values | Description | Example |
+|-----------|--------|-------------|---------|
+| `LOG` | `TRACE`, `DEBUG`, `INFO`, `WARN`, `OFF` | Set interpreter logging level | `@PRAGMA("LOG" = "DEBUG")` |
+| `TRACE` | `ON`, `OFF` | Enable/disable line number tracing (like TRON/TROFF) | `@PRAGMA("TRACE" = "ON")` |
+
+**Example Program**:
+```basic
+10 @PRAGMA("LOG" = "DEBUG")
+20 @PRAGMA("TRACE" = "ON")
+30 PRINT "Line numbers will be traced"
+40 END
+```
+
+**Characteristics**:
+- Does not appear in executable statements
+- Cannot be jump targets (GOTO/GOSUB)
+- Affects interpreter behavior only
+- Similar to `TRON`/`TROFF` in TRS-80 BASIC Level II
 
 ### Code Generation Workflow
 
@@ -2237,7 +2388,904 @@ Options:
   -t <template>   Template file for code generation
 ```
 
-### Extension Points for Customization
+### File Handling (FileManager Class)
+
+**Location**: `memoryManager/FileManager.java`
+
+**Purpose**: Manage file I/O operations for BASIC programs using file numbers.
+
+#### Key Methods
+
+| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| `openFile` | `strFileName`, `iFileID`, `eReadWrite` | `boolean` | Open file for READ or WRITE. Returns `true` if successful, `false` if file ID or path already in use. |
+| `closeFile` | `iFileID`, `bDeleteFile` | `void` | Close file and optionally delete it. |
+| `read` | `iFileID` | `StringValue` | Read one line from file opened for input. Returns empty string at EOF. |
+| `write` | `iFileID`, `strData` | `void` | Write data to file opened for output. |
+| `getEOF` | `iFileID` | `IntegerValue` | Returns `1` if not at EOF, `0` if at EOF or unknown file. |
+| `getFileName` | `iFileID` | `String` | Get file path for given file ID. |
+| `getFileStatus` | `iFileID` | `boolean` | Returns `true` if file ID is open, `false` otherwise. |
+| `getFileRead` | `iFileID` | `BufferedReader` | Get reader for read operations (or `null`). |
+| `getFileWrite` | `iFileID` | `BufferedWriter` | Get writer for write operations (or `null`). |
+| `getFileType` | `iFileID` | `FileOpenType` | Returns READ, WRITE, or `null`. |
+
+#### FileOpenType Enum
+
+```java
+public enum FileOpenType {
+    READ,   // Open for reading (INPUT#)
+    WRITE   // Open for writing (PRINT#)
+}
+```
+
+#### Usage in BASIC
+
+```basic
+10 REM Open file #1 for reading
+20 OPEN "input.txt" FOR INPUT AS #1
+30 WHILE EOF(1) = 0
+40   INPUT #1, A$
+50   PRINT A$
+60 WEND
+70 CLOSE #1
+
+80 REM Open file #2 for writing
+90 OPEN "output.txt" FOR OUTPUT AS #2
+100 PRINT #2, "Hello, World!"
+110 CLOSE #2
+```
+
+#### Internal Data Structures
+
+**Static Maps** (file state persists across instances):
+- `_moFileIDMap`: Maps file ID → file path
+- `_moEoFMap`: Maps file ID → EOF flag (for read files)
+- `_moFileRead`: Maps file ID → BufferedReader
+- `_moFileWrite`: Maps file ID → BufferedWriter
+
+#### Character Encoding
+
+All file operations use **UTF-8 encoding** (`StandardCharsets.UTF_8`).
+
+#### Error Handling
+
+- **File not found**: Throws exception during OPEN
+- **File already open**: Returns `false` from `openFile()`
+- **Invalid file ID**: Returns `null` from getter methods
+- **Read after close**: Returns empty string
+
+---
+
+### Tokenization Details (Normalizer Class)
+
+**Location**: `tokenizer/Normalizer.java`
+
+**Purpose**: Preprocess BASIC source code lines before tokenization to ensure consistent formatting for the lexer.
+
+#### normalize() Method
+
+**Purpose**: Remove unnecessary spaces, standardize operator spacing, handle special cases.
+
+**Process**:
+1. Replace tabs with 4 spaces
+2. Identify quoted strings (`"..."`) — preserve content verbatim
+3. Identify square brackets (`[...]`) — remove all spaces inside
+4. Identify array parentheses (`arr%(...)`) — apply operator spacing
+5. Standardize punctuation spacing
+
+**Special Cases**:
+
+| Construct | Behavior | Example |
+|-----------|----------|---------|
+| Quotation marks | Content preserved verbatim | `"hello world"` stays `"hello world"` |
+| Square brackets | All spaces removed | `[1, 2, 3]` → `[1,2,3]` |
+| Array parentheses | Operators spaced uniformly (now) | `A%( X% + 1 )` → proper tokens |
+| Commas | Leading space added | `A,B` → `A , B` |
+| Semicolons | Leading space added | `A;B` → `A ; B` |
+| Parentheses | Spaces around | `FUNC(X)` → `FUNC ( X )` |
+
+**Code Example**:
+```java
+// normalize the line: put spaces in places where needed
+strProgramLine = Normalizer.normalize(strProgramLine);
+
+// after normalization:
+// "PRINT A%, B$" → "PRINT A% , B$ "
+```
+
+#### normalizeIndex() Method
+
+**Purpose**: Convert array index notation for storage key formatting.
+
+**Transformation**:
+- Input: `"NAME(5)"` 
+- Output: `"NAME-5"`
+
+**Used by**: `VariableManagement.putMap()` and `getMap()` for array storage keys.
+
+#### normalizeFunction() Method
+
+**Purpose**: Ensure proper spacing between function names and parentheses.
+
+**Example**:
+```basic
+SIN(X)  → "SIN ( X )"  (spaces added after function name)
+```
+
+**Why Needed**: Parser must distinguish between:
+- Function calls: `SIN(X)`
+- Array access: `A%(5)`
+
+---
+
+### Variable Naming Convention and Type System
+
+#### Variable Type Naming
+
+BASIC variables are identified by **type suffix characters** at the end of the variable name:
+
+| Suffix | Type | Java Class | Range/Size |
+|--------|------|-----------|-----------|
+| `$` | String | `StringValue` | Unlimited |
+| `%` | Integer | `IntegerValue` | -2,147,483,648 to 2,147,483,647 |
+| `&` | Long | `LongValue` | -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 |
+| `#` | Real (Double) | `RealValue` | IEEE 754 double precision |
+| `!` | Boolean | `BooleanValue` | true, false |
+| (none) | Default (Real) | `RealValue` | IEEE 754 double precision |
+
+#### Valid Variable Names
+
+```basic
+A#          ' Real number
+A%          ' Integer
+A&          ' Long integer
+A$          ' String
+A!          ' Boolean
+A           ' Default = Real (A#)
+MY_VAR%     ' Multi-word integer with underscore
+```
+
+#### Type Coercion Rules
+
+**Automatic Promotion** (when mixing types in arithmetic):
+```
+INTEGER + REAL          → REAL
+INTEGER + LONG          → LONG
+LONG + REAL             → REAL
+Any + STRING            → STRING (concatenation, not arithmetic)
+```
+
+**Explicit Conversions** (built-in functions):
+```basic
+CINT(value)     ' Convert to integer: CINT(3.7) = 3
+CDBL(value)     ' Convert to real: CDBL(42) = 42.0
+STR$(value)     ' Convert to string: STR$(123) = "123"
+VAL(string)     ' Convert string to number: VAL("42") = 42
+```
+
+**String Operations**:
+```basic
+A$ = "Hello" + " " + "World"    ' Concatenation
+A% = VAL("42")                  ' String to number
+A$ = STR$(123)                  ' Number to string
+```
+
+**Boolean Operations**:
+```basic
+A! = TRUE                       ' Logical values
+B! = FALSE
+C! = A! AND B!                 ' Logical operations
+D! = NOT A!
+```
+
+---
+
+### Detailed Statement Types
+
+GD-BASIC supports **35+ statement types**, organized by category:
+
+#### Control Flow Statements
+
+| Statement | Syntax | Purpose |
+|-----------|--------|---------|
+| `GOTO` | `GOTO lineNumber` | Unconditional jump to line |
+| `IF-THEN-ELSE` | `IF condition THEN statement [ELSE statement]` | Conditional execution |
+| `FOR-NEXT` | `FOR var = start TO end [STEP step]...NEXT [var]` | Loop with counter (0 to many iterations) |
+| `DO-UNTIL` | `DO...statements...UNTIL condition` | Loop executing at least once |
+| `WHILE-WEND` | `WHILE condition...statements...WEND` | Loop while condition true |
+| `GOSUB-RETURN` | `GOSUB lineNumber...RETURN` | Subroutine call and return |
+| `EXIT` | `EXIT [FOR\|DO\|WHILE]` | Exit innermost loop |
+| `END` | `END` | Program termination |
+
+#### Data Manipulation Statements
+
+| Statement | Syntax | Purpose |
+|-----------|--------|---------|
+| `LET` / Assignment | `[LET] variable = expression` | Assign value to variable |
+| `ARRAY ASSIGN` | `arrayName(indices) = expression` | Assign to array element (with expression indices) |
+| `INPUT` | `INPUT [prompt,] variable[, variable...]` | Read from user input |
+| `PRINT` | `PRINT [expression[; expression...]]` | Output to console |
+| `PRINT#` | `PRINT# fileNumber, data` | Output to file |
+| `READ` | `READ variable[, variable...]` | Read from DATA statements |
+| `INPUT#` | `INPUT# fileNumber, variable` | Read from file |
+| `DATA` | `DATA value[, value...]` | Define data for READ statements |
+| `DIM` | `DIM arrayName(size[, size...])` | Declare array (optional - arrays auto-allocate) |
+| `OPEN` | `OPEN filename FOR [INPUT\|OUTPUT] AS #fileNumber` | Open file for I/O |
+| `CLOSE` | `CLOSE #fileNumber` | Close file |
+
+#### Program Structure Statements
+
+| Statement | Syntax | Purpose |
+|-----------|--------|---------|
+| `REM` | `REM comment text` | Single-line comment |
+| `'` | `' comment text` | Single-line comment (alternative) |
+| `#DEFINE` | `#DEFINE name [value\|(params) body]` | Macro definition |
+| `@PRAGMA` | `@PRAGMA(parameter = value)` | Interpreter directive |
+| `COLON` | `:` | Statement separator (multiple statements per line) |
+
+#### Extended Statements (Optional)
+
+- **`WHILE-WEND`**: Loop based on condition (pre-test loop)
+- **`DO-UNTIL`**: Post-test loop (executes at least once)
+- **`TRON`/`TROFF`**: Enable/disable line tracing (similar to @PRAGMA TRACE)
+- **`DEF FN`**: User-defined single-line functions (macro-like)
+
+---
+
+### Built-in Functions (30+)
+
+GD-BASIC provides comprehensive built-in function library:
+
+#### Mathematical Functions
+
+| Function | Parameters | Returns | Description |
+|----------|-----------|---------|-------------|
+| `ABS` | `number` | Real | Absolute value: `ABS(-5)` = `5` |
+| `SQR` | `number` | Real | Square root: `SQR(16)` = `4` |
+| `EXP` | `number` | Real | Exponential (e^x): `EXP(1)` ≈ `2.718` |
+| `LOG` | `number` | Real | Natural logarithm: `LOG(2.718)` ≈ `1` |
+| `SIN` | `radians` | Real | Sine: `SIN(PI/2)` = `1` |
+| `COS` | `radians` | Real | Cosine: `COS(0)` = `1` |
+| `TAN` | `radians` | Real | Tangent: `TAN(PI/4)` ≈ `1` |
+| `INT` | `number` | Integer | Floor (truncate toward zero) |
+| `RND` | `[max]` | Real | Random 0 to 1 (or 0 to max) |
+| `CINT` | `number` | Integer | Convert to integer (with rounding) |
+| `CDBL` | `number` | Real | Convert to real number |
+
+#### String Functions
+
+| Function | Parameters | Returns | Description |
+|----------|-----------|---------|-------------|
+| `LEN` | `string` | Integer | String length |
+| `LEFT$` | `string, count` | String | Leftmost `count` characters |
+| `RIGHT$` | `string, count` | String | Rightmost `count` characters |
+| `MID$` | `string, start[, count]` | String | Substring from position |
+| `STR$` | `number` | String | Convert number to string |
+| `VAL` | `string` | Real | Convert string to number |
+| `UPPER$` | `string` | String | Convert to uppercase (if supported) |
+| `LOWER$` | `string` | String | Convert to lowercase (if supported) |
+| `CHR$` | `code` | String | Character from ASCII code |
+| `ASC` | `string` | Integer | ASCII code of first character |
+| `INSTR` | `haystack, needle[, start]` | Integer | Position of substring (1-based, 0 if not found) |
+| `LTRIM$` | `string` | String | Remove leading spaces |
+| `RTRIM$` | `string` | String | Remove trailing spaces |
+| `TRIM$` | `string` | String | Remove leading and trailing spaces |
+
+#### I/O Functions
+
+| Function | Parameters | Returns | Description |
+|----------|-----------|---------|-------------|
+| `EOF` | `fileNumber` | Integer | End-of-file flag (1 = not at EOF, 0 = at EOF) |
+
+#### System Functions
+
+| Function | Parameters | Returns | Description |
+|----------|-----------|---------|-------------|
+| `RND` | (no params) | Real | Random number 0-1 |
+| `TIMER` | (no params) | Real | System time in seconds |
+| `DATE$` | (no params) | String | Current date as string |
+| `TIME$` | (no params) | String | Current time as string |
+
+---
+
+### Development Guidelines
+
+#### Code Style and Conventions
+
+**Naming Conventions**:
+
+| Element | Convention | Example |
+|---------|-----------|---------|
+| **Classes** | PascalCase | `BasicParser`, `VariableManagement` |
+| **Methods** | camelCase | `parseExpression()`, `executeStatement()` |
+| **Member variables** | camelCase with Hungarian prefix | `_strName`, `_iCount`, `_bFlag`, `_oRef` |
+| **Constants** | UPPER_SNAKE_CASE | `MAX_ARRAY_SIZE`, `DEFAULT_TIMEOUT` |
+| **Prefixes** | Type indicator | `_str` (String), `_i` (int), `_b` (boolean), `_o` (Object), `_f` (float), `_v` (Vector), `_a` (array), `_m` (Map) |
+
+**File Organization**:
+```
+src/main/java/eu/gricom/basic/
+├── Basic.java                           # Main entry point
+├── tokenizer/                           # Lexical analysis
+│   ├── BasicLexer.java
+│   ├── Normalizer.java
+│   ├── Token.java
+│   ├── BasicTokenType.java
+│   └── ReservedWords.java
+├── parser/                              # Syntax analysis
+│   ├── Parser.java (interface)
+│   └── BasicParser.java
+├── statements/                          # Statement implementations
+│   ├── Statement.java (interface)
+│   ├── AssignStatement.java
+│   ├── PrintStatement.java
+│   ├── IfThenStatement.java
+│   ├── ArrayAccessExpression.java
+│   ├── ArrayAssignStatement.java
+│   └── ... (30+ statement classes)
+├── functions/                           # Built-in functions
+│   ├── Function.java (orchestrator)
+│   ├── Abs.java
+│   ├── Sin.java
+│   └── ... (30+ function classes)
+├── variableTypes/                       # Type system
+│   ├── Value.java (interface)
+│   ├── RealValue.java
+│   ├── IntegerValue.java
+│   ├── StringValue.java
+│   ├── BooleanValue.java
+│   └── LongValue.java
+├── memoryManager/                       # State and memory
+│   ├── Program.java
+│   ├── VariableManagement.java
+│   ├── Stack.java
+│   ├── ProgramPointer.java
+│   ├── LineNumberXRef.java
+│   ├── FileManager.java
+│   └── FiFoQueue.java
+├── runtimeManager/                      # Execution engine
+│   └── Execute.java
+├── codeGenerator/                       # Compilation
+│   ├── Generator.java (orchestrator)
+│   ├── ObjectCodeGenerator.java (abstract)
+│   ├── JSONCodeGenerator.java
+│   └── GenerateJavaCode.java
+├── macroManager/                        # Preprocessor
+│   ├── MacroProcessor.java
+│   └── MacroList.java
+├── error/                               # Exceptions
+│   ├── SyntaxErrorException.java
+│   ├── DivideByZeroException.java
+│   ├── OutOfDataException.java
+│   └── ... (other exception types)
+└── helper/                              # Utilities
+    ├── Logger.java
+    ├── Printer.java
+    ├── FileHandler.java
+    ├── ConsoleColors.java
+    ├── Time.java
+    ├── EnvParam.java
+    └── Trace.java
+```
+
+#### Code Quality Standards
+
+- **Checkstyle**: All code must pass `etc/checkstyle-config.xml` validation
+- **PMD**: Static analysis via PMD must show minimal issues
+- **JavaDoc**: All public methods and classes must have JavaDoc comments
+- **Hungarian Notation**: Required for all member variables (see prefixes above)
+- **Line Length**: Maximum 100 characters (120 in exceptional cases)
+- **Indentation**: 4 spaces (no tabs)
+- **Braces**: Opening on same line, closing on own line
+- **Access Modifiers**: Always explicit (no package-private, specify public/private/protected)
+
+#### Contribution Process
+
+1. **Fork** the repository on GitHub
+2. **Create** a feature branch: `git checkout -b feature/your-feature-name`
+3. **Commit** with clear messages following project style
+4. **Test** with `mvn clean test` — all tests must pass
+5. **Code Review**: Verify Checkstyle and PMD compliance via `mvn site`
+6. **Push** to your fork
+7. **Create** Pull Request with description of changes
+
+#### Testing Requirements
+
+All contributions must include:
+- **Unit tests** for new classes/methods
+- **Integration tests** for new features
+- **All existing tests** must pass
+- **Code coverage** should be maintained or improved
+
+---
+
+### LineNumberXRef: Program Navigation Mapping
+
+**Location**: `memoryManager/LineNumberXRef.java`
+
+**Purpose**: Map three-way relationship between BASIC line numbers, token positions, and statement indices.
+
+#### Three-Way Mapping
+
+```
+BASIC Line Number (10, 20, 30, ...)
+         ↕ (line to token mapping)
+Token Position (0, 1, 2, 3, ...)
+         ↕ (token to statement mapping)
+Statement Index (0, 1, 2, 3, ...)
+```
+
+#### Key Methods
+
+```java
+// Store mappings (called during parsing)
+public void putLineNumber(int iLineNumber, int iTokenIndex)
+public void putStatementNumber(int iTokenIndex, int iStatementIndex)
+
+// Retrieve mappings (called during execution, especially GOTO)
+public int getLineNumberFromToken(int iTokenIndex)
+public int getTokenFromStatement(int iStatement)
+public int getStatementFromLineNumber(int iLineNumber)
+public int getStatementFromToken(int iTokenIndex)
+
+// Navigation
+public int getNextLineNumber(int iLineNumber)
+```
+
+#### Usage Example: GOTO Implementation
+
+```java
+// When executing: GOTO 1000
+GotoStatement {
+    int targetLine = 1000;
+    int targetStatement = lineNumberXRef.getStatementFromLineNumber(targetLine);
+    programPointer.setCurrentStatement(targetStatement);
+}
+```
+
+#### Internal Data Structures
+
+```java
+private Map<Integer, Integer> _moLineToToken      // line → token
+private Map<Integer, Integer> _moTokenToStatement // token → statement
+```
+
+---
+
+### Testing Strategy (Comprehensive)
+
+#### Test Structure
+
+```
+src/test/
+├── java/eu/gricom/basic/
+│   ├── parser/
+│   │   ├── BasicParserTest.java          # Parser unit tests
+│   │   └── OperatorPrecedenceTest.java   # Expression evaluation tests
+│   ├── tokenizer/
+│   │   ├── BasicLexerTest.java
+│   │   ├── NormalizerTest.java
+│   │   └── TokenTest.java
+│   ├── statements/
+│   │   ├── AssignStatementTest.java
+│   │   ├── ArrayAccessExpressionTest.java
+│   │   ├── ArrayAssignStatementTest.java
+│   │   └── ... (test for each statement type)
+│   ├── functions/
+│   │   ├── AbsTest.java
+│   │   ├── SqrTest.java
+│   │   └── ... (test for each function)
+│   ├── variableTypes/
+│   │   ├── RealValueTest.java
+│   │   ├── IntegerValueTest.java
+│   │   └── ... (test for each type)
+│   └── memoryManager/
+│       ├── VariableManagementTest.java
+│       ├── StackTest.java
+│       ├── LineNumberXRefTest.java
+│       └── FileManagerTest.java
+└── basic/
+    ├── test_arithmetic_operators.bas         # System integration tests
+    ├── test_array_assign_expr.bas
+    ├── test_array_read_expr.bas
+    ├── test_control_flow.bas
+    └── ... (test for each feature)
+```
+
+#### Test Patterns
+
+**Unit Test Template** (JUnit 5):
+```java
+@Test
+void testFeatureDescription_InputCondition_ExpectedResult() throws Exception {
+    // Arrange: Set up test data and mock objects
+    String strInput = "10 LET X% = 5\n20 END\n";
+    Program oProgram = new Program();
+    oProgram.load("test.bas", strInput);
+    
+    // Act: Execute the code under test
+    BasicLexer oLexer = new BasicLexer();
+    List<Token> aoTokens = oLexer.tokenize(strInput);
+    
+    // Assert: Verify results
+    assertEquals(5, aoTokens.size());
+    assertEquals(BasicTokenType.NUMBER, aoTokens.get(3).getType());
+}
+```
+
+**Integration Test Template**:
+```java
+@Test
+void testCompleteProgram_ExecutesSuccessfully() throws Exception {
+    // Load and run complete .bas program
+    String strSource = """
+        10 A% = 5
+        20 B% = 10
+        30 C% = A% + B%
+        40 PRINT C%
+        50 END
+        """;
+    Program oProgram = new Program();
+    oProgram.load("test.bas", strSource);
+    
+    // Execute and verify
+    Basic oBasic = new Basic();
+    oBasic.interpret(oProgram);
+    // Verify output or side effects
+}
+```
+
+#### Test Execution
+
+```bash
+# Run all tests
+mvn test
+
+# Run specific test class
+mvn test -Dtest=BasicParserTest
+
+# Run with coverage report
+mvn test jacoco:report
+# Report at: target/site/jacoco/index.html
+```
+
+#### Coverage Targets
+
+- **Line coverage**: Minimum 80%
+- **Branch coverage**: Minimum 75%
+- **Method coverage**: 100% for public methods
+- **Exception handling**: All exception paths tested
+
+---
+
+### Performance Considerations
+
+#### Memory Usage
+
+**Variable Storage**:
+- **Per variable**: ~100-500 bytes (including HashMap overhead)
+- **Large program** (10,000 variables): ~1-5 MB
+- **Arrays**: Each element stored individually in HashMap (flexible but slower than native arrays)
+
+**Token Storage**:
+- **Per token**: ~200 bytes
+- **Typical program** (1,000 lines): ~5,000-10,000 tokens = ~1-2 MB
+
+**AST in Memory**:
+- **Per statement**: ~500-1,000 bytes (including nested expressions)
+- **Typical program**: ~5-10 MB
+
+**Total Memory Usage**:
+- **Typical program** (1,000 lines): 10-20 MB
+- **Large program** (10,000 lines): 50-100 MB
+- **Maximum practical size**: ~100,000 lines (1GB memory)
+
+#### Performance Optimizations
+
+**Tokenization**:
+- Single-pass character scanning
+- Early termination on EOF
+- Efficient whitespace handling
+
+**Parsing**:
+- Recursive descent (inherently efficient)
+- Minimal backtracking
+- O(n) parse time for n tokens
+
+**Execution**:
+- Direct statement execution (no bytecode compilation)
+- HashMap lookups for variable access (O(1) average)
+- No expression tree recompilation
+
+**Type System**:
+- Efficient type detection via suffix characters
+- Direct type dispatch in arithmetic operations
+- Minimal boxing/unboxing overhead
+
+#### Bottlenecks and Mitigation
+
+| Bottleneck | Cause | Mitigation |
+|-----------|-------|-----------|
+| Variable Lookup | HashMap overhead | Use caching for frequently accessed variables |
+| Expression Evaluation | Recursive tree traversal | Pre-compile expressions if evaluated multiple times |
+| Array Access | HashMap + string key generation | Consider specialized array classes for dense arrays |
+| File I/O | Buffering overhead | FileManager already uses BufferedReader/Writer |
+
+---
+
+### Extension Points (Detailed Steps)
+
+#### Adding a New Built-in Function
+
+**Step 1**: Create function class in `functions/`:
+```java
+// src/main/java/eu/gricom/basic/functions/NewFunc.java
+package eu.gricom.basic.functions;
+
+public class NewFunc {
+    public static Value execute(Value... aoParams) throws SyntaxErrorException {
+        if (aoParams.length != 1) {
+            throw new SyntaxErrorException("NEWFUNC expects 1 parameter, got " + aoParams.length);
+        }
+        // Implementation
+        Value oResult = ... // compute result
+        return oResult;
+    }
+}
+```
+
+**Step 2**: Add token type to `BasicTokenType.java`:
+```java
+public enum BasicTokenType {
+    // ... existing types ...
+    NEWFUNC,  // Add new function token
+}
+```
+
+**Step 3**: Register keyword in `ReservedWords.java`:
+```java
+// In lists (must maintain order):
+// RESERVED_WORDS list:  "NEWFUNC", ...
+// TOKEN_TYPES list:     BasicTokenType.NEWFUNC, ...
+```
+
+**Step 4**: Add to Function evaluator in `Function.java`:
+```java
+public Value evaluate() throws Exception {
+    switch (_oToken.getType()) {
+        // ... existing cases ...
+        case NEWFUNC:
+            return NewFunc.execute(_aoParams);
+        // ...
+    }
+}
+```
+
+**Step 5**: Add unit tests in `src/test/java/eu/gricom/basic/functions/NewFuncTest.java`:
+```java
+@Test
+void testNewFunc_WithValidInput_ReturnsExpectedResult() throws Exception {
+    Value oResult = NewFunc.execute(new RealValue(5.0));
+    assertEquals(expectedValue, oResult.toReal(), 0.001);
+}
+
+@Test
+void testNewFunc_WithInvalidParameterCount_ThrowsException() {
+    assertThrows(SyntaxErrorException.class, 
+        () -> NewFunc.execute(new RealValue(5.0), new RealValue(10.0)));
+}
+```
+
+**Step 6**: Test with BASIC program:
+```bash
+mvn test -Dtest=NewFuncTest
+```
+
+#### Adding a New Statement Type
+
+**Step 1**: Create statement class in `statements/`:
+```java
+package eu.gricom.basic.statements;
+
+public class NewStatement implements Statement {
+    private final int _iTokenNumber;
+    private final Expression _oParam;
+    
+    public NewStatement(int iTokenNumber, Expression oParam) {
+        _iTokenNumber = iTokenNumber;
+        _oParam = oParam;
+    }
+    
+    @Override
+    public void execute() throws Exception {
+        Value oValue = _oParam.evaluate();
+        // Implement statement logic
+    }
+    
+    @Override
+    public int getTokenNumber() {
+        return _iTokenNumber;
+    }
+    
+    @Override
+    public String content() throws Exception {
+        return "NEWSTATEMENT " + _oParam.toString();
+    }
+    
+    @Override
+    public String structure() throws Exception {
+        return "NEWSTATEMENT";
+    }
+}
+```
+
+**Step 2**: Add token type and keyword (same as functions, steps 2-3)
+
+**Step 3**: Add to parser in `BasicParser.parseStatements()`:
+```java
+case NEWSTATEMENT:
+    iOrgPosition = _iPosition++;
+    oLineNumber.putLineNumber(getToken(0).getLine(), iOrgPosition);
+    Expression oParam = expression();
+    aoStatements.add(new NewStatement(iOrgPosition, oParam));
+    break;
+```
+
+**Step 4**: Add unit tests and system tests
+
+#### Adding a New Value Type
+
+**Step 1**: Implement `Value` interface:
+```java
+package eu.gricom.basic.variableTypes;
+
+public class NewTypeValue implements Value {
+    private final Object _oValue;
+    
+    public NewTypeValue(Object oValue) {
+        _oValue = oValue;
+    }
+    
+    @Override
+    public Value plus(Value oValue) throws SyntaxErrorException {
+        // Implementation
+    }
+    
+    // ... implement all Value interface methods ...
+    
+    @Override
+    public double toReal() throws SyntaxErrorException {
+        // Convert to numeric representation
+    }
+}
+```
+
+**Step 2**: Register in `VariableManagement.java`:
+```java
+// In putMap() method, add type detection:
+if (strKey.contains("~")) {  // Use ~ as example suffix
+    eVariableType = VariableType.NEWTYPE;
+}
+
+// Add type mapping logic
+```
+
+**Step 3**: Add to `VariableType` enum:
+```java
+public enum VariableType {
+    STRING, INTEGER, LONG, REAL, DOUBLE, BOOLEAN, NEWTYPE
+}
+```
+
+**Step 4**: Update variable routing in `VariableManagement`:
+```java
+case NEWTYPE:
+    _moNewTypes.put(strName, (NewTypeValue) oValue);
+    break;
+```
+
+---
+
+### BASIC Language Compatibility
+
+#### Dartmouth BASIC (1964) Compatibility
+
+**Mode**: Enable with `-d` flag or `_bDartmouthFlag = true`
+
+**Features Supported**:
+- Line numbers (required)
+- GOTO/GOSUB jumps
+- Left-to-right operator evaluation (all operators equal precedence)
+- Basic arithmetic operators: `+`, `-`, `*`, `/`, `^`
+- Comparison operators: `<`, `<=`, `>`, `>=`, `=`, `<>`
+- String operations
+- Arrays (DIM optional)
+- Simple control flow (IF-THEN, FOR-NEXT, WHILE-WEND)
+- Basic I/O (PRINT, INPUT, DATA/READ)
+
+**Limitations**:
+- No standard operator precedence (multiplication doesn't bind tighter than addition)
+- Limited string functions
+- No file I/O
+- No user functions (DEF FN is macro-like)
+
+**Example**:
+```basic
+10 REM Dartmouth BASIC program
+20 INPUT "Enter a number", N
+30 IF N > 0 THEN PRINT "Positive"
+40 FOR I = 1 TO N
+50   PRINT I * I        ' Left-to-right: (1 * 1)
+60 NEXT I
+70 END
+```
+
+#### ECMA-55 (1976) Standard BASIC Compatibility
+
+**Mode**: Default (standard precedence, `_bDartmouthFlag = false`)
+
+**Features Supported**:
+- All Dartmouth features PLUS:
+- Standard operator precedence (multiplication before addition)
+- Extended array support
+- String manipulation functions (LEFT$, RIGHT$, MID$, etc.)
+- More math functions (SIN, COS, TAN, SQR, LOG, EXP)
+- Type conversion functions (INT, CDBL, CINT, STR$, VAL)
+- File I/O operations (OPEN, CLOSE, PRINT#, INPUT#)
+
+**Standard Precedence**:
+1. Parentheses, function calls (highest)
+2. Exponentiation (^)
+3. Unary +, -
+4. *, /, MOD
+5. +, -
+6. <, <=, >, >=, =, <>
+7. NOT
+8. AND
+9. OR (lowest)
+
+**Example**:
+```basic
+10 REM ECMA-55 compatible program
+20 A# = 1 + 2 * 3      ' Result: 7 (not 9)
+30 B$ = "Hello" + " " + "World"
+40 C% = INT(3.7)
+50 FOR I% = 1 TO 10
+60   PRINT I%; SQR(I%)
+70 NEXT I%
+80 END
+```
+
+#### Extended Features (Beyond Standards)
+
+**GD-BASIC Extensions**:
+- Array expression indices: `A%(I% + 1)`
+- Unary operators: `-5`, `+10`, `!TRUE`
+- Multiple statements per line with `:` separator
+- Comments with `REM` or `'`
+- @PRAGMA directives for interpreter control
+- Macro support via #DEFINE
+- File operations with descriptive file IDs
+
+**Modern Features Supported**:
+- Dynamic arrays (no DIM required)
+- Type-safe variables with suffixes
+- Comprehensive error handling
+- Standard mathematical functions
+- String manipulation
+- File I/O
+
+**Features NOT Supported**:
+- Classes/Objects
+- Structured error handling (ONERR)
+- Module system
+- Nested functions
+- Lambda expressions
+- Concurrent execution
+
+---
+
+
 
 **Add New Statement Type**:
 1. Create class `NewStatement implements Statement`
