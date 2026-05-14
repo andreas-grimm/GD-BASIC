@@ -342,7 +342,4 @@ Initial version of GD-BASIC interpreter with core functionality.
 
 - README.md — project history and version changelog
 - BASIC_CODING_STANDARD.md — BASIC language specification
-- doc/GD-BASIC_Detailed_Design.md — comprehensive architecture documentation
-- doc/TechnicalDocumentation.md — architecture guide
-- doc/ParserDesign.md — parser implementation details
-- doc/OperatorPrecedenceImplementation.md — expression evaluation modes
+- doc/GD-BASIC_Detailed_Design.md — comprehensive architecture documentation (consolidated reference covering all technical aspects)
