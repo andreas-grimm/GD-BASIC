@@ -9,7 +9,11 @@
       "Read(//tmp/**)",
       "Bash(/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/bin/java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar src/test/basic/fibonacci.bas)",
       "Bash(/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/bin/java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar src/test/basic/fibonacci_array_2.bas)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Read(//Users/andreas/.claude/skills/documentation/**)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
