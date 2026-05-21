@@ -223,7 +223,6 @@ public class Basic {
 
         try {
             oOptions.addOption("h", false, "help (This screen)");
-            oOptions.addOption("i", true, "define input file");
             oOptions.addOption("q", false, "quiet mode");
             oOptions.addOption("v", true, "verbose level: (info, debug, trace, or error)");
             oOptions.addOption("d", false, "dartmouth mode");

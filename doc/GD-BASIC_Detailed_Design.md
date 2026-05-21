@@ -3,7 +3,7 @@
 **Version**: 0.1.0  
 **Project**: GriCom Diminutive BASIC Interpreter  
 **Language**: Java 21  
-**Last Updated**: 2026-05-14
+**Last Updated**: 2026-05-21
 
 ---
 
@@ -31,8 +31,8 @@
 
 ### Build Artifacts
 After `mvn clean package`, produces:
-- `target/BASIC-0.1.0-java21-jar-with-dependencies.jar` — Standalone executable JAR with all dependencies bundled
-- `target/BASIC-0.1.0-java21.jar` — Primary JAR (requires separate classpath)
+- `target/BASIC-0.1.1-jar-with-dependencies.jar` — Standalone executable JAR with all dependencies bundled
+- `target/BASIC-0.1.1.jar` — Primary JAR (requires separate classpath)
 
 ---
 
@@ -666,8 +666,69 @@ public interface Expression {
 | `InputStatement` | Read from console/keyboard |
 | `FOpenStatement` | Open file |
 | `FCloseStatement` | Close file |
-| `FInputStatement` | Read from file |
-| `FPrintStatement` | Write to file |
+| `FInputStatement` | Read line from file |
+| `FPrintStatement` | Write line to file (with newline) |
+| `FGetStatement` | Read single character from file |
+| `FPutStatement` | Write single character to file (no newline) |
+| `FPeekStatement` | Peek at next character without advancing |
+| `FRewindStatement` | Rewind file to beginning |
+| `FDeleteStatement` | Delete file from disk |
+| `FRenameStatement` | Rename/move file |
+| `FCopyStatement` | Copy file |
+| `MkDirStatement` | Create directory |
+| `RmDirStatement` | Remove/delete directory |
+
+##### Advanced File Operations
+
+**Character-Level I/O**:
+- `FGetStatement`: Reads single character at current file position, advances position by 1
+- `FPutStatement`: Writes single character without newline (wraps FPrintStatement with bCRLF=false)
+- `FPeekStatement`: Reads character without advancing position (lookahead capability)
+- `FRewindStatement`: Resets file position to beginning without closing file
+
+**Implementation Pattern** (FGetStatement example):
+```java
+public class FGetStatement implements Statement {
+    private final int _iFileId;
+    private final String _strVariableName;
+    
+    public void execute() {
+        // Get current position from FileManager
+        int iPosition = oFileManager.getReadPos(_iFileId).toInt();
+        // Close and rewind file
+        oFileManager.closeFile(_iFileId, false);
+        oFileManager.openFile(filename, _iFileId, FileOpenType.READ);
+        // Read lines, accumulating character count until position reached
+        // Extract character at position
+        // Advance position by 1
+        oFileManager.putReadPos(_iFileId, iPosition + 1);
+    }
+}
+```
+
+**File System Operations**:
+- `FDeleteStatement`: Deletes file using Files.delete()
+- `FRenameStatement`: Renames file using Files.move()
+- `FCopyStatement`: Copies file using Files.copy()
+- `MkDirStatement`: Creates directory using Files.createDirectory()
+- `RmDirStatement`: Removes directory (empty or with force flag for recursive deletion)
+
+**Directory Operations** (with optional force flag):
+```java
+public class RmDirStatement implements Statement {
+    private final int _iTokenNumber;
+    private final StringValue _oDirectory;
+    private final BooleanValue _bForce;  // false: empty only, true: recursive delete
+    
+    public void execute() {
+        if (_bForce.toBoolean()) {
+            deleteDirectoryRecursively(_oDirectory);  // rm -rf style
+        } else {
+            Files.delete(oPath);  // Fails if not empty
+        }
+    }
+}
+```
 
 **Data Statements**:
 
@@ -863,6 +924,25 @@ public class Function implements Expression {
 | TIME$ | `Time` | `TIME$()` | System time string |
 | SYSTEM | `System` | `SYSTEM(command)` | Execute system command |
 
+#### File Operation Functions
+
+| Function | Class | Signature | Returns |
+|----------|-------|-----------|---------|
+| FILEEXISTS | `FExists` | `FILEEXISTS(filename$)` | 1 if exists, 0 otherwise |
+| FILESIZE | `FGetSize` | `FILESIZE(filename$)` | File size in bytes |
+| FILETIME | `FModTime` | `FILETIME(filename$)` | Unix timestamp of last modification |
+| FISOPEN | `FIsOpen` | `FISOPEN(fileId)` | 1 if file open, 0 otherwise |
+| FGETNAME | `FGetFileName` | `FGETNAME(fileId)` | Filename for file ID |
+| FLINECT | `FLineCount` | `FLINECT(fileId)` | Current line number in file |
+
+#### Directory Functions
+
+| Function | Class | Signature | Returns |
+|----------|-------|-----------|---------|
+| DIREXISTS | `DirExists` | `DIREXISTS(path$)` | 1 if directory exists, 0 otherwise |
+| DIRLIST | `ListDirectory` | `DIRLIST(path$, pattern$, array$())` | Count of files matching pattern |
+| CHDIR | `ChDir` | `CHDIR(path$)` | 0 on success, error code otherwise |
+
 #### User-Defined Functions
 
 ```java
@@ -1022,6 +1102,16 @@ public class FileManager {
 - `WRITE`: Open for output
 - `APPEND`: Open for appending
 
+**FileManager Enhancements**:
+- `getReadPos(int iFileId)`: Get current read cursor position for file
+- `putReadPos(int iFileId, long lPosition)`: Set read cursor position
+- `getFileStatus(int iFileId)`: Check if file ID is open
+- `getFileName(int iFileId)`: Get filename for file ID
+- `write(int iFileId, String strData)`: Write string to file
+
+**Read Position Tracking**: 
+Internal map `_moReadPos` tracks byte position for each open file, enabling character-by-character I/O operations (FGETC, FPEEK, FREAD).
+
 #### `FiFoQueue<T>` Class
 
 Generic first-in-first-out queue:
@@ -1170,6 +1260,15 @@ Statement (interface)
   ├── FCloseStatement
   ├── FInputStatement
   ├── FPrintStatement
+  ├── FGetStatement
+  ├── FPutStatement
+  ├── FPeekStatement
+  ├── FRewindStatement
+  ├── FDeleteStatement
+  ├── FRenameStatement
+  ├── FCopyStatement
+  ├── MkDirStatement
+  ├── RmDirStatement
   ├── DataStatement
   ├── ReadStatement
   ├── DimStatement
@@ -1370,6 +1469,16 @@ src/test/java/eu/gricom/basic/
 │   ├── AssignStatementTest.java
 │   ├── ForStatementTest.java
 │   ├── IfThenStatementTest.java
+│   ├── FPrintStatementTest.java
+│   ├── FGetStatementTest.java
+│   ├── FPutStatementTest.java
+│   ├── FPeekStatementTest.java
+│   ├── FRewindStatementTest.java
+│   ├── FDeleteStatementTest.java
+│   ├── FRenameStatementTest.java
+│   ├── FCopyStatementTest.java
+│   ├── MkDirStatementTest.java
+│   ├── RmDirStatementTest.java
 │   └─ ... [statement tests]
 ├── tokenizer/
 │   ├── BasicLexerTest.java
@@ -1439,7 +1548,7 @@ public void testCompleteProgram() throws Exception {
 ### Basic Usage
 
 ```bash
-java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar [options] <filename.bas>
+java -jar target/BASIC-0.1.1-jar-with-dependencies.jar [options] <filename.bas>
 ```
 
 ### Mandatory Parameters
@@ -1459,27 +1568,27 @@ java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar [options] <filenam
 
 **Interpret a BASIC program:**
 ```bash
-java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar program.bas
+java -jar target/BASIC-0.1.1-jar-with-dependencies.jar program.bas
 ```
 
 **Verbose output with debug tracing:**
 ```bash
-java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -v debug program.bas
+java -jar target/BASIC-0.1.1-jar-with-dependencies.jar -v debug program.bas
 ```
 
 **Quiet mode (suppress interpreter output, show only program results):**
 ```bash
-java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -q program.bas
+java -jar target/BASIC-0.1.1-jar-with-dependencies.jar -q program.bas
 ```
 
 **Dartmouth BASIC compatibility mode (left-to-right evaluation):**
 ```bash
-java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -d program.bas
+java -jar target/BASIC-0.1.1-jar-with-dependencies.jar -d program.bas
 ```
 
 **Quiet mode (program output only):**
 ```bash
-java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar -q program.bas
+java -jar target/BASIC-0.1.1-jar-with-dependencies.jar -q program.bas
 ```
 
 ### Verbose Levels
@@ -2196,7 +2305,7 @@ public class MacroList {
 ### Command-Line Interface
 
 ```bash
-java -jar BASIC-0.1.0-java21-jar-with-dependencies.jar [options] <filename.bas>
+java -jar BASIC-0.1.1-jar-with-dependencies.jar [options] <filename.bas>
 
 Options:
   -h              Help message
@@ -3601,6 +3710,70 @@ aoExpressions.add(new StringValue("Hello"))
 Statement oPrint = new PrintStatement(aoExpressions, 0)
 oPrint.execute()
 ```
+
+---
+
+## Recent Enhancements (2026-05-21)
+
+### File Operations Suite Expansion
+
+**New Statements Added** (15 total file operation statements):
+
+1. **Character-Level I/O**:
+   - `FGetStatement`: Read single character with position advancement
+   - `FPutStatement`: Write character without newline (simpler FPRINT wrapper)
+   - `FPeekStatement`: Lookahead character without position change
+   - `FRewindStatement`: Reset file position to start without closing
+
+2. **File System Operations**:
+   - `FDeleteStatement`: Delete files from disk
+   - `FRenameStatement`: Rename/move files
+   - `FCopyStatement`: Copy files with binary support
+
+3. **Directory Operations**:
+   - `MkDirStatement`: Create directories
+   - `RmDirStatement`: Remove directories (with optional recursive delete via force flag)
+
+**New Test Coverage** (107 new unit tests):
+- `FGetStatementTest` (19 tests)
+- `FPutStatementTest` (23 tests)
+- `FPeekStatementTest` (19 tests)
+- `FRewindStatementTest` (16 tests)
+- `MkDirStatementTest` (18 tests)
+- `RmDirStatementTest` (22 tests)
+
+**Total Test Count**: 848 tests passing (increased from 731 baseline)
+
+**FileManager Enhancements**:
+- Position tracking: `getReadPos(fileId)` / `putReadPos(fileId, position)`
+- File status queries: `getFileStatus(fileId)`, `getFileName(fileId)`
+- Character-level write: `write(fileId, data)`
+
+### Implementation Patterns Established
+
+**Position-Based Character I/O Pattern**:
+All character-level operations (FGETC, FPEEK, FPUT) use a close-rewind-read pattern:
+1. Close file to flush any pending I/O
+2. Reopen file for reading from stored position
+3. Accumulate character counts across lines to reach target position
+4. Extract/write single character
+5. Update stored position (advance for GET, restore for PEEK)
+
+**Directory Management Pattern**:
+- MKDIR uses `Files.createDirectory()` - fails if parent missing
+- RMDIR supports optional force flag:
+  - `bForce = false`: Simple delete (fails if non-empty)
+  - `bForce = true`: Recursive deletion using `Files.walk()` in reverse order
+
+### Impact on Architecture
+
+**No Breaking Changes**: All enhancements are additive. Existing FOPEN/FCLOSE/FINPUT/FPRINT operations unchanged.
+
+**Test Structure**: New test files follow established patterns:
+- Positive test cases (successful operations)
+- Edge case handling (special characters, long paths, empty input)
+- Interface validation (method return values, structure formats)
+- File system cleanup in tearDown() to prevent test pollution
 
 ---
 

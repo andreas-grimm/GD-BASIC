@@ -4,7 +4,7 @@
 
 GD-BASIC (GriCom Diminutive BASIC Interpreter) is a Java 21 implementation of a Dartmouth-style BASIC interpreter. It can execute `.bas` programs and optionally compile them to Java source code. It also serves as an embeddable scripting engine.
 
-- **Version**: 0.1.0
+- **Version**: 0.1.1
 - **License**: See LICENSE.md
 
 ## Build & Run
@@ -23,7 +23,7 @@ mvn test -Dtest=BasicParserTest
 mvn site
 
 # Run the interpreter
-java -jar target/BASIC-0.1.0-java21-jar-with-dependencies.jar program.bas
+java -jar target/BASIC-0.1.1-jar-with-dependencies.jar program.bas
 
 # Run with options
 java -jar target/BASIC-*-jar-with-dependencies.jar -v debug program.bas   # verbose
