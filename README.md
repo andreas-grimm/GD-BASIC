@@ -157,9 +157,36 @@ Under Development:
 * Updated the documentation to reflect the new features
 * Replaced third party graphs in the documentation with `mermaid` diagrams
 
+0.1.1: Block IF & Array Support Release
+* **Block IF Statement Support**: Multi-line IF-THEN-ELSE-END-IF block structures fully implemented and tested
+  - Parser now properly distinguishes between single-line IF, inline IF, and block IF
+  - Block statements are collected and executed directly instead of relying on line-number jumping
+  - Full support for nested IF blocks and mixed control structures
+* **Multi-Dimensional Array Parsing**: Fixed tokenizer/normalizer to properly handle array subscripts
+  - Improved Normalizer to add spaces after delimiters (commas, semicolons, colons)
+  - Multi-dimensional arrays like `matrix%(1,2)` now parse and execute correctly
+  - Array subscripts with expressions fully supported
+* **READ Statement Enhancement**: Updated READ to support array subscripts
+  - Statements like `READ A$(I%)` now parse correctly
+  - Works with both simple variables and array elements
+* **Parser Refactoring**: Major code quality improvements
+  - Extracted 9 statement parsing methods from main parser switch statement
+  - Eliminated 200+ lines of code duplication
+  - Created reusable statement parsing methods for both main loop and block contexts
+  - Methods: parsePrintStatement, parseReadStatement, parseInputStatement, parseGotoStatement, parseGosubStatement, parseReturnStatement, parseWordStatement, parseForLoop, parseWhileLoop
+* **Test Results**: 100% test success rate
+  - Unit Tests: 848/848 pass ✅
+  - System Integration Tests: 34/34 pass ✅
+  - BASIC Test Programs: 21/21 pass ✅
+
 ---
 Implemented test and demonstration programs, located at `src/test/resources/GD_Basic_Examples`:
 - `Fibonacci.bas`: translation of the ECMA demonstration `FIBONACCI.BAS` program
 - `Eratosthenese.bas`: translation of the ECMA demonstration `ERATOSTHENES.BAS` program
+
+Test Coverage:
+- 848 unit tests covering all core functionality
+- 34 system integration tests covering all BASIC language features
+- 21 BASIC test programs exercising real-world code patterns
 
 ** NOTE: as of this version, all further versions pass the CheckStyle test **
