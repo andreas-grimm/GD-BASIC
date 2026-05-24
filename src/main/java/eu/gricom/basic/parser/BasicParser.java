@@ -1019,6 +1019,18 @@ public class BasicParser implements Parser {
         astrVariables.add(oReadToken.getText());
         _iPosition++;
 
+        // Handle array subscripts if present (e.g., A$(I%))
+        if (getToken(0).getType() == BasicTokenType.LEFT_PAREN) {
+            _iPosition++;
+            while (getToken(0).getType() != BasicTokenType.RIGHT_PAREN) {
+                if (getToken(0).getType() == BasicTokenType.EOP) {
+                    throw new SyntaxErrorException("Missing ) in array subscript");
+                }
+                _iPosition++;
+            }
+            _iPosition++; // skip )
+        }
+
         while (getToken(0).getType() == BasicTokenType.COMMA) {
             _iPosition++;
             oReadToken = getToken(0);
@@ -1029,6 +1041,18 @@ public class BasicParser implements Parser {
 
             astrVariables.add(oReadToken.getText());
             _iPosition++;
+
+            // Handle array subscripts if present
+            if (getToken(0).getType() == BasicTokenType.LEFT_PAREN) {
+                _iPosition++;
+                while (getToken(0).getType() != BasicTokenType.RIGHT_PAREN) {
+                    if (getToken(0).getType() == BasicTokenType.EOP) {
+                        throw new SyntaxErrorException("Missing ) in array subscript");
+                    }
+                    _iPosition++;
+                }
+                _iPosition++; // skip )
+            }
         }
 
         return new ReadStatement(iReadPosition, astrVariables);
