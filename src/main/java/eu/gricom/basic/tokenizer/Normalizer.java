@@ -69,13 +69,13 @@ public final class Normalizer {
                 // else apply filters
                 switch (cCurrentChar) {
                     case ',':
-                        strOutput += " ,";
+                        strOutput += " , ";
                         break;
                     case ';':
-                        strOutput += " ;";
+                        strOutput += " ; ";
                         break;
                     case ':':
-                        strOutput += " :";
+                        strOutput += " : ";
                         break;
                     case '(':
                         strOutput += " ( ";

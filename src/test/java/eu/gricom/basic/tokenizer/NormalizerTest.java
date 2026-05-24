@@ -28,7 +28,7 @@ public class NormalizerTest {
     @Test
     public void testNormalStringWithComma() {
         String strTest = "This is a normal String with Comma:,";
-        String strTarget = "This is a normal String with Comma : ,";
+        String strTarget = "This is a normal String with Comma :  , ";
         String strResult = Normalizer.normalize(strTest);
 
         assertEquals(strTarget, strResult);
@@ -45,7 +45,7 @@ public class NormalizerTest {
     @Test
     public void testNormalStringWithEverything() {
         String strTest = "This is a normal String with Comma in \"Quotes:,\" and out of Quotes:,";
-        String strTarget = "This is a normal String with Comma in \"Quotes:,\" and out of Quotes : ,";
+        String strTarget = "This is a normal String with Comma in \"Quotes:,\" and out of Quotes :  , ";
 
         String strResult = Normalizer.normalize(strTest);
 
