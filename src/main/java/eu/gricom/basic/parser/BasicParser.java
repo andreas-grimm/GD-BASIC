@@ -353,142 +353,23 @@ public class BasicParser implements Parser {
 
                 // FOR Token: Start of the FOR-NEXT loop
                 case FOR:
-                    Expression oStartValueExpression;
-                    Expression oEndValueExpression;
-                    Expression oStepSize;
-
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FOR] ");
-                    final int iForPosition = _iPosition++;
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), iForPosition);
-
-                    // Get start assignment, target value, and step size
-                    String strForVariable = consumeToken(BasicTokenType.WORD).getText();
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [WORD] " + strForVariable);
-
-                    if (getToken(0).getType() != BasicTokenType.ASSIGN_EQUAL) {
-                        throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString() + " in Line ["
-                                + getToken(0).getLine() + "]");
-                    } else {
-                        _iPosition = _iPosition + 1;
-                        oStartValueExpression = expression();
-                        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oStartValueExpression.content());
-                    }
-
-                    if (getToken(0).getType() != BasicTokenType.TO) {
-                        throw new SyntaxErrorException("Missing TO Operator: " + getToken(0).getType().toString()
-                                + " in Line [" + getToken(0).getLine() + "]");
-                    } else {
-                        _iPosition = _iPosition + 1;
-                        oEndValueExpression = expression();
-                        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oEndValueExpression.content());
-                    }
-
-                    if (getToken(0).getType() != BasicTokenType.STEP) {
-                        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [" + getToken(0).getType().toString() + " ] StepSize set to 1");
-                        oStepSize = new RealValue(1); // default step size
-                    } else {
-                        _iPosition = _iPosition + 1;
-                         oStepSize = expression();
-
-                        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oStepSize.content());
-                    }
-
-                    Token oNextToken = findToken(BasicTokenType.NEXT);
-                    _oLogger.debug("-parse-> followed Token: <" + oNextToken.getLine() + "> [NEXT]");
-
-                    // add FOR statement to a statement list
-                    try {
-                        ForStatement oForStatement = new ForStatement(iForPosition, strForVariable, oStartValueExpression,
-                                                                      oEndValueExpression, oStepSize, oNextToken.getLine());
-
-                        aoStatements.add(oForStatement);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    aoStatements.add(parseForLoop());
                     break;
 
                 // GOTO Token: Read the line from terminal for processing
                 case GOTO:
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOTO] ");
-                    iOrgPosition = _iPosition;
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    _iPosition++;
-                    strTargetLineNumber = consumeToken(BasicTokenType.NUMBER).getText();
-                    aoStatements.add(new GotoStatement(iOrgPosition, strTargetLineNumber));
+                    aoStatements.add(parseGotoStatement());
                     break;
 
                 // GOSUB Token: Read the line from terminal for processing
                 case GOSUB:
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOSUB] ");
-                    iOrgPosition = _iPosition;
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    _iPosition++;
-                    strTargetLineNumber = consumeToken(BasicTokenType.NUMBER).getText();
-                    aoStatements.add(new GosubStatement(iOrgPosition, strTargetLineNumber));
+                    aoStatements.add(parseGosubStatement());
                     break;
 
                 // IF Token: Conditional processing
-                case IF: {
-                    int iElsePosition;
-                    iOrgPosition = _iPosition;
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    _iPosition++;
-                    Expression oCondition = expression();
-                    _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [IF]: <" + oCondition.content() + ">");
-                    String strLabel = consumeToken(BasicTokenType.THEN).getText();
-                    _oLogger.debug("-parse-> followed Token: <" + _iPosition + "> [THEN]: <" + strLabel + ">");
-
-                    // Case 1: Single-line IF with line number (IF condition THEN 100)
-                    if (getToken(0).getType() == BasicTokenType.NUMBER) {
-                        aoStatements.add(new IfThenStatement(oCondition, iOrgPosition, 0, 0,
-                                                             Integer.parseInt(getToken(0).getText())));
-                        _iPosition++;
-                    }
-                    // Case 2: Inline statement after THEN (IF condition THEN PRINT "msg")
-                    else if (isStatementKeyword(getToken(0).getType())) {
-                        _oLogger.debug("-parse-> found inline statement after THEN");
-                        List<Statement> aoIfStatements = new ArrayList<>();
-                        aoIfStatements.add(parseInlineStatement());
-                        aoStatements.add(new IfThenStatement(oCondition, iOrgPosition, aoIfStatements, new ArrayList<>(), 0));
-                    }
-                    // Case 3: Block IF (IF condition THEN ... END-IF)
-                    else {
-                        _oLogger.debug("-parse-> found block IF");
-                        Token oElseToken = null;
-
-                        try {
-                            oElseToken = findTokenOnNextLine(BasicTokenType.ELSE);
-                            _oLogger.debug("-parse-> found ELSE token at line: <" + oElseToken.getLine() + ">");
-                            iElsePosition = oElseToken.getLine();
-                        } catch (SyntaxErrorException eException) {
-                            iElsePosition = 0;
-                            _oLogger.debug("-parse-> no ELSE token found in block");
-                        }
-
-                        Token oEndIfToken = findTokenOnNextLine(BasicTokenType.ENDIF);
-                        _oLogger.debug("-parse-> found END-IF token at line: <" + oEndIfToken.getLine() + ">");
-
-                        int iElseOrEndLine = (oElseToken != null) ? oElseToken.getLine() : oEndIfToken.getLine();
-                        List<Statement> aoIfStatements = parseBlockStatements(iElseOrEndLine);
-
-                        List<Statement> aoElseStatements = new ArrayList<>();
-                        if (oElseToken != null) {
-                            _iPosition = findTokenPosition(BasicTokenType.ELSE);
-                            _iPosition++;
-                            _oLogger.debug("-parse-> parsing ELSE block");
-                            aoElseStatements = parseBlockStatements(oEndIfToken.getLine());
-                        }
-
-                        // Skip to ENDIF
-                        _iPosition = findTokenPosition(BasicTokenType.ENDIF);
-                        _iPosition++;
-                        _oLogger.debug("-parse-> skipped to END-IF");
-
-                        aoStatements.add(new IfThenStatement(oCondition, iOrgPosition, aoIfStatements, aoElseStatements, oEndIfToken.getLine()));
-                    }
-
+                case IF:
+                    aoStatements.add(parseIfStatement());
                     break;
-                }
 
                 // ELSE Token: When the IF block is executed, then the program can run into an ELSE statement.
                 case ELSE:
@@ -500,10 +381,7 @@ public class BasicParser implements Parser {
 
                 // INPUT Token: Read the line from terminal for processing
                 case INPUT:
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [INPUT] ");
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    _iPosition++;
-                    aoStatements.add(new InputStatement(_iPosition - 1, consumeToken(BasicTokenType.WORD).getText()));
+                    aoStatements.add(parseInputStatement());
                     break;
 
                 // LABEL Token: tbd
@@ -521,10 +399,7 @@ public class BasicParser implements Parser {
 
                 // RETURN Token: Jump to the GoSub statement
                 case RETURN:
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [RETURN], to be translated ");
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    aoStatements.add(new ReturnStatement(_iPosition));
-                    _iPosition++;
+                    aoStatements.add(parseReturnStatement());
                     break;
 
                 // ENDWHILE Token: Identical to the NEXT functionality:
@@ -540,66 +415,12 @@ public class BasicParser implements Parser {
 
                 // PRINT Token: print to the terminal
                 case PRINT:
-                    int iPrintPosition = _iPosition;
-                    List<Expression> aoExpression = new ArrayList<>();
-                    boolean bCRLF = true;
-
-                    _oLogger.debug("-parse-> found Token: <" + iPrintPosition + "> [PRINT] ");
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), iPrintPosition);
-                    _iPosition++;
-
-
-                    if (getToken(0).getType() != BasicTokenType.NUMBER
-                            && getToken(0).getType() != BasicTokenType.STRING
-                            && getToken(0).getType() != BasicTokenType.WORD) {
-                        aoExpression.add(new StringValue(" "));
-                    } else {
-                        aoExpression.add(expression());
-                    }
-
-                    while (getToken(0).getType() == BasicTokenType.COMMA) {
-                        _iPosition++;
-                        aoExpression.add(expression());
-                    }
-
-                    if (getToken(0).getType() == BasicTokenType.SEMICOLON) {
-                        _iPosition++;
-                        bCRLF = false;
-                    }
-
-                    aoStatements.add(new PrintStatement(iPrintPosition, aoExpression, bCRLF));
+                    aoStatements.add(parsePrintStatement());
                     break;
 
                 // READ Token: read a data value from a DATA block
                 case READ:
-                    int iReadPosition = _iPosition;
-                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [READ] ");
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    List<String> astrVariables = new ArrayList<>();
-                    _iPosition++;
-
-                    Token oReadToken = getToken(0);
-                    if (oReadToken.getType() != BasicTokenType.WORD) {
-                        throw new SyntaxErrorException("Token not of expected type:" + oReadToken.getType()
-                                                               + " Value" + ": " + oReadToken.getText());
-                    }
-
-                    astrVariables.add(oReadToken.getText());
-                    _iPosition++;
-
-                    while (getToken(0).getType() == BasicTokenType.COMMA) {
-                        _iPosition++;
-                        oReadToken = getToken(0);
-                        if (oReadToken.getType() != BasicTokenType.WORD) {
-                            throw new SyntaxErrorException("Token not of expected type:" + oReadToken.getType()
-                                                                   + " Value: " + oReadToken.getText());
-                        }
-
-                        astrVariables.add(oReadToken.getText());
-                        _iPosition++;
-                    }
-
-                    aoStatements.add(new ReadStatement(iReadPosition, astrVariables));
+                    aoStatements.add(parseReadStatement());
                     break;
 
                 // REM Token: contains comments to the program, ignore the rest of the line
@@ -622,63 +443,12 @@ public class BasicParser implements Parser {
 
                 // WHILE Token: Conditional looping
                 case WHILE:
-                    iOrgPosition = _iPosition;
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
-                    _iPosition++;
-                    Expression oWhileCondition = expression();
-                    _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [WHILE]: <" + oWhileCondition.content() + ">");
-                    Token oEndWhileToken = findToken(BasicTokenType.ENDWHILE);
-                    _oLogger.debug("-parse-> followed Token: <" + oEndWhileToken.getLine() + "> [END-WHILE]");
-                    aoStatements.add(new WhileStatement(iOrgPosition, oWhileCondition, oEndWhileToken.getLine()));
+                    aoStatements.add(parseWhileLoop());
                     break;
 
                 // WORD Token: This word is a variable or function, anything following is variable manipulation
                 case WORD:
-                    _oLogger.debug("-parse-> found Token: " + getToken(0).getText()
-                            + " <" + _iPosition + "> [WORD] ");
-
-                    int iCurrPosition = _iPosition;
-
-                    _oLineNumber.putLineNumber(getToken(0).getLine(), iCurrPosition);
-
-                    if (getToken(1).getType() == BasicTokenType.ASSIGN_EQUAL) {
-                        String strName = getToken(0).getText();
-                        _iPosition = _iPosition + 2;
-                        Expression oExpression = expression();
-                        aoStatements.add(new AssignStatement(iCurrPosition, strName, oExpression));
-
-                    } else if (getToken(1).getType() == BasicTokenType.LEFT_PAREN) {
-                        String strName = getToken(0).getText();
-                        _iPosition = _iPosition + 2;          // consume NAME and (
-
-                        List<Expression> aoIndices = new ArrayList<>();
-                        aoIndices.add(expression());           // parse first index expression
-
-                        while (getToken(0).getType() == BasicTokenType.COMMA) {
-                            _iPosition++;                      // consume ,
-                            aoIndices.add(expression());       // parse next index expression
-                        }
-
-                        if (getToken(0).getType() != BasicTokenType.RIGHT_PAREN) {
-                            throw new SyntaxErrorException("Expected ) after array index in Line ["
-                                    + getToken(0).getLine() + "]");
-                        }
-                        _iPosition++;                          // consume )
-
-                        if (getToken(0).getType() != BasicTokenType.ASSIGN_EQUAL) {
-                            throw new SyntaxErrorException("Expected = after array subscript in Line ["
-                                    + getToken(0).getLine() + "]");
-                        }
-                        _iPosition++;                          // consume =
-
-                        Expression oValue = expression();
-                        aoStatements.add(new ArrayAssignStatement(iCurrPosition, strName, aoIndices, oValue));
-
-                    } else {
-                        throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getText()
-                                + " followed by "+ getToken(1).getType().toString()
-                                + " in Line [" + getToken(0).getLine() + "]");
-                    }
+                    aoStatements.add(parseWordStatement());
                     break;
 
                 // No Token identified, Syntax Error
@@ -1192,6 +962,265 @@ public class BasicParser implements Parser {
     }
 
     /**
+     * Parse a PRINT statement.
+     *
+     * @return the parsed PrintStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parsePrintStatement() throws SyntaxErrorException {
+        int iPrintPosition = _iPosition;
+        List<Expression> aoExpression = new ArrayList<>();
+        boolean bCRLF = true;
+
+        _oLogger.debug("-parse-> found Token: <" + iPrintPosition + "> [PRINT] ");
+        _oLineNumber.putLineNumber(getToken(0).getLine(), iPrintPosition);
+        _iPosition++;
+
+        if (getToken(0).getType() != BasicTokenType.NUMBER
+                && getToken(0).getType() != BasicTokenType.STRING
+                && getToken(0).getType() != BasicTokenType.WORD) {
+            aoExpression.add(new StringValue(" "));
+        } else {
+            aoExpression.add(expression());
+        }
+
+        while (getToken(0).getType() == BasicTokenType.COMMA) {
+            _iPosition++;
+            aoExpression.add(expression());
+        }
+
+        if (getToken(0).getType() == BasicTokenType.SEMICOLON) {
+            _iPosition++;
+            bCRLF = false;
+        }
+
+        return new PrintStatement(iPrintPosition, aoExpression, bCRLF);
+    }
+
+    /**
+     * Parse a READ statement.
+     *
+     * @return the parsed ReadStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseReadStatement() throws SyntaxErrorException {
+        int iReadPosition = _iPosition;
+        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [READ] ");
+        _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+        List<String> astrVariables = new ArrayList<>();
+        _iPosition++;
+
+        Token oReadToken = getToken(0);
+        if (oReadToken.getType() != BasicTokenType.WORD) {
+            throw new SyntaxErrorException("Token not of expected type:" + oReadToken.getType()
+                    + " Value: " + oReadToken.getText());
+        }
+
+        astrVariables.add(oReadToken.getText());
+        _iPosition++;
+
+        while (getToken(0).getType() == BasicTokenType.COMMA) {
+            _iPosition++;
+            oReadToken = getToken(0);
+            if (oReadToken.getType() != BasicTokenType.WORD) {
+                throw new SyntaxErrorException("Token not of expected type:" + oReadToken.getType()
+                        + " Value: " + oReadToken.getText());
+            }
+
+            astrVariables.add(oReadToken.getText());
+            _iPosition++;
+        }
+
+        return new ReadStatement(iReadPosition, astrVariables);
+    }
+
+    /**
+     * Parse an INPUT statement.
+     *
+     * @return the parsed InputStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseInputStatement() throws SyntaxErrorException {
+        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [INPUT] ");
+        _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+        int iInputPos = _iPosition;
+        _iPosition++;
+        return new InputStatement(iInputPos, consumeToken(BasicTokenType.WORD).getText());
+    }
+
+    /**
+     * Parse a GOTO statement.
+     *
+     * @return the parsed GotoStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseGotoStatement() throws SyntaxErrorException {
+        int iOrgPosition = _iPosition;
+        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOTO] ");
+        _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+        _iPosition++;
+        String strTargetLineNumber = consumeToken(BasicTokenType.NUMBER).getText();
+        return new GotoStatement(iOrgPosition, strTargetLineNumber);
+    }
+
+    /**
+     * Parse a GOSUB statement.
+     *
+     * @return the parsed GosubStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseGosubStatement() throws SyntaxErrorException {
+        int iOrgPosition = _iPosition;
+        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOSUB] ");
+        _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+        _iPosition++;
+        String strTargetLineNumber = consumeToken(BasicTokenType.NUMBER).getText();
+        return new GosubStatement(iOrgPosition, strTargetLineNumber);
+    }
+
+    /**
+     * Parse a RETURN statement.
+     *
+     * @return the parsed ReturnStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseReturnStatement() throws SyntaxErrorException {
+        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [RETURN]");
+        _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+        int iReturnPos = _iPosition;
+        _iPosition++;
+        return new ReturnStatement(iReturnPos);
+    }
+
+    /**
+     * Parse a WORD statement (assignment or array assignment).
+     *
+     * @return the parsed AssignStatement or ArrayAssignStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseWordStatement() throws SyntaxErrorException {
+        _oLogger.debug("-parse-> found Token: " + getToken(0).getText()
+                + " <" + _iPosition + "> [WORD] ");
+
+        int iCurrPosition = _iPosition;
+        _oLineNumber.putLineNumber(getToken(0).getLine(), iCurrPosition);
+
+        // Simple assignment: variable = expression
+        if (getToken(1).getType() == BasicTokenType.ASSIGN_EQUAL) {
+            String strName = getToken(0).getText();
+            _iPosition = _iPosition + 2;
+            Expression oExpression = expression();
+            return new AssignStatement(iCurrPosition, strName, oExpression);
+        }
+        // Array assignment: array(indices) = expression
+        else if (getToken(1).getType() == BasicTokenType.LEFT_PAREN) {
+            String strName = getToken(0).getText();
+            _iPosition = _iPosition + 2;
+
+            List<Expression> aoIndices = new ArrayList<>();
+            aoIndices.add(expression());
+
+            while (getToken(0).getType() == BasicTokenType.COMMA) {
+                _iPosition++;
+                aoIndices.add(expression());
+            }
+
+            if (getToken(0).getType() != BasicTokenType.RIGHT_PAREN) {
+                throw new SyntaxErrorException("Expected ) after array index in Line ["
+                        + getToken(0).getLine() + "]");
+            }
+            _iPosition++;
+
+            if (getToken(0).getType() != BasicTokenType.ASSIGN_EQUAL) {
+                throw new SyntaxErrorException("Expected = after array subscript in Line ["
+                        + getToken(0).getLine() + "]");
+            }
+            _iPosition++;
+
+            Expression oValue = expression();
+            return new ArrayAssignStatement(iCurrPosition, strName, aoIndices, oValue);
+        } else {
+            throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getText()
+                    + " followed by " + getToken(1).getType().toString()
+                    + " in Line [" + getToken(0).getLine() + "]");
+        }
+    }
+
+    /**
+     * Parse a FOR loop statement.
+     *
+     * @return the parsed ForStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseForLoop() throws SyntaxErrorException {
+        Expression oStartValueExpression;
+        Expression oEndValueExpression;
+        Expression oStepSize;
+
+        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FOR] ");
+        final int iForPosition = _iPosition++;
+        _oLineNumber.putLineNumber(getToken(0).getLine(), iForPosition);
+
+        String strForVariable = consumeToken(BasicTokenType.WORD).getText();
+        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [WORD] " + strForVariable);
+
+        if (getToken(0).getType() != BasicTokenType.ASSIGN_EQUAL) {
+            throw new SyntaxErrorException("Incorrect Operator: " + getToken(0).getType().toString() + " in Line ["
+                    + getToken(0).getLine() + "]");
+        } else {
+            _iPosition = _iPosition + 1;
+            oStartValueExpression = expression();
+            _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oStartValueExpression.content());
+        }
+
+        if (getToken(0).getType() != BasicTokenType.TO) {
+            throw new SyntaxErrorException("Missing TO Operator: " + getToken(0).getType().toString()
+                    + " in Line [" + getToken(0).getLine() + "]");
+        } else {
+            _iPosition = _iPosition + 1;
+            oEndValueExpression = expression();
+            _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oEndValueExpression.content());
+        }
+
+        if (getToken(0).getType() != BasicTokenType.STEP) {
+            _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [" + getToken(0).getType().toString() + " ] StepSize set to 1");
+            oStepSize = new RealValue(1);
+        } else {
+            _iPosition = _iPosition + 1;
+            oStepSize = expression();
+            _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oStepSize.content());
+        }
+
+        Token oNextToken = findToken(BasicTokenType.NEXT);
+        _oLogger.debug("-parse-> followed Token: <" + oNextToken.getLine() + "> [NEXT]");
+
+        try {
+            return new ForStatement(iForPosition, strForVariable, oStartValueExpression,
+                                   oEndValueExpression, oStepSize, oNextToken.getLine());
+        } catch (Exception e) {
+            throw new SyntaxErrorException("Error parsing FOR loop: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Parse a WHILE loop statement.
+     *
+     * @return the parsed WhileLoopStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseWhileLoop() throws SyntaxErrorException {
+        int iOrgPosition = _iPosition;
+        _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+        _iPosition++;
+        Expression oWhileCondition = expression();
+        _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [WHILE]");
+        Token oEndWhileToken = findToken(BasicTokenType.ENDWHILE);
+        _oLogger.debug("-parse-> followed Token: <" + oEndWhileToken.getLine() + "> [END-WHILE]");
+
+        return new WhileStatement(iOrgPosition, oWhileCondition, oEndWhileToken.getLine());
+    }
+
+    /**
      * Parse statements within an IF block until ELSE or ENDIF is encountered.
      * The statements are collected and returned as a list.
      *
@@ -1204,10 +1233,11 @@ public class BasicParser implements Parser {
 
         while (_iPosition < _aoTokens.size()) {
             BasicTokenType oTokenType = getToken(0).getType();
+            int iCurrentLine = getToken(0).getLine();
 
             // Stop if we hit ELSE or ENDIF at the correct line
             if ((oTokenType == BasicTokenType.ELSE || oTokenType == BasicTokenType.ENDIF) &&
-                getToken(0).getLine() == iBlockEndLine) {
+                iCurrentLine == iBlockEndLine) {
                 break;
             }
 
@@ -1216,12 +1246,67 @@ public class BasicParser implements Parser {
                 break;
             }
 
-            // For now, just skip tokens inside the block - the actual statements will be handled
-            // by the main parsing loop via line number navigation
+            // Skip colons (statement separators)
             if (oTokenType == BasicTokenType.COLON) {
                 _iPosition++;
-            } else {
-                break;
+                continue;
+            }
+
+            // Skip comments
+            if (oTokenType == BasicTokenType.REM) {
+                _iPosition++;
+                continue;
+            }
+
+            // Parse statements based on token type
+            Statement oStatement = null;
+
+            try {
+                switch (oTokenType) {
+                    case PRINT:
+                        oStatement = parsePrintStatement();
+                        break;
+                    case INPUT:
+                        oStatement = parseInputStatement();
+                        break;
+                    case WORD:
+                    case LET:
+                        oStatement = parseWordStatement();
+                        break;
+                    case READ:
+                        oStatement = parseReadStatement();
+                        break;
+                    case GOTO:
+                        oStatement = parseGotoStatement();
+                        break;
+                    case GOSUB:
+                        oStatement = parseGosubStatement();
+                        break;
+                    case FOR:
+                        oStatement = parseForLoop();
+                        break;
+                    case WHILE:
+                        oStatement = parseWhileLoop();
+                        break;
+                    case IF:
+                        oStatement = parseIfStatement();
+                        break;
+                    case RETURN:
+                        oStatement = parseReturnStatement();
+                        break;
+                    default:
+                        // Unknown statement type in block - skip it
+                        _oLogger.debug("-parseBlockStatements-> skipping unknown token: " + oTokenType);
+                        _iPosition++;
+                        continue;
+                }
+
+                if (oStatement != null) {
+                    aoBlockStatements.add(oStatement);
+                }
+            } catch (SyntaxErrorException e) {
+                // Re-throw with block context
+                throw new SyntaxErrorException("Error in block at line " + iCurrentLine + ": " + e.getMessage());
             }
         }
 
@@ -1237,14 +1322,91 @@ public class BasicParser implements Parser {
     private Statement parseInlineStatement() throws SyntaxErrorException {
         BasicTokenType oTokenType = getToken(0).getType();
 
-        // For inline statements, we create a wrapper that will be executed as part of the IF
-        // This is a simplified approach - just return a print statement for now
-        if (oTokenType == BasicTokenType.PRINT) {
-            _iPosition++;
-            return new PrintStatement(_iPosition - 1, new ArrayList<Expression>(), true);
+        switch (oTokenType) {
+            case PRINT:
+                return parsePrintStatement();
+            case INPUT:
+                return parseInputStatement();
+            case WORD:
+            case LET:
+                return parseWordStatement();
+            case READ:
+                return parseReadStatement();
+            case GOTO:
+                return parseGotoStatement();
+            case GOSUB:
+                return parseGosubStatement();
+            case RETURN:
+                return parseReturnStatement();
+            default:
+                throw new SyntaxErrorException("Unsupported statement after THEN: " + oTokenType);
         }
+    }
 
-        throw new SyntaxErrorException("Inline statement after THEN not yet supported: " + oTokenType);
+    /**
+     * Parse an IF statement (handles single-line, inline, and block IF).
+     *
+     * @return the parsed IfThenStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseIfStatement() throws SyntaxErrorException {
+        int iElsePosition;
+        int iOrgPosition = _iPosition;
+        _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+        _iPosition++;
+        Expression oCondition = expression();
+        _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [IF]: <" + oCondition.content() + ">");
+        String strLabel = consumeToken(BasicTokenType.THEN).getText();
+        _oLogger.debug("-parse-> followed Token: <" + _iPosition + "> [THEN]: <" + strLabel + ">");
+
+        // Case 1: Single-line IF with line number (IF condition THEN 100)
+        if (getToken(0).getType() == BasicTokenType.NUMBER) {
+            int iTargetLine = Integer.parseInt(getToken(0).getText());
+            _iPosition++;
+            return new IfThenStatement(oCondition, iOrgPosition, 0, 0, iTargetLine);
+        }
+        // Case 2: Inline statement after THEN (IF condition THEN PRINT "msg")
+        else if (isStatementKeyword(getToken(0).getType())) {
+            _oLogger.debug("-parse-> found inline statement after THEN");
+            List<Statement> aoIfStatements = new ArrayList<>();
+            aoIfStatements.add(parseInlineStatement());
+            return new IfThenStatement(oCondition, iOrgPosition, aoIfStatements, new ArrayList<>(), 0);
+        }
+        // Case 3: Block IF (IF condition THEN ... END-IF)
+        else {
+            _oLogger.debug("-parse-> found block IF");
+            Token oElseToken = null;
+
+            try {
+                oElseToken = findTokenOnNextLine(BasicTokenType.ELSE);
+                _oLogger.debug("-parse-> found ELSE token at line: <" + oElseToken.getLine() + ">");
+                iElsePosition = oElseToken.getLine();
+            } catch (SyntaxErrorException eException) {
+                iElsePosition = 0;
+                _oLogger.debug("-parse-> no ELSE token found in block");
+            }
+
+            Token oEndIfToken = findTokenOnNextLine(BasicTokenType.ENDIF);
+            _oLogger.debug("-parse-> found END-IF token at line: <" + oEndIfToken.getLine() + ">");
+
+            int iElseOrEndLine = (oElseToken != null) ? oElseToken.getLine() : oEndIfToken.getLine();
+            List<Statement> aoIfStatements = parseBlockStatements(iElseOrEndLine);
+
+            List<Statement> aoElseStatements = new ArrayList<>();
+            if (oElseToken != null) {
+                _iPosition = findTokenPosition(BasicTokenType.ELSE);
+                _iPosition++;
+                _oLogger.debug("-parse-> parsing ELSE block");
+                aoElseStatements = parseBlockStatements(oEndIfToken.getLine());
+            }
+
+            // Skip to ENDIF
+            _iPosition = findTokenPosition(BasicTokenType.ENDIF);
+            _iPosition++;
+            _oLogger.debug("-parse-> skipped to END-IF");
+
+            return new IfThenStatement(oCondition, iOrgPosition, aoIfStatements, aoElseStatements, oEndIfToken.getLine());
+        }
     }
 
     /**
