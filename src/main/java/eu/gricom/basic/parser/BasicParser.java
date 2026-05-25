@@ -128,7 +128,6 @@ public class BasicParser implements Parser {
         _iPosition = 0;
 
         int iOrgPosition;
-        String strTargetLineNumber;
         int iFileId;
 
         _oLogger.debug("Start parsing...");
@@ -1016,19 +1015,28 @@ public class BasicParser implements Parser {
                     + " Value: " + oReadToken.getText());
         }
 
-        astrVariables.add(oReadToken.getText());
+        String strVariableName = oReadToken.getText();
         _iPosition++;
 
         // Handle array subscripts if present (e.g., A$(I%))
         if (getToken(0).getType() == BasicTokenType.LEFT_PAREN) {
+            StringBuilder sbArrayRef = new StringBuilder(strVariableName);
             _iPosition++;
+            sbArrayRef.append("(");
             while (getToken(0).getType() != BasicTokenType.RIGHT_PAREN) {
                 if (getToken(0).getType() == BasicTokenType.EOP) {
                     throw new SyntaxErrorException("Missing ) in array subscript");
                 }
+                if (getToken(0).getType() != BasicTokenType.LEFT_PAREN) {
+                    sbArrayRef.append(getToken(0).getText());
+                }
                 _iPosition++;
             }
             _iPosition++; // skip )
+            sbArrayRef.append(")");
+            astrVariables.add(sbArrayRef.toString());
+        } else {
+            astrVariables.add(strVariableName);
         }
 
         while (getToken(0).getType() == BasicTokenType.COMMA) {
@@ -1039,19 +1047,28 @@ public class BasicParser implements Parser {
                         + " Value: " + oReadToken.getText());
             }
 
-            astrVariables.add(oReadToken.getText());
+            strVariableName = oReadToken.getText();
             _iPosition++;
 
             // Handle array subscripts if present
             if (getToken(0).getType() == BasicTokenType.LEFT_PAREN) {
+                StringBuilder sbArrayRef = new StringBuilder(strVariableName);
                 _iPosition++;
+                sbArrayRef.append("(");
                 while (getToken(0).getType() != BasicTokenType.RIGHT_PAREN) {
                     if (getToken(0).getType() == BasicTokenType.EOP) {
                         throw new SyntaxErrorException("Missing ) in array subscript");
                     }
+                    if (getToken(0).getType() != BasicTokenType.LEFT_PAREN) {
+                        sbArrayRef.append(getToken(0).getText());
+                    }
                     _iPosition++;
                 }
                 _iPosition++; // skip )
+                sbArrayRef.append(")");
+                astrVariables.add(sbArrayRef.toString());
+            } else {
+                astrVariables.add(strVariableName);
             }
         }
 
@@ -1283,7 +1300,7 @@ public class BasicParser implements Parser {
             }
 
             // Parse statements based on token type
-            Statement oStatement = null;
+            Statement oStatement;
 
             try {
                 switch (oTokenType) {
@@ -1325,9 +1342,7 @@ public class BasicParser implements Parser {
                         continue;
                 }
 
-                if (oStatement != null) {
-                    aoBlockStatements.add(oStatement);
-                }
+                aoBlockStatements.add(oStatement);
             } catch (SyntaxErrorException e) {
                 // Re-throw with block context
                 throw new SyntaxErrorException("Error in block at line " + iCurrentLine + ": " + e.getMessage());
@@ -1346,25 +1361,16 @@ public class BasicParser implements Parser {
     private Statement parseInlineStatement() throws SyntaxErrorException {
         BasicTokenType oTokenType = getToken(0).getType();
 
-        switch (oTokenType) {
-            case PRINT:
-                return parsePrintStatement();
-            case INPUT:
-                return parseInputStatement();
-            case WORD:
-            case LET:
-                return parseWordStatement();
-            case READ:
-                return parseReadStatement();
-            case GOTO:
-                return parseGotoStatement();
-            case GOSUB:
-                return parseGosubStatement();
-            case RETURN:
-                return parseReturnStatement();
-            default:
-                throw new SyntaxErrorException("Unsupported statement after THEN: " + oTokenType);
-        }
+        return switch (oTokenType) {
+            case PRINT -> parsePrintStatement();
+            case INPUT -> parseInputStatement();
+            case WORD, LET -> parseWordStatement();
+            case READ -> parseReadStatement();
+            case GOTO -> parseGotoStatement();
+            case GOSUB -> parseGosubStatement();
+            case RETURN -> parseReturnStatement();
+            default -> throw new SyntaxErrorException("Unsupported statement after THEN: " + oTokenType);
+        };
     }
 
     /**
@@ -1374,7 +1380,6 @@ public class BasicParser implements Parser {
      * @throws SyntaxErrorException if parsing fails
      */
     private Statement parseIfStatement() throws SyntaxErrorException {
-        int iElsePosition;
         int iOrgPosition = _iPosition;
         _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
         _iPosition++;
@@ -1404,9 +1409,7 @@ public class BasicParser implements Parser {
             try {
                 oElseToken = findTokenOnNextLine(BasicTokenType.ELSE);
                 _oLogger.debug("-parse-> found ELSE token at line: <" + oElseToken.getLine() + ">");
-                iElsePosition = oElseToken.getLine();
             } catch (SyntaxErrorException eException) {
-                iElsePosition = 0;
                 _oLogger.debug("-parse-> no ELSE token found in block");
             }
 
@@ -1457,7 +1460,6 @@ public class BasicParser implements Parser {
      */
     private Token findTokenOnNextLine(final BasicTokenType oType) throws SyntaxErrorException {
         int iCurrentPosition = _iPosition;
-        int iCurrentLine = (iCurrentPosition < _aoTokens.size()) ? _aoTokens.get(iCurrentPosition).getLine() : 0;
 
         while (iCurrentPosition < _aoTokens.size()) {
             Token oToken = _aoTokens.get(iCurrentPosition);

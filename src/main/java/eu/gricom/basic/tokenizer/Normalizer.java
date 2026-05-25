@@ -33,6 +33,7 @@ public final class Normalizer {
 
         boolean bQuotationMark = false;
         boolean bSquareBrackets = false;
+        int iParenthesisDepth = 0;
 
         // replace tabs with spaces
         strWork = strWork.replace("\t", "    ");
@@ -52,6 +53,15 @@ public final class Normalizer {
             // if the quotation mark is not set, then just pass thru...
             if (cCurrentChar == '"') {
                 bQuotationMark = !bQuotationMark;
+            }
+
+            // track parenthesis depth when not in quotes or square brackets
+            if (!bQuotationMark && !bSquareBrackets) {
+                if (cCurrentChar == '(') {
+                    iParenthesisDepth++;
+                } else if (cCurrentChar == ')') {
+                    iParenthesisDepth--;
+                }
             }
 
             // now check whether we are between square brackets [] - here remove all spaces
@@ -82,6 +92,29 @@ public final class Normalizer {
                         break;
                     case ')':
                         strOutput += " ) ";
+                        break;
+                    case '+':
+                    case '-':
+                    case '*':
+                    case '/':
+                    case '^':
+                    case '&':
+                    case '|':
+                        // Inside parentheses, add spaces around arithmetic operators
+                        // Skip spaces for unary minus/plus (right after '(' or ',')
+                        if (iParenthesisDepth > 0 && cPreviousChar != '(' && cPreviousChar != ',') {
+                            strOutput += " " + cCurrentChar + " ";
+                        } else {
+                            strOutput += cCurrentChar;
+                        }
+                        break;
+                    case '=':
+                    case '>':
+                    case '<':
+                    case '!':
+                        // Comparison operators: don't add spaces to avoid breaking multi-char operators
+                        // (e.g., >=, <=, ==, !=, <<, >>)
+                        strOutput += cCurrentChar;
                         break;
                     default:
                         strOutput += cCurrentChar;
