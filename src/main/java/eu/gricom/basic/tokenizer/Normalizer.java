@@ -165,12 +165,12 @@ public final class Normalizer {
      *
      * @param strInput string to be adjusted
      * @return normalized string
-     * @throws SyntaxErrorException if the parenthesis are not set correctly
+     * @throws SyntaxErrorException if the parenthesis is not set correctly
      */
     public static String normalizeFunction(final String strInput) throws SyntaxErrorException {
         String strWork = strInput;
 
-        // this function only runs if there are two parenthesis in the string
+        // this function only runs if there are two parentheses in the string
         int iIndexStart = strWork.indexOf("(");
         int iIndexEnd = strWork.indexOf(")");
 
