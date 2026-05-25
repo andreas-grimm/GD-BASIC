@@ -166,27 +166,36 @@ Under Development:
   - Improved Normalizer to add spaces after delimiters (commas, semicolons, colons)
   - Multi-dimensional arrays like `matrix%(1,2)` now parse and execute correctly
   - Array subscripts with expressions fully supported
+* **Automatic Operator Spacing Normalization** (NEW)
+  - Normalizer automatically normalizes spacing around operators inside parentheses
+  - Accepts flexible spacing: `A$(X%+1)`, `A$(X% + 1)`, and `A$(X% +1)` all work
+  - Preserves multi-character operators: `>=`, `<=`, `!=`, `<<`, `>>`
+  - Correctly handles unary operators: `-5` stays as negative literal
+  - 28 comprehensive unit tests added for Normalizer functionality
 * **READ Statement Enhancement**: Updated READ to support array subscripts
   - Statements like `READ A$(I%)` now parse correctly
   - Works with both simple variables and array elements
+  - Properly reconstructs array variable references from tokenized input
 * **Parser Refactoring**: Major code quality improvements
   - Extracted 9 statement parsing methods from main parser switch statement
   - Eliminated 200+ lines of code duplication
   - Created reusable statement parsing methods for both main loop and block contexts
   - Methods: parsePrintStatement, parseReadStatement, parseInputStatement, parseGotoStatement, parseGosubStatement, parseReturnStatement, parseWordStatement, parseForLoop, parseWhileLoop
 * **Test Results**: 100% test success rate
-  - Unit Tests: 848/848 pass ✅
+  - Unit Tests: 881/881 pass ✅ (28 new Normalizer tests)
   - System Integration Tests: 34/34 pass ✅
   - BASIC Test Programs: 21/21 pass ✅
 
 ---
-Implemented test and demonstration programs, located at `src/test/resources/GD_Basic_Examples`:
-- `Fibonacci.bas`: translation of the ECMA demonstration `FIBONACCI.BAS` program
-- `Eratosthenese.bas`: translation of the ECMA demonstration `ERATOSTHENES.BAS` program
+Implemented test and demonstration programs, located at `src/test/basic/`:
+- `fibonacci.bas`: translation of the ECMA demonstration `FIBONACCI.BAS` program
+- `fibonacci_array.bas`: Fibonacci using array storage
+- Array test programs: `test_array*.bas` testing array functionality
+- Parser test programs: `test_basic_*.bas` testing various language features
 
 Test Coverage:
-- 848 unit tests covering all core functionality
-- 34 system integration tests covering all BASIC language features
-- 21 BASIC test programs exercising real-world code patterns
+- **881 unit tests** covering all core functionality (28 new Normalizer tests)
+- **34 system integration tests** covering all BASIC language features
+- **21 BASIC test programs** exercising real-world code patterns
 
 ** NOTE: as of this version, all further versions pass the CheckStyle test **

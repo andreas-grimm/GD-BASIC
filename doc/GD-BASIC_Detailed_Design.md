@@ -1,9 +1,9 @@
 # GD-BASIC Interpreter: Detailed Technical Design Document
 
-**Version**: 0.1.0  
+**Version**: 0.1.1  
 **Project**: GriCom Diminutive BASIC Interpreter  
 **Language**: Java 21  
-**Last Updated**: 2026-05-21
+**Last Updated**: 2026-05-25
 
 ---
 

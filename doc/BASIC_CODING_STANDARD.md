@@ -1,8 +1,8 @@
 # GD-BASIC Coding Standard
 
-**Version:** 0.1.0  
+**Version:** 0.1.1  
 **Interpreter:** GriCom Basic Interpreter  
-**Last Updated:** 2026-04-30
+**Last Updated:** 2026-05-25
 
 ## Table of Contents
 
@@ -136,30 +136,41 @@ The interpreter supports calculated expressions as array indices, enabling dynam
 60 PRINT F%(N%)
 ```
 
-**IMPORTANT: Operator Spacing in Array Indices**
+**Operator Spacing in Array Indices (Automatic Normalization)**
 
-When using mathematical expressions inside array indices, **operators must be separated from operands by spaces**. This is critical for the parser to correctly recognize calculated indices:
+The Normalizer automatically normalizes operator spacing inside parentheses during preprocessing. This means the interpreter accepts flexible spacing in array index expressions:
 
-| Format | Correct? | Example | Notes |
-|--------|----------|---------|-------|
-| Spaces around operators | ✅ YES | `A$(X% + 1)` | Correct: operators separated by spaces |
-| No spaces | ❌ NO | `A$(X%+1)` | **Incorrect**: treated as literal variable name |
-| Mixed spacing | ❌ NO | `A$(X% +1)` | **Incorrect**: asymmetric spacing not recognized |
+| Format | Status | Example | Notes |
+|--------|--------|---------|-------|
+| Spaces around operators | ✅ Works | `A$(X% + 1)` | Normalized to standard form |
+| No spaces | ✅ Works | `A$(X%+1)` | Automatically spaced by Normalizer |
+| Mixed spacing | ✅ Works | `A$(X% +1)` | Normalized to consistent spacing |
 
-**Correct Usage:**
+**How Normalization Works:**
+
+The Normalizer preprocesses each BASIC line before parsing:
+1. Detects expressions inside parentheses `(` and `)`
+2. Automatically adds spaces around arithmetic operators: `+`, `-`, `*`, `/`, `^`, `&`, `|`
+3. Preserves multi-character operators: `>=`, `<=`, `!=`, `<<`, `>>`
+4. Handles unary operators correctly (e.g., `-1` stays intact)
+
+**Examples (All equivalent after normalization):**
 ```basic
 10 X% = 5
-20 ARR%(X% + 1) = 100        REM ✅ Correct: spaces around +
-30 ARR%(X% - 1) = 200        REM ✅ Correct: spaces around -
-40 ARR%(X% * 2) = 300        REM ✅ Correct: spaces around *
-50 PRINT ARR%(X% + 1)        REM ✅ Correct: reads from index 6
+20 ARR%(X%+1) = 100          REM No spaces: normalized automatically
+30 ARR%(X% + 1) = 100        REM Already spaced: kept as-is
+40 ARR%(X% +1) = 100         REM Mixed spacing: normalized
 ```
 
-**Incorrect Usage:**
+All three statements above are automatically converted to the same normalized form: `ARR%( X + 1 ) = 100`
+
+**Unary Operator Handling:**
+
+Negative literals are preserved correctly:
 ```basic
-10 X% = 5
-20 ARR%(X%+1) = 100          REM ❌ Wrong: no spaces, treats "X%+1" as variable name
-30 ARR%(X%+1) = 200          REM ❌ Wrong: will fail at runtime
+10 RESULT# = ABS(-5)          REM ✅ Negative sign preserved
+20 ARR%(0) = -10              REM ✅ Unary minus handled correctly
+30 ARR%(I% - 1) = 0           REM ✅ Binary minus gets spaces: I -  1
 ```
 
 **Notes:**
@@ -167,7 +178,7 @@ When using mathematical expressions inside array indices, **operators must be se
 - No size limits need to be pre-declared
 - Negative indices are allowed
 - Each array element follows the type rules of its parent variable
-- **Expression indices require spaces around operators** — this follows the general BASIC operator spacing standard
+- While flexible spacing is now supported, **clear spacing in source code is still recommended for readability** (e.g., `X% + 1` is clearer than `X%+1`)
 
 ---
 
