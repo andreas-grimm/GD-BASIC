@@ -163,6 +163,13 @@ public class BasicParser implements Parser {
 
                 case CHDIR:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [CHDIR] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    int iPosition = _iPosition;
+                    _iPosition++;
+
+                    aoStatements.add(new ChDirStatement(iPosition, new StringValue(getToken(0).getText())));
+
+                    _iPosition++;
                     break;
 
                 // COMMENT Token: Ignore any following part of the line, identical to the REM token.
