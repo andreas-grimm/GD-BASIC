@@ -161,6 +161,10 @@ public class BasicParser implements Parser {
                     _iPosition++;
                     break;
 
+                case CHDIR:
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [CHDIR] ");
+                    break;
+
                 // COMMENT Token: Ignore any following part of the line, identical to the REM token.
                 case COLON:
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [COLON] ");

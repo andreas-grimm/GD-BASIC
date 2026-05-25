@@ -1,6 +1,7 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.memoryManager.FileManager;
+import eu.gricom.basic.statements.ChDirStatement;
 import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 import org.junit.jupiter.api.BeforeEach;
@@ -208,7 +209,7 @@ public class GetCwdTest {
     // =========================================================================
 
     /**
-     * Test: GetCwd with ChDir function.
+     * Test: GetCwd with ChDir statement.
      * <p>
      * Given: ChDir is used to change directory
      * When: GetCwd.execute() is called
@@ -220,7 +221,8 @@ public class GetCwdTest {
     public void testGetCwd_AfterChdir_ReturnsChangedDirectory() throws Exception {
         // Setup: Use ChDir to change directory
         String strNewDirectory = "/tmp/";
-        ChDir.execute(new StringValue(strNewDirectory));
+        ChDirStatement oStatement = new ChDirStatement(10, new StringValue(strNewDirectory));
+        oStatement.execute();
 
         // Execute: Call GetCwd
         Value oResult = GetCwd.execute();

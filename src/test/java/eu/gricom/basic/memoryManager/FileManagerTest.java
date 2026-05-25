@@ -1,6 +1,7 @@
 package eu.gricom.basic.memoryManager;
 
 import eu.gricom.basic.error.RuntimeException;
+import eu.gricom.basic.statements.ChDirStatement;
 import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
@@ -731,7 +732,7 @@ public class FileManagerTest {
     @Test
     public void testOpenFile_WithAbsolutePathAfterChDir_OpensSuccessfully() throws IOException, Exception {
         // Setup: Change current directory using ChDir
-        eu.gricom.basic.functions.ChDir.execute(new StringValue("/tmp"));
+        new ChDirStatement(10, new StringValue("/tmp")).execute();
         FileManager oFileManager = new FileManager();
 
         // Execute: Open file with absolute path
@@ -759,7 +760,7 @@ public class FileManagerTest {
         Files.writeString(oFileInDir, "Test content");
 
         // Change directory using ChDir
-        eu.gricom.basic.functions.ChDir.execute(new StringValue(oTempDir.toString() + "/"));
+        new ChDirStatement(10, new StringValue(oTempDir.toString() + "/")).execute();
         FileManager oFileManager = new FileManager();
 
         // Execute: Open file with relative path
@@ -795,12 +796,12 @@ public class FileManagerTest {
         Files.writeString(oFile2, "Content 2");
 
         // Change to first directory
-        eu.gricom.basic.functions.ChDir.execute(new StringValue(oTempDir1.toString() + "/"));
+        new ChDirStatement(10, new StringValue(oTempDir1.toString() + "/")).execute();
         FileManager oFileManager = new FileManager();
         boolean bResult1 = oFileManager.openFile("file1.txt", FILE_ID_READ, FileOpenType.READ);
 
         // Change to second directory
-        eu.gricom.basic.functions.ChDir.execute(new StringValue(oTempDir2.toString() + "/"));
+        new ChDirStatement(10, new StringValue(oTempDir2.toString() + "/")).execute();
         FileManager oFileManager2 = new FileManager();
         boolean bResult2 = oFileManager2.openFile("file2.txt", FILE_ID_WRITE, FileOpenType.WRITE);
 
@@ -829,7 +830,7 @@ public class FileManagerTest {
     @Test
     public void testGetFileName_AfterChdirWithRelativePath_ReturnsCorrectPath() throws IOException, Exception {
         // Setup: Change directory
-        eu.gricom.basic.functions.ChDir.execute(new StringValue("/tmp/"));
+        new ChDirStatement(10, new StringValue("/tmp/")).execute();
         FileManager oFileManager = new FileManager();
 
         // Open file with absolute path
@@ -852,7 +853,7 @@ public class FileManagerTest {
     @Test
     public void testGetFileStatus_AfterChdirWithOpenFile_ReturnsTrue() throws IOException, Exception {
         // Setup: Change directory
-        eu.gricom.basic.functions.ChDir.execute(new StringValue("/tmp/"));
+        new ChDirStatement(10, new StringValue("/tmp/")).execute();
         FileManager oFileManager = new FileManager();
 
         // Open file
@@ -874,7 +875,7 @@ public class FileManagerTest {
     @Test
     public void testRead_AfterChdirWithOpenFile_ReadsContent() throws IOException, Exception {
         // Setup: Change directory
-        eu.gricom.basic.functions.ChDir.execute(new StringValue("/tmp/"));
+        new ChDirStatement(10, new StringValue("/tmp/")).execute();
         FileManager oFileManager = new FileManager();
 
         // Open and read file
@@ -898,13 +899,13 @@ public class FileManagerTest {
     @Test
     public void testSetCurrentDirectory_ResetWithEmptyString_ResetsDirectory() throws Exception {
         // Setup: Set a directory
-        eu.gricom.basic.functions.ChDir.execute(new StringValue("/tmp/"));
+        new ChDirStatement(10, new StringValue("/tmp/")).execute();
         FileManager oFileManager = new FileManager();
         String strDir1 = oFileManager.getCurrentDirectory();
         assertTrue(strDir1.contains("/tmp"));
 
         // Change to empty directory
-        eu.gricom.basic.functions.ChDir.execute(new StringValue(""));
+        new ChDirStatement(10, new StringValue("")).execute();
         FileManager oFileManager2 = new FileManager();
         String strDir2 = oFileManager2.getCurrentDirectory();
         assertEquals("", strDir2);
@@ -927,7 +928,7 @@ public class FileManagerTest {
         Files.writeString(oFileInDir, "Content");
 
         // Change to different directory
-        eu.gricom.basic.functions.ChDir.execute(new StringValue("/tmp/"));
+        new ChDirStatement(10, new StringValue("/tmp/")).execute();
         FileManager oFileManager = new FileManager();
 
         // Open file with absolute path (not in /tmp/)
