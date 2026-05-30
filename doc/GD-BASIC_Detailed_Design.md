@@ -2497,7 +2497,7 @@ Options:
 | `closeFile` | `iFileID`, `bDeleteFile` | `void` | Close file and optionally delete it. |
 | `read` | `iFileID` | `StringValue` | Read one line from file opened for input. Returns empty string at EOF. |
 | `write` | `iFileID`, `strData` | `void` | Write data to file opened for output. |
-| `getEOF` | `iFileID` | `IntegerValue` | Returns `1` if not at EOF, `0` if at EOF or unknown file. |
+| `getEOF` | `iFileID` | `BooleanValue` | Returns `true` if at EOF, `false` otherwise. |
 | `getFileName` | `iFileID` | `String` | Get file path for given file ID. |
 | `getFileStatus` | `iFileID` | `boolean` | Returns `true` if file ID is open, `false` otherwise. |
 | `getFileRead` | `iFileID` | `BufferedReader` | Get reader for read operations (or `null`). |
@@ -2518,7 +2518,7 @@ public enum FileOpenType {
 ```basic
 10 REM Open file #1 for reading
 20 OPEN "input.txt" FOR INPUT AS #1
-30 WHILE EOF(1) = 0
+30 WHILE NOT EOF(1)
 40   INPUT #1, A$
 50   PRINT A$
 60 WEND
@@ -2770,7 +2770,7 @@ GD-BASIC provides comprehensive built-in function library:
 
 | Function | Parameters | Returns | Description |
 |----------|-----------|---------|-------------|
-| `EOF` | `fileNumber` | Integer | End-of-file flag (1 = not at EOF, 0 = at EOF) |
+| `EOF` | `fileNumber` | Boolean | End-of-file flag (true = at EOF, false = not at EOF) |
 
 #### System Functions
 
@@ -3963,4 +3963,63 @@ Key limitations (by design):
 - No variable scoping or functions (FN only)
 
 Suitable for educational purposes and embedding as a scripting engine in Java applications under 100K lines of BASIC code.
+
+---
+
+## To Do / Future Enhancements
+
+The following file operations are candidates for future implementation (version 0.1.2 and beyond):
+
+### Tier 1 - Core File Operations (Priority: Medium)
+
+#### Character and Byte I/O
+- `FGETC(fileId)` - Read single character from file
+- `FPUTC(fileId, char$)` - Write single character to file
+- `FREAD(fileId, count)` - Read N bytes as binary string
+- `FWRITE(fileId, data$)` - Write bytes without newline terminator
+
+#### File Operations
+- `FILEDEL(filename$)` - Delete file from disk
+- `FGETMODE(fileId)` - Get file open mode ("r", "w", "a")
+
+#### File Positioning
+- `FSEEK(fileId, position)` - Seek to byte position in file
+- `FTELL(fileId)` - Get current byte position in file
+- `FGOLINE(fileId, lineNumber)` - Jump to specific line number
+
+#### File Information
+- `FLINECT(fileId)` - Get line count of opened file
+- `FILEEMPTY(filename$)` - Check if file is empty without opening
+
+#### Formatted Output
+- `FPRINTF(fileId, format$, ...)` - Printf-style formatted write to file
+
+### Tier 2 - Directory Operations (Priority: Medium)
+
+- `MKDIR(path$)` - Create directory
+- `RMDIR(path$)` - Remove empty directory
+- `DIRLIST(path$, pattern$, array$())` - List directory contents with pattern matching
+
+### Tier 3 - Advanced Operations (Priority: Low)
+
+- `FILELOCKED(filename$)` - Check if file is currently open/locked
+
+---
+
+## Implementation Notes for Future Work
+
+**File Operations Architecture**:
+- All character-level operations should follow the established position-based pattern used by FGETC/FPEEK/FPUT
+- File seeking requires extending FileManager to track byte positions alongside line-based positions
+- Binary mode support requires separate code paths in FileManager for BufferedReader vs. RandomAccessFile
+
+**Directory Operations**:
+- MKDIR and RMDIR integrate with Java NIO.2 (Files API)
+- DIRLIST requires pattern matching (glob or regex) for file filtering
+- All directory operations return error codes for failure conditions
+
+**Testing Requirements**:
+- Each new function requires corresponding unit tests in src/test/java/
+- System tests (.bas files) should be added in src/test/basic/
+- Edge cases (empty files, special characters, permission errors) must be covered
 
