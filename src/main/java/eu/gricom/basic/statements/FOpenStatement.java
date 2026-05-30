@@ -3,6 +3,10 @@ package eu.gricom.basic.statements;
 import eu.gricom.basic.memoryManager.FileManager;
 import eu.gricom.basic.memoryManager.FileOpenType;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * FOpenStatement.java
  * <p>
@@ -50,8 +54,18 @@ public class FOpenStatement implements Statement {
      */
     @Override
     public void execute() throws Exception {
-        FileManager oFileManager = new FileManager();
+        if (_eReadWrite == FileOpenType.WRITE) {
+            Path oPath = Paths.get(_strFileName);
+            if (!Files.exists(oPath)) {
+                try {
+                    Files.createFile(oPath);
+                } catch (java.nio.file.FileAlreadyExistsException e) {
+                    // File was created by another thread, this is acceptable
+                }
+            }
+        }
 
+        FileManager oFileManager = new FileManager();
         oFileManager.openFile(_strFileName, _iFileId, _eReadWrite);
     }
 
