@@ -523,4 +523,774 @@ public class BasicParserTest {
 
         assertTrue(bDirexistsFound, "DIREXISTS token should be recognized by the lexer");
     }
+
+    // ==================== ZERO-PARAMETER FUNCTIONS ====================
+
+    @Test
+    public void testAtomicGetcwdFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_zero_param_getcwd.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bGetcwdFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.GETCWD) {
+                bGetcwdFound = true;
+                break;
+            }
+        }
+        assertTrue(bGetcwdFound, "GETCWD token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicMemFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_zero_param_mem.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bMemFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.MEM) {
+                bMemFound = true;
+                break;
+            }
+        }
+        assertTrue(bMemFound, "MEM token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicRndFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_zero_param_rnd.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bRndFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.RND) {
+                bRndFound = true;
+                break;
+            }
+        }
+        assertTrue(bRndFound, "RND token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicTimeFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_zero_param_time.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bTimeFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.TIME) {
+                bTimeFound = true;
+                break;
+            }
+        }
+        assertTrue(bTimeFound, "TIME token should be recognized by the lexer");
+    }
+
+    // ==================== SINGLE-PARAMETER MATH FUNCTIONS ====================
+
+    @Test
+    public void testAtomicAbsFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_math_abs.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bAbsFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.ABS) {
+                bAbsFound = true;
+                break;
+            }
+        }
+        assertTrue(bAbsFound, "ABS token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicSinFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_math_sin.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bSinFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.SIN) {
+                bSinFound = true;
+                break;
+            }
+        }
+        assertTrue(bSinFound, "SIN token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicCosFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_math_cos.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bCosFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.COS) {
+                bCosFound = true;
+                break;
+            }
+        }
+        assertTrue(bCosFound, "COS token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicTanFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_math_tan.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bTanFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.TAN) {
+                bTanFound = true;
+                break;
+            }
+        }
+        assertTrue(bTanFound, "TAN token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicLogFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_math_log.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bLogFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.LOG) {
+                bLogFound = true;
+                break;
+            }
+        }
+        assertTrue(bLogFound, "LOG token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicLog10Function() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_math_log10.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bLog10Found = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.LOG10) {
+                bLog10Found = true;
+                break;
+            }
+        }
+        assertTrue(bLog10Found, "LOG10 token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicExpFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_math_exp.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bExpFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.EXP) {
+                bExpFound = true;
+                break;
+            }
+        }
+        assertTrue(bExpFound, "EXP token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicSqrFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_math_sqr.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bSqrFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.SQR) {
+                bSqrFound = true;
+                break;
+            }
+        }
+        assertTrue(bSqrFound, "SQR token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicAtnFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_math_atn.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bAtnFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.ATN) {
+                bAtnFound = true;
+                break;
+            }
+        }
+        assertTrue(bAtnFound, "ATN token should be recognized by the lexer");
+    }
+
+    // ==================== SINGLE-PARAMETER CONVERSION FUNCTIONS ====================
+
+    @Test
+    public void testAtomicChrFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_convert_chr.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bChrFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.CHR) {
+                bChrFound = true;
+                break;
+            }
+        }
+        assertTrue(bChrFound, "CHR token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicAscFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_convert_asc.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bAscFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.ASC) {
+                bAscFound = true;
+                break;
+            }
+        }
+        assertTrue(bAscFound, "ASC token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicValFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_convert_val.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bValFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.VAL) {
+                bValFound = true;
+                break;
+            }
+        }
+        assertTrue(bValFound, "VAL token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicStrFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_convert_str.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bStrFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.STR) {
+                bStrFound = true;
+                break;
+            }
+        }
+        assertTrue(bStrFound, "STR token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicCintFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_convert_cint.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bCintFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.CINT) {
+                bCintFound = true;
+                break;
+            }
+        }
+        assertTrue(bCintFound, "CINT token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicCdblFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_convert_cdbl.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bCdblFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.CDBL) {
+                bCdblFound = true;
+                break;
+            }
+        }
+        assertTrue(bCdblFound, "CDBL token should be recognized by the lexer");
+    }
+
+    // ==================== SINGLE-PARAMETER FILE FUNCTIONS ====================
+
+    @Test
+    public void testAtomicEofFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_file_eof.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bEofFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.EOF) {
+                bEofFound = true;
+                break;
+            }
+        }
+        assertTrue(bEofFound, "EOF token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicFexistsFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_file_fexists.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bFexistsFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.FEXISTS) {
+                bFexistsFound = true;
+                break;
+            }
+        }
+        assertTrue(bFexistsFound, "FEXISTS token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicFgetnameFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_file_fgetname.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bFgetnameFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.FGETNAME) {
+                bFgetnameFound = true;
+                break;
+            }
+        }
+        assertTrue(bFgetnameFound, "FGETNAME token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicFgetsizeFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_file_fgetsize.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bFgetsizeFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.FGETSIZE) {
+                bFgetsizeFound = true;
+                break;
+            }
+        }
+        assertTrue(bFgetsizeFound, "FGETSIZE token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicFisopenFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_file_fisopen.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bFisopenFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.FISOPEN) {
+                bFisopenFound = true;
+                break;
+            }
+        }
+        assertTrue(bFisopenFound, "FISOPEN token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicFlinecountFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_file_flinecount.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bFlinecountFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.FLINECOUNT) {
+                bFlinecountFound = true;
+                break;
+            }
+        }
+        assertTrue(bFlinecountFound, "FLINECOUNT token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicFmodtimeFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_file_fmodtime.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bFmodtimeFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.FMODTIME) {
+                bFmodtimeFound = true;
+                break;
+            }
+        }
+        assertTrue(bFmodtimeFound, "FMODTIME token should be recognized by the lexer");
+    }
+
+    // ==================== SINGLE-PARAMETER UTILITY FUNCTIONS ====================
+
+    @Test
+    public void testAtomicLenFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_string_len.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bLenFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.LEN) {
+                bLenFound = true;
+                break;
+            }
+        }
+        assertTrue(bLenFound, "LEN token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicNotFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_logic_not.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bNotFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.NOT) {
+                bNotFound = true;
+                break;
+            }
+        }
+        assertTrue(bNotFound, "NOT token should be recognized by the lexer");
+    }
+
+    // ==================== TWO-PARAMETER FUNCTIONS ====================
+
+    @Test
+    public void testAtomicInstrFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_two_param_instr.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bInstrFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.INSTR) {
+                bInstrFound = true;
+                break;
+            }
+        }
+        assertTrue(bInstrFound, "INSTR token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicLeftFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_two_param_left.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bLeftFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.LEFT) {
+                bLeftFound = true;
+                break;
+            }
+        }
+        assertTrue(bLeftFound, "LEFT token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicRightFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_two_param_right.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bRightFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.RIGHT) {
+                bRightFound = true;
+                break;
+            }
+        }
+        assertTrue(bRightFound, "RIGHT token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicFcompareFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_two_param_fcompare.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bFcompareFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.FCOMPARE) {
+                bFcompareFound = true;
+                break;
+            }
+        }
+        assertTrue(bFcompareFound, "FCOMPARE token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicSystemFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_two_param_system.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bSystemFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.SYSTEM) {
+                bSystemFound = true;
+                break;
+            }
+        }
+        assertTrue(bSystemFound, "SYSTEM token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicCallFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_two_param_call.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bCallFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.CALL) {
+                bCallFound = true;
+                break;
+            }
+        }
+        assertTrue(bCallFound, "CALL token should be recognized by the lexer");
+    }
+
+    // ==================== THREE-PARAMETER FUNCTIONS ====================
+
+    @Test
+    public void testAtomicMidFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_three_param_mid.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bMidFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.MID) {
+                bMidFound = true;
+                break;
+            }
+        }
+        assertTrue(bMidFound, "MID token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicListdirectoryFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_three_param_listdirectory.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bListdirectoryFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.LISTDIRECTORY) {
+                bListdirectoryFound = true;
+                break;
+            }
+        }
+        assertTrue(bListdirectoryFound, "LISTDIRECTORY token should be recognized by the lexer");
+    }
 }

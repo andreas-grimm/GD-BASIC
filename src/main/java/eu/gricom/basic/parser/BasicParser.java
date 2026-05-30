@@ -816,7 +816,7 @@ public class BasicParser implements Parser {
                 return oExpression;
 
             // three parameter function calls
-            case MID:
+            case LISTDIRECTORY: case MID:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                                        + oToken.getText() + "' [" + oToken.getLine() + "]");
@@ -832,7 +832,7 @@ public class BasicParser implements Parser {
                 return oThreeParameterFunction;
 
             // two parameter function calls
-            case INSTR: case LEFT: case RIGHT: case SYSTEM: case CALL:
+            case FCOMPARE: case INSTR: case LEFT: case RIGHT: case SYSTEM: case CALL:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                                        + oToken.getText() + "' [" + oToken.getLine() + "]");
@@ -847,7 +847,8 @@ public class BasicParser implements Parser {
 
             // single parameter function calls. Add all functions that contain only one parameter.
             case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case DIREXISTS: case EOF: case EXP:
-                case LEN: case LOG: case LOG10: case NOT: case SIN: case SQR: case STR: case TAN: case VAL:
+                case FEXISTS: case FGETNAME: case FGETSIZE: case FISOPEN: case FLINECOUNT: case FMODTIME: case LEN:
+                case LOG: case LOG10: case NOT: case SIN: case SQR: case STR: case TAN: case VAL:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
@@ -859,7 +860,7 @@ public class BasicParser implements Parser {
                 return oParameterFunction;
 
             // zero parameter function calls
-            case MEM: case RND: case TIME:
+            case GETCWD: case MEM: case RND: case TIME:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");
