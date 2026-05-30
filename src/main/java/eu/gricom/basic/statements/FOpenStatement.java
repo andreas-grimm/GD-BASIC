@@ -26,7 +26,7 @@ public class FOpenStatement implements Statement {
      *
      */
     public FOpenStatement(int iTokenNumber, int iFileId, String strFileName, String strMode) {
-        if (strMode.equalsIgnoreCase("write")) {
+        if (strMode.equalsIgnoreCase("w") || strMode.equalsIgnoreCase("write")) {
             _eReadWrite = FileOpenType.WRITE;
         }
 
@@ -54,17 +54,6 @@ public class FOpenStatement implements Statement {
      */
     @Override
     public void execute() throws Exception {
-        if (_eReadWrite == FileOpenType.WRITE) {
-            Path oPath = Paths.get(_strFileName);
-            if (!Files.exists(oPath)) {
-                try {
-                    Files.createFile(oPath);
-                } catch (java.nio.file.FileAlreadyExistsException e) {
-                    // File was created by another thread, this is acceptable
-                }
-            }
-        }
-
         FileManager oFileManager = new FileManager();
         oFileManager.openFile(_strFileName, _iFileId, _eReadWrite);
     }

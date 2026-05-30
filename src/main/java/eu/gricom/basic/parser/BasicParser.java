@@ -285,6 +285,145 @@ public class BasicParser implements Parser {
                 }
                 break;
 
+                // FCOPY Token: Copy content from source file to destination file
+                case FCOPY: {
+                    int iSourceFileId;
+                    int iDestinationFileId;
+
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FCOPY] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    iOrgPosition = _iPosition;
+                    _iPosition++;
+
+                    iSourceFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FCOPY: Source FileId] <" + iSourceFileId + "> ");
+
+                    consumeToken(BasicTokenType.COMMA);
+                    _oLogger.debug("-parse-> [FCOPY: Comma consumed] ");
+
+                    iDestinationFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FCOPY: Destination FileId] <" + iDestinationFileId + "> ");
+
+                    aoStatements.add(new FCopyStatement(iOrgPosition, iSourceFileId, iDestinationFileId));
+                }
+                break;
+
+                // FDELETE Token: Delete a file identified by its file ID
+                case FDELETE: {
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FDELETE] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    iOrgPosition = _iPosition;
+                    _iPosition++;
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FDELETE: FileId] <" + iFileId + "> ");
+
+                    aoStatements.add(new FDeleteStatement(iOrgPosition, iFileId));
+                }
+                break;
+
+                // FGET Token: Read next character from file and assign to variable
+                case FGET: {
+                    String strVariableName;
+
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FGET] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    iOrgPosition = _iPosition;
+                    _iPosition++;
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FGET: FileId] <" + iFileId + "> ");
+
+                    consumeToken(BasicTokenType.COMMA);
+                    _oLogger.debug("-parse-> [FGET: Comma consumed] ");
+
+                    strVariableName = consumeToken(BasicTokenType.WORD).getText();
+                    _oLogger.debug("-parse-> [FGET: VariableName] <" + strVariableName + "> ");
+
+                    aoStatements.add(new FGetStatement(iOrgPosition, iFileId, strVariableName));
+                }
+                break;
+
+                // FPEEK Token: Peek at next character from file without consuming it
+                case FPEEK: {
+                    String strVariableName;
+
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FPEEK] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    iOrgPosition = _iPosition;
+                    _iPosition++;
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FPEEK: FileId] <" + iFileId + "> ");
+
+                    consumeToken(BasicTokenType.COMMA);
+                    _oLogger.debug("-parse-> [FPEEK: Comma consumed] ");
+
+                    strVariableName = consumeToken(BasicTokenType.WORD).getText();
+                    _oLogger.debug("-parse-> [FPEEK: VariableName] <" + strVariableName + "> ");
+
+                    aoStatements.add(new FPeekStatement(iOrgPosition, iFileId, strVariableName));
+                }
+                break;
+
+                // FPUT Token: Write character/data from variable to file
+                case FPUT: {
+                    Expression oExpression;
+
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FPUT] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    iOrgPosition = _iPosition;
+                    _iPosition++;
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FPUT: FileId] <" + iFileId + "> ");
+
+                    consumeToken(BasicTokenType.COMMA);
+                    _oLogger.debug("-parse-> [FPUT: Comma consumed] ");
+
+                    oExpression = expression();
+                    _oLogger.debug("-parse-> [FPUT: Expression parsed] ");
+
+                    aoStatements.add(new FPutStatement(iOrgPosition, iFileId, oExpression));
+                }
+                break;
+
+                // FRENAME Token: Rename a file identified by its file ID
+                case FRENAME: {
+                    StringValue oNewFileName;
+
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FRENAME] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    iOrgPosition = _iPosition;
+                    _iPosition++;
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FRENAME: FileId] <" + iFileId + "> ");
+
+                    consumeToken(BasicTokenType.COMMA);
+                    _oLogger.debug("-parse-> [FRENAME: Comma consumed] ");
+
+                    oNewFileName = new StringValue(consumeToken(BasicTokenType.STRING).getText());
+                    _oLogger.debug("-parse-> [FRENAME: NewFileName] <" + oNewFileName.toString() + "> ");
+
+                    aoStatements.add(new FRenameStatement(iOrgPosition, iFileId, oNewFileName));
+                }
+                break;
+
+                // FREWIND Token: Rewind file pointer to beginning
+                case FREWIND: {
+                    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FREWIND] ");
+                    _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+                    iOrgPosition = _iPosition;
+                    _iPosition++;
+
+                    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+                    _oLogger.debug("-parse-> [FREWIND: FileId] <" + iFileId + "> ");
+
+                    aoStatements.add(new FRewindStatement(iOrgPosition, iFileId));
+                }
+                break;
+
                 // FINPUT Token: Read the line from a file for processing
                 case FINPUT: {
                     _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FINPUT] ");

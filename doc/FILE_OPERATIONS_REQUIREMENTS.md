@@ -580,23 +580,243 @@ Applications using basic file I/O can incrementally adopt new functions:
 
 ---
 
-## 11. Documentation Updates
+## 11. New File Operation Statements (Implementation - May 30, 2026)
 
-### 11.1 Files to Update
+Four new file operation statements have been implemented and integrated into BasicParser:
+
+### 11.1 FPEEK Statement - Character Lookahead
+
+**Syntax**: `FPEEK fileId, variableName`
+
+**Purpose**: Read next character from file without advancing read position
+
+**Implementation Details**:
+- Retrieves current read position from FileManager
+- Closes and reopens file to safely access position
+- Reads lines sequentially, accumulating character count
+- Extracts character at current position
+- Preserves position for subsequent FGET or FPEEK operations
+- Returns "EOF" if end of file is reached
+
+**Parser Integration** (BasicParser.java lines 348-367):
+```java
+case FPEEK: {
+    String strVariableName;
+    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FPEEK] ");
+    iOrgPosition = _iPosition;
+    _iPosition++;
+    
+    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+    consumeToken(BasicTokenType.COMMA);
+    strVariableName = consumeToken(BasicTokenType.WORD).getText();
+    
+    aoStatements.add(new FPeekStatement(iOrgPosition, iFileId, strVariableName));
+}
+break;
+```
+
+**Unit Test Coverage**: 9 tests in FPeekStatementTest.java
+- Peek first character
+- Multiple consecutive peeks return same character
+- Peek with multiline files, Unicode, special characters
+- Empty file handling
+- Large file handling
+
+**Use Case Example**:
+```basic
+10 FOPEN 1 "data.txt" "r"
+20 FPEEK 1, C$       ! Look at next char without consuming
+30 IF C$ = "X" THEN GOSUB 1000
+40 FGET 1, C$        ! Now read it
+50 END
+```
+
+### 11.2 FPUT Statement - Character Output Without Newline
+
+**Syntax**: `FPUT fileId, expression`
+
+**Purpose**: Write character/string to file without adding newline terminator
+
+**Implementation Details**:
+- Evaluates expression to obtain string value
+- Creates single-element list containing expression
+- Delegates to FPrintStatement with bCRLF=false flag
+- Enables building lines character-by-character
+- Useful for formatted output composition
+
+**Parser Integration** (BasicParser.java lines 369-388):
+```java
+case FPUT: {
+    Expression oExpression;
+    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FPUT] ");
+    iOrgPosition = _iPosition;
+    _iPosition++;
+    
+    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+    consumeToken(BasicTokenType.COMMA);
+    oExpression = expression();
+    
+    aoStatements.add(new FPutStatement(iOrgPosition, iFileId, oExpression));
+}
+break;
+```
+
+**Unit Test Coverage**: 10 tests in FPutStatementTest.java
+- Single characters, multi-character strings
+- Empty strings, special characters (\n, \t)
+- Long strings, Unicode characters
+- Numeric strings, path strings
+
+**Use Case Example**:
+```basic
+10 FOPEN 1 "output.txt" "w"
+20 FPUT 1, "H"
+30 FPUT 1, "e"
+40 FPUT 1, "l"
+50 FPUT 1, "l"
+60 FPUT 1, "o"
+70 FPRINT 1 ""           ! Add newline
+80 FCLOSE 1
+90 END
+```
+
+### 11.3 FRENAME Statement - File Renaming/Moving
+
+**Syntax**: `FRENAME fileId, newFileName`
+
+**Purpose**: Rename or move file tracked by file ID
+
+**Implementation Details**:
+- Verifies file ID is registered in FileManager
+- Retrieves current filename from FileManager
+- Closes file without deleting (preserves content)
+- Renames/moves file using Files.move() API
+- Re-registers file with same ID under new filename
+- Enables moving files to different directories
+
+**Parser Integration** (BasicParser.java lines 390-411):
+```java
+case FRENAME: {
+    StringValue oNewFileName;
+    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FRENAME] ");
+    iOrgPosition = _iPosition;
+    _iPosition++;
+    
+    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+    consumeToken(BasicTokenType.COMMA);
+    oNewFileName = new StringValue(consumeToken(BasicTokenType.STRING).getText());
+    
+    aoStatements.add(new FRenameStatement(iOrgPosition, iFileId, oNewFileName));
+}
+break;
+```
+
+**Error Handling**:
+- Throws RuntimeException if file ID not registered
+- Throws RuntimeException if file cannot be closed
+- Throws RuntimeException if rename operation fails (permissions, target exists)
+
+**Unit Test Coverage**: 10 tests in FRenameStatementTest.java
+- Simple filenames, paths, different extensions
+- Names without extensions, case sensitivity
+- Special characters (hyphens, underscores)
+- Hidden files, long filenames
+
+**Use Case Example**:
+```basic
+10 FOPEN 1 "temp.txt" "w"
+20 FPRINT 1 "Data to process"
+30 FCLOSE 1
+40 FRENAME 1, "final.txt"   ! Rename file
+50 IF FEXISTS("final.txt") THEN PRINT "Success"
+60 END
+```
+
+### 11.4 FREWIND Statement - File Position Reset
+
+**Syntax**: `FREWIND fileId`
+
+**Purpose**: Reset file read position to beginning without closing file
+
+**Implementation Details**:
+- Verifies file ID is registered in FileManager
+- Sets read cursor position to 0 in FileManager
+- File remains open and accessible
+- Enables re-reading file multiple times efficiently
+- More efficient than FCLOSE/FOPEN sequence
+
+**Parser Integration** (BasicParser.java lines 413-424):
+```java
+case FREWIND: {
+    _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [FREWIND] ");
+    iOrgPosition = _iPosition;
+    _iPosition++;
+    
+    iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
+    
+    aoStatements.add(new FRewindStatement(iOrgPosition, iFileId));
+}
+break;
+```
+
+**Error Handling**:
+- Throws RuntimeException if file ID not registered
+- Throws RuntimeException if position cannot be set
+
+**Unit Test Coverage**: 9 tests in FRewindStatementTest.java
+- Valid file IDs, multiple file IDs
+- Invalid file IDs, edge cases (0, -1)
+- Large line numbers, empty files
+- Large files, multiline content
+
+**Use Case Example**:
+```basic
+10 FOPEN 1 "report.txt" "r"
+20 PRINT "First pass:"
+30 GOSUB 100
+40 FREWIND 1              ! Go back to start
+50 PRINT "Second pass:"
+60 GOSUB 100
+70 FCLOSE 1
+80 END
+100 REM Process file
+110 WHILE NOT EOF(1)
+120     FINPUT 1 LINE$
+130     PRINT LINE$
+140 WEND
+150 RETURN
+```
+
+### 11.5 Statement Summary
+
+| Statement | Purpose | Parameters | Implementation Status |
+|-----------|---------|------------|----------------------|
+| FPEEK | Peek at next character | fileId, variableName | ✅ Complete (May 30, 2026) |
+| FPUT | Write character without newline | fileId, expression | ✅ Complete (May 30, 2026) |
+| FRENAME | Rename/move file | fileId, newFileName | ✅ Complete (May 30, 2026) |
+| FREWIND | Reset file position | fileId | ✅ Complete (May 30, 2026) |
+
+**Total Unit Tests Added**: 38 tests (9+10+10+9)
+
+## 12. Documentation Updates
+
+### 12.1 Files Updated
 
 | File | Updates |
 |------|----------|
 | `BASIC_CODING_STANDARD.md` | Document file operation functions, error codes |
-| `doc/GD-BASIC_Detailed_Design.md` | Add FileOperations to architecture |
+| `doc/GD-BASIC_Detailed_Design.md` | Add detailed implementation notes for four new statements |
 | `README.md` | Mention file operations enhancements |
+| `FILE_OPERATIONS_REQUIREMENTS.md` | Add implementation status and statement documentation |
 
-### 11.2 New User Documentation
+### 12.2 New User Documentation
 
 Create `doc/FILE_OPERATIONS_USER_GUIDE.md`:
 - File mode descriptions (read, write, append)
 - Error code reference table
 - Common patterns (copy file, list directory)
 - Performance tips for large files
+- Examples of FPEEK, FPUT, FRENAME, FREWIND usage
 
 ---
 

@@ -476,6 +476,278 @@ INPUT Variable
 
 ---
 
+### File I/O Operations
+
+#### Basic File Operations
+
+**FOPEN - Open File**
+```basic
+FOPEN fileId, "filename", "mode"
+```
+- **fileId** (int): Unique file identifier (1-256)
+- **filename** (string): Path to file
+- **mode** (string): "r" (read), "w" (write), or "a" (append)
+- **Example**: `FOPEN 1 "data.txt" "r"`
+
+**FCLOSE - Close File**
+```basic
+FCLOSE fileId [, "DELETE"]
+```
+- **fileId** (int): File identifier
+- **"DELETE"** (optional): Delete file when closing
+- **Example**: `FCLOSE 1 ""`  or  `FCLOSE 1 "DELETE"`
+
+**FINPUT - Read Line from File**
+```basic
+FINPUT fileId, variableName
+```
+- Reads entire line from file
+- Stores in specified variable
+- **Example**: `FINPUT 1, LINE$`
+
+**FPRINT - Write Line to File**
+```basic
+FPRINT fileId, expression
+```
+- Writes expression followed by newline
+- **Example**: `FPRINT 1, "Hello"`
+
+**EOF - Check End of File**
+```basic
+IF EOF(fileId) THEN ...
+```
+- Returns TRUE if at end of file
+- **Example**: `WHILE NOT EOF(1)`
+
+#### Character-Level File Operations
+
+**FGET - Read Single Character (Advances Position)**
+```basic
+FGET fileId, variableName
+```
+- **Purpose**: Read one character and advance file position
+- **Returns**: Single character as string or "EOF"
+- **Advances**: Read position by 1 character
+- **Example**:
+```basic
+10 FOPEN 1 "input.txt" "r"
+20 FGET 1, C$
+30 PRINT "Read: "; C$
+40 FCLOSE 1
+```
+
+**FPUT - Write Character Without Newline**
+```basic
+FPUT fileId, expression
+```
+- **Purpose**: Write character/string without line terminator
+- **Parameters**: Expression evaluates to string to write
+- **Newline**: NOT added (use FPRINT for newline)
+- **Example**:
+```basic
+10 FOPEN 1 "output.txt" "w"
+20 FPUT 1, "H"
+30 FPUT 1, "i"
+40 FPRINT 1, ""          ! Add newline
+50 FCLOSE 1
+```
+
+**FPEEK - Peek at Next Character (No Advance)**
+```basic
+FPEEK fileId, variableName
+```
+- **Purpose**: Read next character WITHOUT advancing position
+- **Returns**: Next character or "EOF"
+- **Position**: NOT advanced (lookahead operation)
+- **Example**:
+```basic
+10 FOPEN 1 "data.txt" "r"
+20 FPEEK 1, C$           ! Look ahead
+30 IF C$ = "X" THEN GOSUB 1000
+40 FGET 1, C$            ! Actually read it
+50 FCLOSE 1
+```
+
+**Key Differences - Character I/O**:
+| Operation | Advances Position | Returns |
+|-----------|-------------------|---------|
+| FGET | ✅ Yes (+1) | Next character |
+| FPUT | N/A (write) | N/A |
+| FPEEK | ❌ No | Next character |
+
+#### File Management Operations
+
+**FRENAME - Rename/Move File**
+```basic
+FRENAME fileId, "newFileName"
+```
+- **Purpose**: Rename or move file tracked by file ID
+- **fileId**: ID of file to rename
+- **newFileName**: New filename/path
+- **FileID**: Remains valid after rename
+- **Content**: Preserved during rename
+- **Example**:
+```basic
+10 FOPEN 1 "temp.txt" "w"
+20 FPRINT 1, "Data"
+30 FCLOSE 1
+40 FRENAME 1, "final.txt"    ! Rename file
+50 IF FEXISTS("final.txt") THEN PRINT "Success"
+```
+
+**FREWIND - Reset File Position**
+```basic
+FREWIND fileId
+```
+- **Purpose**: Reset read position to beginning
+- **File State**: Remains open (no close/reopen)
+- **Efficiency**: Better than FCLOSE/FOPEN
+- **Example**:
+```basic
+10 FOPEN 1 "data.txt" "r"
+20 PRINT "First read:"
+30 GOSUB 100
+40 FREWIND 1                 ! Go back to start
+50 PRINT "Second read:"
+60 GOSUB 100
+70 FCLOSE 1
+80 END
+100 REM Read file content
+110 WHILE NOT EOF(1)
+120    FINPUT 1, LINE$
+130    PRINT LINE$
+140 WEND
+150 RETURN
+```
+
+#### Advanced File Functions
+
+**FEXISTS - Check File Existence**
+```basic
+IF FEXISTS("filename") THEN ...
+```
+- Returns TRUE if file exists
+- **Example**: `IF FEXISTS("backup.txt") THEN DELETE`
+
+**FGETSIZE - Get File Size**
+```basic
+SIZE = FGETSIZE("filename")
+```
+- Returns file size in bytes
+- **Example**: `SIZE = FGETSIZE("data.bin")`
+
+**FGETNAME - Get File Name from ID**
+```basic
+FILENAME$ = FGETNAME(fileId)
+```
+- Retrieves filename associated with file ID
+- **Example**: `CURRENT$ = FGETNAME(1)`
+
+**DIREXISTS - Check Directory Existence**
+```basic
+IF DIREXISTS("dirname") THEN ...
+```
+- Returns TRUE if directory exists
+- **Example**: `IF DIREXISTS("backup") THEN ...`
+
+#### File I/O Examples
+
+**Example 1: Copy File**
+```basic
+10 SRC$ = "original.txt"
+20 DST$ = "backup.txt"
+30 IF NOT FEXISTS(SRC$) THEN PRINT "Source not found": END
+40 
+50 SRC_ID = FOPEN 1 SRC$ "r"
+60 DST_ID = FOPEN 2 DST$ "w"
+70 
+80 WHILE NOT EOF(1)
+90     FINPUT 1, LINE$
+100    FPRINT 2, LINE$
+110 WEND
+120
+130 FCLOSE 1 ""
+140 FCLOSE 2 ""
+150 PRINT "Copy complete"
+160 END
+```
+
+**Example 2: Character-by-Character Processing**
+```basic
+10 FOPEN 1 "input.txt" "r"
+20 FOPEN 2 "output.txt" "w"
+30
+40 WHILE NOT EOF(1)
+50     FGET 1, C$          ! Read character
+60     IF C$ != "EOF" THEN
+70         IF C$ = " " THEN
+80             FPUT 2, "_" ! Replace space with underscore
+90         ELSE
+100            FPUT 2, C$ ! Keep original
+110        END IF
+120    END IF
+130 WEND
+140
+150 FCLOSE 1 ""
+160 FCLOSE 2 ""
+170 END
+```
+
+**Example 3: Search with Lookahead**
+```basic
+10 FOPEN 1 "search.txt" "r"
+20 FOUND% = 0
+30
+40 WHILE NOT EOF(1)
+50     FPEEK 1, C$         ! Look ahead
+60     IF C$ = "X" THEN
+70         FGET 1, CHAR$   ! Consume it
+80         FOUND% = FOUND% + 1
+90         PRINT "Found X at position"; FOUND%
+100    ELSE
+110        FGET 1, DUMMY$  ! Skip character
+120    END IF
+130 WEND
+140
+150 FCLOSE 1 ""
+160 PRINT "Total X's found: "; FOUND%
+170 END
+```
+
+**Example 4: Multi-pass File Processing**
+```basic
+10 FOPEN 1 "report.txt" "r"
+20
+30 PRINT "Analysis:"
+40 PRINT "Pass 1 - Count lines:"
+50 GOSUB 1000
+60
+70 FREWIND 1              ! Go back to start
+80 PRINT "Pass 2 - Process content:"
+90 GOSUB 2000
+100
+110 FCLOSE 1 ""
+120 END
+130
+1000 REM Count lines
+1010 COUNT% = 0
+1020 WHILE NOT EOF(1)
+1030    FINPUT 1, LINE$
+1040    COUNT% = COUNT% + 1
+1050 WEND
+1060 PRINT "Total lines: "; COUNT%
+1070 RETURN
+1080
+2000 REM Process content
+2010 WHILE NOT EOF(1)
+2020    FINPUT 1, LINE$
+2030    PRINT ">> "; LINE$
+2040 WEND
+2050 RETURN
+```
+
+---
+
 ## String Operations
 
 ### String Literals

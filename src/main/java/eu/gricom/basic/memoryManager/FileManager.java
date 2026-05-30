@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,11 +84,23 @@ public class FileManager {
             }
 
             if (eReadWrite == FileOpenType.WRITE) {
-                BufferedWriter oWriter = Files.newBufferedWriter(oPath, StandardCharsets.UTF_8);
+                // Ensure parent directories exist
+                Path oParentPath = oPath.getParent();
+                if (oParentPath != null && !Files.exists(oParentPath)) {
+                    Files.createDirectories(oParentPath);
+                }
+                BufferedWriter oWriter = Files.newBufferedWriter(
+                    oPath,
+                    StandardCharsets.UTF_8,
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+                );
                 _moFileWrite.put(oFileID, oWriter);
             }
         } catch (IOException eException) {
             _oLogger.error("Failed to open file: " + strWorkFileName + ": " + eException);
+            eException.printStackTrace(System.err);
             System.exit(-1);
         }
 

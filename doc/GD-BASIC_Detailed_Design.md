@@ -706,6 +706,107 @@ public class FGetStatement implements Statement {
 }
 ```
 
+**Detailed Implementation of New File Operation Statements (May 30, 2026)**:
+
+**1. FPeekStatement - Character Lookahead Without Advancing**:
+- **Purpose**: Read next character from file without consuming it (lookahead operation)
+- **Syntax**: `FPEEK fileId, variableName`
+- **Parameters**:
+  - `fileId` (int): File ID of opened file in READ mode
+  - `variableName` (String): Target variable to store peeked character
+- **Behavior**: 
+  - Retrieves current read position from FileManager
+  - Closes and reopens file to reset position
+  - Reads characters line-by-line, accumulating character count
+  - Extracts character at current position
+  - **Does NOT advance** the read position (unlike FGET)
+  - Returns "EOF" if end of file reached
+- **Unit Tests**: 9 comprehensive tests covering:
+  - First character peek, multiline files, Unicode characters
+  - Empty files, special characters, peek behavior verification
+  - Multiple consecutive peeks return same character
+- **Key Difference from FGET**: FPEEK preserves position; FGET advances by 1
+- **Implementation File**: `FPeekStatement.java`
+
+**2. FPutStatement - Character Output Without Newline**:
+- **Purpose**: Write character or string to file without adding line terminator (newline)
+- **Syntax**: `FPUT fileId, expression`
+- **Parameters**:
+  - `fileId` (int): File ID of opened file in WRITE/APPEND mode
+  - `expression` (Expression): Evaluates to character/string to write
+- **Behavior**:
+  - Evaluates expression to obtain string value
+  - Creates single-element list containing expression
+  - Delegates to FPrintStatement with `bCRLF=false` flag
+  - Writes string without newline terminator
+  - Useful for building lines character-by-character
+- **Unit Tests**: 10 comprehensive tests covering:
+  - Single characters, multi-character strings, empty strings
+  - Special characters (\n, \t), long strings, Unicode
+  - Path strings, numeric strings, various escape sequences
+- **Key Difference from FPRINT**: FPUT omits newline; FPRINT adds newline
+- **Common Usage**: Building formatted output by composing characters/strings
+- **Implementation File**: `FPutStatement.java`
+
+**3. FRenameStatement - File Renaming/Moving**:
+- **Purpose**: Rename or move file tracked by file ID in FileManager
+- **Syntax**: `FRENAME fileId, newFileName`
+- **Parameters**:
+  - `fileId` (int): File ID of file to rename
+  - `newFileName` (StringValue): New filename including path
+- **Behavior**:
+  - Verifies file ID is registered in FileManager
+  - Retrieves current filename from FileManager
+  - Closes file without deleting from disk (preserves content)
+  - Renames/moves file in file system using Files.move()
+  - Re-registers file with same ID under new filename
+  - Subsequent file operations reference renamed file automatically
+- **Error Handling**:
+  - Throws RuntimeException if file ID not registered
+  - Throws RuntimeException if file cannot be closed
+  - Throws RuntimeException if file cannot be renamed (permissions, existing target)
+- **Unit Tests**: 10 comprehensive tests covering:
+  - Simple names, path names, different extensions
+  - Names without extensions, uppercase/lowercase/mixed case
+  - Special characters (hyphens, underscores), long filenames
+  - Hidden files (.prefix), edge cases
+- **Implementation Details**:
+  - File ID remains constant (tracks renamed file)
+  - Can rename to different directory (move operation)
+  - Content is preserved; only name/location changes
+- **Implementation File**: `FRenameStatement.java`
+
+**4. FRewindStatement - File Position Reset**:
+- **Purpose**: Reset file read position to beginning without closing file
+- **Syntax**: `FREWIND fileId`
+- **Parameters**:
+  - `fileId` (int): File ID of opened file in READ mode
+- **Behavior**:
+  - Verifies file ID is registered in FileManager
+  - Sets read cursor position to 0 in FileManager
+  - File remains open and can be read again from start
+  - Useful for re-reading file multiple times without reopening
+- **Error Handling**:
+  - Throws RuntimeException if file ID not registered
+  - Throws RuntimeException if position cannot be set
+- **Unit Tests**: 9 comprehensive tests covering:
+  - Valid file IDs, different file IDs simultaneously
+  - Invalid file IDs (handled gracefully), edge cases (0, -1)
+  - Large line numbers, empty files, large files
+  - Multiline file rewinding verification
+- **Performance Benefits**: 
+  - Avoids close/reopen cycle
+  - Preserves file handle
+  - More efficient than FCLOSE/FOPEN sequence
+- **Implementation File**: `FRewindStatement.java`
+
+**Integration with FileManager**:
+All four statements interact with `FileManager` for file state tracking:
+- **FPEEK/FGET**: Use `getReadPos()`, `putReadPos()` for position tracking
+- **FPUT**: Uses FileManager indirectly through FPrintStatement
+- **FRENAME**: Uses `getFileName()`, `closeFile()`, `openFile()` for renaming
+- **FREWIND**: Uses `putReadPos()` to reset position to 0
+
 **File System Operations**:
 - `FDeleteStatement`: Deletes file using Files.delete()
 - `FRenameStatement`: Renames file using Files.move()
