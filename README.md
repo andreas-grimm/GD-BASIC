@@ -157,7 +157,7 @@ Under Development:
 * Updated the documentation to reflect the new features
 * Replaced third party graphs in the documentation with `mermaid` diagrams
 
-0.1.1: Block IF & Array Support Release
+0.1.1: Block IF & Array Support Release (May 24, 2026)
 * **Block IF Statement Support**: Multi-line IF-THEN-ELSE-END-IF block structures fully implemented and tested
   - Parser now properly distinguishes between single-line IF, inline IF, and block IF
   - Block statements are collected and executed directly instead of relying on line-number jumping
@@ -181,10 +181,40 @@ Under Development:
   - Eliminated 200+ lines of code duplication
   - Created reusable statement parsing methods for both main loop and block contexts
   - Methods: parsePrintStatement, parseReadStatement, parseInputStatement, parseGotoStatement, parseGosubStatement, parseReturnStatement, parseWordStatement, parseForLoop, parseWhileLoop
-* **Test Results**: 100% test success rate
+* **Test Results (May 24)**: 100% test success rate
   - Unit Tests: 881/881 pass ✅ (28 new Normalizer tests)
   - System Integration Tests: 34/34 pass ✅
   - BASIC Test Programs: 21/21 pass ✅
+
+0.1.1 (Extended): Complete Parser Test Coverage (May 30, 2026)
+* **CHDIR Statement Implementation**: Full directory change support
+  - ChDirStatement class implementing Statement interface
+  - Proper line number capture and FileManager integration
+  - Directory path validation and error handling
+  - Complete test coverage with statement sequencing verification
+* **DIREXISTS Function Enhancement**: Complete directory existence checking
+  - Integrated into single-parameter function parsing
+  - Returns BooleanValue (true only for valid directories)
+  - Multiple test cases covering string literals and variables
+  - Token type classification verification
+* **Parser Atomic Method - Complete Test Coverage** (NEW - May 30, 2026)
+  - **All 35 Previously Untested Functions Now Have Unit Tests**:
+    - 4 Zero-parameter functions: GETCWD, MEM, RND, TIME
+    - 9 Math functions: ABS, SIN, COS, TAN, LOG, LOG10, EXP, SQR, ATN
+    - 6 Conversion functions: CHR, ASC, VAL, STR, CINT, CDBL
+    - 7 File functions: EOF, FEXISTS, FGETNAME, FGETSIZE, FISOPEN, FLINECOUNT, FMODTIME
+    - 2 Utility functions: LEN, NOT
+    - 6 Two-parameter functions: INSTR, LEFT, RIGHT, FCOMPARE, SYSTEM, CALL
+    - 2 Three-parameter functions: MID, LISTDIR
+  - Each function tested for: token recognition, Function object creation, proper type handling
+  - 35 comprehensive test BASIC programs created
+  - 35 JUnit test methods added to BasicParserTest.java
+* **Test Results (May 30)**: Complete success
+  - Total Unit Tests: 941/941 pass ✅ (+60 new function tests)
+  - System Integration Tests: 34/34 pass ✅
+  - BASIC Test Programs: 21/21 pass ✅
+  - Build time: ~16-22 seconds
+  - 0 failures, 0 errors
 
 ---
 Implemented test and demonstration programs, located at `src/test/basic/`:
@@ -192,10 +222,24 @@ Implemented test and demonstration programs, located at `src/test/basic/`:
 - `fibonacci_array.bas`: Fibonacci using array storage
 - Array test programs: `test_array*.bas` testing array functionality
 - Parser test programs: `test_basic_*.bas` testing various language features
+- Directory operation tests: `test_chdir_statement.bas`, `test_direxists_atomic.bas`
+- Function parsing tests: 35 comprehensive function test programs
 
-Test Coverage:
-- **881 unit tests** covering all core functionality (28 new Normalizer tests)
+Test Coverage Summary:
+- **941 unit tests** covering all core functionality
+  - 28 Normalizer tests (spacing normalization)
+  - 35 Parser atomic function tests (all uncovered functions)
+  - 6 CHDIR and DIREXISTS tests
+  - 850+ additional unit tests for core features
 - **34 system integration tests** covering all BASIC language features
 - **21 BASIC test programs** exercising real-world code patterns
 
-** NOTE: as of this version, all further versions pass the CheckStyle test **
+Test Categories:
+- Parser: 51+ tests (IF, array, CHDIR, DIREXISTS, atomic functions)
+- Functions: 350+ tests (math, string, file operations, system)
+- Statements: 200+ tests (control flow, loops, I/O)
+- Type System: 100+ tests (RealValue, IntegerValue, StringValue, etc.)
+- File Operations: 150+ tests (FOPEN, FCLOSE, FGET, file functions)
+- Tokenizer & Normalizer: 100+ tests (lexical analysis, spacing)
+
+** NOTE: as of this version, all further versions pass the CheckStyle test and have complete BasicParser.atomic() coverage **

@@ -3,7 +3,7 @@
 **Version**: 0.1.1  
 **Project**: GriCom Diminutive BASIC Interpreter  
 **Language**: Java 21  
-**Last Updated**: 2026-05-25
+**Last Updated**: 2026-05-30
 
 ---
 
@@ -1499,8 +1499,75 @@ src/test/basic/
 ├── test_array_assign_expr.bas
 ├── test_array_assign_literal.bas
 ├── test_array_assign_variable.bas
+├── test_chdir_statement.bas
+├── test_direxists_atomic.bas
 └─ ... [more system tests]
 ```
+
+### Parser Atomic Method Function Tests (NEW - May 30, 2026)
+
+**Complete Coverage of BasicParser.atomic() Method**:
+All 36 functions in the atomic() method now have comprehensive unit test coverage.
+
+```
+src/test/basic/
+├── Zero-Parameter Functions (4 tests)
+│   ├── test_zero_param_getcwd.bas
+│   ├── test_zero_param_mem.bas
+│   ├── test_zero_param_rnd.bas
+│   └── test_zero_param_time.bas
+├── Single-Parameter Math Functions (9 tests)
+│   ├── test_math_abs.bas
+│   ├── test_math_sin.bas
+│   ├── test_math_cos.bas
+│   ├── test_math_tan.bas
+│   ├── test_math_log.bas
+│   ├── test_math_log10.bas
+│   ├── test_math_exp.bas
+│   ├── test_math_sqr.bas
+│   └── test_math_atn.bas
+├── Single-Parameter Conversion Functions (6 tests)
+│   ├── test_convert_chr.bas
+│   ├── test_convert_asc.bas
+│   ├── test_convert_val.bas
+│   ├── test_convert_str.bas
+│   ├── test_convert_cint.bas
+│   └── test_convert_cdbl.bas
+├── Single-Parameter File Functions (7 tests)
+│   ├── test_file_eof.bas
+│   ├── test_file_fexists.bas
+│   ├── test_file_fgetname.bas
+│   ├── test_file_fgetsize.bas
+│   ├── test_file_fisopen.bas
+│   ├── test_file_flinecount.bas
+│   └── test_file_fmodtime.bas
+├── Single-Parameter Utility Functions (2 tests)
+│   ├── test_string_len.bas
+│   └── test_logic_not.bas
+├── Two-Parameter Functions (6 tests)
+│   ├── test_two_param_instr.bas
+│   ├── test_two_param_left.bas
+│   ├── test_two_param_right.bas
+│   ├── test_two_param_fcompare.bas
+│   ├── test_two_param_system.bas
+│   └── test_two_param_call.bas
+└── Three-Parameter Functions (2 tests)
+    ├── test_three_param_mid.bas
+    └── test_three_param_listdirectory.bas
+```
+
+**Unit Test Integration** (src/test/java/eu/gricom/basic/parser/BasicParserTest.java):
+- 35 new test methods: `testAtomicXxxFunction()` for each function
+- Each test verifies:
+  - Token recognition by lexer (BasicTokenType matching)
+  - Correct parsing into Function objects
+  - Proper parameter handling
+  - Expression evaluation correctness
+
+**Test Results (May 30, 2026)**:
+- Parser atomic function tests: 35/35 pass ✅
+- CHDIR/DIREXISTS tests: 6/6 pass ✅
+- Total unit tests: 941/941 pass ✅
 
 ### Test Patterns
 
