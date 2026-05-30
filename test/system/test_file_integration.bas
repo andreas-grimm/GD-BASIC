@@ -27,11 +27,8 @@
 1170 
 1180 REM Step 3: Use FPEEK to lookahead
 1190 FPEEK 1, NEXT_CHAR$
-1200 IF NEXT_CHAR$ = "D" THEN
-1210    PRINT "  Confirmed: Next line starts with D"
-1220 ELSE
-1230    GOTO 9000
-1240 END IF
+1200 IF NEXT_CHAR$ != "D" THEN GOTO 9000
+1210 PRINT "  Confirmed: Next line starts with D"
 1250 
 1260 REM Step 4: Read remaining line
 1270 FINPUT 1 LINE1$

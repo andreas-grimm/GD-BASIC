@@ -352,11 +352,13 @@ The `EOF` function checks if the end of a file has been reached.
 ###### BASIC Syntax
 `EOF(<file_id>)`
 
-Returns `1` if the end of the specified file has been reached, or `0` otherwise.
+Returns `true` (boolean) if the end of the specified file has been reached, or `false` otherwise.
+
+**Note:** The EOF flag is set to true only when an attempt is made to read past the end of the file. Simply reading the last line of a file does not set EOF to true—it becomes true on the next read attempt.
 
 Example:
 ```basic
-60 IF EOF(1) == 1 THEN PRINT "End of file reached"
+60 IF EOF(1) THEN PRINT "End of file reached"
 ```
 
 #### FGET

@@ -243,3 +243,19 @@ Test Categories:
 - Tokenizer & Normalizer: 100+ tests (lexical analysis, spacing)
 
 ** NOTE: as of this version, all further versions pass the CheckStyle test and have complete BasicParser.atomic() coverage **
+
+0.1.1 (Extended): EOF Function Type Correction (May 30, 2026)
+* **EOF Function Type Fix**: Corrected return type from IntegerValue to BooleanValue
+  - EOF now returns boolean true/false instead of integer 1/0
+  - Enables direct use in IF statements without type casting
+  - Example: `IF EOF(1) THEN PRINT "End of file"` now works correctly
+  - All 902 unit tests pass ✅
+  - All 34 system integration tests pass ✅
+* **Documentation Updates**:
+  - Updated BASIC.md EOF function documentation
+  - Clarified EOF flag behavior: set to true only when reading past EOF
+  - Added boolean return type specification
+* **Test Results (May 30)**: Complete success
+  - Unit Tests: 902/902 pass ✅
+  - System Integration Tests: 34/34 pass ✅
+  - Build successful with Java 21 compilation
