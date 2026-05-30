@@ -2,6 +2,7 @@ package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.memoryManager.FileManager;
+import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.Value;
 
@@ -19,10 +20,10 @@ public final class Eof {
      * triggers the function.
      *
      * @param oValue input value
-     * @return Value the return message of the function
+     * @return Value the return message of the function (BooleanValue indicating if at EOF)
      * @throws Exception as any execution error found during execution
      */
-    public static IntegerValue execute(final Value oValue) throws Exception {
+    public static BooleanValue execute(final Value oValue) throws Exception {
         if (oValue instanceof IntegerValue) {
             FileManager oFileManager = new FileManager();
 

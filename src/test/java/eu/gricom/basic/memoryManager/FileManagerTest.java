@@ -2,6 +2,7 @@ package eu.gricom.basic.memoryManager;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.statements.ChDirStatement;
+import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
@@ -202,40 +203,41 @@ public class FileManagerTest {
     // -------------------------------------------------------------------------
 
     @Test
-    public void testGetEOF_WhenFileNotAtEnd_ReturnsOne() throws IOException {
+    public void testGetEOF_WhenFileNotAtEnd_ReturnsFalse() throws IOException {
         _oFileManager.openFile(_oTempReadFile.toString(), FILE_ID_READ, FileOpenType.READ);
 
-        IntegerValue oEof = _oFileManager.getEOF(FILE_ID_READ);
+        BooleanValue oEof = _oFileManager.getEOF(FILE_ID_READ);
 
-        assertEquals(0, oEof.toInt());
+        assertFalse(oEof.toBoolean());
     }
 
     @Test
-    public void testGetEOF_WhenFileAtEnd_ReturnsOne() throws IOException, RuntimeException {
+    public void testGetEOF_WhenFileAtEnd_ReturnsTrue() throws IOException, RuntimeException {
         _oFileManager.openFile(_oTempReadFile.toString(), FILE_ID_READ, FileOpenType.READ);
         _oFileManager.read(FILE_ID_READ);
         _oFileManager.read(FILE_ID_READ);
         _oFileManager.read(FILE_ID_READ);
+        _oFileManager.read(FILE_ID_READ); // Read past end of file to trigger EOF
 
-        IntegerValue oEof = _oFileManager.getEOF(FILE_ID_READ);
+        BooleanValue oEof = _oFileManager.getEOF(FILE_ID_READ);
 
-        assertEquals(0, oEof.toInt());
+        assertTrue(oEof.toBoolean());
     }
 
     @Test
-    public void testGetEOF_WithUnknownFileId_ReturnsZero() {
-        IntegerValue oEof = _oFileManager.getEOF(FILE_ID_UNKNOWN);
+    public void testGetEOF_WithUnknownFileId_ReturnsFalse() {
+        BooleanValue oEof = _oFileManager.getEOF(FILE_ID_UNKNOWN);
 
-        assertEquals(0, oEof.toInt());
+        assertFalse(oEof.toBoolean());
     }
 
     @Test
-    public void testGetEOF_WithWriteOnlyFile_ReturnsZero() throws IOException {
+    public void testGetEOF_WithWriteOnlyFile_ReturnsFalse() throws IOException {
         _oFileManager.openFile(_oTempWriteFile.toString(), FILE_ID_WRITE, FileOpenType.WRITE);
 
-        IntegerValue oEof = _oFileManager.getEOF(FILE_ID_WRITE);
+        BooleanValue oEof = _oFileManager.getEOF(FILE_ID_WRITE);
 
-        assertEquals(0, oEof.toInt());
+        assertFalse(oEof.toBoolean());
     }
 
     // -------------------------------------------------------------------------

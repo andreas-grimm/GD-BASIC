@@ -187,14 +187,9 @@ public class FileManager {
      * @param iFileId the file that is use for the write operation
      * @return 0 for false, 1 for true
      */
-    public final IntegerValue getEOF(int iFileId) {
-        int iEOF = 0;
-
-        if (_moEoFMap.getOrDefault(iFileId, false) == true) {
-            iEOF = 1;
-        }
-
-        return new IntegerValue(iEOF);
+    public final BooleanValue getEOF(int iFileId) {
+        boolean bEOF = _moEoFMap.getOrDefault(iFileId, false);
+        return new BooleanValue(bEOF);
     }
 
     /**
