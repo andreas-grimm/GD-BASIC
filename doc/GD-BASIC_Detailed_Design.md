@@ -2359,6 +2359,185 @@ Supporting `READ arr%(expr)` is scoped as a separate task.
 - `test_array_assign_expr.bas`: Assignment with expression indices
 - `test_array_read_expr.bas`: Read operations with expression indices
 
+### Block IF Statement Implementation
+
+#### Overview
+
+The interpreter supports three forms of IF statements:
+
+1. **Single-line IF with line number**: `IF condition THEN 100` (legacy behavior)
+2. **Inline IF with statement**: `IF condition THEN PRINT "msg"` (all statement types supported)
+3. **Block IF with ELSE/END-IF**: Multi-line block structure with optional ELSE clause
+
+#### IfThenStatement Class Enhancements
+
+**File**: `statements/IfThenStatement.java`
+
+The class supports both legacy line-number-based execution and modern block-based execution:
+
+```java
+public class IfThenStatement implements Statement {
+    private final Expression _oCondition;
+    private final int _iTargetStatement;
+    
+    // Block IF support (new fields)
+    private final List<Statement> _aoIfBlockStatements;
+    private final List<Statement> _aoElseBlockStatements;
+    private final boolean _bHasBlockStatements;
+    
+    // Constructor for legacy IF (line numbers)
+    public IfThenStatement(Expression oCondition, int iTargetStatement)
+    
+    // Constructor for block IF
+    public IfThenStatement(Expression oCondition, int iTokenNumber,
+                           List<Statement> aoIfBlockStatements,
+                           List<Statement> aoElseBlockStatements, int iEndIfLine)
+    
+    public void execute() throws Exception
+    public List<Statement> getIfBlockStatements()
+    public List<Statement> getElseBlockStatements()
+    public boolean hasBlockStatements()
+}
+```
+
+#### Execution Flow
+
+**For Block IF** (`_bHasBlockStatements == true`):
+
+```
+1. Evaluate condition
+2. If condition is true:
+   - Execute all statements in _aoIfBlockStatements
+3. If condition is false:
+   - If ELSE block exists: execute _aoElseBlockStatements
+   - Otherwise: skip to statement after END-IF
+4. Continue execution after END-IF
+```
+
+**For Legacy IF** (fallback):
+
+```
+1. Evaluate condition
+2. If condition is true: jump to target line number
+3. Otherwise: continue to next statement
+```
+
+#### BasicParser Enhancements
+
+**File**: `parser/BasicParser.java`
+
+Added helper methods to detect and parse IF variants:
+
+**isStatementKeyword(BasicTokenType)**
+- Distinguishes between:
+  - Line number: `IF x THEN 100`
+  - Statement keyword: `IF x THEN PRINT "msg"` or `IF x THEN` (block IF)
+
+**parseBlockStatements(int iBlockEndLine)**
+- Parses all statements between THEN and ELSE/END-IF
+- Supports all 35+ statement types in block context
+- Returns `List<Statement>` for execution
+
+**parseInlineStatement()**
+- Parses single statement after THEN keyword
+- Supports all statement types: PRINT, INPUT, assignments, GOTO, GOSUB, etc.
+
+#### Three-Branch IF Parsing Logic
+
+```
+IF <condition> THEN
+  ├─ Token after THEN is NUMBER
+  │  └─ Single-line IF: IF condition THEN 100
+  │
+  ├─ Token after THEN is STATEMENT KEYWORD
+  │  └─ Inline IF: IF condition THEN PRINT/INPUT/etc
+  │
+  └─ Line ends after THEN (no statement on same line)
+     └─ Block IF: IF condition THEN
+        <block statements>
+        [ELSE]
+        <block statements>
+        END-IF
+```
+
+#### Example Usage
+
+**Single-line IF** (legacy):
+```basic
+10 IF X > 5 THEN 100
+20 PRINT "X is <= 5"
+30 END
+100 PRINT "X is > 5"
+110 END
+```
+
+**Inline IF**:
+```basic
+10 IF X > 5 THEN PRINT "X is > 5"
+20 END
+```
+
+**Block IF with ELSE**:
+```basic
+10 IF X > 5 THEN
+20   PRINT "X is > 5"
+30   Y = X * 2
+40 ELSE
+50   PRINT "X is <= 5"
+60   Y = X / 2
+70 END-IF
+80 PRINT "Y = "; Y
+90 END
+```
+
+**Nested Block IF**:
+```basic
+10 IF A > 0 THEN
+20   IF B > 0 THEN
+30     PRINT "Both positive"
+40   ELSE
+50     PRINT "A positive, B non-positive"
+60   END-IF
+70 ELSE
+80   PRINT "A is non-positive"
+90 END-IF
+```
+
+#### Test Coverage
+
+**Unit Tests**:
+- IfThenStatementTest: Verification of block statement collection and execution
+- BasicParserTest: All three IF variants parsed correctly
+
+**System Tests**:
+- `test_if_then_else.bas`: Comprehensive IF block testing
+- Nested blocks, ELSE clauses, mixed statement types
+
+#### Design Pattern: Statement Collection
+
+The block IF implementation uses a **statement collection pattern**:
+
+1. Parser collects statements into `List<Statement>` during parsing
+2. Statements executed sequentially without line-number jumping
+3. Blocks can be nested arbitrarily deep
+4. Each block maintains its own statement list
+
+This pattern enables:
+- More readable BASIC code (modern structured programming)
+- Easier debugging (no GOTO/line-number jumping)
+- Natural nesting support
+- Full compatibility with all statement types
+
+#### Known Limitations
+
+1. **Single `=` in conditions**: Currently requires `==` for comparisons in block IF
+   - Reason: Parser needs to distinguish assignment from comparison
+   - Workaround: Use explicit `==` in IF conditions
+
+2. **GOTO from block**: Jumping out of a block leaves stack entries
+   - Recommendation: Avoid GOTO/GOSUB to jump out of blocks
+   - Use RETURN from GOSUB to properly manage stack
+
 ### Stack for GOSUB/RETURN
 
 **Mechanism**:
