@@ -352,11 +352,137 @@ The `EOF` function checks if the end of a file has been reached.
 ###### BASIC Syntax
 `EOF(<file_id>)`
 
-Returns `1` if the end of the specified file has been reached, or `0` otherwise.
+Returns `true` (boolean) if the end of the specified file has been reached, or `false` otherwise.
+
+**Note:** The EOF flag is set to true only when an attempt is made to read past the end of the file. Simply reading the last line of a file does not set EOF to true—it becomes true on the next read attempt.
 
 Example:
 ```basic
-60 IF EOF(1) == 1 THEN PRINT "End of file reached"
+60 IF EOF(1) THEN PRINT "End of file reached"
+```
+
+#### FGET
+
+The `FGET` command reads a single character from an open file and advances the file position by 1.
+
+###### BASIC Syntax
+`FGET <file_id>, <variable>`
+
+- `<file_id>`: The ID of a file opened in `"read"` mode.
+- `<variable>`: The variable where the read character will be stored.
+
+Returns the character as a string, or "EOF" if end of file is reached. The read position advances by 1 character.
+
+Example:
+```basic
+10 FOPEN 1 "data.txt" "read"
+20 FGET 1, C$
+30 PRINT "Character: "; C$
+40 FCLOSE 1 "KEEP"
+```
+
+#### FPEEK (NEW - May 30, 2026)
+
+The `FPEEK` command reads the next character from a file WITHOUT advancing the read position. This provides lookahead capability.
+
+###### BASIC Syntax
+`FPEEK <file_id>, <variable>`
+
+- `<file_id>`: The ID of a file opened in `"read"` mode.
+- `<variable>`: The variable where the peeked character will be stored.
+
+Returns the next character as a string, or "EOF" if end of file is reached. The read position is NOT advanced.
+
+Key Difference from FGET:
+- `FGET`: Reads character AND advances position
+- `FPEEK`: Reads character WITHOUT advancing position (lookahead)
+
+Example:
+```basic
+10 FOPEN 1 "data.txt" "read"
+20 FPEEK 1, C$           ! Look ahead
+30 IF C$ == "X" THEN PRINT "Found X ahead"
+40 FGET 1, ACTUAL$       ! Now read it
+50 FCLOSE 1 "KEEP"
+```
+
+#### FPUT (NEW - May 30, 2026)
+
+The `FPUT` command writes a character or string to an open file WITHOUT adding a newline.
+
+###### BASIC Syntax
+`FPUT <file_id>, <expression>`
+
+- `<file_id>`: The ID of a file opened in `"write"` mode.
+- `<expression>`: Expression evaluates to character/string to write.
+
+Unlike FPRINT, FPUT does not add a newline (CRLF) after the output. Useful for building lines character-by-character.
+
+Key Difference from FPRINT:
+- `FPRINT`: Writes with newline
+- `FPUT`: Writes without newline
+
+Example:
+```basic
+10 FOPEN 1 "output.txt" "write"
+20 FPUT 1, "H"
+30 FPUT 1, "e"
+40 FPUT 1, "l"
+50 FPUT 1, "l"
+60 FPUT 1, "o"
+70 FPRINT 1, ""           ! Add newline at end
+80 FCLOSE 1 "KEEP"
+```
+
+#### FRENAME (NEW - May 30, 2026)
+
+The `FRENAME` command renames or moves a file tracked by a file ID.
+
+###### BASIC Syntax
+`FRENAME <file_id>, "<new_filename>"`
+
+- `<file_id>`: The ID of the file to rename.
+- `<new_filename>`: The new filename (may include path).
+
+The file is closed (without deletion), renamed in the file system, and re-registered under the same file ID. Content is preserved.
+
+Example:
+```basic
+10 FOPEN 1 "temp.txt" "write"
+20 FPRINT 1, "Important data"
+30 FCLOSE 1 "KEEP"
+40 FRENAME 1, "backup.txt"     ! Rename file
+50 PRINT "File renamed to backup.txt"
+60 END
+```
+
+#### FREWIND (NEW - May 30, 2026)
+
+The `FREWIND` command resets the file read position to the beginning of the file without closing it.
+
+###### BASIC Syntax
+`FREWIND <file_id>`
+
+- `<file_id>`: The ID of a file opened in `"read"` mode.
+
+The file position is reset to 0, allowing re-reading from the start. The file remains open, making this more efficient than closing and reopening.
+
+Example:
+```basic
+10 FOPEN 1 "data.txt" "read"
+20 PRINT "First pass:"
+30 GOSUB 100
+40 FREWIND 1                   ! Go back to start
+50 PRINT "Second pass:"
+60 GOSUB 100
+70 FCLOSE 1 "KEEP"
+80 END
+100 REM Process file
+110 WHILE NOT EOF(1)
+120    FINPUT 1, L$
+130    PRINT L$
+140 WEND
+150 RETURN
 ```
 
 ### Comments

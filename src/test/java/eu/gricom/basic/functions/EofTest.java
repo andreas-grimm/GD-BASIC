@@ -5,6 +5,7 @@ import eu.gricom.basic.memoryManager.VariableManagement;
 import eu.gricom.basic.statements.FInputStatement;
 import eu.gricom.basic.statements.FOpenStatement;
 import eu.gricom.basic.statements.FPrintStatement;
+import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -55,19 +57,19 @@ public class EofTest {
     // -------------------------------------------------------------------------
 
     @Test
-    public void testExecute_WithIntegerValue_ReturnsIntegerValue() throws Exception {
+    public void testExecute_WithIntegerValue_ReturnsBooleanValue() throws Exception {
         IntegerValue oFileId = new IntegerValue(FILE_ID_1);
         Value oResult = Eof.execute(oFileId);
 
-        assertTrue(oResult instanceof IntegerValue);
+        assertTrue(oResult instanceof BooleanValue);
     }
 
     @Test
-    public void testExecute_WithNonOpenFile_ReturnsZero() throws Exception {
+    public void testExecute_WithNonOpenFile_ReturnsFalse() throws Exception {
         IntegerValue oFileId = new IntegerValue(FILE_ID_1);
-        IntegerValue oResult = (IntegerValue) Eof.execute(oFileId);
+        BooleanValue oResult = (BooleanValue) Eof.execute(oFileId);
 
-        assertEquals(0, oResult.toInt());
+        assertFalse(oResult.toBoolean());
     }
 
     @Test
@@ -105,7 +107,7 @@ public class EofTest {
         List<String> astrReadLines = new ArrayList<>();
         FInputStatement oFInput = new FInputStatement(6, FILE_ID_1, "A$");
 
-        while (Eof.execute(new IntegerValue(FILE_ID_1)).toInt() == 0) {
+        while (!((BooleanValue) Eof.execute(new IntegerValue(FILE_ID_1))).toBoolean()) {
             try {
                 oFInput.execute();
                 VariableManagement oVariableManagement = new VariableManagement();
@@ -140,7 +142,7 @@ public class EofTest {
         List<String> astrReadLines = new ArrayList<>();
         FInputStatement oFInput = new FInputStatement(4, FILE_ID_1, "A$");
 
-        while ((Eof.execute(new IntegerValue(FILE_ID_1))).toInt() == 0) {
+        while (!((BooleanValue) Eof.execute(new IntegerValue(FILE_ID_1))).toBoolean()) {
             try {
                 oFInput.execute();
                 VariableManagement oVariableManagement = new VariableManagement();
@@ -185,7 +187,7 @@ public class EofTest {
         List<String> astrReadLines = new ArrayList<>();
         FInputStatement oFInput = new FInputStatement(8, FILE_ID_2, "B$");
 
-        while (Eof.execute(new IntegerValue(FILE_ID_2)).toInt() == 0) {
+        while (!((BooleanValue) Eof.execute(new IntegerValue(FILE_ID_2))).toBoolean()) {
             try {
                 oFInput.execute();
                 VariableManagement oVariableManagement = new VariableManagement();
@@ -202,7 +204,7 @@ public class EofTest {
     }
 
     @Test
-    public void testExecute_ReturnsOneWhenMoreDataToRead() throws Exception {
+    public void testExecute_ReturnsFalseWhenMoreDataToRead() throws Exception {
         FOpenStatement oFOpenWrite = new FOpenStatement(1, FILE_ID_1, _oTempFile1.toString(), "write");
         oFOpenWrite.execute();
         FPrintStatement oFPrint = new FPrintStatement(2, FILE_ID_1, List.of(new StringValue("data\n")), false);
@@ -214,12 +216,12 @@ public class EofTest {
         FOpenStatement oFOpenRead = new FOpenStatement(3, FILE_ID_1, _oTempFile1.toString(), "read");
         oFOpenRead.execute();
 
-        IntegerValue oResult = (IntegerValue) Eof.execute(new IntegerValue(FILE_ID_1));
-        assertEquals(0, oResult.toInt());
+        BooleanValue oResult = (BooleanValue) Eof.execute(new IntegerValue(FILE_ID_1));
+        assertFalse(oResult.toBoolean());
     }
 
     @Test
-    public void testExecute_ReturnsZeroAfterAllLinesRead() throws Exception {
+    public void testExecute_ReturnsTrueAfterAllLinesRead() throws Exception {
         FOpenStatement oFOpenWrite = new FOpenStatement(1, FILE_ID_1, _oTempFile1.toString(), "write");
         oFOpenWrite.execute();
         FPrintStatement oFPrint = new FPrintStatement(2, FILE_ID_1, List.of(new StringValue("only line")), false);
@@ -235,7 +237,7 @@ public class EofTest {
         oFInput.execute();
         oFInput.execute();
 
-        IntegerValue oResult = (IntegerValue) Eof.execute(new IntegerValue(FILE_ID_1));
-        assertEquals(1, oResult.toInt());
+        BooleanValue oResult = (BooleanValue) Eof.execute(new IntegerValue(FILE_ID_1));
+        assertTrue(oResult.toBoolean());
     }
 }

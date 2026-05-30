@@ -32,8 +32,8 @@ public final class Normalizer {
         String strOutput = new String();
 
         boolean bQuotationMark = false;
-        boolean bArrayParenthenes = false;
         boolean bSquareBrackets = false;
+        int iParenthesisDepth = 0;
 
         // replace tabs with spaces
         strWork = strWork.replace("\t", "    ");
@@ -50,19 +50,18 @@ public final class Normalizer {
                 bSquareBrackets = true;
             }
 
-            if (cCurrentChar == '('
-                    && (cPreviousChar == '$'
-                        || cPreviousChar == '#'
-                        || cPreviousChar == '!'
-                        || cPreviousChar == '%'
-                        || cPreviousChar == '&'
-                        || cPreviousChar == '@')) {
-                bArrayParenthenes = true;
-            }
-
             // if the quotation mark is not set, then just pass thru...
             if (cCurrentChar == '"') {
                 bQuotationMark = !bQuotationMark;
+            }
+
+            // track parenthesis depth when not in quotes or square brackets
+            if (!bQuotationMark && !bSquareBrackets) {
+                if (cCurrentChar == '(') {
+                    iParenthesisDepth++;
+                } else if (cCurrentChar == ')') {
+                    iParenthesisDepth--;
+                }
             }
 
             // now check whether we are between square brackets [] - here remove all spaces
@@ -74,29 +73,48 @@ public final class Normalizer {
                 if (cCurrentChar == ']') {
                     bSquareBrackets = false;
                 }
-            } else if (bQuotationMark || bArrayParenthenes) {
+            } else if (bQuotationMark) {
                 strOutput += cCurrentChar;
-                if (cCurrentChar == ')'
-                        && bArrayParenthenes) {
-                    bArrayParenthenes = false;
-                }
             } else {
                 // else apply filters
                 switch (cCurrentChar) {
                     case ',':
-                        strOutput += " ,";
+                        strOutput += " , ";
                         break;
                     case ';':
-                        strOutput += " ;";
+                        strOutput += " ; ";
                         break;
                     case ':':
-                        strOutput += " :";
+                        strOutput += " : ";
                         break;
                     case '(':
                         strOutput += " ( ";
                         break;
                     case ')':
                         strOutput += " ) ";
+                        break;
+                    case '+':
+                    case '-':
+                    case '*':
+                    case '/':
+                    case '^':
+                    case '&':
+                    case '|':
+                        // Inside parentheses, add spaces around arithmetic operators
+                        // Skip spaces for unary minus/plus (right after '(' or ',')
+                        if (iParenthesisDepth > 0 && cPreviousChar != '(' && cPreviousChar != ',') {
+                            strOutput += " " + cCurrentChar + " ";
+                        } else {
+                            strOutput += cCurrentChar;
+                        }
+                        break;
+                    case '=':
+                    case '>':
+                    case '<':
+                    case '!':
+                        // Comparison operators: don't add spaces to avoid breaking multi-char operators
+                        // (e.g., >=, <=, ==, !=, <<, >>)
+                        strOutput += cCurrentChar;
                         break;
                     default:
                         strOutput += cCurrentChar;
@@ -147,12 +165,12 @@ public final class Normalizer {
      *
      * @param strInput string to be adjusted
      * @return normalized string
-     * @throws SyntaxErrorException if the parenthesis are not set correctly
+     * @throws SyntaxErrorException if the parenthesis is not set correctly
      */
     public static String normalizeFunction(final String strInput) throws SyntaxErrorException {
         String strWork = strInput;
 
-        // this function only runs if there are two parenthesis in the string
+        // this function only runs if there are two parentheses in the string
         int iIndexStart = strWork.indexOf("(");
         int iIndexEnd = strWork.indexOf(")");
 

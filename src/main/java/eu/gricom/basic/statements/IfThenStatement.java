@@ -6,6 +6,8 @@ import eu.gricom.basic.memoryManager.ProgramPointer;
 import eu.gricom.basic.memoryManager.Stack;
 import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.IntegerValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * IfThenStatement.java
@@ -26,6 +28,9 @@ public final class IfThenStatement implements Statement {
     private final LabelStatement _oLabelStatement = new LabelStatement();
     private final LineNumberXRef _oLineNumberObject = new LineNumberXRef();
     private final int _iEndIfLine;
+    private final List<Statement> _aoIfBlockStatements = new ArrayList<>();
+    private final List<Statement> _aoElseBlockStatements = new ArrayList<>();
+    private boolean _bHasBlockStatements = false;
 
     /**
      * JASIC constructor.
@@ -60,6 +65,37 @@ public final class IfThenStatement implements Statement {
         _iElseStatement = iELseStatement;
         _iEndIfLine = iEndIfLine;
         _iTargetLineNumber = iTargetLineNumber;
+        _bHasBlockStatements = false;
+    }
+
+    /**
+     * Block IF constructor for multi-line IF-THEN-ELSE-END-IF blocks.
+     *
+     * @param oCondition - condition to be tested
+     * @param iTokenNumber - the number of this token related to this statement
+     * @param aoIfBlockStatements - list of statements in the IF block
+     * @param aoElseBlockStatements - list of statements in the ELSE block (may be empty)
+     * @param iEndIfLine - line number of the END-IF statement
+     */
+    public IfThenStatement(final Expression oCondition,
+                           final int iTokenNumber,
+                           final List<Statement> aoIfBlockStatements,
+                           final List<Statement> aoElseBlockStatements,
+                           final int iEndIfLine) {
+        _iTokenNumber = iTokenNumber;
+        _oCondition = oCondition;
+        _strLabel = "";
+        _iElseStatement = (aoElseBlockStatements != null && !aoElseBlockStatements.isEmpty()) ? 1 : 0;
+        _iEndIfLine = iEndIfLine;
+        _iTargetLineNumber = 0;
+        _bHasBlockStatements = true;
+
+        if (aoIfBlockStatements != null) {
+            _aoIfBlockStatements.addAll(aoIfBlockStatements);
+        }
+        if (aoElseBlockStatements != null) {
+            _aoElseBlockStatements.addAll(aoElseBlockStatements);
+        }
     }
 
     /**
@@ -70,6 +106,33 @@ public final class IfThenStatement implements Statement {
     @Override
     public int getTokenNumber() {
         return _iTokenNumber;
+    }
+
+    /**
+     * Get the list of statements in the IF block.
+     *
+     * @return list of IF block statements
+     */
+    public List<Statement> getIfBlockStatements() {
+        return _aoIfBlockStatements;
+    }
+
+    /**
+     * Get the list of statements in the ELSE block.
+     *
+     * @return list of ELSE block statements
+     */
+    public List<Statement> getElseBlockStatements() {
+        return _aoElseBlockStatements;
+    }
+
+    /**
+     * Check if this IF statement has block statements stored.
+     *
+     * @return true if block statements are stored, false otherwise
+     */
+    public boolean hasBlockStatements() {
+        return _bHasBlockStatements;
     }
 
     /**
@@ -87,6 +150,21 @@ public final class IfThenStatement implements Statement {
                 _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strLabel));
             }
 
+            return;
+        }
+
+        // For block IF statements with stored statements, execute them directly
+        if (_bHasBlockStatements) {
+            BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
+            if (bValue.isTrue()) {
+                for (Statement oStatement : _aoIfBlockStatements) {
+                    oStatement.execute();
+                }
+            } else if (!_aoElseBlockStatements.isEmpty()) {
+                for (Statement oStatement : _aoElseBlockStatements) {
+                    oStatement.execute();
+                }
+            }
             return;
         }
 

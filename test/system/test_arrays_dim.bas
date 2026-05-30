@@ -58,7 +58,6 @@
 530 NEXT
 540 REM Test 2D array
 550 PRINT "Testing 2D Array:"
-560 DIM matrix%(3,3)
 570 matrix%(1,1) = 1
 580 matrix%(1,2) = 2
 590 matrix%(2,1) = 3

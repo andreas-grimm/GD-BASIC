@@ -12,11 +12,11 @@
 300 rem Test Case 4: Testing the IF
 310 print "Testing of the IF command"
 320 c# = 2
-330 if c# = 3 then
+330 if c# == 3 then
 340 print "This line should not be printed"
 350 end-if
 360 print "Verify this is the first line of the IF statement printed..."
-370 if c# = 2 then
+370 if c# == 2 then
 380 print "This line should be printed"
 390 end-if
 999 end
