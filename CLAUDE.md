@@ -182,3 +182,7 @@ project/
 - **Branch**: never leave the current branch without explicit instruction
 - **Third-party software**: never install without explicit user confirmation ("yes" or "confirm")
 - **Deleting code**: never delete code without approval — mark redundant code as `@Deprecated`, comment out unused code and tag with `TODO`
+
+## Clean Up
+
+- Delete any temporary files before commiting the project
