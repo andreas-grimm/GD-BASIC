@@ -126,19 +126,44 @@ public class CallTest {
                 Value oURL = new StringValue("https://httpbin.org/status/404");
                 Value oPayload = new StringValue("{}");
 
-                RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-                    Call.execute(oURL, oPayload);
-                });
-                assertTrue(exception.getMessage().contains("status code: 404"),
-                        "Expected 404 error, got: " + exception.getMessage());
-                return null;
+                try {
+                    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+                        Call.execute(oURL, oPayload);
+                    });
+
+                    // Check if we got 404 or if service is experiencing issues
+                    String exceptionMsg = exception.getMessage();
+                    boolean isTransientError = exceptionMsg.contains("503") ||
+                            exceptionMsg.contains("timeout") ||
+                            exceptionMsg.contains("timed") ||
+                            exceptionMsg.contains("Connection") ||
+                            exceptionMsg.contains("refused");
+
+                    if (isTransientError) {
+                        // Service experiencing issues, propagate for retry/skip
+                        throw exception;
+                    }
+
+                    assertTrue(exceptionMsg.contains("status code: 404"),
+                            "Expected 404 error, got: " + exceptionMsg);
+                    return null;
+                } catch (RuntimeException rte) {
+                    // Propagate runtime exceptions for retry logic to handle
+                    throw rte;
+                }
             }, "404 status code test");
         } catch (Exception e) {
             // Skip test if external service is unavailable or network issues occur
             String msg = e.getMessage();
             boolean isNetworkIssue = msg != null && (msg.contains("503") || msg.contains("timeout") ||
-                    msg.contains("Connection") || msg.contains("Failed after 4 attempts"));
-            assumeTrue(!isNetworkIssue, "httpbin.org service unavailable or network issues, skipping external API test");
+                    msg.contains("timed") || msg.contains("Connection") || msg.contains("Failed after 4 attempts") ||
+                    msg.contains("refused") || msg.contains("resolve"));
+
+            // If it's a network/service issue, skip the test gracefully
+            if (isNetworkIssue) {
+                assumeTrue(false, "httpbin.org service unavailable or network issues (" + msg + "), skipping external API test");
+            }
+            // For other errors, re-throw
             throw e;
         }
     }
@@ -153,25 +178,42 @@ public class CallTest {
                 String payloadJson = "{\"test\":\"value\"}";
                 Value oPayload = new StringValue(payloadJson);
 
-                Value result = Call.execute(oURL, oPayload);
+                try {
+                    Value result = Call.execute(oURL, oPayload);
 
-                assertNotNull(result);
-                assertTrue(result instanceof StringValue);
-                // httpbin.org/post returns the JSON with "data" field containing the payload
-                // The payload string might be escaped in the response, let's check for the key/value
-                String responseBody = result.toString();
-                // Response body contains test data
-                assertTrue(responseBody.contains("test") || responseBody.contains("value"),
-                        "Response should contain the payload data. Response: " + responseBody);
-                return null;
+                    assertNotNull(result);
+                    assertTrue(result instanceof StringValue);
+                    // httpbin.org/post returns the JSON with "data" field containing the payload
+                    // The payload string might be escaped in the response, let's check for the key/value
+                    String responseBody = result.toString();
+                    // Response body contains test data
+                    assertTrue(responseBody.contains("test") || responseBody.contains("value"),
+                            "Response should contain the payload data. Response: " + responseBody);
+                    return null;
+                } catch (RuntimeException rte) {
+                    // If service is experiencing issues, propagate for retry
+                    String msg = rte.getMessage();
+                    if (msg.contains("503") || msg.contains("timeout") || msg.contains("timed") ||
+                            msg.contains("Connection") || msg.contains("refused")) {
+                        throw rte;
+                    }
+                    throw rte;
+                }
             }, "successful POST request test");
         } catch (Exception e) {
             // Skip test if external service is unavailable or network issues occur
             String msg = e.getMessage();
             boolean isNetworkIssue = msg != null && (msg.contains("503") || msg.contains("timeout") ||
-                    msg.contains("Connection") || msg.contains("Failed after 4 attempts"));
-            assumeTrue(!isNetworkIssue, "httpbin.org service unavailable or network issues, skipping external API test");
+                    msg.contains("timed") || msg.contains("Connection") || msg.contains("Failed after 4 attempts") ||
+                    msg.contains("refused") || msg.contains("resolve"));
+
+            // If it's a network/service issue, skip the test gracefully
+            if (isNetworkIssue) {
+                assumeTrue(false, "httpbin.org service unavailable or network issues (" + msg + "), skipping external API test");
+            }
+            // For other errors, re-throw
             throw e;
         }
     }
+
 }
