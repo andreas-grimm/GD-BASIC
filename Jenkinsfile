@@ -12,12 +12,4 @@ pipeline {
             }
         }
     }
-    post {
-        success {
-            slackSend channel: '#jenkins', color: 'good', message: "SUCCESS: Job ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}]"
-        }
-        failure {
-            slackSend channel: '#jenkins', color: 'danger', message: "FAILURE: Job ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}]"
-        }
-    }
 }
