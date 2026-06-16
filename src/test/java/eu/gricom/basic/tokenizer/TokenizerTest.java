@@ -61,7 +61,7 @@ public class TokenizerTest {
 
             LOGGER.setLogLevel("");
 
-            String strProgramLine = "10 A# = 4 * ( 2 + 1 )";
+            String strProgramLine = "10 A = 4 * ( 2 + 1 )";
             Lexer oTokenizer = new BasicLexer();
 
             List<Token> aoTokens = oTokenizer.tokenize(strProgramLine);
@@ -71,7 +71,7 @@ public class TokenizerTest {
             Token oToken = aoTokens.get(0);
 
             assertEquals(10, oToken.getLine());
-            assertEquals("A#", oToken.getText());
+            assertEquals("A", oToken.getText());
             assertEquals(BasicTokenType.WORD, oToken.getType());
 
             oToken = aoTokens.get(1);
@@ -133,7 +133,7 @@ public class TokenizerTest {
 
             LOGGER.setLogLevel("");
 
-            String strProgramLine = "10 A# = 4 * 2 + 1";
+            String strProgramLine = "10 A = 4 * 2 + 1";
             Lexer oTokenizer = new BasicLexer();
 
             List<Token> aoTokens = oTokenizer.tokenize(strProgramLine);
@@ -143,7 +143,7 @@ public class TokenizerTest {
             Token oToken = aoTokens.get(0);
 
             assertEquals(10, oToken.getLine());
-            assertEquals("A#", oToken.getText());
+            assertEquals("A", oToken.getText());
             assertEquals(BasicTokenType.WORD, oToken.getType());
 
             oToken = aoTokens.get(1);

@@ -24,11 +24,11 @@ Project Planning and Control
 
 Build Process:
 
-This package has been tested to build with Maven 3.6.3, using Oracle Java 1.8.0_131 under Mac OS X 10.15.7
+This package has been tested to build with Maven 3.6.3+, using Java 21+ under macOS
 
 Use the following command line:
 
-    mvn -Drevision=0.0.6-SNAPSHOT -Dmaven.javadoc.skip=true clean site package
+    mvn clean test package
 
 --- 
 
@@ -259,3 +259,58 @@ Test Categories:
   - Unit Tests: 902/902 pass ✅
   - System Integration Tests: 34/34 pass ✅
   - Build successful with Java 21 compilation
+
+---
+
+## 0.2.0: Type System Simplification - Removal of # Suffix (June 16, 2026)
+
+⚠️ **BREAKING CHANGE**: This version removes the `#` suffix for real variables.
+
+### What Changed
+* **Removed `#` suffix for real variables** - No longer supported (syntax error if used)
+* **Untyped variables default to REAL** - Variables with no suffix now store real (double) values
+* **Cleaner type system** - Simplified from 7 type suffixes to 6
+* **Freed `#` symbol** - Available for future use (e.g., comments, operators)
+
+### Migration Required
+Programs using `#` suffix must be updated:
+- `X# = 3.14` → `X = 3.14` (untyped real)
+- `a# = a# + 1` → `a = a + 1` (simple arithmetic)
+- `PRINT x#` → `PRINT x` (variable reference)
+
+See BASIC_CODING_STANDARD.md for complete migration guide.
+
+### Implementation Details
+* **VariableManagement.java**: Redesigned type detection and storage routing
+  - Removed `_moUntyped` HashMap (untyped now stored in `_moReals`)
+  - Added `_hasTypeSuffix()` helper method for suffix detection
+  - Explicit validation to reject `#` with clear error messages
+* **Test Updates**:
+  - All Java unit tests updated (79 tests in Phase 1-3)
+  - All BASIC system tests updated (34/34 now pass)
+  - Added 7 new unit tests for hash suffix rejection
+* **Documentation**:
+  - Updated BASIC_CODING_STANDARD.md with migration guide
+  - Updated CLAUDE.md variable types specification
+  - Updated README.md (this file) with breaking change notice
+
+### Test Results (June 16, 2026)
+- Unit Tests: 908/908 pass ✅ (no failures, 1 skipped)
+- System Integration Tests: 34/34 pass ✅
+- Build successful with Java 21
+- Zero regressions in existing functionality
+
+### Error Handling
+Clear error messages guide users to correct syntax:
+```
+Syntax Error: Variable name [X#] uses unsupported '#' suffix. 
+Use untyped (no suffix) or '!' for real numbers.
+```
+
+### Valid Variable Types in 0.2.0
+- **Untyped (real default)**: `X`, `pi`, `value`
+- **Double**: `result!`, `sum!`
+- **Integer**: `count%`, `index%`
+- **String**: `name$`, `text$`
+- **Long**: `bignum&`, `largeint&`
+- **Boolean**: `flag@`, `condition@`

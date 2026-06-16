@@ -29,19 +29,19 @@ public class ForStatementTest {
         oLineNumber.putStatementNumber(15, 15);
         oLineNumber.putLineNumber(15, 15);
 
-        ForStatement oForStatement = new ForStatement(5, "X#", oStart, oEnd, oStep, 10);
+        ForStatement oForStatement = new ForStatement(5, "X", oStart, oEnd, oStep, 10);
 
         // after the execute, there should be a X real in the system with the value of 0
         oForStatement.execute();
 
-        RealValue oXVariable = (RealValue) oVariableManager.getMap("X#");
+        RealValue oXVariable = (RealValue) oVariableManager.getMap("X");
 
         assertTrue(oXVariable.toReal() == 0.0);
         oStack.pop();
         // after the second execution, X should have a value of 1.0
         oForStatement.execute();
 
-        oXVariable = (RealValue) oVariableManager.getMap("X#");
+        oXVariable = (RealValue) oVariableManager.getMap("X");
 
         assertTrue(oXVariable.toReal() == 1.0);
         oStack.pop();
@@ -49,7 +49,7 @@ public class ForStatementTest {
         // after the third execution, X should have a value of 2.0 and the program pointer should be set to 10
         oForStatement.execute();
 
-        oXVariable = (RealValue) oVariableManager.getMap("X#");
+        oXVariable = (RealValue) oVariableManager.getMap("X");
 
         assertTrue(oXVariable.toReal() == 1.0);
     }
@@ -73,19 +73,19 @@ public class ForStatementTest {
         oLineNumber.putStatementNumber(15, 15);
         oLineNumber.putLineNumber(15, 15);
 
-        ForStatement oForStatement = new ForStatement(5, "X#", oStart, oEnd, oStep, 10);
+        ForStatement oForStatement = new ForStatement(5, "X", oStart, oEnd, oStep, 10);
 
         // after the execute, there should be a X real in the system with the value of 0
         oForStatement.execute();
 
-        RealValue oXVariable = (RealValue) oVariableManager.getMap("X#");
+        RealValue oXVariable = (RealValue) oVariableManager.getMap("X");
 
         assertTrue(oXVariable.toReal() == 1.0);
         oStack.pop();
         // after the second execution, X should have a value of 1.0
         oForStatement.execute();
 
-        oXVariable = (RealValue) oVariableManager.getMap("X#");
+        oXVariable = (RealValue) oVariableManager.getMap("X");
 
         assertTrue(oXVariable.toReal() == 0.0);
         oStack.pop();
@@ -93,7 +93,7 @@ public class ForStatementTest {
         // after the third execution, X should have a value of 2.0 and the program pointer should be set to 10
         oForStatement.execute();
 
-        oXVariable = (RealValue) oVariableManager.getMap("X#");
+        oXVariable = (RealValue) oVariableManager.getMap("X");
 
         assertTrue(oXVariable.toReal() == 0.0);
     }
