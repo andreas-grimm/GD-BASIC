@@ -4,6 +4,8 @@ If the functionality of the interpreter does not match the documentation, refer 
 GitHub.
 Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
+> **Updated for v0.2.0**: The `#` suffix for real variables has been removed. Variables without a suffix now default to Real type (floating-point). Examples throughout this document reflect the current syntax.
+
 GDBasic language syntax
 ---------------------
 
@@ -35,11 +37,10 @@ GD-BASIC is based on the **Dartmouth BASIC October 1964** specification, the ori
 
 | Type | Variable Name Structure | Values |
 |------|-------------------------|--------|
-| `REAL` | `AB#` or `AB!` | not defined |
+| `REAL` | `AB` or `AB!` | not defined |
 | `INTEGER` | `AB%` or `AB&` | not defined |
 | `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | not defined |
 | `BOOLEAN` | `AB@` | `true` or `false` |
-| undefined | `AB` | not defined |
 
 
 ## Document Conventions
@@ -76,15 +77,15 @@ __Example of a BASIC Program__
 
      10 REM Recorded of the JASIC Program in Dartmouth 
      20 REM Basic Format
-     30 COUNT# = 5
-     40 COUNT# = COUNT# * 2
+     30 COUNT = 5
+     40 COUNT = COUNT * 2
      50 REM Stop looping if we are done
-     60 IF COUNT# == 0 THEN
+     60 IF COUNT == 0 THEN
      70 GOTO 120
      80 END-IF
      90 PRINT "Hello, world!"
     100 REM Decrement and restart the loop
-    110 COUNT# = COUNT# - 1
+    110 COUNT = COUNT - 1
     120 GOTO 50
     130 END
 
@@ -96,8 +97,8 @@ increase the JASIC programming feature until the Dartmouth version is functional
 The Colon is used to have multiple BASIC commands in a single command line:
 
     20 REM Colon Example
-    30 COUNT# = 5 : MULTIPLIER# = 2
-    40 COUNT# = COUNT# * MULTIPLIER
+    30 COUNT = 5 : MULTIPLIER = 2
+    40 COUNT = COUNT * MULTIPLIER
 
 
 ### Variables, Arrays, and Constants
@@ -119,7 +120,7 @@ is made available, if available.
 Example of Arrays:
 
     A$(10) = "This is the 10th field of the array"
-    A#(5) = a#(4) + 1
+    A(5) = a(4) + 1
 
 >[!Warning]
 > Two dimensional arrays must not have any space or tab characters between the denominators of the array:
