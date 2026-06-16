@@ -24,11 +24,11 @@ Project Planning and Control
 
 Build Process:
 
-This package has been tested to build with Maven 3.6.3, using Oracle Java 1.8.0_131 under Mac OS X 10.15.7
+This package has been tested to build with Maven 3.6.3+, using Java 21+ under macOS
 
 Use the following command line:
 
-    mvn -Drevision=0.0.6-SNAPSHOT -Dmaven.javadoc.skip=true clean site package
+    mvn clean test package
 
 --- 
 
