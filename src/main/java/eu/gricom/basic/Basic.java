@@ -1,6 +1,5 @@
 package eu.gricom.basic;
 
-import eu.gricom.basic.codeGenerator.Generator;
 import eu.gricom.basic.functions.Mem;
 import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.Lexer;
@@ -26,9 +25,9 @@ import java.util.Locale;
 /**
  * Basic.java
  * <p>
- * Description: The Basic class is the main entry point for the GD-BASIC interpreter and compiler. It orchestrates the
- * complete execution pipeline including file loading, lexical analysis (tokenisation), parsing, and either
- * interpretation or code generation based on command-line options.
+ * Description: The Basic class is the main entry point for the GD-BASIC interpreter. It orchestrates the
+ * complete execution pipeline including file loading, lexical analysis (tokenisation), parsing, and
+ * interpretation of BASIC programs.
  * <p>
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
@@ -36,11 +35,7 @@ import java.util.Locale;
 public class Basic {
     private Program _oProgram = new Program();
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
-    private static String _strCompileTemplate = "/resources/template/compile.java";
-    private static boolean _bCompile = false;
-    private static boolean _bBeautified = false;
     private static boolean _bDartmouthFlag = false;
-    private static boolean _bStoreIntermediateFiles = false;
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of the interpreter, such as the values of
@@ -206,73 +201,6 @@ public class Basic {
         System.exit(0);
     }
 
-    /**
-     * Compile.
-     * The compile function executes the same macro processing, tokenization, and parsing as the interpreter. The
-     * difference is that - instead of executing the code - the compiler generates a Java (at this stage) program
-     * which it then will compile to execute.
-     *
-     * @param oProgram The program object, containing the source code of a .bas script to interpret.
-     */
-    public final void compile(final Program oProgram) {
-        // The initial step of the interpreter is executed. This is done for the sole purpose of making sure that
-        // later the compiler will not have problems with the macro processing, tokenization, and parsing.
-
-        // Find and process Macros.
-        _oLogger.info("Processing macros...");
-        _oProgram = macroProcessing(oProgram);
-
-        // Tokenize. At the end of the tokenization, I have the program transferred into a list of tokens and parameters
-        _oLogger.info("Starting tokenization...");
-
-        Lexer oTokenizer = new BasicLexer();
-
-        try {
-            _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
-
-        } catch (SyntaxErrorException eSyntaxErrorException) {
-            // This syntax error has to generate due to the use of the macro. Original code errors in the lexer are
-            // discovered in the previous step.
-            System.out.println(eSyntaxErrorException.getMessage());
-            System.exit(1);
-        }
-
-        int iCounter = 0;
-        for (Token oToken: _oProgram.getTokens()) {
-            if (oToken.getType().toString().contains("LINE")) {
-                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType() + "]: []");
-            } else {
-                _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType() + "]: ["
-                                       + oToken.getText() + "]");
-            }
-            iCounter++;
-        }
-
-        // Parse.
-        _oLogger.info("Starting parsing...");
-        try {
-            BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
-            _oProgram.setPreRunStatements(oParser.parsePreRun());
-            _oProgram.setStatements(oParser.parse());
-        } catch (SyntaxErrorException eSyntaxError) {
-            _oLogger.error(eSyntaxError.getMessage());
-        }
-
-        // Generate and store object code.
-        _oLogger.info("Converting basic program into json...");
-        Generator.createJSONCode(_oProgram, _bBeautified, _bStoreIntermediateFiles);
-
-        // Generate target code.
-        _oLogger.info("Create the target code...");
-        Generator.createCode(_oProgram.getProgramName(), _oProgram.getProgram(), _strCompileTemplate);
-
-        // compile.
-        Printer.println("Please compile the generated code...");
-
-        // Complete.
-        System.exit(0);
-    }
-
 
     // Utility stuff -----------------------------------------------------------
 
@@ -295,16 +223,9 @@ public class Basic {
 
         try {
             oOptions.addOption("h", false, "help (This screen)");
-            oOptions.addOption("i", true, "define input file");
             oOptions.addOption("q", false, "quiet mode");
             oOptions.addOption("v", true, "verbose level: (info, debug, trace, or error)");
-            oOptions.addOption("c", false, "compile");
-            oOptions.addOption("b", false, "beautified json intermediate code for compilation");
-            oOptions.addOption("p", false, "experimental: build p-code for later runtime component");
-            oOptions.addOption("l", true, "compile language <java>");
             oOptions.addOption("d", false, "dartmouth mode");
-            oOptions.addOption("n", false, "store intermediate files");
-            oOptions.addOption("t", true, "template for the compiler");
 
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(oOptions, args);
@@ -336,34 +257,6 @@ public class Basic {
             }
 
             oLogger.debug("Log Level set:" + strLogLevel + "...");
-        }
-
-        if (oCommandLine != null && oCommandLine.hasOption("l")) {
-            String strLanguage = oCommandLine.getOptionValue("l");
-            String strLanguageList = "java";
-
-            oLogger.debug("Compile Language:" + strLanguage + "...");
-        }
-
-        if (oCommandLine != null && oCommandLine.hasOption("t")) {
-            _strCompileTemplate = oCommandLine.getOptionValue("t");
-
-            oLogger.debug("Compile Template:" + _strCompileTemplate + "...");
-        }
-
-        if (oCommandLine != null && oCommandLine.hasOption("c")) {
-            _bCompile = true;
-            oLogger.debug("Compiler selected...");
-        }
-
-        if (oCommandLine != null && oCommandLine.hasOption("n")) {
-            _bStoreIntermediateFiles = true;
-            oLogger.debug("Store Intermediate Files selected...");
-        }
-
-        if (oCommandLine != null && oCommandLine.hasOption("b")) {
-            _bBeautified = true;
-            oLogger.debug("Compiler is generating beautified json intermediate code...");
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("h")) {
@@ -399,13 +292,8 @@ public class Basic {
             // Run it.
             Basic oBasic = new Basic();
 
-            if (_bCompile) {
-                oLogger.info("Run the compiler...");
-                oBasic.compile(oProgram);
-            } else {
-                oLogger.info("Run the interpreter...");
-                oBasic.interpret(oProgram);
-            }
+            oLogger.info("Run the interpreter...");
+            oBasic.interpret(oProgram);
 
             System.exit(-1);
         }

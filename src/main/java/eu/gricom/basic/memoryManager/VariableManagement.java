@@ -25,7 +25,6 @@ import java.util.Map;
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class VariableManagement {
-    private final static Map<String, Value> _moUntyped = new HashMap<>();
     private final static Map<String, BooleanValue> _moBooleans = new HashMap<>();
     private final static Map<String, IntegerValue> _moIntegers = new HashMap<>();
     private final static Map<String, RealValue> _moReals = new HashMap<>();
@@ -35,6 +34,18 @@ public class VariableManagement {
      * Default Constructor.
      */
     public VariableManagement() {
+    }
+
+    /**
+     * Helper method to determine if a variable name has any type suffix.
+     *
+     * @param strKey variable name to check
+     * @return true if variable has type suffix ($, %, &, !, @), false otherwise
+     */
+    private boolean _hasTypeSuffix(final String strKey) {
+        return strKey.contains("$") || strKey.contains("%") ||
+               strKey.contains("&") || strKey.contains("!") ||
+               strKey.contains("@");
     }
 
 // section managing internal variables...
@@ -55,7 +66,9 @@ public class VariableManagement {
         } else if (strKey.contains("&")) {
             eVariableType = VariableType.LONG;
         } else if (strKey.contains("#")) {
-            eVariableType = VariableType.REAL;
+            throw new SyntaxErrorException(
+                "Syntax Error: Variable name [" + strKey +
+                "] uses unsupported '#' suffix. Use untyped (no suffix) or '!' for real numbers.");
         } else if (strKey.contains("!")) {
             eVariableType = VariableType.DOUBLE;
         } else if (strKey.contains("@")) {
@@ -78,8 +91,21 @@ public class VariableManagement {
             case BOOLEAN:
                 _moBooleans.put(Normalizer.normalizeIndex(strKey), (BooleanValue) oValue);
                 break;
+            case UNDEFINED:
+                // Untyped variables default to REAL type
+                if (oValue instanceof RealValue) {
+                    _moReals.put(Normalizer.normalizeIndex(strKey), (RealValue) oValue);
+                } else {
+                    // Convert untyped to real
+                    _moReals.put(Normalizer.normalizeIndex(strKey),
+                        new RealValue(oValue.toReal()));
+                }
+                break;
             default:
-                _moUntyped.put(Normalizer.normalizeIndex(strKey), oValue);
+                // Should not reach here with current suffix logic
+                _moReals.put(Normalizer.normalizeIndex(strKey),
+                    new RealValue(oValue.toReal()));
+                break;
         }
     }
 
@@ -88,17 +114,24 @@ public class VariableManagement {
      *
      * @param strKey - key part of the pair
      * @param dValue - value part of the pair, here as an double
-     * @throws SyntaxErrorException variable is not marked as real
+     * @throws SyntaxErrorException variable cannot store double value
      */
     public final void putMap(final String strKey, final double dValue) throws SyntaxErrorException {
-        if (strKey.contains("!") || strKey.contains("#")) {
+        // Reject # suffix explicitly
+        if (strKey.contains("#")) {
+            throw new SyntaxErrorException("Syntax Error: Variable name [" + strKey +
+                    "] uses unsupported '#' suffix. Use untyped (no suffix) or '!' for real numbers.");
+        }
+
+        // Explicit ! suffix or untyped variables both map to REAL
+        if (strKey.contains("!") || !_hasTypeSuffix(strKey)) {
             RealValue oValue = new RealValue(dValue);
             _moReals.put(Normalizer.normalizeIndex(strKey), oValue);
             return;
         }
 
         throw new SyntaxErrorException("Syntax Error: Variable name [" + strKey
-                + "] does not end as a Real: '!' or " + "'#'");
+                + "] cannot store double value. Use untyped (no suffix) or '!' for real numbers.");
     }
 
     /**
@@ -158,11 +191,6 @@ public class VariableManagement {
 
         strWork = Normalizer.normalizeIndex(strWork);
 
-        if (_moUntyped.containsKey(strWork)) {
-            oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [untyped] ");
-            return _moUntyped.get(strWork);
-        }
-
         if (_moStrings.containsKey(strWork)) {
             oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [string] " + _moStrings.get(strWork));
             Value oString = _moStrings.get(strWork);
@@ -209,8 +237,7 @@ public class VariableManagement {
 
         strWork = Normalizer.normalizeIndex(strWork);
 
-        if (_moUntyped.containsKey(strWork)
-                || _moBooleans.containsKey(strWork)
+        if (_moBooleans.containsKey(strWork)
                 || _moIntegers.containsKey(strWork)
                 || _moReals.containsKey(strWork)
                 || _moStrings.containsKey(strWork)) {

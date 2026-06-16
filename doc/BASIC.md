@@ -1,11 +1,25 @@
+# GD-BASIC Language Reference
+
+**Version:** 0.2.0  
+**Interpreter:** GriCom Diminutive BASIC Interpreter  
+**Language:** Java 21  
+**Last Updated:** 2026-06-16
+
+---
+
+## Overview
+
 This document describes the features and capabilities of the BASIC version implemented in this interpreter. The version is 
 very similar to the original BASIC interpreters and additional functions are added to provide even more of the original functionality.
-If the functionality of the interpreter does not match the documentation, refer to the error reporting processing in 
-GitHub.
-Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
-GDBasic language syntax
----------------------
+If the functionality of the interpreter does not match the documentation, refer to the error reporting processing in 
+GitHub. Errors in the documentation can be reported and fixed as any software bug (Hint!).
+
+> **Updated for v0.2.0**: The `#` suffix for real variables has been removed. Variables without a suffix now default to Real type (floating-point). Examples throughout this document reflect the current syntax.
+
+---
+
+## GD-BASIC Language Syntax
 
 ## Introduction
 
@@ -35,11 +49,10 @@ GD-BASIC is based on the **Dartmouth BASIC October 1964** specification, the ori
 
 | Type | Variable Name Structure | Values |
 |------|-------------------------|--------|
-| `REAL` | `AB#` or `AB!` | not defined |
-| `INTEGER` | `AB%` or `AB&` | not defined |
-| `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | not defined |
+| `REAL` | `AB` or `AB!` | 1, 1.01, 3.14 |
+| `INTEGER` | `AB%` or `AB&` | 1, 2, 9999 |
+| `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | "A Text" |
 | `BOOLEAN` | `AB@` | `true` or `false` |
-| undefined | `AB` | not defined |
 
 
 ## Document Conventions
@@ -76,15 +89,15 @@ __Example of a BASIC Program__
 
      10 REM Recorded of the JASIC Program in Dartmouth 
      20 REM Basic Format
-     30 COUNT# = 5
-     40 COUNT# = COUNT# * 2
+     30 COUNT = 5
+     40 COUNT = COUNT * 2
      50 REM Stop looping if we are done
-     60 IF COUNT# == 0 THEN
+     60 IF COUNT == 0 THEN
      70 GOTO 120
      80 END-IF
      90 PRINT "Hello, world!"
     100 REM Decrement and restart the loop
-    110 COUNT# = COUNT# - 1
+    110 COUNT = COUNT - 1
     120 GOTO 50
     130 END
 
@@ -96,8 +109,8 @@ increase the JASIC programming feature until the Dartmouth version is functional
 The Colon is used to have multiple BASIC commands in a single command line:
 
     20 REM Colon Example
-    30 COUNT# = 5 : MULTIPLIER# = 2
-    40 COUNT# = COUNT# * MULTIPLIER
+    30 COUNT = 5 : MULTIPLIER = 2
+    40 COUNT = COUNT * MULTIPLIER
 
 
 ### Variables, Arrays, and Constants
@@ -119,7 +132,7 @@ is made available, if available.
 Example of Arrays:
 
     A$(10) = "This is the 10th field of the array"
-    A#(5) = a#(4) + 1
+    A(5) = a(4) + 1
 
 >[!Warning]
 > Two dimensional arrays must not have any space or tab characters between the denominators of the array:
@@ -352,11 +365,137 @@ The `EOF` function checks if the end of a file has been reached.
 ###### BASIC Syntax
 `EOF(<file_id>)`
 
-Returns `1` if the end of the specified file has been reached, or `0` otherwise.
+Returns `true` (boolean) if the end of the specified file has been reached, or `false` otherwise.
+
+**Note:** The EOF flag is set to true only when an attempt is made to read past the end of the file. Simply reading the last line of a file does not set EOF to true—it becomes true on the next read attempt.
 
 Example:
 ```basic
-60 IF EOF(1) == 1 THEN PRINT "End of file reached"
+60 IF EOF(1) THEN PRINT "End of file reached"
+```
+
+#### FGET
+
+The `FGET` command reads a single character from an open file and advances the file position by 1.
+
+###### BASIC Syntax
+`FGET <file_id>, <variable>`
+
+- `<file_id>`: The ID of a file opened in `"read"` mode.
+- `<variable>`: The variable where the read character will be stored.
+
+Returns the character as a string, or "EOF" if end of file is reached. The read position advances by 1 character.
+
+Example:
+```basic
+10 FOPEN 1 "data.txt" "read"
+20 FGET 1, C$
+30 PRINT "Character: "; C$
+40 FCLOSE 1 "KEEP"
+```
+
+#### FPEEK (NEW - May 30, 2026)
+
+The `FPEEK` command reads the next character from a file WITHOUT advancing the read position. This provides lookahead capability.
+
+###### BASIC Syntax
+`FPEEK <file_id>, <variable>`
+
+- `<file_id>`: The ID of a file opened in `"read"` mode.
+- `<variable>`: The variable where the peeked character will be stored.
+
+Returns the next character as a string, or "EOF" if end of file is reached. The read position is NOT advanced.
+
+Key Difference from FGET:
+- `FGET`: Reads character AND advances position
+- `FPEEK`: Reads character WITHOUT advancing position (lookahead)
+
+Example:
+```basic
+10 FOPEN 1 "data.txt" "read"
+20 FPEEK 1, C$           ! Look ahead
+30 IF C$ == "X" THEN PRINT "Found X ahead"
+40 FGET 1, ACTUAL$       ! Now read it
+50 FCLOSE 1 "KEEP"
+```
+
+#### FPUT (NEW - May 30, 2026)
+
+The `FPUT` command writes a character or string to an open file WITHOUT adding a newline.
+
+###### BASIC Syntax
+`FPUT <file_id>, <expression>`
+
+- `<file_id>`: The ID of a file opened in `"write"` mode.
+- `<expression>`: Expression evaluates to character/string to write.
+
+Unlike FPRINT, FPUT does not add a newline (CRLF) after the output. Useful for building lines character-by-character.
+
+Key Difference from FPRINT:
+- `FPRINT`: Writes with newline
+- `FPUT`: Writes without newline
+
+Example:
+```basic
+10 FOPEN 1 "output.txt" "write"
+20 FPUT 1, "H"
+30 FPUT 1, "e"
+40 FPUT 1, "l"
+50 FPUT 1, "l"
+60 FPUT 1, "o"
+70 FPRINT 1, ""           ! Add newline at end
+80 FCLOSE 1 "KEEP"
+```
+
+#### FRENAME (NEW - May 30, 2026)
+
+The `FRENAME` command renames or moves a file tracked by a file ID.
+
+###### BASIC Syntax
+`FRENAME <file_id>, "<new_filename>"`
+
+- `<file_id>`: The ID of the file to rename.
+- `<new_filename>`: The new filename (may include path).
+
+The file is closed (without deletion), renamed in the file system, and re-registered under the same file ID. Content is preserved.
+
+Example:
+```basic
+10 FOPEN 1 "temp.txt" "write"
+20 FPRINT 1, "Important data"
+30 FCLOSE 1 "KEEP"
+40 FRENAME 1, "backup.txt"     ! Rename file
+50 PRINT "File renamed to backup.txt"
+60 END
+```
+
+#### FREWIND (NEW - May 30, 2026)
+
+The `FREWIND` command resets the file read position to the beginning of the file without closing it.
+
+###### BASIC Syntax
+`FREWIND <file_id>`
+
+- `<file_id>`: The ID of a file opened in `"read"` mode.
+
+The file position is reset to 0, allowing re-reading from the start. The file remains open, making this more efficient than closing and reopening.
+
+Example:
+```basic
+10 FOPEN 1 "data.txt" "read"
+20 PRINT "First pass:"
+30 GOSUB 100
+40 FREWIND 1                   ! Go back to start
+50 PRINT "Second pass:"
+60 GOSUB 100
+70 FCLOSE 1 "KEEP"
+80 END
+100 REM Process file
+110 WHILE NOT EOF(1)
+120    FINPUT 1, L$
+130    PRINT L$
+140 WEND
+150 RETURN
 ```
 
 ### Comments
@@ -813,6 +952,11 @@ Get the Left side of a string
 #### `LEN`
 Get the length of a string
 
+#### `LOWER`
+Convert a string to lowercase. All uppercase letters are converted to their lowercase equivalents; other characters remain unchanged.
+
+**Example**: `LOWER("HeLLo WoRLd")` returns `"hello world"`
+
 #### `MID`
 Get the middle of a string
 
@@ -821,6 +965,11 @@ Get the right side of a string
 
 #### `STR`
 Convert a number to the string
+
+#### `UPPER`
+Convert a string to uppercase. All lowercase letters are converted to their uppercase equivalents; other characters remain unchanged.
+
+**Example**: `UPPER("HeLLo WoRLd")` returns `"HELLO WORLD"`
 
 #### `VAL`
 Convert a string to a real number

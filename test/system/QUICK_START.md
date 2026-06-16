@@ -28,7 +28,7 @@ GD-BASIC System Test Suite
 Project Root: /path/to/GD-BASIC
 Test Directory: /path/to/GD-BASIC/test/system
 
-Using JAR: target/BASIC-0.1.0-java21-jar-with-dependencies.jar
+Using JAR: target/BASIC-0.1.1-jar-with-dependencies.jar
 
 Running test: test_arithmetic_operators
 ✓ PASSED: test_arithmetic_operators

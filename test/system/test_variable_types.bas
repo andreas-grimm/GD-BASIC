@@ -1,6 +1,6 @@
 1 REM ========================================================================
 2 REM Test: Variable Types
-3 REM Description: Tests all variable types (integer%, real#, string$, boolean!, long&)
+3 REM Description: Tests all variable types (integer%, real, string$, boolean!, long&)
 4 REM Expected: All variable types should work correctly with assignments
 5 REM ========================================================================
 10 PRINT "=== Testing Variable Types ==="
@@ -13,11 +13,11 @@
 80 IF intVar% != 42 THEN 9000
 90 REM Test real variable (#)
 100 PRINT "Testing Real Variable (#):"
-110 realVar# = 3.14159
-120 PRINT "realVar# = ";
-130 PRINT realVar#
-140 IF realVar# < 3.14 THEN 9000
-150 IF realVar# > 3.15 THEN 9000
+110 realVar = 3.14159
+120 PRINT "realVar = ";
+130 PRINT realVar
+140 IF realVar < 3.14 THEN 9000
+150 IF realVar > 3.15 THEN 9000
 160 REM Test string variable ($)
 170 PRINT "Testing String Variable ($):"
 180 strVar$ = "Hello, BASIC!"
@@ -56,11 +56,11 @@
 480 REM Test mixed type operations
 490 PRINT "Testing Mixed Type Operations:"
 500 i% = 5
-510 r# = 2.5
-520 result# = i% * r#
+510 r = 2.5
+520 result = i% * r
 530 PRINT "5 * 2.5 = ";
-540 PRINT result#
-550 IF result# != 12.5 THEN 9000
+540 PRINT result
+550 IF result != 12.5 THEN 9000
 560 PRINT ""
 570 PRINT "=== All Variable Type Tests PASSED ==="
 580 END

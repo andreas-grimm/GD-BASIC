@@ -19,10 +19,9 @@ public class FCloseStatement implements Statement {
     /**
      * Default constructor.
      * <p>
-     * A "DIM" statement initializes an array of any type.
      * @param iTokenNumber - number of the command in the basic program
      */
-    public FCloseStatement(int iTokenNumber, int iFileId,boolean bDelete) {
+    public FCloseStatement(int iTokenNumber, int iFileId, boolean bDelete) {
         _iTokenNumber = iTokenNumber;
         _iFileId = iFileId;
         _bDelete = bDelete;

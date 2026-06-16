@@ -1,0 +1,3 @@
+10 num = VAL("123.45")
+20 PRINT num
+30 END

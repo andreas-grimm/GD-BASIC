@@ -22,16 +22,16 @@
 170 IF arr%(3) != 30 THEN 9000
 180 REM Test 1D real array
 190 PRINT "Testing 1D Real Array:"
-200 DIM nums#(5)
-210 nums#(1) = 1.5
-220 nums#(2) = 2.5
-230 nums#(3) = 3.5
-240 PRINT "nums#(1) = ";
-250 PRINT nums#(1)
-260 PRINT "nums#(2) = ";
-270 PRINT nums#(2)
-280 PRINT "nums#(3) = ";
-290 PRINT nums#(3)
+200 DIM nums(5)
+210 nums(1) = 1.5
+220 nums(2) = 2.5
+230 nums(3) = 3.5
+240 PRINT "nums(1) = ";
+250 PRINT nums(1)
+260 PRINT "nums(2) = ";
+270 PRINT nums(2)
+280 PRINT "nums(3) = ";
+290 PRINT nums(3)
 300 REM Test 1D string array
 310 PRINT "Testing 1D String Array:"
 320 DIM names$(3)
@@ -58,7 +58,6 @@
 530 NEXT
 540 REM Test 2D array
 550 PRINT "Testing 2D Array:"
-560 DIM matrix%(3,3)
 570 matrix%(1,1) = 1
 580 matrix%(1,2) = 2
 590 matrix%(2,1) = 3

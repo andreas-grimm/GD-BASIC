@@ -50,7 +50,9 @@ public class FInputStatement implements Statement {
     /**
      * Execute.
      * <p>
-     * Execute the input statement.
+     * Execute the input statement. Reads a line from the file and stores it in the specified variable.
+     * After reading, updates the read cursor position in FileManager by adding the length of the read input
+     * to the current cursor position.
      *
      * @throws eu.gricom.basic.error.RuntimeException if an incorrect input is detected
      */
@@ -60,7 +62,22 @@ public class FInputStatement implements Statement {
 
         try {
             FileManager oFileManager = new FileManager();
+
+            // Read the line from the file
             oStringValue = oFileManager.read(_iFileId);
+
+            // Update the read cursor position with the length of the read input
+            if (oStringValue != null) {
+                try {
+                    int iOldPosition = oFileManager.getReadPos(_iFileId).toInt();
+                    String strReadInput = oStringValue.toString();
+                    int iNewPosition = iOldPosition + strReadInput.length();
+                    oFileManager.putReadPos(_iFileId, iNewPosition);
+                } catch (RuntimeException e) {
+                    Logger oLogger = new Logger("eu.gricom.basic.statements.FInputStatement");
+                    oLogger.warning("Failed to update read position: " + e.getMessage());
+                }
+            }
         } catch (Exception e) {
             Logger oLogger = new Logger("eu.gricom.basic.statements.FInputStatement");
             oLogger.error(e.getMessage());

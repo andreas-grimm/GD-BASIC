@@ -3,6 +3,10 @@ package eu.gricom.basic.statements;
 import eu.gricom.basic.memoryManager.FileManager;
 import eu.gricom.basic.memoryManager.FileOpenType;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * FOpenStatement.java
  * <p>
@@ -22,7 +26,7 @@ public class FOpenStatement implements Statement {
      *
      */
     public FOpenStatement(int iTokenNumber, int iFileId, String strFileName, String strMode) {
-        if (strMode.equalsIgnoreCase("write")) {
+        if (strMode.equalsIgnoreCase("w") || strMode.equalsIgnoreCase("write")) {
             _eReadWrite = FileOpenType.WRITE;
         }
 
@@ -51,7 +55,6 @@ public class FOpenStatement implements Statement {
     @Override
     public void execute() throws Exception {
         FileManager oFileManager = new FileManager();
-
         oFileManager.openFile(_strFileName, _iFileId, _eReadWrite);
     }
 
