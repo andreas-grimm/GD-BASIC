@@ -1,13 +1,25 @@
+# GD-BASIC Language Reference
+
+**Version:** 0.2.0  
+**Interpreter:** GriCom Diminutive BASIC Interpreter  
+**Language:** Java 21  
+**Last Updated:** 2026-06-16
+
+---
+
+## Overview
+
 This document describes the features and capabilities of the BASIC version implemented in this interpreter. The version is 
 very similar to the original BASIC interpreters and additional functions are added to provide even more of the original functionality.
+
 If the functionality of the interpreter does not match the documentation, refer to the error reporting processing in 
-GitHub.
-Errors in the documentation can be reported and fixed as any software bug (Hint!).
+GitHub. Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
 > **Updated for v0.2.0**: The `#` suffix for real variables has been removed. Variables without a suffix now default to Real type (floating-point). Examples throughout this document reflect the current syntax.
 
-GDBasic language syntax
----------------------
+---
+
+## GD-BASIC Language Syntax
 
 ## Introduction
 
@@ -940,6 +952,11 @@ Get the Left side of a string
 #### `LEN`
 Get the length of a string
 
+#### `LOWER`
+Convert a string to lowercase. All uppercase letters are converted to their lowercase equivalents; other characters remain unchanged.
+
+**Example**: `LOWER("HeLLo WoRLd")` returns `"hello world"`
+
 #### `MID`
 Get the middle of a string
 
@@ -948,6 +965,11 @@ Get the right side of a string
 
 #### `STR`
 Convert a number to the string
+
+#### `UPPER`
+Convert a string to uppercase. All lowercase letters are converted to their uppercase equivalents; other characters remain unchanged.
+
+**Example**: `UPPER("HeLLo WoRLd")` returns `"HELLO WORLD"`
 
 #### `VAL`
 Convert a string to a real number

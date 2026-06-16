@@ -177,6 +177,12 @@ public class Function implements Expression {
                 yield Log10.execute(_oFirstParam.evaluate());
             }
 
+            // LOWER Token: Convert string to lowercase
+            case LOWER -> {
+                assert _oFirstParam != null;
+                yield Lower.execute(_oFirstParam.evaluate());
+            }
+
             // MEM Token: Return size of available memory
             case MEM -> Mem.execute();
 
@@ -235,6 +241,13 @@ public class Function implements Expression {
                 assert _oFirstParam != null;
                 yield Val.execute(_oFirstParam.evaluate());
             }
+
+            // UPPER Token: Convert string to uppercase
+            case UPPER -> {
+                assert _oFirstParam != null;
+                yield Upper.execute(_oFirstParam.evaluate());
+            }
+
             default -> throw new RuntimeException("Unknown Function Called: " + _oToken.getText());
         };
     }

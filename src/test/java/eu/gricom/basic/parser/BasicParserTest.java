@@ -1293,4 +1293,96 @@ public class BasicParserTest {
         }
         assertTrue(bListdirectoryFound, "LISTDIRECTORY token should be recognized by the lexer");
     }
+
+    // ==================== STRING CASE CONVERSION FUNCTIONS ====================
+
+    @Test
+    public void testParseAndExecuteUpperFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+
+        String strTestProgramName = "src/test/basic/test_upper_parsing.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
+        Program oProgram = new Program();
+        oProgram.load(strTestProgramName, strReadText);
+
+        oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
+
+        BasicParser oTestParser = new BasicParser(oProgram.getTokens(), false);
+        oProgram.setStatements(oTestParser.parse());
+
+        Execute oRun = new Execute(oProgram);
+        oRun.runProgram();
+
+        PrintStatement oLastStatement = (PrintStatement) oRun.getFinalStatement();
+        Expression oExpression = oLastStatement.getExpression();
+        String strValue = oExpression.evaluate().toString();
+
+        assertEquals("HELLO", strValue);
+    }
+
+    @Test
+    public void testParseAndExecuteLowerFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+
+        String strTestProgramName = "src/test/basic/test_lower_parsing.bas";
+        String strReadText = FileHandler.readFile(strTestProgramName);
+        Program oProgram = new Program();
+        oProgram.load(strTestProgramName, strReadText);
+
+        oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
+
+        BasicParser oTestParser = new BasicParser(oProgram.getTokens(), false);
+        oProgram.setStatements(oTestParser.parse());
+
+        Execute oRun = new Execute(oProgram);
+        oRun.runProgram();
+
+        PrintStatement oLastStatement = (PrintStatement) oRun.getFinalStatement();
+        Expression oExpression = oLastStatement.getExpression();
+        String strValue = oExpression.evaluate().toString();
+
+        assertEquals("hello", strValue);
+    }
+
+    @Test
+    public void testAtomicUpperFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_upper_parsing.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bUpperFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.UPPER) {
+                bUpperFound = true;
+                break;
+            }
+        }
+        assertTrue(bUpperFound, "UPPER token should be recognized by the lexer");
+    }
+
+    @Test
+    public void testAtomicLowerFunction() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = FileHandler.readFile("src/test/basic/test_lower_parsing.bas");
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 1, "Should have at least one statement");
+
+        boolean bLowerFound = false;
+        for (Token oToken : aoTokens) {
+            if (oToken.getType() == BasicTokenType.LOWER) {
+                bLowerFound = true;
+                break;
+            }
+        }
+        assertTrue(bLowerFound, "LOWER token should be recognized by the lexer");
+    }
 }

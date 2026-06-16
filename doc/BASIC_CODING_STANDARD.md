@@ -406,6 +406,8 @@ RETURN
 | `LEFT$(S$, N)` | Leftmost N characters | `LEFT$("Hello", 2)` → "He" |
 | `RIGHT$(S$, N)` | Rightmost N characters | `RIGHT$("Hello", 2)` → "lo" |
 | `MID$(S$, Start, Length)` | Substring | `MID$("Hello", 2, 3)` → "ell" |
+| `UPPER(S$)` | Convert to uppercase | `UPPER("hello")` → "HELLO" |
+| `LOWER(S$)` | Convert to lowercase | `LOWER("HELLO")` → "hello" |
 | `CHR$(N)` | Character from ASCII code | `CHR$(65)` → "A" |
 | `ASC(S$)` | ASCII code of character | `ASC("A")` → 65 |
 | `VAL(S$)` | String to number | `VAL("123")` → 123 |

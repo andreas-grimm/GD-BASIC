@@ -1,9 +1,9 @@
 # GD-BASIC Interpreter: Detailed Technical Design Document
 
-**Version**: 0.1.1  
+**Version**: 0.2.0  
 **Project**: GriCom Diminutive BASIC Interpreter  
 **Language**: Java 21  
-**Last Updated**: 2026-05-30
+**Last Updated**: 2026-06-16
 
 ---
 
@@ -4355,6 +4355,128 @@ All character-level operations (FGETC, FPEEK, FPUT) use a close-rewind-read patt
 - Edge case handling (special characters, long paths, empty input)
 - Interface validation (method return values, structure formats)
 - File system cleanup in tearDown() to prevent test pollution
+
+---
+
+## String Case Conversion Functions (v0.2.0)
+
+### Overview
+
+Two new string manipulation functions have been added to support case conversion operations. These functions are compatible with legacy BASIC implementations (Apple II, Tandy Level II, Commodore PET) and address a common feature gap identified in the language compatibility analysis.
+
+### Implementation Details
+
+#### UPPER() Function
+
+**Location**: `eu.gricom.basic.functions.Upper.java`
+
+**Signature**:
+```java
+public static Value execute(final Value oValue) throws Exception
+```
+
+**Behavior**:
+- Accepts StringValue as input
+- Returns StringValue with all lowercase letters converted to uppercase
+- Preserves: numbers, special characters, whitespace
+- Throws RuntimeException for non-string types
+
+**Example**:
+```basic
+10 text$ = "HeLLo WoRLd"
+20 result$ = UPPER(text$)
+30 PRINT result$  'Output: HELLO WORLD
+```
+
+#### LOWER() Function
+
+**Location**: `eu.gricom.basic.functions.Lower.java`
+
+**Signature**:
+```java
+public static Value execute(final Value oValue) throws Exception
+```
+
+**Behavior**:
+- Accepts StringValue as input
+- Returns StringValue with all uppercase letters converted to lowercase
+- Preserves: numbers, special characters, whitespace
+- Throws RuntimeException for non-string types
+
+**Example**:
+```basic
+10 text$ = "HeLLo WoRLd"
+20 result$ = LOWER(text$)
+30 PRINT result$  'Output: hello world
+```
+
+### Parser Integration
+
+**Token Registration**: 
+- `BasicTokenType.UPPER` and `BasicTokenType.LOWER` added to enum
+- Registered in `ReservedWords.java` as `"UPPER"` and `"LOWER"` (without `$` suffix)
+
+**Parser Handling**:
+- Classified as single-parameter functions
+- Parsed in `BasicParser.atomic()` with other single-parameter functions
+- Routed through `Function.java` dispatcher with dedicated cases
+
+**Function Dispatch**:
+```java
+case UPPER -> {
+    assert _oFirstParam != null;
+    yield Upper.execute(_oFirstParam.evaluate());
+}
+case LOWER -> {
+    assert _oFirstParam != null;
+    yield Lower.execute(_oFirstParam.evaluate());
+}
+```
+
+### Test Coverage (v0.2.0)
+
+**Unit Tests** (19 new tests):
+
+**FunctionTest.java** (15 tests):
+- UPPER function: 8 tests covering basic, mixed case, numbers, empty strings, special characters, type validation, error handling, round-trip
+- LOWER function: 7 tests covering basic, mixed case, numbers, empty strings, special characters, type validation, error handling
+
+**BasicParserTest.java** (4 tests):
+- testParseAndExecuteUpperFunction - Full parse-to-print pipeline
+- testAtomicUpperFunction - Token recognition by lexer
+- testParseAndExecuteLowerFunction - Full parse-to-print pipeline
+- testAtomicLowerFunction - Token recognition by lexer
+
+**Test Results**:
+- 982/982 unit tests passing ✅ (963 + 19 new)
+- 100% code coverage for case conversion functions
+- All test categories covered: functional, integration, error handling, edge cases
+
+### Input Scenarios Tested
+
+| Scenario | Example | Result |
+|----------|---------|--------|
+| Basic lowercase | `UPPER("hello")` | `"HELLO"` |
+| Basic uppercase | `LOWER("HELLO")` | `"hello"` |
+| Mixed case | `UPPER("HeLLo")` | `"HELLO"` |
+| With numbers | `UPPER("Test123")` | `"TEST123"` |
+| Special chars | `UPPER("hello!@#")` | `"HELLO!@#"` |
+| Empty string | `UPPER("")` | `""` |
+| Whitespace | `UPPER("hello world")` | `"HELLO WORLD"` |
+| Type error | `UPPER(123)` | RuntimeException |
+
+### Implementation Quality
+
+**Code Metrics**:
+- Class structure follows existing function pattern
+- Hungarian notation: `oValue` (Object), `strValue` (String)
+- Method signature matches Function dispatcher expectations
+- Comprehensive error messages for type mismatches
+
+**Error Handling**:
+- Non-string input types immediately throw RuntimeException
+- Error message format: "Input value not of type String: [value]"
+- Consistent with other type-checking functions (ABS, etc.)
 
 ---
 

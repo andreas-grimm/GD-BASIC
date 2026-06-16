@@ -21,8 +21,8 @@ public class ReservedWordsTest {
 
         // Test symbols that are escaped in the regex but passed as literal strings
         // ReservedWords uses matches(strReserveWord), where strReserveWord might be "\\+"
-        // "+" matches "\\+" regex, and its index is 97
-        assertEquals(97, ReservedWords.getIndex("+"));  // Updated: shifted due to more reserved words
+        // "+" matches "\\+" regex, and its index is 99 (shifted due to UPPER and LOWER additions)
+        assertEquals(99, ReservedWords.getIndex("+"));  // Updated: shifted due to UPPER$ and LOWER$ additions
 
         // Test invalid reserved word
         assertEquals(-1, ReservedWords.getIndex("NON_EXISTENT_WORD"));
