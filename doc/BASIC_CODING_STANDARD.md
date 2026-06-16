@@ -1,8 +1,8 @@
 # GD-BASIC Coding Standard
 
-**Version:** 0.1.1  
+**Version:** 0.2.0  
 **Interpreter:** GriCom Basic Interpreter  
-**Last Updated:** 2026-05-25
+**Last Updated:** 2026-06-16
 
 ## Table of Contents
 
@@ -35,7 +35,7 @@
 - **Sequential:** Line numbers must be in ascending order
 - **Line Separation:** Use colons (`:`) to separate multiple statements on one line
   ```basic
-  10 X# = 5 : Y# = 10 : PRINT X# + Y#
+  10 X = 5 : Y = 10 : PRINT X + Y
   ```
 
 ### Program Termination
@@ -54,21 +54,20 @@ Variables are identified by their suffix character:
 
 | Suffix | Type | Example | Default Value |
 |--------|------|---------|----------------|
-| `#` | Real (floating-point) | `X#`, `VALUE#` | 0.0 |
 | `!` | Double | `RESULT!` | 0.0 |
 | `%` | Integer | `COUNT%`, `INDEX%` | 0 |
 | `&` | Long | `BIG&` | 0 |
 | `$` | String | `NAME$`, `MESSAGE$` | "" |
 | `@` | Boolean | `FLAG@` | False |
-| *(none)* | Untyped | `X`, `Y` | 0 |
+| *(none)* | Real (default) | `X`, `Y`, `VALUE` | 0.0 |
 
 ### Variable Declaration
 
 **Implicit Declaration:**
 - Variables are created on first use
-- Type is inferred from suffix
+- Type is inferred from suffix (or default to real if no suffix)
   ```basic
-  10 X# = 3.14159
+  10 X = 3.14159
   20 NAME$ = "John"
   30 COUNT% = 42
   ```
@@ -79,7 +78,7 @@ Variables are identified by their suffix character:
 - Must start with a letter
 - Case-insensitive
   ```basic
-  10 TOTAL_SUM# = 100
+  10 TOTAL_SUM = 100
   20 firstName$ = "Alice"
   30 my_flag@ = true
   ```
@@ -168,7 +167,7 @@ All three statements above are automatically converted to the same normalized fo
 
 Negative literals are preserved correctly:
 ```basic
-10 RESULT# = ABS(-5)          REM ✅ Negative sign preserved
+10 RESULT = ABS(-5)          REM ✅ Negative sign preserved
 20 ARR%(0) = -10              REM ✅ Unary minus handled correctly
 30 ARR%(I% - 1) = 0           REM ✅ Binary minus gets spaces: I -  1
 ```
@@ -234,7 +233,7 @@ Negative literals are preserved correctly:
 
 ### Expression Examples
 ```basic
-10 RESULT# = 1 + 2 * 3           REM Result: 7 (not 9)
+10 RESULT = 1 + 2 * 3           REM Result: 7 (not 9)
 20 POWER# = 2 ^ 3 ^ 2            REM Result: 512 (right associative: 2^(3^2))
 30 CHECK@ = X# > 0 AND X# < 10   REM Compound condition
 ```
@@ -296,8 +295,8 @@ NEXT
 
 **Example:**
 ```basic
-10 FOR I# = 1 TO 10
-20   PRINT I#
+10 FOR I = 1 TO 10
+20   PRINT I
 30 NEXT
 ```
 
@@ -407,6 +406,8 @@ RETURN
 | `LEFT$(S$, N)` | Leftmost N characters | `LEFT$("Hello", 2)` → "He" |
 | `RIGHT$(S$, N)` | Rightmost N characters | `RIGHT$("Hello", 2)` → "lo" |
 | `MID$(S$, Start, Length)` | Substring | `MID$("Hello", 2, 3)` → "ell" |
+| `UPPER(S$)` | Convert to uppercase | `UPPER("hello")` → "HELLO" |
+| `LOWER(S$)` | Convert to lowercase | `LOWER("HELLO")` → "hello" |
 | `CHR$(N)` | Character from ASCII code | `CHR$(65)` → "A" |
 | `ASC(S$)` | ASCII code of character | `ASC("A")` → 65 |
 | `VAL(S$)` | String to number | `VAL("123")` → 123 |
@@ -822,15 +823,15 @@ REM But arrays work without it:
 ✓ GOOD:
 10 REM Main program
 20 PRINT "Start"
-30 FOR I# = 1 TO 10
-40   PRINT I#
+30 FOR I = 1 TO 10
+40   PRINT I
 50 NEXT
 999 END
 
 ✗ BAD:
 1 PRINT "Start"
-2 FOR I# = 1 TO 10
-3 PRINT I#
+2 FOR I = 1 TO 10
+3 PRINT I
 4 NEXT
 ```
 
@@ -862,20 +863,20 @@ REM But arrays work without it:
 ### 4. Indentation (for readability)
 ```basic
 ✓ GOOD:
-10 FOR I# = 1 TO 10
-20   IF I# MOD 2 = 0 THEN
-30     PRINT "Even: "; I#
+10 FOR I = 1 TO 10
+20   IF I MOD 2 = 0 THEN
+30     PRINT "Even: "; I
 40   ELSE
-50     PRINT "Odd: "; I#
+50     PRINT "Odd: "; I
 60   END-IF
 70 NEXT
 
 ✗ BAD:
-10 FOR I# = 1 TO 10
-20 IF I# MOD 2 = 0 THEN
-30 PRINT "Even: "; I#
+10 FOR I = 1 TO 10
+20 IF I MOD 2 = 0 THEN
+30 PRINT "Even: "; I
 40 ELSE
-50 PRINT "Odd: "; I#
+50 PRINT "Odd: "; I
 60 END-IF
 70 NEXT
 ```
@@ -928,27 +929,70 @@ REM But arrays work without it:
 30 NEXT
 
 ✗ BAD:
-10 FOR I# = 1 TO 100    REM Using floating point for index
-20   PRINT I#
+10 FOR I = 1 TO 100    REM Using floating point for index
+20   PRINT I
 30 NEXT
 ```
 
 ### 8. Error Handling with Conditionals
 ```basic
 ✓ GOOD:
-10 INPUT VALUE#
-20 IF VALUE# = 0 THEN
+10 INPUT VALUE
+20 IF VALUE = 0 THEN
 30   PRINT "Error: Cannot divide by zero"
 40 ELSE
-50   RESULT# = 100 / VALUE#
-60   PRINT "Result: "; RESULT#
+50   RESULT = 100 / VALUE
+60   PRINT "Result: "; RESULT
 70 END-IF
 
 ✗ BAD:
-10 INPUT VALUE#
-20 RESULT# = 100 / VALUE#      REM No error check
-30 PRINT "Result: "; RESULT#
+10 INPUT VALUE
+20 RESULT = 100 / VALUE      REM No error check
+30 PRINT "Result: "; RESULT
 ```
+
+---
+
+## Migration Guide: Version 0.1.x to 0.2.0
+
+### Breaking Change: Removal of # Suffix
+
+**The `#` suffix for real variables has been removed in version 0.2.0.**
+
+#### What Changed
+- `#` suffix is no longer supported (causes syntax error if used)
+- Untyped variables (no suffix) now default to REAL type
+- `!` suffix remains available for explicit DOUBLE type
+
+#### How to Update Your Code
+
+| Old Code (0.1.x) | New Code (0.2.0) | Explanation |
+|---|---|---|
+| `X# = 3.14` | `X = 3.14` | Untyped defaults to real |
+| `a# = a# + 1` | `a = a + 1` | Simple arithmetic |
+| `PRINT x#` | `PRINT x` | Variable reference |
+| `FOR i# = 1 TO 10` | `FOR i = 1 TO 10` | Loop variable |
+| `SUM# = A# + B#` | `SUM = A + B` | Recommended style |
+| `RESULT! = 2.71` | `RESULT! = 2.71` | No change for ! |
+
+#### Valid Variable Types in 0.2.0
+- **Untyped (real by default):** `X`, `pi`, `value`
+- **Explicit double:** `result!`, `sum!`
+- **Integer:** `count%`, `index%`
+- **String:** `name$`, `text$`
+- **Long:** `bignum&`, `largeint&`
+- **Boolean:** `flag@`, `condition@`
+
+#### Migration Effort
+- Simple find-and-replace: `X#` → `X`
+- No logic changes required
+- All output remains identical
+- Most programs can be updated in seconds with automated tools
+
+#### Error Message
+If you encounter: **"Syntax Error: Variable name [X#] uses unsupported '#' suffix"**
+
+**Solution:** Remove the `#` suffix and use the untyped variable name instead.
 
 ---
 
@@ -957,7 +1001,7 @@ REM But arrays work without it:
 This BASIC interpreter supports a substantial subset of BASIC functionality with **arrays and scalars**:
 
 ### What IS Supported ✅
-- **Scalar variables** with type suffixes (# for real, $ for string, % for integer, etc.)
+- **Scalar variables** with type suffixes (untyped for real, $ for string, % for integer, ! for double, etc.)
 - **Arrays with auto-allocation** - Array elements are created on first use (no DIM needed)
 - Arithmetic and logical operations
 - Control flow statements (IF-THEN-ELSE, GOTO)

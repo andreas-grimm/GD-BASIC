@@ -987,7 +987,7 @@ public class BasicParser implements Parser {
             // single parameter function calls. Add all functions that contain only one parameter.
             case ABS: case ASC: case ATN: case CDBL: case CHR: case CINT: case COS: case DIREXISTS: case EOF: case EXP:
                 case FEXISTS: case FGETNAME: case FGETSIZE: case FISOPEN: case FLINECOUNT: case FMODTIME: case LEN:
-                case LOG: case LOG10: case NOT: case SIN: case SQR: case STR: case TAN: case VAL:
+                case LOG: case LOG10: case LOWER: case NOT: case SIN: case SQR: case STR: case TAN: case UPPER: case VAL:
                 oToken = getToken(0);
                 _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
                         + oToken.getText() + "' [" + oToken.getLine() + "]");

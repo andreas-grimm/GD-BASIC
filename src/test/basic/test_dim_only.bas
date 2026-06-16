@@ -1,3 +1,3 @@
-10 DIM F# (5)
+10 DIM F (5)
 20 PRINT "Done"
 999 END

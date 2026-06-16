@@ -165,8 +165,8 @@ public class NormalizerTest {
 
     @Test
     public void testArrayAccessWithMultiplication() {
-        String strTest = "matrix#(x*3)";
-        String strTarget = "matrix# ( x * 3 ) ";
+        String strTest = "matrix(x*3)";
+        String strTarget = "matrix ( x * 3 ) ";
         String strResult = Normalizer.normalize(strTest);
         assertEquals(strTarget, strResult);
     }
@@ -365,8 +365,8 @@ public class NormalizerTest {
 
     @Test
     public void testRealNumberVariableArray() {
-        String strTest = "values#(index*2)";
-        String strTarget = "values# ( index * 2 ) ";
+        String strTest = "values(index*2)";
+        String strTarget = "values ( index * 2 ) ";
         String strResult = Normalizer.normalize(strTest);
         assertEquals(strTarget, strResult);
     }

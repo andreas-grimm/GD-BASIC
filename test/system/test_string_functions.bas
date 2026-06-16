@@ -63,9 +63,9 @@
 580 PRINT val1%
 590 IF val1% != 123 THEN 9000
 600 str7$ = "3.14"
-610 val2# = VAL(str7$)
+610 val2 = VAL(str7$)
 620 PRINT "VAL('3.14') = ";
-630 PRINT val2#
+630 PRINT val2
 640 REM Test INSTR function
 650 PRINT "Testing INSTR (Find Substring):"
 660 str8$ = "Hello World"

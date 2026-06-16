@@ -68,6 +68,7 @@ public enum BasicTokenType {
     LISTDIRECTORY,
     LOG,
     LOG10,
+    LOWER,
     MEM,
     MID, // token for the MID$ function
     MODULO, // token for the % operation
@@ -98,6 +99,7 @@ public enum BasicTokenType {
     TIME, // token for the TIME$ function
     TO,
     UNTIL,
+    UPPER,
     VAL,
     WHILE,
     WRITE,
