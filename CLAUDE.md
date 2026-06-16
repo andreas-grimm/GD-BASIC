@@ -4,8 +4,10 @@
 
 GD-BASIC (GriCom Diminutive BASIC Interpreter) is a Java 21 implementation of a Dartmouth-style BASIC interpreter. It can execute `.bas` programs and optionally compile them to Java source code. It also serves as an embeddable scripting engine.
 
-- **Version**: 0.1.1
+- **Version**: 0.2.0
 - **License**: See LICENSE.md
+
+⚠️ **Breaking Change**: Version 0.2.0 removes the `#` suffix for real variables. Use untyped variables (no suffix) instead. See BASIC_CODING_STANDARD.md for migration guide.
 
 ## Build & Run
 
@@ -23,7 +25,7 @@ mvn test -Dtest=BasicParserTest
 mvn site
 
 # Run the interpreter
-java -jar target/BASIC-0.1.1-jar-with-dependencies.jar program.bas
+java -jar target/BASIC-0.2.0-jar-with-dependencies.jar program.bas
 
 # Run with options
 java -jar target/BASIC-*-jar-with-dependencies.jar -v debug program.bas   # verbose
@@ -68,7 +70,7 @@ Controlled by `_bDartmouthFlag` in `BasicParser`:
 ### Variable Types
 
 Type is indicated by suffix on variable name:
-- `#` Real (double), `%` Integer, `&` Long, `$` String, `!` Boolean, (none) = Real
+- `%` Integer, `&` Long, `$` String, `!` Double, `@` Boolean, (none) = Real (default)
 
 Arrays are dynamically allocated — no DIM statement required.
 

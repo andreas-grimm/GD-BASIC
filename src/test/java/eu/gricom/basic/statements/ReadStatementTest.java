@@ -47,13 +47,13 @@ public class ReadStatementTest {
 
         try {
             astrVariables.add("A$");
-            astrVariables.add("A#");
+            astrVariables.add("A");
 
             ReadStatement oReadStatement = new ReadStatement(1, astrVariables);
             oReadStatement.execute();
 
             StringValue oString = (StringValue) _oVariableManagement.getMap("A$");
-            IntegerValue oInteger = (IntegerValue) _oVariableManagement.getMap("A#");
+            IntegerValue oInteger = (IntegerValue) _oVariableManagement.getMap("A");
 
             assertTrue(oString.toString().contains("TestValue"));
             assertEquals(999, oInteger.toInt());

@@ -11,16 +11,16 @@
 60 PRINT "zero% = ";
 70 PRINT zero%
 80 IF zero% != 0 THEN 9000
-90 result# = 5 + zero%
+90 result = 5 + zero%
 100 PRINT "5 + 0 = ";
-110 PRINT result#
-120 IF result# != 5 THEN 9000
+110 PRINT result
+120 IF result != 5 THEN 9000
 130 REM Test division by one
 140 PRINT "Testing Division by One:"
-150 div1# = 10 / 1
+150 div1 = 10 / 1
 160 PRINT "10 / 1 = ";
-170 PRINT div1#
-180 IF div1# != 10 THEN 9000
+170 PRINT div1
+180 IF div1 != 10 THEN 9000
 190 REM Test multiplication by zero
 200 PRINT "Testing Multiplication by Zero:"
 210 mult0% = 42 * 0
@@ -29,16 +29,16 @@
 240 IF mult0% != 0 THEN 9000
 250 REM Test power of zero
 260 PRINT "Testing Power of Zero:"
-270 pow0# = 5 ^ 0
+270 pow0 = 5 ^ 0
 280 PRINT "5 ^ 0 = ";
-290 PRINT pow0#
-300 IF pow0# != 1 THEN 9000
+290 PRINT pow0
+300 IF pow0 != 1 THEN 9000
 310 REM Test power of one
 320 PRINT "Testing Power of One:"
-330 pow1# = 5 ^ 1
+330 pow1 = 5 ^ 1
 340 PRINT "5 ^ 1 = ";
-350 PRINT pow1#
-360 IF pow1# != 5 THEN 9000
+350 PRINT pow1
+360 IF pow1 != 5 THEN 9000
 370 REM Test empty string
 380 PRINT "Testing Empty String:"
 390 empty$ = ""

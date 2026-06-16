@@ -1,7 +1,7 @@
 1 REM ========================================================================
 2 REM Test: DATA and READ Statements
 3 REM Description: Tests DATA and READ statements for data storage/retrieval
-4 REM Expected: READ should correctly retrieve values from DATA statements
+4 REM Expected: READ should correctly retrieve valueues from DATA statements
 5 REM ========================================================================
 10 PRINT "=== Testing DATA and READ Statements ==="
 20 PRINT ""
@@ -10,7 +10,7 @@
 50 READ a%
 60 READ b%
 70 READ c%
-80 PRINT "First three values: ";
+80 PRINT "First three valueues: ";
 90 PRINT a%;
 100 PRINT ", ";
 110 PRINT b%;
@@ -31,13 +31,13 @@
 260 PRINT "Testing READ with Mixed Types:"
 270 READ num%
 280 READ str$
-290 READ val#
+290 READ value
 300 PRINT "Mixed: ";
 310 PRINT num%;
 320 PRINT ", ";
 330 PRINT str$;
 340 PRINT ", ";
-350 PRINT val#
+350 PRINT value
 360 REM Test READ in loop
 370 PRINT "Testing READ in Loop:"
 380 FOR i% = 1 TO 3
