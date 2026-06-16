@@ -37,9 +37,9 @@ GD-BASIC is based on the **Dartmouth BASIC October 1964** specification, the ori
 
 | Type | Variable Name Structure | Values |
 |------|-------------------------|--------|
-| `REAL` | `AB` or `AB!` | not defined |
-| `INTEGER` | `AB%` or `AB&` | not defined |
-| `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | not defined |
+| `REAL` | `AB` or `AB!` | 1, 1.01, 3.14 |
+| `INTEGER` | `AB%` or `AB&` | 1, 2, 9999 |
+| `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | "A Text" |
 | `BOOLEAN` | `AB@` | `true` or `false` |
 
 
