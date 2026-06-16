@@ -1,8 +1,8 @@
 10 REM Test READ / DATA Structure
 20 PRINT "Test Series 6"
-30 READ A#, B$
+30 READ A, B$
 40 PRINT B$
-50 READ A$, B#
+50 READ A$, B
 60 PRINT A$
 100 @PRAGMA("Trace" = "on")
 240 FOR I% = 0 TO 9 STEP 1
@@ -13,11 +13,11 @@
 290 NEXT
 300 PRINT " "
 310 PRINT "Testing IF - THEN - ELSE "
-320 FOR D# = 1 TO 3 STEP 1
-330 IF D# == 2 THEN
-340 PRINT D#, " is even"
+320 FOR D = 1 TO 3 STEP 1
+330 IF D == 2 THEN
+340 PRINT D, " is even"
 350 ELSE
-360 PRINT D#, " is odd"
+360 PRINT D, " is odd"
 370 END-IF
 380 NEXT
 400 PRINT "Testing colon to split lines..."
