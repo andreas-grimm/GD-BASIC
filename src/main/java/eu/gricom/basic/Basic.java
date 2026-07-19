@@ -240,8 +240,8 @@ public class Basic {
             long lFreeMem = Mem.execute().toInt() / 1024;
             Printer.println();
             Printer.println("   _____ _____             ____            _    ");
-            Printer.println("  / ____|  __ \\           |  _ \\          (_)        GriCom Basic Interpreter Version 0.1.0");
-            Printer.println(" | |  __| |  | |  ______  | |_) | __ _ ___ _  ___    (c) Copyright A.Grimm 2025");
+            Printer.println("  / ____|  __ \\           |  _ \\          (_)        GriCom Basic Interpreter Version 0.2.0");
+            Printer.println(" | |  __| |  | |  ______  | |_) | __ _ ___ _  ___    (c) Copyright A.Grimm 2026");
             Printer.println(" | | |_ | |  | | |______| |  _ < / _` / __| |/ __|   ");
             Printer.println(" | |__| | |__| |          | |_) | (_| \\__ \\ | (__    Maximum memory (KBytes): " + lMaxMemory);
             Printer.println("  \\_____|_____/           |____/ \\__,_|___/_|\\___|   Free memory (KBytes): " + lFreeMem);

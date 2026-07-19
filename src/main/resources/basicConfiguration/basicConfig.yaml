@@ -1,0 +1,3 @@
+# initial configuration parameter, to be overwritten by local config file, command line parameter, or pragma statement
+configuration:
+  realTypeVariableLength: 40
