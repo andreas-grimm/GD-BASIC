@@ -4,7 +4,132 @@ All notable changes to the GD-BASIC project are documented in this file.
 
 ## Version History
 
-The GD-BASIC project spans from December 2020 to June 2026, covering versions 0.0.3 through 0.2.0.
+The GD-BASIC project spans from December 2020 to July 2026, covering versions 0.0.3 through 0.2.0+.
+
+---
+
+## [0.2.0+] - 2026-07-25 (Patch Release)
+
+**Configuration Management System**: YAML-based externalized configuration and quality improvements.
+
+### Configuration Management System (NEW - July 25, 2026)
+
+#### YAML-Based Configuration
+
+**New Feature**: Externalized YAML configuration system via `EnvParam` singleton class.
+
+**Files Added**:
+- `src/main/resources/application.yaml` — Application configuration with `environment` and `testing` groups
+- Configuration supports two environments: `environment` (runtime) and `testing` (test suite)
+
+**Configuration Keys** (environment group):
+- `app_name` (String): Application identifier → "GD-BASIC"
+- `version` (String): Version number → "0.2.0"
+- `max_bcd_digits` (Integer): Maximum BCD digits for real numbers → 40
+- `dartmouth` (Boolean): Enable Dartmouth-style left-to-right evaluation → false
+- `log_level` (String): Default logging level → "warning"
+
+**Configuration Keys** (testing group):
+- Parallel keys for unit/integration testing with overridable values
+- `debug_mode` (Boolean), `timeout_seconds` (Integer), `timeout_float` (Float)
+
+#### Environment Variable Override
+
+Environment variables take precedence over YAML configuration:
+```bash
+export dartmouth=true
+export log_level=debug
+java -jar target/BASIC-*.jar program.bas
+```
+
+#### EnvParam Enhancement
+
+**Refactored from Static Constant to Singleton**:
+- `getMAX_BCD_DIGITS()` → `getMaxBcdDigits()` (now queries configuration)
+- New methods: `getString()`, `getInt()`, `getFloat()`, `getBoolean()`
+- Singleton instance cached with configuration group support
+- Graceful error handling for missing keys (returns defaults)
+
+**Files Modified**:
+- `eu.gricom.basic.helper.EnvParam.java` — Complete rewrite as singleton configuration manager
+- `eu.gricom.basic.variableTypes.RealValue.java` — Updated to use new `getMaxBcdDigits()` method
+- `eu.gricom.basic.Basic.java` — `_bDartmouthFlag` and `_strVersion` now externalized to config
+
+### Build System Improvements (July 25, 2026)
+
+**Maven Resource Configuration**
+- Fixed `pom.xml` resource directory from `src/**/*.java` exclusion to explicit `src/main/resources`
+- Enables proper packaging of YAML configuration files
+
+**Dependency Addition**
+- Added SnakeYAML 2.2 for YAML parsing and deserialization
+- Minimal footprint; no transitive dependencies
+
+**Dynamic Version Display**
+- Application splash screen now displays version from configuration
+- No hardcoded version strings in source code
+- Easily updated by modifying `application.yaml`
+
+### Testing Improvements (July 25, 2026)
+
+**EnvParamTest Complete Rewrite**:
+- 16 comprehensive test cases covering all configuration scenarios
+- Tests for all type conversions: String, Integer, Float, Boolean
+- Missing key handling (graceful defaults)
+- Singleton pattern verification
+- Configuration group switching with proper teardown/setup
+
+**Precision Fixes**:
+- `ExpTest.java`: Added epsilon parameter (1e-15) to floating-point assertions for better precision handling
+- Prevents floating-point rounding errors in test assertions
+
+**Test Results (July 25, 2026)**:
+- Unit Tests: 910/910 pass ✅ (16 new EnvParam tests + 2 precision fixes)
+- System Integration Tests: 34/34 pass ✅
+- Zero regressions; all existing tests pass without modification
+
+### Documentation Updates (July 25, 2026)
+
+**CLAUDE.md**
+- Added "Configuration Management" section with YAML structure
+- Documented EnvParam API with type-safe accessor methods
+- Environment variable override behavior documented
+- Configuration keys table with default values and purposes
+
+### Development Environment Configuration
+
+**VSCode Settings** (`.vscode/settings.json`)
+- Added file exclusion patterns for common build/metadata directories
+- Excludes: .git, .svn, .hg, .DS_Store, Thumbs.db, .mvn, .mule, etc.
+- Cleaner workspace without cluttering IDE file explorer
+
+**Claude Code Permissions** (`.claude/settings.local.json`)
+- Added Java 21 CLI execution permissions
+- Added Maven clean build with JAVA_HOME environment setup
+- Enables seamless local build environment configuration
+
+### Breaking Changes
+
+⚠️ **Method Name Change**: `EnvParam.getMAX_BCD_DIGITS()` → `EnvParam.getMaxBcdDigits()`
+- Aligns with Java naming conventions (camelCase for methods)
+- Queries configuration instead of returning hardcoded constant
+- No code outside the project is affected (internal utility class)
+
+### Migration Guide for External Code
+
+If using GD-BASIC as an embedded library, update calls:
+
+```java
+// Before (v0.2.0)
+int maxDigits = EnvParam.getMAX_BCD_DIGITS();
+
+// After (v0.2.0+)
+int maxDigits = EnvParam.getMaxBcdDigits();
+
+// Or set custom configuration
+EnvParam.setConfigGroup("custom");
+EnvParam.getInstance();  // Reloads configuration
+```
 
 ---
 

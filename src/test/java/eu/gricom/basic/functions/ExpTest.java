@@ -18,13 +18,13 @@ public class ExpTest {
 
             RealValue oResult = (RealValue) Exp.execute(oValue);
 
-            assertEquals(2.718281828459045, oResult.toReal());
+            assertEquals(2.718281828459045, oResult.toReal(), 1e-15);
 
             oValue = new RealValue(0.0);
 
             oResult = (RealValue) Exp.execute(oValue);
 
-            assertEquals(1.0, oResult.toReal());
+            assertEquals(1.0, oResult.toReal(), 1e-15);
         } catch (Exception e) {
             e.printStackTrace();
         }

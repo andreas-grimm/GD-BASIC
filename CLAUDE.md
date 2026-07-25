@@ -74,6 +74,79 @@ Type is indicated by suffix on variable name:
 
 Arrays are dynamically allocated — no DIM statement required.
 
+## Configuration Management
+
+**Version 0.2.0+**: The interpreter uses a YAML-based configuration system via the `EnvParam` singleton class.
+
+### Configuration File
+
+Configuration is loaded from `src/main/resources/application.yaml` with two configuration groups:
+
+```yaml
+environment:          # Default runtime settings
+  app_name: GD-BASIC
+  version: 0.2.0
+  max_bcd_digits: 40
+  dartmouth: false
+  log_level: warning
+
+testing:              # Test environment overrides
+  max_bcd_digits: 40
+  debug_mode: false
+  timeout_seconds: 30
+  timeout_float: 30.5
+```
+
+### Environment Variable Override
+
+Environment variables take precedence over YAML configuration. To override a setting:
+
+```bash
+# Override via environment variable
+export dartmouth=true
+export log_level=debug
+java -jar target/BASIC-*.jar program.bas
+
+# Or inline
+JAVA_HOME=/path/to/jdk-21 log_level=debug mvn test
+```
+
+### EnvParam API
+
+The `EnvParam` singleton provides type-safe configuration access:
+
+```java
+String version = EnvParam.getString("version");        // "0.2.0"
+int maxDigits = EnvParam.getInt("max_bcd_digits");     // 40
+float timeout = EnvParam.getFloat("timeout_float");    // 30.5
+boolean dartmouth = EnvParam.getBoolean("dartmouth");  // false
+int legacy = EnvParam.getMaxBcdDigits();               // 40 (convenience method)
+```
+
+### Configuration Groups
+
+Switch between configuration groups for testing or different environments:
+
+```java
+EnvParam.setConfigGroup("testing");  // Use testing config group
+String appName = EnvParam.getString("app_name");
+```
+
+The singleton instance is cached; reset via reflection in tests using the teardown hook.
+
+### Key Configuration Keys
+
+| Key | Type | Default | Purpose |
+|---|---|---|---|
+| `app_name` | String | GD-BASIC | Application identifier |
+| `version` | String | 0.2.0 | Version number (displayed in splash) |
+| `max_bcd_digits` | Integer | 40 | Maximum BCD digits for real numbers |
+| `dartmouth` | Boolean | false | Enable Dartmouth-style left-to-right evaluation |
+| `log_level` | String | warning | Default logging level (trace, debug, info, warning) |
+| `debug_mode` | Boolean | false | Enable debug output |
+| `timeout_seconds` | Integer | 30 | Operation timeout in seconds |
+| `timeout_float` | Float | 30.5 | Timeout with fractional seconds |
+
 ## Testing
 
 ```bash

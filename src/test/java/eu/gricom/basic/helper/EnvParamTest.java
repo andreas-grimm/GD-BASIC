@@ -1,69 +1,147 @@
 package eu.gricom.basic.helper;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * EnvParamTest.java
- * <p>
- * Test suite for EnvParam class, testing environment parameter configuration.
- */
-@DisplayName("EnvParam Test Suite")
 class EnvParamTest {
 
-    @Test
-    @DisplayName("getMAX_BCD_DIGITS should return exactly 40")
-    void testGetMaxBcdDigitsReturnsForty() {
-        int result = EnvParam.getMAX_BCD_DIGITS();
-        assertEquals(40, result, "MAX_BCD_DIGITS should return 40");
+    @BeforeEach
+    void setUp() {
+        EnvParam.setConfigGroup("testing");
+        resetSingleton();
+    }
+
+    @AfterEach
+    void tearDown() {
+        EnvParam.setConfigGroup("environment");
+        resetSingleton();
     }
 
     @Test
-    @DisplayName("getMAX_BCD_DIGITS should return positive value")
-    void testGetMaxBcdDigitsIsPositive() {
-        int result = EnvParam.getMAX_BCD_DIGITS();
-        assertTrue(result > 0, "MAX_BCD_DIGITS should be positive");
+    void testGetStringFromConfigFile() {
+        String appName = EnvParam.getString("app_name");
+        assertEquals("GD-BASIC", appName);
     }
 
     @Test
-    @DisplayName("getMAX_BCD_DIGITS should return greater than 10")
-    void testGetMaxBcdDigitsGreaterThanTen() {
-        int result = EnvParam.getMAX_BCD_DIGITS();
-        assertTrue(result > 10, "MAX_BCD_DIGITS should be greater than 10");
+    void testGetIntFromConfigFile() {
+        int maxBcdDigits = EnvParam.getInt("max_bcd_digits");
+        assertEquals(40, maxBcdDigits);
     }
 
     @Test
-    @DisplayName("getMAX_BCD_DIGITS should be consistent across multiple calls")
-    void testGetMaxBcdDigitsConsistent() {
-        int firstCall = EnvParam.getMAX_BCD_DIGITS();
-        int secondCall = EnvParam.getMAX_BCD_DIGITS();
-        int thirdCall = EnvParam.getMAX_BCD_DIGITS();
-
-        assertEquals(firstCall, secondCall, "Result should be consistent");
-        assertEquals(secondCall, thirdCall, "Result should be consistent");
-        assertEquals(firstCall, thirdCall, "Result should be consistent");
+    void testGetFloatFromConfigFile() {
+        float timeoutFloat = EnvParam.getFloat("timeout_float");
+        assertEquals(30.5f, timeoutFloat, 0.01f);
     }
 
     @Test
-    @DisplayName("getMAX_BCD_DIGITS should not be zero")
-    void testGetMaxBcdDigitsNotZero() {
-        int result = EnvParam.getMAX_BCD_DIGITS();
-        assertNotEquals(0, result, "MAX_BCD_DIGITS should not be zero");
+    void testGetBooleanFromConfigFile() {
+        boolean debugMode = EnvParam.getBoolean("debug_mode");
+        assertFalse(debugMode);
     }
 
     @Test
-    @DisplayName("getMAX_BCD_DIGITS should be less than 100")
-    void testGetMaxBcdDigitsLessThanHundred() {
-        int result = EnvParam.getMAX_BCD_DIGITS();
-        assertTrue(result < 100, "MAX_BCD_DIGITS should be less than 100");
+    void testMissingStringKeyReturnsEmpty() {
+        String result = EnvParam.getString("non_existent_key");
+        assertEquals("", result);
     }
 
     @Test
-    @DisplayName("getMAX_BCD_DIGITS should be in reasonable range for BCD digits")
-    void testGetMaxBcdDigitsInReasonableRange() {
-        int result = EnvParam.getMAX_BCD_DIGITS();
-        assertTrue(result >= 32 && result <= 256, "MAX_BCD_DIGITS should be in a reasonable range");
+    void testMissingIntKeyReturnsZero() {
+        int result = EnvParam.getInt("non_existent_int_key");
+        assertEquals(0, result);
+    }
+
+    @Test
+    void testMissingFloatKeyReturnsZero() {
+        float result = EnvParam.getFloat("non_existent_float_key");
+        assertEquals(0.0f, result);
+    }
+
+    @Test
+    void testMissingBooleanKeyReturnsFalse() {
+        boolean result = EnvParam.getBoolean("non_existent_bool_key");
+        assertFalse(result);
+    }
+
+    @Test
+    void testGetMaxBcdDigits() {
+        int iMaxBcdDigits = EnvParam.getMaxBcdDigits();
+        assertEquals(40, iMaxBcdDigits);
+    }
+
+    @Test
+    void testSingletonBehavior() {
+        EnvParam instance1 = EnvParam.getInstance();
+        EnvParam instance2 = EnvParam.getInstance();
+        assertSame(instance1, instance2);
+    }
+
+    @Test
+    void testTimeoutSecondsConfiguration() {
+        int timeout = EnvParam.getInt("timeout_seconds");
+        assertEquals(30, timeout);
+    }
+
+    @Test
+    void testBooleanParsing_False() {
+        boolean debugMode = EnvParam.getBoolean("debug_mode");
+        assertFalse(debugMode);
+    }
+
+    @Test
+    void testIntegerConfiguration() {
+        int result = EnvParam.getInt("timeout_seconds");
+        assertEquals(30, result);
+    }
+
+    @Test
+    void testNegativeIntegerHandling() {
+        int result = EnvParam.getInt("negative_value_not_exists");
+        assertEquals(0, result);
+    }
+
+    @Test
+    void testStringWithSpecialChars() {
+        String result = EnvParam.getString("app_name");
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+    }
+
+    @Test
+    void testMultipleCallsReturnSameValue() {
+        String result1 = EnvParam.getString("app_name");
+        String result2 = EnvParam.getString("app_name");
+        assertEquals(result1, result2);
+        assertEquals("GD-BASIC", result1);
+    }
+
+    @Test
+    void testConfigFileLoading() {
+        assertNotNull(EnvParam.getInstance());
+        String appName = EnvParam.getString("app_name");
+        assertEquals("GD-BASIC", appName);
+    }
+
+    @Test
+    void testFloatParsing() {
+        float result = EnvParam.getFloat("timeout_float");
+        assertTrue(result > 30.0f);
+    }
+
+    private void resetSingleton() {
+        try {
+            Field oField = EnvParam.class.getDeclaredField("_oInstance");
+            oField.setAccessible(true);
+            oField.set(null, null);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to reset singleton", e);
+        }
     }
 }

@@ -5,6 +5,7 @@ import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.Lexer;
 import eu.gricom.basic.tokenizer.Token;
 import eu.gricom.basic.error.SyntaxErrorException;
+import eu.gricom.basic.helper.EnvParam;
 import eu.gricom.basic.helper.FileHandler;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.helper.Printer;
@@ -35,7 +36,8 @@ import java.util.Locale;
 public class Basic {
     private Program _oProgram = new Program();
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
-    private static boolean _bDartmouthFlag = false;
+    private static boolean _bDartmouthFlag = EnvParam.getBoolean("dartmouth");
+    private static String _strVersion = EnvParam.getString("version");
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of the interpreter, such as the values of
@@ -214,7 +216,7 @@ public class Basic {
     public static void main(final String[] args) {
         Logger oLogger = new Logger("main");
         Program oProgram = new Program();
-        oLogger.setLogLevel("");
+        oLogger.setLogLevel(EnvParam.getString("log_level"));
 
         CommandLine oCommandLine = null;
 
@@ -240,7 +242,7 @@ public class Basic {
             long lFreeMem = Mem.execute().toInt() / 1024;
             Printer.println();
             Printer.println("   _____ _____             ____            _    ");
-            Printer.println("  / ____|  __ \\           |  _ \\          (_)        GriCom Basic Interpreter Version 0.2.0");
+            Printer.println("  / ____|  __ \\           |  _ \\          (_)        GriCom Basic Interpreter Version " + _strVersion);
             Printer.println(" | |  __| |  | |  ______  | |_) | __ _ ___ _  ___    (c) Copyright A.Grimm 2026");
             Printer.println(" | | |_ | |  | | |______| |  _ < / _` / __| |/ __|   ");
             Printer.println(" | |__| | |__| |          | |_) | (_| \\__ \\ | (__    Maximum memory (KBytes): " + lMaxMemory);
@@ -251,6 +253,8 @@ public class Basic {
         if (oCommandLine != null && oCommandLine.hasOption("v")) {
             String strLogLevel = oCommandLine.getOptionValue("v");
             String strLogLevelList = "trace|debug|info|warning";
+
+            oLogger.setLogLevel(EnvParam.getString("log_level"));
 
             if (strLogLevelList.contains(strLogLevel.toLowerCase(Locale.ROOT))) {
                 oLogger.setLogLevel(strLogLevel);
