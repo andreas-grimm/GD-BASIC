@@ -109,6 +109,12 @@ public final class Call {
 
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid URL format: " + strURL);
+        } catch (java.net.UnknownHostException e) {
+            throw new RuntimeException("Domain not found: " + strURL + ". Error: " + e.getMessage());
+        } catch (java.net.ConnectException e) {
+            throw new RuntimeException("Connection failed: " + e.getMessage());
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("Network error during API call: " + e.getMessage());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException("HTTP call was interrupted: " + e.getMessage());
