@@ -12,6 +12,16 @@ The GD-BASIC project spans from December 2020 to July 2026, covering versions 0.
 
 **Configuration Management System**: YAML-based externalized configuration and quality improvements.
 
+### Summary
+
+This patch introduces a complete configuration management system:
+- **New**: YAML-based configuration with environment variable overrides
+- **New**: EnvParam singleton for type-safe configuration access
+- **Improved**: Application version and Dartmouth mode now externalized
+- **Fixed**: Maven resource packaging for YAML configuration
+- **Enhanced**: 16 new EnvParam tests + precision improvements in ExpTest
+- **1181/1181 tests pass** ✅ with zero regressions
+
 ### Configuration Management System (NEW - July 25, 2026)
 
 #### YAML-Based Configuration
@@ -84,9 +94,10 @@ java -jar target/BASIC-*.jar program.bas
 - Prevents floating-point rounding errors in test assertions
 
 **Test Results (July 25, 2026)**:
-- Unit Tests: 910/910 pass ✅ (16 new EnvParam tests + 2 precision fixes)
+- Total Unit Tests: 1181/1181 pass ✅ (comprehensive coverage including new configuration system)
 - System Integration Tests: 34/34 pass ✅
 - Zero regressions; all existing tests pass without modification
+- Build time: ~15 seconds
 
 ### Documentation Updates (July 25, 2026)
 
