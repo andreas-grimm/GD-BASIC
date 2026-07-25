@@ -4,10 +4,10 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+import eu.gricom.basic.helper.Logger;
 
 public class EnvParam {
-    private static final Logger LOGGER = Logger.getLogger(EnvParam.class.getName());
+    private static final Logger LOGGER = new Logger(EnvParam.class.getName());
     private static final String CONFIG_FILE_PATH = "application.yaml";
     private static EnvParam _oInstance;
     private static String _strConfigGroup = "environment";

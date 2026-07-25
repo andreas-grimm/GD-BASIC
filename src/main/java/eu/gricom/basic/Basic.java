@@ -1,6 +1,8 @@
 package eu.gricom.basic;
 
+import eu.gricom.basic.error.EndOfProgramException;
 import eu.gricom.basic.functions.Mem;
+import eu.gricom.basic.lineEditor.LineEditor;
 import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.Lexer;
 import eu.gricom.basic.tokenizer.Token;
@@ -38,6 +40,7 @@ public class Basic {
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private static boolean _bDartmouthFlag = EnvParam.getBoolean("dartmouth");
     private static String _strVersion = EnvParam.getString("version");
+    private static boolean _bEditorFlag = true;
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of the interpreter, such as the values of
@@ -181,24 +184,33 @@ public class Basic {
             iCounter++;
         }
 
-        // Parse.
-        _oLogger.info("Starting parsing...");
-        try {
-            BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
-            _oProgram.setPreRunStatements(oParser.parsePreRun());
-            _oProgram.setStatements(oParser.parse());
-        } catch (SyntaxErrorException eSyntaxError) {
-            _oLogger.error(eSyntaxError.getMessage());
+        if (_bEditorFlag) {
+            Printer.println("Starting line editor");
+            LineEditor oLineEditor = new LineEditor(oProgram, _bDartmouthFlag);
+            oLineEditor.execute();
+        } else {
+            // Parse.
+            _oLogger.info("Starting parsing...");
+            try {
+                BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
+                _oProgram.setPreRunStatements(oParser.parsePreRun());
+                _oProgram.setStatements(oParser.parse());
+            } catch (SyntaxErrorException eSyntaxError) {
+                _oLogger.error(eSyntaxError.getMessage());
+            }
+
+            // Run.
+            Execute oRun = new Execute(_oProgram);
+
+            // load the environment for the execution
+            oRun.loadEnvironment();
+
+            // run the program
+            try {
+                oRun.runProgram();
+            } catch (Exception e) {
+            }
         }
-
-        // Run.
-        Execute oRun = new Execute(_oProgram);
-
-        // load the environment for the execution
-        oRun.loadEnvironment();
-
-        // run the program
-        oRun.runProgram();
 
         System.exit(0);
     }
@@ -228,6 +240,7 @@ public class Basic {
             oOptions.addOption("q", false, "quiet mode");
             oOptions.addOption("v", true, "verbose level: (info, debug, trace, or error)");
             oOptions.addOption("d", false, "dartmouth mode");
+            oOptions.addOption("r",false, "execute the loaded program directly, do not use the line editor");
 
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(oOptions, args);
@@ -274,6 +287,11 @@ public class Basic {
         if (oCommandLine != null && oCommandLine.hasOption("d")) {
             _bDartmouthFlag = true;
             oLogger.debug("Dartmouth mode selected...");
+        }
+
+        if (oCommandLine != null && oCommandLine.hasOption("r")) {
+            _bEditorFlag = false;
+            oLogger.debug("Direct execution mode selected...");
         }
 
         if (oCommandLine != null) {

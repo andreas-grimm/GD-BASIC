@@ -80,7 +80,7 @@ run_test() {
     print_test_start "$test_name"
     
     # Run the test and capture output
-    java -jar $JAR_PATH "$test_file" > /dev/null 2>&1
+    java -jar $JAR_PATH -r "$test_file" > /dev/null 2>&1
     local exit_code=$?
     
     if [ $exit_code -eq 0 ]; then

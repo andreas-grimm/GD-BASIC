@@ -9,14 +9,12 @@ package eu.gricom.basic.error;
  * <p>
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
-public class RuntimeException extends Exception {
+public class EndOfProgramException extends Exception {
 
     /**
      * Constructor of the Code Generator object.
-     *
-     * @param strErrorMessage - error message related to the syntax error
      */
-    public RuntimeException(final String strErrorMessage) {
-        super(strErrorMessage);
+    public EndOfProgramException() {
+        super("End message reached");
     }
 }
