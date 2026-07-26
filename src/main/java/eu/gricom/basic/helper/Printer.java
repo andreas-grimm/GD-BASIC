@@ -38,4 +38,15 @@ public final class Printer {
             System.out.println(strPrintLine);
         }
     }
+
+    /**
+     * provide output to the console terminal.
+     *
+     * @param strPrintLine - defined output line
+     */
+    public static void print(final String strPrintLine) {
+        if (_strTarget.contains("Console")) {
+            System.out.print(strPrintLine);
+        }
+    }
 }

@@ -2,18 +2,22 @@
 
 ## Project Overview
 
-GD-BASIC (GriCom Diminutive BASIC Interpreter) is a Java 21 implementation of a Dartmouth-style BASIC interpreter. It can execute `.bas` programs and optionally compile them to Java source code. It also serves as an embeddable scripting engine.
+GD-BASIC (GriCom Diminutive BASIC Interpreter) is a Java 21 implementation of a Dartmouth-style BASIC interpreter. It can execute `.bas` programs, support interactive line editing, and optionally compile them to Java source code. It also serves as an embeddable scripting engine.
 
-- **Version**: 0.2.0
+- **Version**: 0.2.0+ (Extended)
 - **License**: See LICENSE.md
+- **Status**: Production Ready (1214/1214 tests passing)
+- **Last Updated**: 2026-07-26
 
 ⚠️ **Breaking Change**: Version 0.2.0 removes the `#` suffix for real variables. Use untyped variables (no suffix) instead. See BASIC_CODING_STANDARD.md for migration guide.
+
+✨ **New in 0.2.0+**: Interactive line editor with LOAD, SAVE, DELETE, HELP commands. Start without a file: `java -jar BASIC-*.jar`
 
 ## Build & Run
 
 ```bash
 # Build (produces target/BASIC-*-jar-with-dependencies.jar)
-mvn clean package
+mvn clean test package
 
 # Run tests
 mvn test
@@ -24,16 +28,25 @@ mvn test -Dtest=BasicParserTest
 # Generate site reports (Checkstyle, PMD, JavaDoc)
 mvn site
 
-# Run the interpreter
+# Interactive mode (no file required, NEW in 0.2.0+)
+java -jar target/BASIC-0.2.0-jar-with-dependencies.jar
+
+# Run with a program file
 java -jar target/BASIC-0.2.0-jar-with-dependencies.jar program.bas
 
+# Direct execution (skip interactive editor)
+java -jar target/BASIC-0.2.0-jar-with-dependencies.jar -r program.bas
+
 # Run with options
-java -jar target/BASIC-*-jar-with-dependencies.jar -v debug program.bas   # verbose
-java -jar target/BASIC-*-jar-with-dependencies.jar -c -b program.bas       # compile mode
-java -jar target/BASIC-*-jar-with-dependencies.jar -d program.bas          # Dartmouth mode
+java -jar target/BASIC-*-jar-with-dependencies.jar -v debug program.bas   # verbose logging
+java -jar target/BASIC-*-jar-with-dependencies.jar -q -r program.bas      # quiet, direct run
+java -jar target/BASIC-*-jar-with-dependencies.jar -d program.bas         # Dartmouth mode
+java -jar target/BASIC-*-jar-with-dependencies.jar -h                     # help
 ```
 
 **Requirements**: Java 21+, Maven 3.6.3+
+
+**Test Results**: 1214/1214 tests passing (100% pass rate, zero failures)
 
 ## Architecture
 
@@ -55,11 +68,12 @@ Optionally: instead of Execute, the Generator compiles to Java via a JSON interm
 | `statements` | 35+ statement implementations (IF, FOR, PRINT, GOSUB, …) |
 | `variableTypes` | Type system — `RealValue`, `IntegerValue`, `StringValue`, `LongValue`, `BooleanValue` |
 | `memoryManager` | State — `Program`, `VariableManagement`, `Stack`, `ProgramPointer` |
-| `functions` | 30+ built-in functions (math, string, system) |
+| `functions` | 40+ built-in functions (math, string, system, file) |
 | `runtimeManager` | Execution engine — `Execute` |
+| `lineEditor` | Interactive line editor — `LineEditor` (NEW in 0.2.0+) |
 | `codeGenerator` | Java code generation |
-| `error` | Exception types |
-| `helper` | `Logger`, `Printer`, `FileHandler` |
+| `error` | Exception types (includes new `EmptyProgramException`, `FileAlreadyExistsException`) |
+| `helper` | `Logger`, `Printer`, `FileHandler`, `EnvParam` |
 
 ### Parser Evaluation Modes
 
@@ -73,6 +87,56 @@ Type is indicated by suffix on variable name:
 - `%` Integer, `&` Long, `$` String, `!` Double, `@` Boolean, (none) = Real (default)
 
 Arrays are dynamically allocated — no DIM statement required.
+
+## Interactive Line Editor (NEW in 0.2.0+)
+
+The interpreter includes an interactive line editor accessible by running without a program file or by loading one.
+
+### Editor Commands
+
+| Command | Purpose |
+|---|---|
+| `LIST` | Display current program source code |
+| `RUN` | Parse and execute the program (requires content) |
+| `LOAD <filename>` | Load BASIC program from file |
+| `SAVE <filename>` | Save program to new file (prevents overwriting) |
+| `DELETE <line>` | Delete a single line |
+| `DELETE <start> <end>` | Delete line range (inclusive) |
+| `HELP` | Display built-in command help |
+| `EXIT` / `BYE` / `QUIT` | Exit the interpreter |
+
+### Program Entry
+
+Enter lines with format: `<line-number> <statement>`
+
+Example:
+```
+>10 PRINT "HELLO"
+>20 END
+>LIST
+10 PRINT "HELLO"
+20 END
+>RUN
+HELLO
+>SAVE output.bas
+Program saved to output.bas
+```
+
+### New Exception Classes
+
+- **`EmptyProgramException`** — Thrown when loading empty file (file I/O validation)
+- **`FileAlreadyExistsException`** — Thrown when SAVE target exists (file safety)
+
+### Key New Methods
+
+**Program.java**:
+- `hasContent()` — Check if program has loaded content
+- `loadProgram(String filename)` — Load from file with validation
+- `save(String filename)` — Save to file with safety checks
+- `deleteLines(int begin, int end)` — Remove line range
+
+**LineEditor.java**:
+- Enhanced `run()` method checks `hasContent()` before executing
 
 ## Configuration Management
 
@@ -183,23 +247,42 @@ Code quality is enforced by Checkstyle (`etc/checkstyle-config.xml`) and PMD —
 
 ## BASIC Language Reference
 
-See `BASIC_CODING_STANDARD.md` for the full language spec. Quick reference:
+See `BASIC_CODING_STANDARD.md` for the full language spec and `doc/BASIC.md` for syntax and editor commands. Quick reference:
 
 - Line numbers increment by 10 (convention)
 - Multiple statements per line with `:`
 - Programs must end with `END`
-- Math functions: ABS, SIN, COS, TAN, SQR, EXP, LOG, RND, …
-- String functions: LEN, LEFT$, RIGHT$, MID$, STR$, VAL, CHR$, ASC, INSTR
-- File I/O: FOPEN, FCLOSE, FINPUT, FPRINT, EOF
+- **Math functions**: ABS, SIN, COS, TAN, SQR, EXP, LOG, LOG10, RND, ATN, CDBL, CINT
+- **String functions**: LEN, LEFT$, RIGHT$, MID$, STR$, VAL, CHR$, ASC, INSTR, UPPER, LOWER
+- **File I/O**: FOPEN, FCLOSE, FINPUT, FPRINT, EOF, FGET, FPUT, FPEEK, FREWIND, FEXISTS, FGETNAME, FGETSIZE, FMODTIME, FISOPEN, FLINECOUNT, FCOMPARE
+- **Directory operations**: CHDIR, DIREXISTS, GETCWD, MKDIR, RMDIR
+- **System functions**: CALL, SYSTEM, MEM, TIME
+- **Total**: 40+ built-in functions
 
 ## Key Documentation
 
-- `README.md` — project history and version changelog
-- `BASIC_CODING_STANDARD.md` — BASIC language specification
-- `doc/TechnicalDocumentation.md` — architecture guide
-- `doc/ParserDesign.md` — parser implementation details
-- `doc/OperatorPrecedenceImplementation.md` — expression evaluation modes
-- `prompts/STYLEGUIDE.md` — Java coding style guide
+### Quick Reference
+- **README.md** — Documentation index and quick start
+- **CHANGELOG.md** — Complete version history (v0.0.1 through v0.2.0+)
+- **TEST_SUMMARY.md** — Test coverage and documentation
+
+### For Users
+- **doc/USER_GUIDE.md** — Comprehensive user manual (NEW in 0.2.0+)
+  - Installation, setup, command-line parameters
+  - Interactive editor commands and workflows
+  - Example programs and troubleshooting
+
+### For Developers
+- **doc/BASIC.md** — BASIC language reference
+  - Syntax, keywords, variable types
+  - Line editor command reference (NEW in 0.2.0+)
+- **doc/BASIC_CODING_STANDARD.md** — BASIC language specification and migration guides
+- **doc/GD-BASIC_Detailed_Design.md** — Architecture and design documentation
+
+### For Maintainers
+- **doc/Java_25_Needed_Changes.md** — Future Java upgrade roadmap (replaces Java22ComplianceGuide.md)
+- **prompts/STYLEGUIDE.md** — Java coding style guide
+- **DOCUMENTATION_REORGANIZATION.md** — Documentation structure changes (NEW in 0.2.0+)
 
 ## AI Assistant Persona
 

@@ -116,4 +116,52 @@ public class ProgramTest {
 
         assertFalse(p1.equals(p2));
     }
+
+    @Test
+    public void testHasContentPositiveWithContent() {
+        String source = "10 PRINT \"Hello\"\n20 END";
+        _oProgram.load("test.bas", source);
+        assertTrue(_oProgram.hasContent());
+    }
+
+    @Test
+    public void testHasContentPositiveWithSingleLine() {
+        String source = "10 PRINT \"Hello\"";
+        _oProgram.load("test.bas", source);
+        assertTrue(_oProgram.hasContent());
+    }
+
+    @Test
+    public void testHasContentNegativeEmpty() {
+        String source = "";
+        _oProgram.load("test.bas", source);
+        assertFalse(_oProgram.hasContent());
+    }
+
+    @Test
+    public void testHasContentNegativeWhitespaceOnly() {
+        String source = "   \n  \n  \t  ";
+        _oProgram.load("test.bas", source);
+        assertFalse(_oProgram.hasContent());
+    }
+
+    @Test
+    public void testHasContentNegativeNewlinesOnly() {
+        String source = "\n\n\n";
+        _oProgram.load("test.bas", source);
+        assertFalse(_oProgram.hasContent());
+    }
+
+    @Test
+    public void testHasContentNegativeNullProgram() {
+        _oProgram.setProgram(null);
+        assertFalse(_oProgram.hasContent());
+    }
+
+    @Test
+    public void testHasContentPositiveWithLeadingWhitespace() {
+        String source = "  10 PRINT \"Hello\"\n  20 END";
+        _oProgram.load("test.bas", source);
+        assertTrue(_oProgram.hasContent());
+    }
 }

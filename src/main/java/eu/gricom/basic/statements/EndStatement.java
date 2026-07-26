@@ -1,5 +1,7 @@
 package eu.gricom.basic.statements;
 
+import eu.gricom.basic.error.EndOfProgramException;
+
 /**
  * EndStatement.java
  * <p>
@@ -45,8 +47,8 @@ public class EndStatement implements Statement {
      *
      * Terminate the running program.
      */
-    public final void execute() {
-        System.exit(0);
+    public final void execute() throws Exception {
+        throw new EndOfProgramException();
     }
 
     /**
