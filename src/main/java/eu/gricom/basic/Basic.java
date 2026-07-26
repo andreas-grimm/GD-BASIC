@@ -206,10 +206,7 @@ public class Basic {
             oRun.loadEnvironment();
 
             // run the program
-            try {
-                oRun.runProgram();
-            } catch (Exception e) {
-            }
+            oRun.runProgram();
         }
 
         System.exit(0);
@@ -281,7 +278,7 @@ public class Basic {
             oLogger.debug("Display help message...");
 
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("java -jar BASIC-<build-name>.jar <filename.bas>", oOptions);
+            formatter.printHelp("java -jar BASIC-<build-name>.jar [<filename.bas>]", oOptions);
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("d")) {
@@ -298,10 +295,15 @@ public class Basic {
             List<String> astrArguments = oCommandLine.getArgList();
 
             if (astrArguments.isEmpty()) {
-                oLogger.error("Program file name missing...");
-                Printer.println("");
-                Printer.println("usage: java -jar BASIC-<build-name>.jar <filename.bas>");
-                Printer.println("where <filename.bas> is a relative path to a .bas program to run.");
+                // No program file provided; start with empty program in line editor
+                oLogger.info("Starting with empty program in line editor mode...");
+                _bEditorFlag = true;
+                oProgram.load("<empty>", "");
+
+                Basic oBasic = new Basic();
+                oLogger.info("Run the interpreter...");
+                oBasic.interpret(oProgram);
+
                 System.exit(-1);
             }
 
