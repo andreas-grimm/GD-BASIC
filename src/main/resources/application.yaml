@@ -1,0 +1,13 @@
+environment:
+  app_name: GD-BASIC
+  max_bcd_digits: 40
+  dartmouth: false
+  log_level: warning
+  version: 0.2.0
+
+testing:
+  max_bcd_digits: 40
+  app_name: GD-BASIC
+  debug_mode: false
+  timeout_seconds: 30
+  timeout_float: 30.5

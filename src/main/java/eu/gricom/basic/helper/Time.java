@@ -42,14 +42,19 @@ public class Time {
     }
 
     /**
-     * Time Constructor, sets the object with a date.
+     * Time Constructor, sets the object with a date or datetime.
      *
      * @param strDate
-     *            initialize the Time object with a date string
+     *            initialize the Time object with a date string (YYYY-MM-DD)
+     *            or datetime string (YYYY-MM-DD HH:mm:ss)
      */
     public Time(final String strDate) {
         try {
-            parseDate(strDate);
+            if (strDate != null && strDate.contains(" ")) {
+                parseDateTime(strDate);
+            } else {
+                parseDate(strDate);
+            }
         } catch (Exception eException) {
             System.err.println(eException.getMessage());
         }
@@ -118,7 +123,7 @@ public class Time {
             throw new Exception("[Time] Time out of range");
         }
 
-        _oDate.set(_iYear, _iMonth, _iDay, _iHour, _iMinute, _iSecs);
+        _oDate.set(_iYear, _iMonth - 1, _iDay, _iHour, _iMinute, _iSecs);
     }
 
     /**
@@ -163,12 +168,20 @@ public class Time {
                 || _iYear > 3000
                 || _iMonth < 1
                 || _iMonth > 12
-                || _iDay < 0
+                || _iDay < 1
                 || _iDay > 31) {
             throw new Exception("[Time] Date out of range");
         }
 
-        _oDate.set(_iYear, _iMonth, _iDay);
+        int iMaxDays = getDaysInMonth(_iMonth, _iYear);
+        if (_iDay > iMaxDays) {
+            throw new Exception("[Time] Day out of range for month");
+        }
+
+        _iHour = 0;
+        _iMinute = 0;
+        _iSecs = 0;
+        _oDate.set(_iYear, _iMonth - 1, _iDay, 0, 0, 0);
     }
 
     /**
@@ -364,28 +377,37 @@ public class Time {
 
     /**
      * Adds a number of months to this time object.
-     * 
+     *
      * @param iInputMonths
      *            - number of months to add
      */
     public final void addMonths(final int iInputMonths) {
         int iMonth = _iMonth + iInputMonths;
+        int iYear = _iYear;
 
+        // Normalize month and year (handle overflow)
         while (iMonth > 12) {
-            _iYear++;
-            iMonth--;
+            iYear++;
+            iMonth -= 12;
         }
 
-        // now normailze the day again ...
-        int iMaxDays = getDaysInMonth(iMonth, _iYear);
-        while (_iDay > iMaxDays) {
-            iMonth++;
-            _iDay -= iMaxDays;
-            iMaxDays = getDaysInMonth(iMonth, _iYear);
+        // Handle negative months (month underflow)
+        while (iMonth < 1) {
+            iYear--;
+            iMonth += 12;
         }
 
-        _oDate.set(_iYear, iMonth - 1, _iDay, _iHour, _iMinute, _iSecs);
+        // Normalize day: if day is too large for target month, cap it to max day of month
+        int iMaxDays = getDaysInMonth(iMonth, iYear);
+        int iDay = _iDay;
+        if (iDay > iMaxDays) {
+            iDay = iMaxDays;
+        }
+
+        _iYear = iYear;
         _iMonth = iMonth;
+        _iDay = iDay;
+        _oDate.set(_iYear, iMonth - 1, _iDay, _iHour, _iMinute, _iSecs);
     }
 
     /**
@@ -589,6 +611,7 @@ public class Time {
 
         while (iWorkMonth < 13) {
             iDays += getDaysInMonth(iWorkMonth, oTime._iYear);
+            iWorkMonth++;
         }
 
         iDays += getDaysUntilEndOfMonth(oTime);

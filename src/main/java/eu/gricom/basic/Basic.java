@@ -1,10 +1,13 @@
 package eu.gricom.basic;
 
+import eu.gricom.basic.error.EndOfProgramException;
 import eu.gricom.basic.functions.Mem;
+import eu.gricom.basic.lineEditor.LineEditor;
 import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.Lexer;
 import eu.gricom.basic.tokenizer.Token;
 import eu.gricom.basic.error.SyntaxErrorException;
+import eu.gricom.basic.helper.EnvParam;
 import eu.gricom.basic.helper.FileHandler;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.helper.Printer;
@@ -35,7 +38,9 @@ import java.util.Locale;
 public class Basic {
     private Program _oProgram = new Program();
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
-    private static boolean _bDartmouthFlag = false;
+    private static boolean _bDartmouthFlag = EnvParam.getBoolean("dartmouth");
+    private static String _strVersion = EnvParam.getString("version");
+    private static boolean _bEditorFlag = true;
 
     /**
      * Constructs a new Basic instance. The instance stores the global state of the interpreter, such as the values of
@@ -179,24 +184,30 @@ public class Basic {
             iCounter++;
         }
 
-        // Parse.
-        _oLogger.info("Starting parsing...");
-        try {
-            BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
-            _oProgram.setPreRunStatements(oParser.parsePreRun());
-            _oProgram.setStatements(oParser.parse());
-        } catch (SyntaxErrorException eSyntaxError) {
-            _oLogger.error(eSyntaxError.getMessage());
+        if (_bEditorFlag) {
+            Printer.println("Starting line editor");
+            LineEditor oLineEditor = new LineEditor(oProgram, _bDartmouthFlag);
+            oLineEditor.execute();
+        } else {
+            // Parse.
+            _oLogger.info("Starting parsing...");
+            try {
+                BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
+                _oProgram.setPreRunStatements(oParser.parsePreRun());
+                _oProgram.setStatements(oParser.parse());
+            } catch (SyntaxErrorException eSyntaxError) {
+                _oLogger.error(eSyntaxError.getMessage());
+            }
+
+            // Run.
+            Execute oRun = new Execute(_oProgram);
+
+            // load the environment for the execution
+            oRun.loadEnvironment();
+
+            // run the program
+            oRun.runProgram();
         }
-
-        // Run.
-        Execute oRun = new Execute(_oProgram);
-
-        // load the environment for the execution
-        oRun.loadEnvironment();
-
-        // run the program
-        oRun.runProgram();
 
         System.exit(0);
     }
@@ -214,7 +225,7 @@ public class Basic {
     public static void main(final String[] args) {
         Logger oLogger = new Logger("main");
         Program oProgram = new Program();
-        oLogger.setLogLevel("");
+        oLogger.setLogLevel(EnvParam.getString("log_level"));
 
         CommandLine oCommandLine = null;
 
@@ -226,6 +237,7 @@ public class Basic {
             oOptions.addOption("q", false, "quiet mode");
             oOptions.addOption("v", true, "verbose level: (info, debug, trace, or error)");
             oOptions.addOption("d", false, "dartmouth mode");
+            oOptions.addOption("r",false, "execute the loaded program directly, do not use the line editor");
 
             CommandLineParser parser = new DefaultParser();
             oCommandLine = parser.parse(oOptions, args);
@@ -240,8 +252,8 @@ public class Basic {
             long lFreeMem = Mem.execute().toInt() / 1024;
             Printer.println();
             Printer.println("   _____ _____             ____            _    ");
-            Printer.println("  / ____|  __ \\           |  _ \\          (_)        GriCom Basic Interpreter Version 0.1.0");
-            Printer.println(" | |  __| |  | |  ______  | |_) | __ _ ___ _  ___    (c) Copyright A.Grimm 2025");
+            Printer.println("  / ____|  __ \\           |  _ \\          (_)        GriCom Basic Interpreter Version " + _strVersion);
+            Printer.println(" | |  __| |  | |  ______  | |_) | __ _ ___ _  ___    (c) Copyright A.Grimm 2026");
             Printer.println(" | | |_ | |  | | |______| |  _ < / _` / __| |/ __|   ");
             Printer.println(" | |__| | |__| |          | |_) | (_| \\__ \\ | (__    Maximum memory (KBytes): " + lMaxMemory);
             Printer.println("  \\_____|_____/           |____/ \\__,_|___/_|\\___|   Free memory (KBytes): " + lFreeMem);
@@ -251,6 +263,8 @@ public class Basic {
         if (oCommandLine != null && oCommandLine.hasOption("v")) {
             String strLogLevel = oCommandLine.getOptionValue("v");
             String strLogLevelList = "trace|debug|info|warning";
+
+            oLogger.setLogLevel(EnvParam.getString("log_level"));
 
             if (strLogLevelList.contains(strLogLevel.toLowerCase(Locale.ROOT))) {
                 oLogger.setLogLevel(strLogLevel);
@@ -264,7 +278,7 @@ public class Basic {
             oLogger.debug("Display help message...");
 
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("java -jar BASIC-<build-name>.jar <filename.bas>", oOptions);
+            formatter.printHelp("java -jar BASIC-<build-name>.jar [<filename.bas>]", oOptions);
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("d")) {
@@ -272,14 +286,24 @@ public class Basic {
             oLogger.debug("Dartmouth mode selected...");
         }
 
+        if (oCommandLine != null && oCommandLine.hasOption("r")) {
+            _bEditorFlag = false;
+            oLogger.debug("Direct execution mode selected...");
+        }
+
         if (oCommandLine != null) {
             List<String> astrArguments = oCommandLine.getArgList();
 
             if (astrArguments.isEmpty()) {
-                oLogger.error("Program file name missing...");
-                Printer.println("");
-                Printer.println("usage: java -jar BASIC-<build-name>.jar <filename.bas>");
-                Printer.println("where <filename.bas> is a relative path to a .bas program to run.");
+                // No program file provided; start with empty program in line editor
+                oLogger.info("Starting with empty program in line editor mode...");
+                _bEditorFlag = true;
+                oProgram.load("<empty>", "");
+
+                Basic oBasic = new Basic();
+                oLogger.info("Run the interpreter...");
+                oBasic.interpret(oProgram);
+
                 System.exit(-1);
             }
 
