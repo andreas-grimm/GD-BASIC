@@ -1,0 +1,54 @@
+================================================================================
+  GD-BASIC (GriCom Diminutive BASIC Interpreter) - Line Editor Help
+================================================================================
+
+BASIC PROGRAM ENTRY:
+  <line-number> <statement>
+    Enter a BASIC program line with a line number and statement.
+    Example: 10 PRINT "HELLO WORLD"
+
+EDITOR COMMANDS:
+
+  LIST
+    Display the current program source code.
+    Example: LIST
+
+  RUN
+    Parse and execute the current program.
+    Example: RUN
+
+  LOAD <filename>
+    Load a BASIC program from a file.
+    Example: LOAD program.bas
+
+  SAVE <filename>
+    Save the current program to a file (file must not already exist).
+    Example: SAVE output.bas
+
+  DELETE <line-number>
+    Delete a single line from the program.
+    Example: DELETE 100
+
+  DELETE <line-begin> <line-end>
+    Delete a range of lines from the program (inclusive).
+    Example: DELETE 100 200
+
+  DELETE <line-begin>,<line-end>
+    Delete a range of lines using comma syntax.
+    Example: DELETE 100,200
+
+  EXIT | BYE | QUIT
+    Exit the BASIC interpreter.
+    Example: EXIT
+
+  HELP
+    Display this help information.
+    Example: HELP
+
+NOTES:
+  - Line numbers should start at 10 and increment by 10 (convention).
+  - Multiple statements on one line can be separated by colons.
+  - Programs must end with an END statement.
+  - Variable suffixes: % (integer), & (long), $ (string), ! (double), @ (boolean)
+
+================================================================================

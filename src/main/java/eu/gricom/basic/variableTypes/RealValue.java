@@ -21,7 +21,7 @@ public class RealValue implements Value {
     private double _fValue;
 
     // BCD Representation
-    private final int _iMaxNumOfDigits = EnvParam.getMAX_BCD_DIGITS(); // max value of float + decimal point
+    private final int _iMaxNumOfDigits = EnvParam.getMaxBcdDigits();
     private char[] _aiBCDValue = new char[_iMaxNumOfDigits];
     private char[] _aiBCDMaxValue = new char[_iMaxNumOfDigits];
     private char[] _aiBCDMinValue = new char[_iMaxNumOfDigits];

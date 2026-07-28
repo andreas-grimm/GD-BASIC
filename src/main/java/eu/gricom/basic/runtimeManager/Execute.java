@@ -79,7 +79,9 @@ public class Execute {
                 System.exit(-1);
             }
         } catch (Exception eException) {
-            eException.printStackTrace();
+            if (!eException.getClass().getName().contains("EndOfProgramException")) {
+                eException.printStackTrace();
+            }
         }
     }
 

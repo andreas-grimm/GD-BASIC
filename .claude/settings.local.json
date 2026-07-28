@@ -16,7 +16,9 @@
       "Bash(git push *)",
       "Bash(mvn test *)",
       "Bash(/usr/libexec/java_home -v 21)",
-      "Bash(/usr/libexec/java_home -a)"
+      "Bash(/usr/libexec/java_home -a)",
+      "Bash(/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/bin/java *)",
+      "Bash(JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home mvn clean *)"
     ]
   }
 }

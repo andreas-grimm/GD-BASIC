@@ -1,0 +1,8 @@
+#!/bin/sh
+tput clear
+VERSION=0.2.0
+RELEASE_LEVEL=java21
+
+echo "--- Basic Regression Test ---"
+echo "Test run: src/test/resources/test_basic_jasic_1_recoded.bas"
+java -jar target/BASIC-$VERSION-jar-with-dependencies.jar src/test/basic/test_basic_jasic_1_recoded.bas

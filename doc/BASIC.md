@@ -1,9 +1,9 @@
 # GD-BASIC Language Reference
 
-**Version:** 0.2.0  
+**Version:** 0.2.0+  
 **Interpreter:** GriCom Diminutive BASIC Interpreter  
 **Language:** Java 21  
-**Last Updated:** 2026-06-16
+**Last Updated:** 2026-07-26 10:40 UTC
 
 ---
 
@@ -16,6 +16,174 @@ If the functionality of the interpreter does not match the documentation, refer 
 GitHub. Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
 > **Updated for v0.2.0**: The `#` suffix for real variables has been removed. Variables without a suffix now default to Real type (floating-point). Examples throughout this document reflect the current syntax.
+
+> **Updated for v0.2.0+**: Interactive line editor now supports LOAD, SAVE, DELETE, and HELP commands. See Line Editor section below.
+
+---
+
+## Interactive Line Editor (v0.2.0+)
+
+**Last Updated:** 2026-07-26
+
+The GD-BASIC interpreter includes an interactive line editor for interactive program development. All program files are loaded into this editor by default.
+
+### Editor Commands
+
+#### LIST
+Display the current program source code in order of line numbers.
+
+**Syntax:** `LIST`
+
+**Example:**
+```
+>LIST
+10 PRINT "HELLO WORLD"
+20 PRINT "This is line 20"
+30 END
+>
+```
+
+#### RUN
+Parse and execute the current program. The program must contain at least one line.
+
+**Syntax:** `RUN`
+
+**Error if program is empty:**
+```
+>RUN
+RUN: No program loaded. Use LOAD command or enter program lines.
+```
+
+#### LOAD
+Load a BASIC program from a file, completely replacing the current program.
+
+**Syntax:** `LOAD <filename>`
+
+**Example:**
+```
+>LOAD myprogram.bas
+Program loaded from myprogram.bas
+```
+
+**Errors:**
+- File does not exist: `File not found: filename`
+- File is empty: `Program file is empty: filename`
+
+#### SAVE
+Save the current program to a new file. **The file must not already exist** (prevents accidental overwriting).
+
+**Syntax:** `SAVE <filename>`
+
+**Example:**
+```
+>SAVE myoutput.bas
+Program saved to myoutput.bas
+```
+
+**Error if file exists:**
+```
+>SAVE myoutput.bas
+Error: File already exists: myoutput.bas
+```
+
+#### DELETE (Single Line)
+Delete a single line from the program by line number.
+
+**Syntax:** `DELETE <line-number>`
+
+**Example:**
+```
+>DELETE 20
+Deleted line 20
+```
+
+#### DELETE (Range)
+Delete a range of lines (inclusive) from the program.
+
+**Syntax:** `DELETE <start> <end>`
+
+**Example (space-separated):**
+```
+>DELETE 10 20
+Deleted lines 10 to 20
+```
+
+**Example (comma-separated):**
+```
+>DELETE 10,20
+Deleted lines 10 to 20
+```
+
+#### HELP
+Display help information for all editor commands and usage examples.
+
+**Syntax:** `HELP`
+
+**Output:** Displays comprehensive help text with:
+- BASIC program entry syntax
+- All editor commands
+- Command syntax and examples
+- Variable type information
+- Usage notes
+
+#### EXIT, BYE, QUIT
+Exit the BASIC interpreter.
+
+**Syntax:** `EXIT` or `BYE` or `QUIT`
+
+**Example:**
+```
+>EXIT
+Good bye.
+```
+
+### Entering Program Lines
+
+To add or modify lines in the program, enter a line number followed by a space and the BASIC statement:
+
+**Syntax:** `<line-number> <statement>`
+
+**Example:**
+```
+>10 PRINT "HELLO"
+>20 INPUT "Enter a number: "; N
+>30 PRINT "You entered: "; N
+>40 END
+```
+
+**Automatic Sorting:**
+Lines are automatically sorted by line number. You don't need to enter them in order:
+
+```
+>30 END
+>10 PRINT "Start"
+>20 PRINT "Next"
+>LIST
+10 PRINT "Start"
+20 PRINT "Next"
+30 END
+```
+
+### Modifying Lines
+
+To replace an existing line, re-enter the line number with the new statement:
+
+```
+>10 PRINT "Original"
+>LIST
+10 PRINT "Original"
+>10 PRINT "Modified"
+>LIST
+10 PRINT "Modified"
+```
+
+### Multiple Statements Per Line
+
+Use colons (`:`) to enter multiple statements on a single line:
+
+```
+>10 X = 5 : PRINT "X is "; X : X = X + 1
+```
 
 ---
 
