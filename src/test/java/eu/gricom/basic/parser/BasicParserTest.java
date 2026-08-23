@@ -1385,4 +1385,166 @@ public class BasicParserTest {
         }
         assertTrue(bLowerFound, "LOWER token should be recognized by the lexer");
     }
+
+    @Test
+    public void testOnGotoBasicParsing() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = "10 X% = 1\n20 ON X% GOTO 100, 200\n100 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 2, "Should have at least 2 statements");
+
+        boolean bOnGotoFound = false;
+        for (Statement oStatement : aoStatements) {
+            if (oStatement instanceof OnGotoStatement) {
+                bOnGotoFound = true;
+                break;
+            }
+        }
+        assertTrue(bOnGotoFound, "Parser should recognize ON GOTO statement");
+    }
+
+    @Test
+    public void testOnGosubBasicParsing() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = "10 X% = 1\n20 ON X% GOSUB 100, 200\n100 RETURN\n200 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 2, "Should have at least 2 statements");
+
+        boolean bOnGosubFound = false;
+        for (Statement oStatement : aoStatements) {
+            if (oStatement instanceof OnGosubStatement) {
+                bOnGosubFound = true;
+                break;
+            }
+        }
+        assertTrue(bOnGosubFound, "Parser should recognize ON GOSUB statement");
+    }
+
+    @Test
+    public void testOnGotoWithExpression() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = "10 X% = 1\n20 Y% = 1\n30 ON X% + Y% GOTO 100, 200, 300\n100 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 3, "Should have at least 3 statements");
+
+        boolean bOnGotoFound = false;
+        for (Statement oStatement : aoStatements) {
+            if (oStatement instanceof OnGotoStatement) {
+                bOnGotoFound = true;
+                OnGotoStatement oOnGoto = (OnGotoStatement) oStatement;
+                String strContent = oOnGoto.content();
+                assertTrue(strContent.contains("ON GOTO"), "Content should describe ON GOTO statement");
+                break;
+            }
+        }
+        assertTrue(bOnGotoFound, "Parser should recognize ON GOTO with expression");
+    }
+
+    @Test
+    public void testOnGotoMultipleTargets() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = "10 X% = 3\n20 ON X% GOTO 100, 200, 300, 400, 500\n100 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+
+        for (Statement oStatement : aoStatements) {
+            if (oStatement instanceof OnGotoStatement) {
+                String strContent = oStatement.content();
+                assertTrue(strContent.contains("100"), "Should contain first target");
+                assertTrue(strContent.contains("500"), "Should contain last target");
+                return;
+            }
+        }
+        fail("ON GOTO statement not found");
+    }
+
+    @Test
+    public void testOnGosubMultipleTargets() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = "10 X% = 2\n20 ON X% GOSUB 100, 200, 300, 400\n100 RETURN\n200 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+
+        for (Statement oStatement : aoStatements) {
+            if (oStatement instanceof OnGosubStatement) {
+                String strContent = oStatement.content();
+                assertTrue(strContent.contains("100"), "Should contain first target");
+                assertTrue(strContent.contains("400"), "Should contain last target");
+                return;
+            }
+        }
+        fail("ON GOSUB statement not found");
+    }
+
+    @Test
+    public void testOnGotoSingleTarget() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = "10 X% = 1\n20 ON X% GOTO 100\n100 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+        assertTrue(aoStatements.size() >= 2, "Should have at least 2 statements");
+    }
+
+    @Test
+    public void testOnGotoInvalidSyntax() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = "10 X% = 1\n20 ON X% PRINT 100\n100 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+
+        assertThrows(SyntaxErrorException.class, oParser::parse,
+            "Parser should throw exception for invalid ON syntax (PRINT instead of GOTO)");
+    }
+
+    @Test
+    public void testOnGosubInvalidSyntax() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = "10 X% = 1\n20 ON X% IF 100\n100 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+
+        assertThrows(SyntaxErrorException.class, oParser::parse,
+            "Parser should throw exception for invalid ON syntax (IF instead of GOSUB)");
+    }
+
+    @Test
+    public void testOnGotoWithComplexExpression() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strReadText = "10 X% = 2\n20 Y% = 3\n30 ON X% * Y% - 5 GOTO 100, 200, 300\n100 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strReadText);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+        List<Statement> aoStatements = oParser.parse();
+
+        assertNotNull(aoStatements, "Parser should return statements");
+
+        boolean bOnGotoFound = false;
+        for (Statement oStatement : aoStatements) {
+            if (oStatement instanceof OnGotoStatement) {
+                bOnGotoFound = true;
+                break;
+            }
+        }
+        assertTrue(bOnGotoFound, "Parser should handle complex expressions in ON GOTO");
+    }
 }

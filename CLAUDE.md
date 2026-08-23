@@ -4,9 +4,9 @@
 
 GD-BASIC (GriCom Diminutive BASIC Interpreter) is a Java 21 implementation of a Dartmouth-style BASIC interpreter. It can execute `.bas` programs, support interactive line editing, and optionally compile them to Java source code. It also serves as an embeddable scripting engine.
 
-- **Version**: 0.2.0+ (Extended)
+- **Version**: 0.2.1
 - **License**: See LICENSE.md
-- **Status**: Production Ready (1214/1214 tests passing)
+- **Status**: Production Ready (1248/1248 tests passing)
 - **Last Updated**: 2026-07-26
 
 ⚠️ **Breaking Change**: Version 0.2.0 removes the `#` suffix for real variables. Use untyped variables (no suffix) instead. See BASIC_CODING_STANDARD.md for migration guide.
@@ -29,13 +29,13 @@ mvn test -Dtest=BasicParserTest
 mvn site
 
 # Interactive mode (no file required, NEW in 0.2.0+)
-java -jar target/BASIC-0.2.0-jar-with-dependencies.jar
+java -jar target/BASIC-0.2.1-jar-with-dependencies.jar
 
 # Run with a program file
-java -jar target/BASIC-0.2.0-jar-with-dependencies.jar program.bas
+java -jar target/BASIC-0.2.1-jar-with-dependencies.jar program.bas
 
 # Direct execution (skip interactive editor)
-java -jar target/BASIC-0.2.0-jar-with-dependencies.jar -r program.bas
+java -jar target/BASIC-0.2.1-jar-with-dependencies.jar -r program.bas
 
 # Run with options
 java -jar target/BASIC-*-jar-with-dependencies.jar -v debug program.bas   # verbose logging
@@ -46,7 +46,7 @@ java -jar target/BASIC-*-jar-with-dependencies.jar -h                     # help
 
 **Requirements**: Java 21+, Maven 3.6.3+
 
-**Test Results**: 1214/1214 tests passing (100% pass rate, zero failures)
+**Test Results**: 1248/1248 tests passing (100% pass rate, zero failures)
 
 ## Architecture
 
@@ -149,7 +149,7 @@ Configuration is loaded from `src/main/resources/application.yaml` with two conf
 ```yaml
 environment:          # Default runtime settings
   app_name: GD-BASIC
-  version: 0.2.0
+  version: 0.2.1
   max_bcd_digits: 40
   dartmouth: false
   log_level: warning
@@ -180,7 +180,7 @@ JAVA_HOME=/path/to/jdk-21 log_level=debug mvn test
 The `EnvParam` singleton provides type-safe configuration access:
 
 ```java
-String version = EnvParam.getString("version");        // "0.2.0"
+String version = EnvParam.getString("version");        // "0.2.1"
 int maxDigits = EnvParam.getInt("max_bcd_digits");     // 40
 float timeout = EnvParam.getFloat("timeout_float");    // 30.5
 boolean dartmouth = EnvParam.getBoolean("dartmouth");  // false
@@ -203,7 +203,7 @@ The singleton instance is cached; reset via reflection in tests using the teardo
 | Key | Type | Default | Purpose |
 |---|---|---|---|
 | `app_name` | String | GD-BASIC | Application identifier |
-| `version` | String | 0.2.0 | Version number (displayed in splash) |
+| `version` | String | 0.2.1 | Version number (displayed in splash) |
 | `max_bcd_digits` | Integer | 40 | Maximum BCD digits for real numbers |
 | `dartmouth` | Boolean | false | Enable Dartmouth-style left-to-right evaluation |
 | `log_level` | String | warning | Default logging level (trace, debug, info, warning) |

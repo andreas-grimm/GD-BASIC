@@ -4,9 +4,9 @@
 
 &copy; 2020 - 2026 Andreas Grimm | Use according to the included licence file ([LICENSE.md](LICENSE.md))
 
-**Version:** 0.2.0+ (Extended)  
+**Version:** 0.2.1  
 **Status:** Production Ready  
-**Last Updated:** 2026-07-26
+**Last Updated:** 2026-08-24
 
 ---
 
@@ -19,9 +19,10 @@
 - ✅ **Interactive Line Editor** — Build and test programs without file setup
 - ✅ **File I/O** — LOAD, SAVE, DELETE commands in the editor
 - ✅ **Comprehensive BASIC Support** — 40+ built-in functions, 35+ statements
+- ✅ **Computed Branches** — ON GOTO and ON GOSUB for dynamic control flow
 - ✅ **Type Safety** — Strongly-typed variable system with 6 types
 - ✅ **Advanced Features** — Arrays, loops, conditionals, file operations
-- ✅ **Production Ready** — 1214/1214 tests passing, zero failures
+- ✅ **Production Ready** — 1248/1248 tests passing, zero failures
 - ✅ **Well Documented** — User guides, architecture docs, code examples
 
 ---
@@ -35,13 +36,13 @@
 java -version  # Should show Java 21 or later
 
 # Download the JAR
-# File: BASIC-0.2.0-jar-with-dependencies.jar
+# File: BASIC-0.2.1-jar-with-dependencies.jar
 ```
 
 ### Run Interactive Mode (No File Required)
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar
+java -jar BASIC-0.2.1-jar-with-dependencies.jar
 >10 PRINT "HELLO WORLD"
 >20 END
 >RUN
@@ -52,7 +53,7 @@ HELLO WORLD
 ### Load and Modify a Program
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar existing.bas
+java -jar BASIC-0.2.1-jar-with-dependencies.jar existing.bas
 >LIST
 >DELETE 15
 >30 PRINT "Modified"
@@ -62,7 +63,7 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar existing.bas
 ### Direct Execution (No Editor)
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -r -q program.bas
+java -jar BASIC-0.2.1-jar-with-dependencies.jar -r -q program.bas
 ```
 
 ---
@@ -313,7 +314,7 @@ GD-BASIC/
 │
 ├── target/
 │   ├── BASIC-0.2.0.jar ................ Standard JAR
-│   └── BASIC-0.2.0-jar-with-dependencies.jar .. Executable JAR
+│   └── BASIC-0.2.1-jar-with-dependencies.jar .. Executable JAR
 │
 └── test/system/ ....................... System tests (34+)
 ```
