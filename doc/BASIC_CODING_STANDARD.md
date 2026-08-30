@@ -1,8 +1,8 @@
 # GD-BASIC Coding Standard
 
-**Version:** 0.2.0  
+**Version:** 0.2.1  
 **Interpreter:** GriCom Basic Interpreter  
-**Last Updated:** 2026-06-16
+**Last Updated:** 2026-08-24
 
 ## Table of Contents
 
@@ -279,6 +279,67 @@ Negative literals are preserved correctly:
 30 END
 100 REM Process more
 ```
+
+### ON GOTO Statement (v0.2.1+)
+
+Computed (dynamic) jump based on an expression value.
+
+**Syntax:**
+```basic
+ON expression GOTO line1, line2, line3, ...
+```
+
+**Example:**
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOTO 100, 200, 300
+30 PRINT "Invalid choice"
+40 GOTO 9999
+100 PRINT "Option 1 selected"
+110 GOTO 9999
+200 PRINT "Option 2 selected"
+210 GOTO 9999
+300 PRINT "Option 3 selected"
+9999 END
+```
+
+**Notes:**
+- Expression is evaluated at runtime (can use variables and complex expressions)
+- Uses 1-based indexing: ON 1 jumps to first target, ON 2 to second target, etc.
+- Real numbers are automatically converted to integers (2.7 → 2)
+- If index is out of range (< 1 or > number of targets), program continues normally
+- Supports any number of targets separated by commas
+
+### ON GOSUB Statement (v0.2.1+)
+
+Computed (dynamic) subroutine call based on an expression value.
+
+**Syntax:**
+```basic
+ON expression GOSUB line1, line2, line3, ...
+```
+
+**Example:**
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOSUB 100, 200, 300
+30 PRINT "Program returned from subroutine"
+40 GOTO 9999
+100 PRINT "Subroutine 1"
+110 RETURN
+200 PRINT "Subroutine 2"
+210 RETURN
+300 PRINT "Subroutine 3"
+310 RETURN
+9999 END
+```
+
+**Notes:**
+- Works like ON GOTO but calls a subroutine instead
+- Saves return address on the stack for the RETURN statement
+- Uses 1-based indexing (same as ON GOTO)
+- Supports nested subroutine calls
+- If index is out of range, program continues without calling any subroutine
 
 ---
 

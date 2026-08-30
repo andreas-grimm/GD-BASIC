@@ -2,7 +2,93 @@
 
 All notable changes to the GD-BASIC project are documented in this file.
 
-**Last Updated:** 2026-07-26 10:40 UTC
+**Last Updated:** 2026-08-24 00:08 UTC
+
+---
+
+## [0.2.1] - 2026-08-24 (Computed Branches: ON GOTO/GOSUB)
+
+**Computed Branch Control Release**: Implementation of ON GOTO and ON GOSUB statements for dynamic control flow.
+
+### Summary
+
+This release adds computed branch functionality allowing dynamic selection of jump targets:
+- **New**: ON GOTO statement for computed unconditional jumps
+- **New**: ON GOSUB statement for computed subroutine calls
+- **New**: Expression-based index evaluation (1-based indexing)
+- **New**: Out-of-range index handling (graceful fallthrough)
+- **New**: 34 comprehensive unit tests for new functionality
+- **Enhanced**: Parser with unified statement handling for computed branches
+- **1248/1248 tests pass** ✅ (+34 new tests)
+
+### ON GOTO Statement (NEW - August 24, 2026)
+
+**Syntax**: `ON expression GOTO line1, line2, line3, ...`
+
+Evaluates expression to an integer and uses that index to select a target line number for an unconditional jump.
+
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOTO 100, 200, 300
+30 PRINT "Invalid choice"
+40 GOTO 9999
+100 PRINT "Option 1 selected"
+110 GOTO 9999
+200 PRINT "Option 2 selected"
+210 GOTO 9999
+300 PRINT "Option 3 selected"
+9999 END
+```
+
+**Features**:
+- 1-based indexing (ON 1 → first target, ON 2 → second target, etc.)
+- Supports multiple targets separated by commas
+- Evaluates complex expressions at runtime
+- Automatically converts real numbers to integers (e.g., 2.7 → 2)
+- Out-of-range indices (< 1 or > target count) continue normally without jumping
+
+### ON GOSUB Statement (NEW - August 24, 2026)
+
+**Syntax**: `ON expression GOSUB line1, line2, line3, ...`
+
+Similar to ON GOTO but calls a subroutine and saves return address for RETURN statement.
+
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOSUB 100, 200, 300
+30 PRINT "Program returned from subroutine"
+40 GOTO 9999
+100 PRINT "Subroutine 1"
+110 RETURN
+200 PRINT "Subroutine 2"
+210 RETURN
+300 PRINT "Subroutine 3"
+310 RETURN
+9999 END
+```
+
+**Features**:
+- Same indexing and expression handling as ON GOTO
+- Pushes return address to stack before jumping
+- Works seamlessly with RETURN statement
+- Allows nested subroutine calls
+
+### Implementation Details
+
+**New Classes**:
+- `OnGotoStatement.java` — Computed GOTO statement implementation
+- `OnGosubStatement.java` — Computed GOSUB statement implementation
+
+**Parser Enhancements**:
+- `parseOnStatement()` — Unified parser method for both ON GOTO and ON GOSUB
+- Handles expression parsing and target list parsing
+- Validates syntax and throws appropriate errors
+
+**Test Coverage**:
+- 12 unit tests for OnGotoStatement
+- 13 unit tests for OnGosubStatement
+- 10 parser integration tests for ON statement parsing
+- 3 system test programs demonstrating functionality
 
 ---
 

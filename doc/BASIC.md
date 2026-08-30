@@ -1,9 +1,9 @@
 # GD-BASIC Language Reference
 
-**Version:** 0.2.0+  
+**Version:** 0.2.1  
 **Interpreter:** GriCom Diminutive BASIC Interpreter  
 **Language:** Java 21  
-**Last Updated:** 2026-07-26 10:40 UTC
+**Last Updated:** 2026-08-24 00:08 UTC
 
 ---
 
@@ -914,6 +914,94 @@ Jumps to the statement at the given line number. Processes the program from that
 
       10 PRINT "Hello"
       20 GOTO 10
+
+##### `ON GOTO` Command (v0.2.1+)
+
+The `ON GOTO` command represents a computed (dynamic) jump based on the value of an expression. It evaluates 
+an expression to an integer and uses that value to select a target line number from a list.
+
+`ON <expression> GOTO <line1>, <line2>, <line3>, ...`
+
+The expression is evaluated to determine the index (1-based):
+- If expression evaluates to 1, jumps to line1
+- If expression evaluates to 2, jumps to line2
+- If expression evaluates to 3, jumps to line3
+- etc.
+
+If the index is out of range (< 1 or > number of targets), the program continues to the next statement 
+without jumping (graceful fallthrough).
+
+**Examples:**
+
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOTO 100, 200, 300
+30 PRINT "Invalid choice"
+40 GOTO 9999
+100 PRINT "Option 1 selected"
+110 GOTO 9999
+200 PRINT "Option 2 selected"
+210 GOTO 9999
+300 PRINT "Option 3 selected"
+9999 END
+```
+
+**With expression:**
+
+```basic
+10 X% = 2
+20 Y% = 1
+30 ON X% + Y% GOTO 100, 200, 300
+40 PRINT "Invalid choice"
+50 GOTO 9999
+100 PRINT "Sum is 1"
+110 GOTO 9999
+200 PRINT "Sum is 2"
+210 GOTO 9999
+300 PRINT "Sum is 3"
+9999 END
+```
+
+**Features:**
+- Expression is evaluated at runtime (supports variables and complex expressions)
+- Real numbers are automatically converted to integers (2.7 → 2)
+- 1-based indexing (follows BASIC tradition)
+- Out-of-range indices continue normally without error
+
+##### `ON GOSUB` Command (v0.2.1+)
+
+The `ON GOSUB` command is similar to `ON GOTO` but calls a subroutine instead of performing an unconditional jump. 
+It evaluates an expression to an integer and uses that value to select a target subroutine from a list. 
+The return address is saved on the stack for the `RETURN` command.
+
+`ON <expression> GOSUB <line1>, <line2>, <line3>, ...`
+
+Works identically to `ON GOTO` but:
+- Pushes the return address onto the stack before jumping
+- Works seamlessly with the `RETURN` command
+- Allows nested subroutine calls
+
+**Example:**
+
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOSUB 100, 200, 300
+30 PRINT "Program returned from subroutine"
+40 GOTO 9999
+100 PRINT "Subroutine 1"
+110 RETURN
+200 PRINT "Subroutine 2"
+210 RETURN
+300 PRINT "Subroutine 3"
+310 RETURN
+9999 END
+```
+
+**Features:**
+- Same indexing and expression handling as `ON GOTO`
+- Saves return address for `RETURN` statement
+- Supports nested subroutine calls
+- Out-of-range indices continue normally without calling any subroutine
 
 #### Conditional Process Control
 

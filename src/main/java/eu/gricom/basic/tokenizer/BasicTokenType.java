@@ -87,6 +87,7 @@ public enum BasicTokenType {
     RMDIR,
     RND,
     SIN,
+    SQL,
     SQR,
     STEP,
     STOP,

@@ -18,7 +18,9 @@
       "Bash(/usr/libexec/java_home -v 21)",
       "Bash(/usr/libexec/java_home -a)",
       "Bash(/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/bin/java *)",
-      "Bash(JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home mvn clean *)"
+      "Bash(JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home mvn clean *)",
+      "Bash(cd /Users/Andreas/Projects/Sources/Java/GD-BASIC)",
+      "Bash(grep -E \"\\(BUILD|Tests run:|Running eu.gricom.basic.*Test$\\)\")"
     ]
   }
 }

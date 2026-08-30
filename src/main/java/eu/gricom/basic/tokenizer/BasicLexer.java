@@ -42,7 +42,7 @@ public class BasicLexer implements Lexer {
                 continue;
             } else if (strProgramLine.indexOf(" ") < 0)  {
                 // line only contains line number
-                iLineNumber = Integer.parseInt(strProgramLine);
+                   iLineNumber = Integer.parseInt(strProgramLine);
                 strProgramLine = "";
             } else {
                 // isolate line number and the program line

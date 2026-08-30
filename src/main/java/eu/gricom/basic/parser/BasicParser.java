@@ -595,6 +595,11 @@ public class BasicParser implements Parser {
                     aoStatements.add(parseWhileLoop());
                     break;
 
+                // ON Token: Computed GOTO or GOSUB
+                case ON:
+                    aoStatements.add(parseOnStatement());
+                    break;
+
                 // WORD Token: This word is a variable or function, anything following is variable manipulation
                 case WORD:
                     aoStatements.add(parseWordStatement());
@@ -1271,6 +1276,51 @@ public class BasicParser implements Parser {
     }
 
     /**
+     * Parse an ON statement (either ON GOTO or ON GOSUB).
+     *
+     * @return the parsed OnGotoStatement or OnGosubStatement
+     * @throws SyntaxErrorException if parsing fails
+     */
+    private Statement parseOnStatement() throws SyntaxErrorException {
+        int iOrgPosition = _iPosition;
+        _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [ON]");
+        _oLineNumber.putLineNumber(getToken(0).getLine(), _iPosition);
+        _iPosition++;  // consume ON
+
+        Expression oSelectExpression = expression();
+
+        if (getToken(0).getType() == BasicTokenType.GOTO) {
+            _iPosition++;  // consume GOTO
+            _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOTO]");
+
+            List<String> aoTargets = new ArrayList<>();
+            aoTargets.add(consumeToken(BasicTokenType.NUMBER).getText());
+
+            while (getToken(0).getType() == BasicTokenType.COMMA) {
+                _iPosition++;  // consume comma
+                aoTargets.add(consumeToken(BasicTokenType.NUMBER).getText());
+            }
+
+            return new OnGotoStatement(iOrgPosition, oSelectExpression, aoTargets);
+        } else if (getToken(0).getType() == BasicTokenType.GOSUB) {
+            _iPosition++;  // consume GOSUB
+            _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [GOSUB]");
+
+            List<String> aoTargets = new ArrayList<>();
+            aoTargets.add(consumeToken(BasicTokenType.NUMBER).getText());
+
+            while (getToken(0).getType() == BasicTokenType.COMMA) {
+                _iPosition++;  // consume comma
+                aoTargets.add(consumeToken(BasicTokenType.NUMBER).getText());
+            }
+
+            return new OnGosubStatement(iOrgPosition, oSelectExpression, aoTargets);
+        } else {
+            throw new SyntaxErrorException("Expected GOTO or GOSUB after ON expression at line " + getToken(0).getLine());
+        }
+    }
+
+    /**
      * Parse a RETURN statement.
      *
      * @return the parsed ReturnStatement
@@ -1485,6 +1535,9 @@ public class BasicParser implements Parser {
                         break;
                     case RETURN:
                         oStatement = parseReturnStatement();
+                        break;
+                    case ON:
+                        oStatement = parseOnStatement();
                         break;
                     default:
                         // Unknown statement type in block - skip it
