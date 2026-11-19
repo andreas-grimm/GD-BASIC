@@ -3,6 +3,7 @@ package eu.gricom.basic.parser;
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.functions.Function;
 import eu.gricom.basic.helper.FileHandler;
+import eu.gricom.basic.memoryManager.FiFoQueue;
 import eu.gricom.basic.memoryManager.Program;
 import eu.gricom.basic.runtimeManager.Execute;
 import eu.gricom.basic.statements.*;
@@ -1546,5 +1547,68 @@ public class BasicParserTest {
             }
         }
         assertTrue(bOnGotoFound, "Parser should handle complex expressions in ON GOTO");
+    }
+
+    /**
+     * Regression test: a GOTO whose target is the first statement of the program (statement index 0).
+     * <p>
+     * Before the fix, GotoStatement treated statement index 0 as "not found" and threw
+     * "GOTO [unknown]: Target: 10" when jumping back to the first line of a program.
+     * <p>
+     * Expected behavior: the loop runs, jumps back to line 10 and the program reaches END.
+     */
+    @Test
+    public void testGotoToFirstStatementOfProgram() throws Exception {
+        String strProgram = "10 READ N\n20 IF N < 1 THEN 40\n30 GOTO 10\n40 END\n50 DATA 1, 2, 0";
+
+        Statement oFinal = runProgramAndGetFinalStatement(strProgram);
+
+        assertTrue(oFinal instanceof EndStatement,
+                "GOTO 10 (first statement) should jump back and the program should reach END");
+    }
+
+    /**
+     * Regression test: ON GOTO whose selected target is the first statement of the program.
+     * <p>
+     * Expected behavior: the first READ returns 1 and jumps to line 10; the second READ returns 2 and reaches END.
+     */
+    @Test
+    public void testOnGotoToFirstStatementOfProgram() throws Exception {
+        String strProgram = "10 READ N\n20 ON N GOTO 10, 40\n30 END\n40 END\n50 DATA 1, 2";
+
+        Statement oFinal = runProgramAndGetFinalStatement(strProgram);
+
+        assertTrue(oFinal instanceof EndStatement,
+                "ON GOTO selecting the first statement should jump there and reach END");
+    }
+
+    /**
+     * Helper: tokenizes, parses and runs a BASIC program held in a string.
+     * <p>
+     * Execute.runProgram() prints errors instead of throwing them, so the caller checks the last executed
+     * statement: it is END when the program ran to completion, and the failing statement otherwise.
+     *
+     * @param strProgram the BASIC source code
+     * @return the last statement that was executed
+     * @throws Exception when tokenizing or parsing fails
+     */
+    private Statement runProgramAndGetFinalStatement(final String strProgram) throws Exception {
+        // The DATA/READ queue is static and shared between tests: clear leftovers from earlier programs
+        new FiFoQueue().reset();
+
+        Lexer oTokenizer = new BasicLexer();
+        Program oProgram = new Program();
+        oProgram.load("unittest_first_line_target.bas", strProgram);
+        oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
+
+        // Same order as the interpreter (Basic.java): DATA lines are pre-run statements, parsed first
+        BasicParser oParser = new BasicParser(oProgram.getTokens(), false);
+        oProgram.setPreRunStatements(oParser.parsePreRun());
+        oProgram.setStatements(oParser.parse());
+
+        Execute oRun = new Execute(oProgram);
+        oRun.loadEnvironment();   // runs the DATA statements, which fill the READ queue
+        oRun.runProgram();
+        return oRun.getFinalStatement();
     }
 }

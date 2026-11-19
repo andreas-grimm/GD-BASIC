@@ -125,6 +125,164 @@ public final class Normalizer {
     }
 
     /**
+<<<<<<< Updated upstream
+=======
+     * Normalizes spacing around operators to ensure exactly one space before and after each operator.
+     * Handles multiple spaces and removes extra whitespace around arithmetic and assignment operators.
+     * Respects variable type suffixes (%, $, #, &, !) which should not be treated as operators.
+     *
+     * @param strInput string with potentially multiple spaces
+     * @return normalized string with consistent operator spacing
+     */
+    private static String normalizeOperatorSpacing(final String strInput) {
+        String strWork = strInput;
+        boolean bQuotationMark = false;
+
+        StringBuilder strOutput = new StringBuilder();
+
+        for (int i = 0; i < strWork.length(); i++) {
+            char cCurrentChar = strWork.charAt(i);
+
+            if (cCurrentChar == '"') {
+                bQuotationMark = !bQuotationMark;
+                strOutput.append(cCurrentChar);
+            } else if (bQuotationMark) {
+                strOutput.append(cCurrentChar);
+            } else if (isOperator(cCurrentChar)) {
+                // Check if this is a variable type suffix (%, $, #, &, !)
+                // Type suffixes appear after alphanumeric characters
+                if (isVariableTypeSuffix(cCurrentChar, strOutput, strWork, i)) {
+                    strOutput.append(cCurrentChar);
+                } else {
+                    // Check if this is part of a two-character operator (!=, <=, >=, <>)
+                    String twoCharOp = getTwoCharOperator(strWork, i);
+                    if (twoCharOp != null) {
+                        // Don't add spacing inside multi-character operators
+                        while (strOutput.length() > 0 && strOutput.charAt(strOutput.length() - 1) == ' ') {
+                            strOutput.deleteCharAt(strOutput.length() - 1);
+                        }
+                        strOutput.append(' ').append(twoCharOp).append(' ');
+                        i++; // Skip the next character (second char of two-char operator)
+                        // Skip any spaces after operator
+                        while (i + 1 < strWork.length() && strWork.charAt(i + 1) == ' ') {
+                            i++;
+                        }
+                    } else {
+                        // This is a single-character operator
+                        // Remove trailing spaces before operator
+                        while (strOutput.length() > 0 && strOutput.charAt(strOutput.length() - 1) == ' ') {
+                            strOutput.deleteCharAt(strOutput.length() - 1);
+                        }
+                        strOutput.append(' ').append(cCurrentChar).append(' ');
+
+                        // Skip any spaces after operator
+                        while (i + 1 < strWork.length() && strWork.charAt(i + 1) == ' ') {
+                            i++;
+                        }
+                    }
+                }
+            } else {
+                strOutput.append(cCurrentChar);
+            }
+        }
+
+        // Clean up any remaining multiple spaces but preserve single spaces
+        String result = strOutput.toString();
+        result = result.replaceAll("  +", " ");
+        result = result.trim();
+
+        return result;
+    }
+
+    /**
+     * Determines if a character is a variable type suffix rather than an operator.
+     * Type suffixes include %, $, #, &, ! and appear at the end of variable names.
+     *
+     * @param c character to check
+     * @param strOutput current output being built
+     * @param strInput original input string
+     * @param iIndex current index in input string
+     * @return true if this is a type suffix, false if it's an operator
+     */
+    private static boolean isVariableTypeSuffix(final char c, final StringBuilder strOutput,
+                                                  final String strInput, final int iIndex) {
+        // Only %, $, #, &, ! can be type suffixes
+        if (!(c == '%' || c == '$' || c == '#' || c == '&' || c == '!')) {
+            return false;
+        }
+
+        // Check for two-character operators that start with these characters
+        // != (not equal), and ! should not be treated as type suffix if followed by =
+        if (c == '!' && iIndex + 1 < strInput.length() && strInput.charAt(iIndex + 1) == '=') {
+            return false; // != is an operator, not a type suffix
+        }
+
+        // Check if the character before this is alphanumeric or another type suffix
+        // If so, this is likely a type suffix at the end of a variable name
+        if (strOutput.length() > 0) {
+            char cPreviousChar = strOutput.charAt(strOutput.length() - 1);
+            if (Character.isLetterOrDigit(cPreviousChar) || isVariableTypeSuffixChar(cPreviousChar)) {
+                // Now check what comes after: space, operator, or parenthesis
+                // These all indicate this is the end of the variable name
+                if (iIndex + 1 >= strInput.length()) {
+                    return true; // End of line
+                }
+                char cNextChar = strInput.charAt(iIndex + 1);
+                if (cNextChar == ' ' || isOperator(cNextChar) || cNextChar == '(' || cNextChar == ')' ||
+                    cNextChar == ',' || cNextChar == ';' || cNextChar == ':') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a character is a variable type suffix character.
+     *
+     * @param c character to check
+     * @return true if character is %, $, #, &, or !
+     */
+    private static boolean isVariableTypeSuffixChar(final char c) {
+        return c == '%' || c == '$' || c == '#' || c == '&' || c == '!';
+    }
+
+    /**
+     * Determines if the character at the given index starts a two-character operator.
+     * Two-character operators: ==, !=, <=, >=, <>
+     *
+     * @param strInput the input string
+     * @param iIndex current index
+     * @return the two-character operator string if found, null otherwise
+     */
+    private static String getTwoCharOperator(final String strInput, final int iIndex) {
+        if (iIndex + 1 >= strInput.length()) {
+            return null;
+        }
+        char c1 = strInput.charAt(iIndex);
+        char c2 = strInput.charAt(iIndex + 1);
+
+        if ((c1 == '=' || c1 == '!' || c1 == '<' || c1 == '>') && c2 == '=') {
+            return String.valueOf(c1) + c2;
+        }
+        if (c1 == '<' && c2 == '>') {
+            return "<>";
+        }
+        return null;
+    }
+
+    /**
+     * Checks if a character is an arithmetic or assignment operator.
+     *
+     * @param c character to check
+     * @return true if character is an operator (+, -, *, /, ^, %, =, !)
+     */
+    private static boolean isOperator(final char c) {
+        return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '%' || c == '=' || c == '!';
+    }
+
+    /**
+>>>>>>> Stashed changes
      * The normalizeIndex function converts the input string by removing un-needed spaces and ensures that the format of
      * the
      * line in working with the lexer.

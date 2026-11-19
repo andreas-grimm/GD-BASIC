@@ -39,5 +39,36 @@ public class GosubStatementTest {
             fail();
         }
     }
+
+    /**
+     * Regression test: statement index 0 is a valid GOSUB destination (the first statement of a program).
+     * <p>
+     * Before the fix, GosubStatement treated 0 as "not found" and threw "GOSUB [unknown]".
+     */
+    @Test
+    public void testEvaluateToFirstStatement() {
+        ProgramPointer oProgramPointer = new ProgramPointer();
+        LineNumberXRef oLineNumberObject = new LineNumberXRef();
+        Stack oStack = new Stack();
+
+        // Line 9100 is the first statement of the program: statement index 0
+        oLineNumberObject.putLineNumber(9100, 0);
+        oLineNumberObject.putStatementNumber(0, 0);
+        // The calling statement (token 10) sits at statement index 5 and must be pushed as the return point
+        oLineNumberObject.putStatementNumber(10, 5);
+
+        try {
+            oProgramPointer.setCurrentStatement(7);
+
+            GosubStatement oStatement = new GosubStatement(10, "9100");
+            oStatement.execute();
+
+            assertEquals(0, oProgramPointer.getCurrentStatement());
+            assertEquals(5, ((IntegerValue) oStack.pop()).toInt());
+
+        } catch (Exception eException) {
+            fail("GOSUB to the first statement must not fail: " + eException.getMessage());
+        }
+    }
 }
 

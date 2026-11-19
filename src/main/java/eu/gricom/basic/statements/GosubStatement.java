@@ -54,15 +54,17 @@ public final class GosubStatement implements Statement {
     public void execute() throws SyntaxErrorException, RuntimeException {
         // This class is only used for the BASIC version...
         // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
-        int iTokenNo = _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget));
-
-        if (iTokenNo != 0) {
-            _oStack.push(new IntegerValue(_oLineNumberObject.getStatementFromToken(_iTokenNumber)));
-            _oProgramPointer.setCurrentStatement(iTokenNo);
-            return;
+        // Statement index 0 is a valid target (the first statement of the program), so a missing line is detected
+        // by the exception thrown by getStatementFromLineNumber(), not by a 0 return value.
+        int iStatementNo;
+        try {
+            iStatementNo = _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget));
+        } catch (RuntimeException e) {
+            throw new SyntaxErrorException("GOSUB [unknown]: Target: " + _strTarget);
         }
 
-        throw new SyntaxErrorException("GOSUB [unknown]: Target: " + _strTarget);
+        _oStack.push(new IntegerValue(_oLineNumberObject.getStatementFromToken(_iTokenNumber)));
+        _oProgramPointer.setCurrentStatement(iStatementNo);
     }
 
     /**
