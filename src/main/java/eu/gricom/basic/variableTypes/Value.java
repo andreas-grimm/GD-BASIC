@@ -1,6 +1,7 @@
 package eu.gricom.basic.variableTypes;
 
 import eu.gricom.basic.error.DivideByZeroException;
+import eu.gricom.basic.error.OverflowException;
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.statements.Expression;
 
@@ -53,8 +54,9 @@ public interface Value extends Expression {
      * @param oValue second value for the calculation
      * @return the result of the addition
      * @throws SyntaxErrorException thrown when different types are used
+     * @throws OverflowException thrown when a BCD result needs more digits than max_bcd_digits
      */
-    Value plus(Value oValue) throws SyntaxErrorException;
+    Value plus(Value oValue) throws SyntaxErrorException, OverflowException;
 
     /**
      * Substraction of one value object with another one.
@@ -62,8 +64,9 @@ public interface Value extends Expression {
      * @param oValue subtractor for the calculation
      * @return the result of the substraction
      * @throws SyntaxErrorException thrown when different types are used
+     * @throws OverflowException thrown when a BCD result needs more digits than max_bcd_digits
      */
-    Value minus(Value oValue) throws SyntaxErrorException;
+    Value minus(Value oValue) throws SyntaxErrorException, OverflowException;
 
     /**
      * Multiplication of one value object with another one.
@@ -71,8 +74,9 @@ public interface Value extends Expression {
      * @param oValue second factor for the calculation
      * @return the result of the multiplication
      * @throws SyntaxErrorException thrown when different types are used
+     * @throws OverflowException thrown when a BCD result needs more digits than max_bcd_digits
      */
-    Value multiply(Value oValue) throws SyntaxErrorException;
+    Value multiply(Value oValue) throws SyntaxErrorException, OverflowException;
 
     /**
      * Division of one value object with another one.
@@ -81,8 +85,9 @@ public interface Value extends Expression {
      * @return the result of the division
      * @throws DivideByZeroException thrown for a division by zero
      * @throws SyntaxErrorException thrown when different types are used
+     * @throws OverflowException thrown when a BCD result needs more digits than max_bcd_digits
      */
-    Value divide(Value oValue) throws DivideByZeroException, SyntaxErrorException;
+    Value divide(Value oValue) throws DivideByZeroException, SyntaxErrorException, OverflowException;
 
     /**
      * Remainder of an integer division.
@@ -92,16 +97,7 @@ public interface Value extends Expression {
      * @throws DivideByZeroException thrown for a division by zero
      * @throws SyntaxErrorException thrown when different types are used
      */
-    Value modulo(Value oValue) throws DivideByZeroException, SyntaxErrorException;
-
-    /**
-     * Multiplication of one value object by 2, parameter times.
-     *
-     * @param oValue second factor for the calculation
-     * @return the result of the multiplication
-     * @throws SyntaxErrorException thrown when different types are used
-     */
-    Value shiftLeft(Value oValue) throws SyntaxErrorException;
+    Value modulo(Value oValue) throws DivideByZeroException, SyntaxErrorException, OverflowException;
 
     /**
      * Execution of the logical AND function.
@@ -122,23 +118,15 @@ public interface Value extends Expression {
     Value or(Value oValue) throws DivideByZeroException, SyntaxErrorException;
 
     /**
-     * Division of one value object by 2, parameter times.
-     *
-     * @param oValue divisor for the calculation
-     * @return the result of the division
-     * @throws DivideByZeroException thrown for a division by zero
-     * @throws SyntaxErrorException thrown when different types are used
-     */
-    Value shiftRight(Value oValue) throws DivideByZeroException, SyntaxErrorException;
-
-    /**
      * Calcualte the power of one value object with another one.
      *
      * @param oValue divisor for the calculation
      * @return the result of the divition
+     * @throws DivideByZeroException thrown for a zero base with a negative BCD exponent
      * @throws SyntaxErrorException thrown when different types are used
+     * @throws OverflowException thrown when a BCD result needs more digits than max_bcd_digits
      */
-    Value power(Value oValue) throws SyntaxErrorException;
+    Value power(Value oValue) throws DivideByZeroException, SyntaxErrorException, OverflowException;
 
     /**
      * smallerThan compares one value object with another one.

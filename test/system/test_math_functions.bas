@@ -29,7 +29,7 @@
 240 e% = CINT(3.7)
 250 PRINT "CINT(3.7) = ";
 260 PRINT e%
-270 IF e% != 4 THEN 9000
+270 IF e% != 3 THEN 9000
 280 f% = CINT(3.2)
 290 PRINT "CINT(3.2) = ";
 300 PRINT f%

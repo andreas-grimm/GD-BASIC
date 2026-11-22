@@ -3,7 +3,7 @@
 **Version**: 0.2.0  
 **Project**: GriCom Diminutive BASIC Interpreter  
 **Language**: Java 21  
-**Last Updated**: 2026-06-16
+**Last Updated**: 2026-11-22
 
 ---
 
@@ -371,8 +371,8 @@ public interface Value extends Expression {
     Value divide(Value oValue)
     Value modulo(Value oValue)
     Value power(Value oValue)
-    Value shiftLeft(Value oValue)
-    Value shiftRight(Value oValue)
+    // shiftLeft / shiftRight live on IntegerValue only. OperatorExpression converts both operands to
+    // INTEGER first (owner decision, 2026-11-22)
     
     // Comparisons
     Value equals(Value oValue)
@@ -392,36 +392,47 @@ public interface Value extends Expression {
 
 Type indicators based on BASIC naming conventions:
 
+The enum below is the **version 0.3.0 code** (branch `feature/bcd-arithmetic`). The 0.2.1 rules are kept below as history.
+
 ```java
 public enum VariableType {
     STRING        // suffix: $
     INTEGER       // suffix: %
     LONG          // suffix: &
-    REAL          // suffix: #
-    DOUBLE        // suffix: !
-    BOOLEAN       // suffix: @
+    REAL          // suffix: none (double precision)
+    DOUBLE        // no suffix in 0.3.0 (kept as the internal name for untyped variables, see decision D5)
+    BOOLEAN       // suffix: ! in 0.3.0 (@ in 0.2.1 only, see decision D2)
     UNDEFINED     // no suffix (defaults to REAL)
+    BCD           // suffix: # (0.3.0)
 }
 ```
 
-**Variable Type Detection**:
+**Variable Type Detection (0.2.1 code, history)**:
 - `name$` → STRING
 - `name%` → INTEGER
 - `name&` → LONG
-- `name#` → REAL
-- `name!` → DOUBLE
-- `name@` → BOOLEAN
+- `name#` → rejected with a syntax error (`VariableManagement.java:68-71`). Planned: BCD.
+- `name!` → DOUBLE (`VariableManagement.java:72-73`). Planned: BOOLEAN.
+- `name@` → BOOLEAN (`VariableManagement.java:74-75`). Planned: retired as a suffix.
 - `name` → UNDEFINED (treated as REAL)
+
+**Variable Type Detection (version 0.3.0, branch `feature/bcd-arithmetic`, implemented)**:
+- `name` (no suffix) → REAL, double precision
+- `name#` → BCD, up to 40 significant digits
+- `name!` → BOOLEAN
+- `name@` → error: `uses '@', which is not a variable suffix. Use '!' for true or false`
+- `name$`, `name%`, `name&` → unchanged
 
 #### Concrete Value Types
 
-| Class | Wraps | Operations |
-|-------|-------|-----------|
-| `RealValue` | `double` | Full numeric operations |
-| `IntegerValue` | `int` | Integer operations, modulo |
-| `LongValue` | `long` | Large integer operations |
-| `StringValue` | `String` | String concatenation, comparison |
-| `BooleanValue` | `boolean` | Logical AND, OR, negation |
+| Class | Wraps | Operations | Status |
+|-------|-------|-----------|--------|
+| `RealValue` | `double` | Full numeric operations | Implemented |
+| `IntegerValue` | `int` | Integer operations, modulo | Implemented |
+| `LongValue` | `long` | Large integer operations | Implemented |
+| `StringValue` | `String` | String concatenation, comparison | Implemented |
+| `BooleanValue` | `boolean` | Logical AND, OR, negation | Implemented |
+| `BcdValue` | `BigDecimal` (up to 40 significant digits), selected by `#` | Full arithmetic and maths functions | Implemented (0.3.0) |
 
 **Example Type Coercion**:
 ```java
@@ -1002,7 +1013,7 @@ public class Function implements Expression {
 | LEN | `Len` | `LEN(string)` | String length |
 | LEFT$ | `Left` | `LEFT$(string, count)` | Leftmost n characters |
 | RIGHT$ | `Right` | `RIGHT$(string, count)` | Rightmost n characters |
-| MID$ | `Mid` | `MID$(string, start, count)` | Substring |
+| MID$ | `Mid` | `MID$(string, start, end)` | Substring from start to end, both included |
 | CHR$ | `Chr` | `CHR$(ascii)` | Character from ASCII code |
 | ASC | `Asc` | `ASC(string)` | ASCII code of first character |
 | STR$ | `Str` | `STR$(number)` | Convert number to string |
@@ -1283,18 +1294,137 @@ public void runProgram() {
 
 Numeric utilities for decimal and precision operations.
 
-#### `BCDConverter` Class
+#### `BCDConverter` Class (0.2.x code, not used by the interpreter)
 
-Binary Coded Decimal conversions:
+Packs a `double` into packed BCD bytes and back. Source: `src/main/java/eu/gricom/basic/math/BCDConverter.java`.
 
 ```java
 public class BCDConverter {
-    public static String decimalToBCD(double dValue)
-    public static double bcdToDecimal(String strBCD)
+    public static byte[] toBCD(double fRealValue)
+    public static double toReal(byte[] abyteBCDValue)
 }
 ```
 
-Used for high-precision arithmetic in financial calculations.
+No class in `src/` calls `BCDConverter` (checked by search). It is a packing utility. It is **not** the planned `#` decimal type, which is `BcdValue` (see "BCD Arithmetic Design" below).
+
+---
+
+### BCD Arithmetic Design (version 0.3.0, branch `feature/bcd-arithmetic`)
+
+**Status:** Implemented in version 0.3.0 on branch `feature/bcd-arithmetic` (not yet merged). The decisions D1–D16 in the register above give the status of each point. The text below is the design as written before the work started.
+
+**Source:** This section replaces `requirements/BCD_ARITHMETIC_REQUIREMENTS.md` (version 1.0, 2026-05-14). That file's content is merged here. Where the requirements and the owner's decisions differ, the decision register wins.
+
+#### Decision register
+
+| ID | Topic | Decision | Status |
+|----|-------|----------|--------|
+| D1 | BCD suffix | `#` marks a decimal (BCD) variable. In 0.2.x `#` is rejected (`VariableManagement.java:68-71`), so the code change is the one that removes that check. | Implemented (checked in version 0.3.0: `a# = 1.5` prints `1.5`) |
+| D2 | `@` suffix | `@` is no longer a variable suffix. Only `!` is the boolean suffix. `@` is not in the lexer's suffix set (`Normalizer.java:210`), and `@PRAGMA` keeps its own meaning. | Implemented (checked: `c@ = 1` gives a syntax error that names `!`) |
+| D3 | Untyped variables | A variable with no suffix is REAL, double precision. `#` is not REAL. This replaces the earlier plan to reinstate `#` as REAL. | Implemented (checked: `x = 5 + 2.5` prints `7.5`) |
+| D4 | `!` suffix | `!` is BOOLEAN. In 0.2.x `!` is DOUBLE (`VariableManagement.java:72-73`). | Implemented (checked: `b! = TRUE` prints `True`) |
+| D5 | `VariableType.DOUBLE` | The internal name stays for untyped variables. Users see REAL. | Decided by owner: no change (2026-11-22, Q7) |
+| D6 | Precision | Up to **40 significant digits**. Replaces the 10-place scale in the requirements (§3.1, §6.1). Shorter numbers keep their natural length. | Implemented (40 digits, `MathContext`) |
+| D7 | Overflow | A result whose integer part needs more than 40 digits raises `OverflowException`. Digits after the decimal point are rounded to fit 40 significant digits. The requirements said overflow "is not possible" (§8.3); that is superseded. | Implemented (overflow message checked). **Confirmed by owner (2026-11-22).** |
+| D8 | Rounding | Fixed `HALF_UP`, the requirements' default (§7.1). It matches `RealValue.round` (`RealValue.java:287`). The pragma choice of modes (§7.2) is removed. | Implemented, HALF_UP. Recommended; confirm |
+| D9 | Global mode | The `--bcd` / `-B` flag, `--bcd-scale`, and `#PRAGMA BCD_ENABLE` / `BCD_DISABLE` / `BCD_SCALE` / `BCD_ROUNDING` (requirements §2, §6, §7.2) are removed. BCD is chosen per variable with `~`. | Implemented: no `--bcd` option or `BCD_*` pragma exists in the code (search found none) |
+| D10 | Output format | Plain decimal notation, trailing zeros removed. The requirements' fixed-scale examples (`0.3000000000`, §9.1) are superseded. | Implemented (checked: `2.50` prints `2.5`). **Confirmed by owner (2026-11-22).** |
+| D11 | Mixed types | `INTEGER` and `LONG` convert to BCD exactly. REAL converts to BCD with `BigDecimal.valueOf(double)`, which may lose digits (accepted in requirements §3.2). BCD converts to REAL with `doubleValue()`. A mix of BCD and another numeric type gives a BCD result. | Implemented (checked: `1234.56 + 0.1` gives `1234.66`) |
+| D12 | Maths functions | All functions run in BCD for `#` values: `ABS`, `SIN`, `COS`, `TAN`, `ATN`, `EXP`, `LOG`, `LOG10`, `SQR`, `RND`, `CDBL`, `CINT`, and `^`. The requirements (§4.3) convert to `double`; that is superseded. | Implemented for the functions tested in `BcdMathTest`. `RND` takes no argument in the code, so it is not a BCD function |
+| D13 | Division by zero | Raise the existing `DivideByZeroException`, not the `ArithmeticException` in requirements §8.1. | Implemented (`DivideByZeroException`, checked: `1/0`) |
+| D14 | Bit operations | Shift operands are integers (owner decision, 2026-11-22). A whole number of any numeric type (INTEGER, REAL, LONG, BCD) is converted to INTEGER. A fraction, a value outside the INTEGER range, text or a boolean gives a syntax error. The count uses its low five bits, as in Java. BCD `AND` and `OR` use the integer part, as for INTEGER. | Decided by owner (2026-11-22, Q6 and the integer-operand rule) |
+| D15 | Configuration | Use the existing key `max_bcd_digits` (40). The requirements' `_iBCDScale`, `--bcd-scale`, and `BCD_SCALE` are removed. | Implemented: key `max_bcd_digits` = 40 in `application.yaml` |
+| D16 | Timeline | The effort estimates in requirements §13 are not carried over. | Recommended; no change needed |
+
+#### Class design
+
+- **`BcdValue`** in `variableTypes/`, implementing `Value`. It wraps a `java.math.BigDecimal`.
+- Each arithmetic result uses `MathContext(40, RoundingMode.HALF_UP)` (D6, D8).
+- The class checks the integer-part length after each operation and throws `OverflowException` (D7). This class exists in the `error` package (implemented in version 0.3.0).
+- Constructors: from `String`, `double`, `BigDecimal`, `int`, `long`.
+- Comparisons use `compareTo`, not `equals`, because `BigDecimal.equals` treats `2.0` and `2.00` as different.
+
+#### Function support (D12)
+
+| Function | Method |
+|----------|----------------|
+| `ABS` | `BigDecimal.abs()` |
+| `SQR` | `BigDecimal.sqrt(mc)` (Java 9 and later) |
+| `EXP`, `LOG`, `LOG10`, `^` (non-integer exponent) | Series with range reduction, at 50 working digits, rounded to 40 at the end. Uses `exp(y · ln x)` for powers. |
+| `SIN`, `COS`, `TAN`, `ATN` | Series with range reduction. π is computed in code (for example, Machin's formula), not typed in. |
+| `RND`, `CDBL`, `CINT` | To be specified in Phase 3. |
+| `^` with integer exponent | `BigDecimal.pow(int, mc)` |
+
+The existing function classes in `functions/` take `Value` arguments. The BCD path adds a type check in each class (requirements §4.3 pattern). The `double` path is unchanged.
+
+#### Existing code that is affected
+
+- `RealValue.java:25-27` declares three BCD arrays (`_aiBCDValue`, `_aiBCDMaxValue`, `_aiBCDMinValue`). A search found no other use of them in that file. They are not used by arithmetic. Planned: leave them unchanged. Deleting code needs owner approval.
+- `BCDConverter` is unused in `src/` (see above).
+- Requirements §4.2 lists `Program.java`, `Basic.java`, `BasicParser.java`, and `MacroProcessor.java` changes for the global mode. Those changes are dropped under D9.
+
+#### Test plan (JUnit, positive and negative)
+
+Unit tests go in `src/test/java/eu/gricom/basic/variableTypes/BcdValueTest.java`. System programs: requirements §9.2 used `src/test/basic/`, but both `src/test/basic/` (68 entries) and `test/system/` (56 programs) exist. `CLAUDE.md` names `test/system/` for system tests. Which directory the new BCD programs use is an open choice, and the existing programs in both directories are affected by D4 (see "Impact on existing programs").
+
+| Test | Kind | Expected result |
+|------|------|-----------------|
+| `0.1 + 0.2` | Positive | `0.3` (D10) |
+| `1000.00 * 0.05` | Positive | `50` (D10) |
+| `BcdValue` with 40 significant digits | Positive | Accepted |
+| Integer part with 41 digits (a `1` followed by 40 zeros) | Negative | `OverflowException` (D7) |
+| `1 / 0` | Negative | `DivideByZeroException` (D13) |
+| `SQR(-1)` | Negative | Same error the REAL function gives |
+| `SIN(0)`, `COS(0)` | Positive | `0`, `1` |
+| `SIN(x)² + COS(x)²` | Positive | `1` to 40 digits |
+
+#### Backward compatibility
+
+- Programs without `#` run as before, provided they do not use `!` as a double (see "Impact on existing programs").
+- Requirements §11.2 suggested `amount#` → `amount~`. Under D1 the decimal suffix is `#`, so the requirement's old `amount#` (which meant Double) must not be read as REAL. Programs that used `#` for REAL were already rejected by 0.2.x, so no existing program is affected by D1.
+- The `--bcd` flag and pragmas (requirements §11.1, §11.2) are removed under D9.
+
+#### Impact on existing programs
+
+Counted with a search for a letter or digit directly before `!` (not `!=`). The count is an upper bound, because string text can match too.
+
+- About 30 `.bas` programs under `src/test/basic/`, `test/system/` and `doc/GD_Basic_Examples/` contain a `!` suffix-like pattern.
+- Example: `test/system/test_logical_operators.bas` assigns Boolean results to `a!`, `b!`, `c!`, `d!` (lines 35-45). This fits D4 (`!` is BOOLEAN).
+- Example: `src/test/basic/test_logic_not.bas` uses `result!` (line 1).
+- No program uses `#` as a suffix (search found none). D1 therefore has no existing-program impact.
+
+Under D4 the 0.2.x meaning of `!` (DOUBLE) changes. Any program that relies on `!` as a double must be changed to use untyped variables. This needs a migration note and a test run before merge.
+
+#### Suffix ambiguity check
+
+Question checked: after the change, is every suffix reading unambiguous? The check used the lexer code in `src/main/java/eu/gricom/basic/tokenizer/Normalizer.java` and the parser's keyword list in `ReservedWords.java`, and it used the test programs as examples. The tests were not run for this check; the results come from reading the code.
+
+**Rule the lexer applies** (`Normalizer.java:210-233`): a suffix character (`%`, `$`, `#`, `&`, `!`) is a suffix only when the character before it is a letter, a digit or another suffix (`Character.isLetterOrDigit`, line 224), and the character after it is a space, an operator, `(`, `)`, `,`, `;`, `:` or the end of the line (lines 228-233). A `!` followed directly by `=` is always the operator `!=` (line 216).
+
+| # | Case | Reading after the change | Status |
+|---|------|--------------------------|--------|
+| A1 | `A#` followed by space, operator, bracket or end of line | BCD variable `A` | Resolved |
+| A2 | `#` used on a REAL name | Not possible after D3 (REAL has no suffix) | Resolved |
+| A3 | `#` used with `!` or `@` | Not possible: each name has at most one suffix | Resolved |
+| A4 | `#PRAGMA` (in the requirements' examples) | Pragmas are `@PRAGMA` (`ReservedWords.java:25`); `#` no longer starts a pragma | Resolved; requirements examples are obsolete |
+| A5 | `@` as a boolean suffix | Not in the lexer's suffix set (`Normalizer.java:210`); D2 retires it | Resolved by D2 |
+| A6 | A line whose first token is `!`, for example `20 ! Comment` | **Checked in 0.3.0:** the line is accepted as a comment (`20 ! Comment` followed by `PRINT 1` prints `1`). A `!` after a colon is accepted with the warning `Comment after colon: use REM in place of !`. | **Implemented** (owner's design). Use `REM` in new programs |
+| A6b | `!` after a colon, for example `10 PRINT A : ! Comment` | **Checked in 0.3.0:** the line runs; the text after `!` is a comment, and the warning `Comment after colon: use REM in place of !` is logged. The `PRINT` before the colon still runs (`PRINT 1 : ! c` prints `1.0`, and the next line runs). **Owner's design:** a warning, not a comment. | **Implemented** (owner's design). Use `REM` in new programs |
+| A7 | `A!=TRUE` (no space before `=`) | **Owner's design:** a `!` directly after a name is the boolean suffix. **Checked in 0.3.0:** `A!=1 == 1` and `OTHER!=FALSE` are accepted as assignments to `A!` and `OTHER!`. | **Implemented** |
+| A8 | `10#` or `1.5#` | **Checked in 0.3.0:** `X = 10#` gives `Syntax Error: the decimal suffix '#' cannot follow a number` when the program is parsed. | **Implemented** (owner's design: invalid) |
+| A11 | Number assigned to a `!` variable | A number is converted: 0 gives TRUE, any other number gives FALSE (owner's rule, 2026-11-22, Q1). Text is rejected. Implemented; covered by `VariableManagementTest` and `test/system/test_variable_types.bas`. | Resolved |
+| A12 | `NOT` on a number | For a number, `NOT` gives the bitwise complement: `NOT x` is `-x - 1` (owner's rule, 2026-11-22, Q4). `PRINT !1` is a syntax error. | Resolved |
+| A9 | `%` and `&` as operators, for example `17 % 5` in `test/system/test_arithmetic_operators.bas:40` | A space before the operator means the previous character is not a name character, so no suffix is read | Resolved for spaced operators. `A%5` with no spaces is read as an operator, not a suffix |
+| A10 | Messages that describe the old meaning, for example `Use untyped (no suffix) or '!' for real numbers` | **Checked in 0.3.0:** the old message text no longer exists in the code. | **Resolved** |
+
+**Answer (as written before the work started):** The change removes the ambiguities between `#` and REAL, between `@` and `!`, and between `#` and pragmas. A7 is resolved once the lexer checks the suffix before `!=` (one code change, `Normalizer.java:216`). A8 is resolved as "invalid". A6 and A6b are not yet decided: the built jar rejects those lines, and the warning behaviour the owner described needs a specification. A11 and A12 are defects found during this check.
+
+#### Status of the open decisions (updated 2026-11-22)
+
+- **Closed by the owner (2026-11-22):** A11 (number to `!`: 0 gives TRUE, other numbers FALSE), A12 (`NOT` on a number is the bitwise complement), D5 (no change, the name `DOUBLE` stays), D14 and the integer-operand rule for shifts, `MID$` (start and end, both included), `CINT` (truncation), the comma in `PRINT` (no space added).
+- **Implemented and checked:** A6 and A6b (comment at the start of a line, and a warning after a colon), A7 (`A!=TRUE`), A8 (`10#` is a syntax error), A10 (the old message text is gone).
+- **Confirmed by the owner (2026-11-22):** D7 (overflow and rounding rule) and D10 (output format).
+- **Still open:** shift counts outside 0 to 31 (the code uses the low five bits, see `doc/BASIC.md`, Shift Operators).
 
 ---
 
@@ -1513,8 +1643,8 @@ AssignStatement.execute()
       ├─ Determine VariableType from variable name suffix
       │   ├─ "$" → STRING, store in _moStrings
       │   ├─ "%" → INTEGER, store in _moIntegers
-      │   ├─ "#" → REAL, store in _moReals
-      │   └─ no suffix → UNDEFINED (REAL)
+      │   ├─ "#" → BCD, store in _moBcds (0.3.0; 0.2.1 rejected "#")
+      │   └─ no suffix → UNDEFINED (REAL, store in _moReals)
       └─ Type coercion if needed
 
 VariableExpression.evaluate()
@@ -3032,24 +3162,26 @@ No measurable impact on overall interpreter performance.
 
 BASIC variables are identified by **type suffix characters** at the end of the variable name:
 
-| Suffix | Type | Java Class | Range/Size |
-|--------|------|-----------|-----------|
-| `$` | String | `StringValue` | Unlimited |
-| `%` | Integer | `IntegerValue` | -2,147,483,648 to 2,147,483,647 |
-| `&` | Long | `LongValue` | -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 |
-| `#` | Real (Double) | `RealValue` | IEEE 754 double precision |
-| `!` | Boolean | `BooleanValue` | true, false |
-| (none) | Default (Real) | `RealValue` | IEEE 754 double precision |
+| Suffix | Type | Java Class | Range/Size | Status |
+|--------|------|-----------|-----------|--------|
+| `$` | String | `StringValue` | Unlimited | Implemented |
+| `%` | Integer | `IntegerValue` | -2,147,483,648 to 2,147,483,647 | Implemented |
+| `&` | Long | `LongValue` | -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 | Implemented |
+| `#` | Decimal (BCD) | `BcdValue` | Up to 40 significant digits | Implemented (0.3.0; rejected in 0.2.1) |
+| `!` | Boolean | `BooleanValue` | true, false | Implemented (0.3.0; in 0.2.1 it is DOUBLE) |
+| `@` | Boolean | `BooleanValue` | true, false | 0.2.1 only; error in 0.3.0 (decision D2) |
+| (none) | Default (Real) | `RealValue` | IEEE 754 double precision | Implemented |
 
 #### Valid Variable Names
 
 ```basic
-A#          ' Real number
-A%          ' Integer
-A&          ' Long integer
-A$          ' String
-A!          ' Boolean
-A           ' Default = Real (A#)
+A           ' Real, double precision (implemented)
+A%          ' Integer (implemented)
+A&          ' Long integer (implemented)
+A$          ' String (implemented)
+A@          ' Error in 0.3.0 (was Boolean in 0.2.1)
+A!          ' Boolean (implemented in 0.3.0; in 0.2.1 this is a Double)
+A#          ' Decimal, up to 40 significant digits (implemented in 0.3.0)
 MY_VAR%     ' Multi-word integer with underscore
 ```
 
@@ -3157,7 +3289,7 @@ GD-BASIC provides comprehensive built-in function library:
 | `TAN` | `radians` | Real | Tangent: `TAN(PI/4)` ≈ `1` |
 | `INT` | `number` | Integer | Floor (truncate toward zero) |
 | `RND` | `[max]` | Real | Random 0 to 1 (or 0 to max) |
-| `CINT` | `number` | Integer | Convert to integer (with rounding) |
+| `CINT` | `number` | Integer | Convert to integer (the fraction is removed) |
 | `CDBL` | `number` | Real | Convert to real number |
 
 #### String Functions
@@ -3167,7 +3299,7 @@ GD-BASIC provides comprehensive built-in function library:
 | `LEN` | `string` | Integer | String length |
 | `LEFT$` | `string, count` | String | Leftmost `count` characters |
 | `RIGHT$` | `string, count` | String | Rightmost `count` characters |
-| `MID$` | `string, start[, count]` | String | Substring from position |
+| `MID$` | `string, start, end` | String | Characters from start to end, both included |
 | `STR$` | `number` | String | Convert number to string |
 | `VAL` | `string` | Real | Convert string to number |
 | `UPPER$` | `string` | String | Convert to uppercase (if supported) |
@@ -3666,8 +3798,8 @@ public class NewTypeValue implements Value {
 **Step 2**: Register in `VariableManagement.java`:
 ```java
 // In putMap() method, add type detection:
-if (strKey.contains("~")) {  // Use ~ as example suffix
-    eVariableType = VariableType.NEWTYPE;
+if (strKey.contains("#")) {  // # is the BCD suffix (see "BCD Arithmetic Design")
+    eVariableType = VariableType.BCD;
 }
 
 // Add type mapping logic
@@ -3676,16 +3808,18 @@ if (strKey.contains("~")) {  // Use ~ as example suffix
 **Step 3**: Add to `VariableType` enum:
 ```java
 public enum VariableType {
-    STRING, INTEGER, LONG, REAL, DOUBLE, BOOLEAN, NEWTYPE
+    STRING, INTEGER, LONG, REAL, DOUBLE, BOOLEAN, BCD
 }
 ```
 
 **Step 4**: Update variable routing in `VariableManagement`:
 ```java
-case NEWTYPE:
-    _moNewTypes.put(strName, (NewTypeValue) oValue);
+case BCD:
+    _moBcds.put(strName, (BcdValue) oValue);
     break;
 ```
+
+The `#` example above is the BCD type (implemented in 0.3.0). The steps show the pattern for adding any new suffix.
 
 ---
 
@@ -3806,7 +3940,7 @@ case NEWTYPE:
 1. Create class `NewValue implements Value`
 2. Implement all arithmetic/comparison operations
 3. Register in `VariableManagement` type routing
-4. Add type suffix character (e.g., `var~` for new type)
+4. Add a type suffix character that is not already in `Normalizer.java:210` (for example, check the list first)
 
 ---
 

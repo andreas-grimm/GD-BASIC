@@ -32,8 +32,8 @@ A complete BASIC interpreter written in Java that:
 - ✅ Interactive line editor with LOAD/SAVE commands
 - ✅ Supports multiple BASIC dialects (Dartmouth, TRS-80, PET, Apple)
 - ✅ 40+ built-in functions (PRINT, INPUT, SIN, RND, etc.)
-- ✅ Full type system (Integer, Real, String, Long, Double, Boolean)
-- ✅ 1248 comprehensive unit tests (100% pass rate)
+- ✅ Type system (Integer, Real, String, Long, Boolean, decimal BCD `#` in version 0.3.0 on branch `feature/bcd-arithmetic`)
+- ✅ 1435 comprehensive unit tests (100% pass rate) and 62 system test programs
 - ✅ Optional Java code generation
 
 ---
@@ -45,7 +45,7 @@ Java Version:    21+
 Maven:           3.6.3+
 Files:           60+ Java source files
 Main Code:       ~15,000 lines
-Tests:           1248 (100% passing)
+Tests:           1435 unit (100% passing); 62 system programs
 Status:          Production Ready
 ```
 
@@ -295,7 +295,7 @@ java -jar target/BASIC-*.jar -r test_program.bas
 2. **Check tests** - Best examples of how to use code
 3. **Use verbose mode** - `java -jar BASIC-*.jar -v debug program.bas`
 4. **Study existing statements** - All follow same pattern
-5. **Keep tests passing** - 1248 tests are your safety net
+5. **Keep tests passing** - 1435 tests are your safety net
 
 ---
 
@@ -326,7 +326,7 @@ cat /Users/andreas/JottaCloud/Notes/Projects/GD-Basic/doc/INDEX.md
 
 ---
 
-**Version**: 0.2.1  
+**Version**: 0.3.0  
 **Updated: 2026-08-31
 **Status**: Production Ready ✓
 

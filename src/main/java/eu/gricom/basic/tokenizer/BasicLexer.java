@@ -72,7 +72,8 @@ public class BasicLexer implements Lexer {
                 String[] astrWords = strProgramLine.split("\\s");
 
                 // and iterate over them
-                for (String strWord : astrWords) {
+                for (int iWordIndex = 0; iWordIndex < astrWords.length; iWordIndex++) {
+                    String strWord = astrWords[iWordIndex];
 
                     // eliminate all empty strings
                     if (strWord.length() <= 0) {
@@ -103,6 +104,17 @@ public class BasicLexer implements Lexer {
                         // compare the word with the list of reserved words
                         int iIndex = ReservedWords.getIndex(strWord);
 
+                        // String functions have a $ at the end (STR$, CHR$, LEFT$ ...). If the full word is not a
+                        // reserved word, the name without the $ is looked up, so that "STR$(" is the STR function
+                        // and not an array. The token keeps the text with the $ (bug fixed in Phase 7).
+                        // Only when the word is followed by "(" (a function call). "str$ = ..." stays a variable name.
+                        boolean bFunctionCall = java.util.regex.Pattern
+                                .compile(java.util.regex.Pattern.quote(strWord) + "\\s*\\(")
+                                .matcher(strProgramLine).find();
+                        if (iIndex == -1 && bFunctionCall && strWord.endsWith("$") && strWord.length() > 1) {
+                            iIndex = ReservedWords.getIndex(strWord.substring(0, strWord.length() - 1));
+                        }
+
                         if (iIndex != -1) {
                             // we found a reserved word...
                             BasicTokenType oTokenType = ReservedWords.getTokenType(iIndex);
@@ -117,6 +129,34 @@ public class BasicLexer implements Lexer {
                             }
 
                             oToken = new Token(strWord, oTokenType, iLineNumber);
+
+                        // a "!" on its own is a comment marker (decision A6 and A6b):
+                        // at the start of a line it is a comment; after a colon it gives a warning and is a comment.
+                        } else if (strWord.equals("!")) {
+                            Token oLastToken = aoTokens.isEmpty() ? null : aoTokens.get(aoTokens.size() - 1);
+                            boolean bFirstOnLine = oLastToken == null || oLastToken.getLine() != iLineNumber;
+
+                            if (bFirstOnLine) {
+                                aoTokens.add(new Token(strProgramLine, BasicTokenType.REM, iLineNumber));
+                                break;
+                            }
+                            if (oLastToken.getType() == BasicTokenType.COLON) {
+                                _oLogger.warning("Comment after colon: use REM in place of !");
+                                aoTokens.add(new Token(strProgramLine, BasicTokenType.REM, iLineNumber));
+                                break;
+                            }
+                            throw new SyntaxErrorException("Syntax Error: '!' starts a comment only at the start of a"
+                                    + " line or after ':' in Line [" + iLineNumber + "]");
+
+                        // a "!" inside an expression (not "!=", and not a name suffix) is a syntax error (decision Q2)
+                        } else if (strWord.startsWith("!") && !strWord.startsWith("!=")) {
+                            throw new SyntaxErrorException("Syntax Error: '!' is not valid inside an expression: "
+                                    + strWord + " in Line [" + iLineNumber + "]");
+
+                        // a decimal suffix "#" directly after a number is not valid (decision A8)
+                        } else if (strWord.matches("[0-9][0-9.]*#")) {
+                            throw new SyntaxErrorException("Syntax Error: the decimal suffix '#' cannot follow a number: "
+                                    + strWord + " in Line [" + iLineNumber + "]");
 
                         // ok - this is not reserved word - so maybe it is a number?
                         } else if (isNumber(strWord)) {

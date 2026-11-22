@@ -1,5 +1,7 @@
 # GD-BASIC System Tests Summary
 
+> **Status note (2026-11-22, version 0.3.0):** This file is a snapshot from May 2026. Its counts and per-statement percentages are not current. The current suite has 62 programs and 1435 unit tests; see `README.md` in this folder and `run_all_tests.sh`.
+
 ## New File Operations Tests (May 30, 2026)
 
 Comprehensive system integration test suite created to validate the four new file operation statements and existing file I/O functionality.

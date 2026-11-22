@@ -1,6 +1,5 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.memoryManager.LineNumberXRef;
 import eu.gricom.basic.memoryManager.ProgramPointer;
 import eu.gricom.basic.memoryManager.Stack;
@@ -43,14 +42,12 @@ public class ReturnStatement implements Statement {
 
         int iTargetLineNumber = ((IntegerValue) oStack.pop()).toInt();
 
-        if (iTargetLineNumber == 0) {
-            throw new SyntaxErrorException("Undefined Jump Target");
-        } else {
-            oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
-                    oLineNumberObject.getNextLineNumber(
-                            oLineNumberObject.getLineNumberFromToken(
-                                    oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
-        }
+        // Statement number 0 is a valid target (a GOSUB as the first statement of a program), so it is not rejected here.
+        // An empty stack is reported by Stack.pop() as EmptyStackException.
+        oProgramPointer.setCurrentStatement(oLineNumberObject.getStatementFromLineNumber(
+                oLineNumberObject.getNextLineNumber(
+                        oLineNumberObject.getLineNumberFromToken(
+                                oLineNumberObject.getTokenFromStatement(iTargetLineNumber)))));
 
     }
 

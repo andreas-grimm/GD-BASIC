@@ -1,3 +1,2 @@
-10 IF DIREXISTS("/tmp") THEN
-20 PRINT "Directory exists"
-30 END
+10 IF DIREXISTS("/tmp") THEN PRINT "Directory exists"
+20 END

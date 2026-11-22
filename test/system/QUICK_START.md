@@ -28,7 +28,7 @@ GD-BASIC System Test Suite
 Project Root: /path/to/GD-BASIC
 Test Directory: /path/to/GD-BASIC/test/system
 
-Using JAR: target/BASIC-0.1.1-jar-with-dependencies.jar
+Using JAR: target/BASIC-0.3.0-jar-with-dependencies.jar
 
 Running test: test_arithmetic_operators
 ✓ PASSED: test_arithmetic_operators
@@ -39,7 +39,7 @@ Running test: test_comparison_operators
 Running test: test_logical_operators
 ✓ PASSED: test_logical_operators
 
-... (all 26 tests) ...
+... (all 62 programs) ...
 
 ========================================================================
 TEST SUITE COMPLETED SUCCESSFULLY
@@ -47,8 +47,8 @@ TEST SUITE COMPLETED SUCCESSFULLY
 All tests passed!
 
 Summary:
-  Total tests: 26
-  Passed: 26
+  Total tests: 62
+  Passed: 62
   Failed: 0
 ```
 
@@ -117,6 +117,8 @@ mvn clean package
 ```
 
 ### Test fails
+
+A test fails when the interpreter exits with a code other than 0, or when the program prints `ERROR: Test failed`. Parse and runtime errors exit with code 1 (version 0.3.0).
 
 If a test fails, the runner will:
 1. Stop immediately

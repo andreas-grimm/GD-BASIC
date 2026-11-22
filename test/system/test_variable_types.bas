@@ -11,8 +11,8 @@
 60 PRINT "intVar% = ";
 70 PRINT intVar%
 80 IF intVar% != 42 THEN 9000
-90 REM Test real variable (#)
-100 PRINT "Testing Real Variable (#):"
+90 REM Test real variable (no suffix = REAL, double precision)
+100 PRINT "Testing Real Variable (no suffix):"
 110 realVar = 3.14159
 120 PRINT "realVar = ";
 130 PRINT realVar
@@ -38,6 +38,12 @@
 305 GOTO 9000
 310 IF boolFalse! THEN 9000
 320 PRINT "boolFalse! is FALSE (correct)"
+321 REM A number stored in a boolean (!) name: 0 gives TRUE, any other number gives FALSE (owner rule, Q1)
+322 zeroFlag! = 0
+323 IF NOT zeroFlag! THEN 9000
+324 nonZeroFlag! = 5
+325 IF nonZeroFlag! THEN 9000
+326 PRINT "Number to boolean: 0 is TRUE, 5 is FALSE (correct)"
 330 REM Test long variable (&)
 340 PRINT "Testing Long Variable (&):"
 350 longVar& = 1000000

@@ -36,12 +36,12 @@
 1260 WHILE NOT EOF(1)
 1270    FGET 1, C$
 1280    IF C$ != "EOF" THEN
-1290       IF C$ = " " THEN
+1290       IF C$ == " " THEN
 1300          FPUT 2, "_"
 1310       ELSE
 1320          FPUT 2, C$
-1330       END IF
-1340    END IF
+1330       END-IF
+1340    END-IF
 1350 WEND
 1360 
 1370 FCLOSE 1 "DELETE"

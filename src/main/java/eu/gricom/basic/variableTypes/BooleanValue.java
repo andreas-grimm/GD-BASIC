@@ -196,15 +196,7 @@ public class BooleanValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " '%' for boolean expression is not defined");
     }
 
-    @Override
-    public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
-        throw new SyntaxErrorException(oValue.content() + " '<<' for boolean expression is not defined");
-    }
 
-    @Override
-    public final Value shiftRight(final Value oValue) throws SyntaxErrorException {
-        throw new SyntaxErrorException(oValue.content() + " '>>' for boolean expression is not defined");
-    }
 
     @Override
     public final Value and(final Value oValue) throws SyntaxErrorException {

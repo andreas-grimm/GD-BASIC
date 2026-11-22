@@ -3,6 +3,7 @@ package eu.gricom.basic.functions;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.statements.Expression;
 import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
@@ -37,12 +38,13 @@ public final class Mid {
     public static Value execute(final Expression oValue,
                                 final Expression oStartPosition,
                                 final Expression oEndPosition) throws Exception {
+        // Phase 7: a number literal such as 4 is a REAL value; a whole number is accepted as a position.
         if (oValue instanceof StringValue
-                && oStartPosition instanceof IntegerValue
-                && oEndPosition instanceof IntegerValue) {
+                && isWholeNumber(oStartPosition)
+                && isWholeNumber(oEndPosition)) {
             String strValue = oValue.toString();
-            int iStart = ((IntegerValue) oStartPosition).toInt();
-            int iEnd = ((IntegerValue) oEndPosition).toInt();
+            int iStart = (int) ((Value) oStartPosition).toReal();
+            int iEnd = (int) ((Value) oEndPosition).toReal();
 
             if (iStart < 0
                 || iEnd < 0
@@ -55,5 +57,22 @@ public final class Mid {
         }
 
         throw new RuntimeException("Input value not String, parameter not integer");
+    }
+
+    /**
+     * isWholeNumber tells whether a value is an INTEGER, or a REAL value without fraction (such as 4.0).
+     *
+     * @param oExpression the evaluated parameter
+     * @return true when the value can be used as a position
+     */
+    private static boolean isWholeNumber(final Expression oExpression) {
+        if (oExpression instanceof IntegerValue) {
+            return true;
+        }
+        if (oExpression instanceof RealValue) {
+            double dValue = ((RealValue) oExpression).toReal();
+            return dValue == Math.rint(dValue);
+        }
+        return false;
     }
 }

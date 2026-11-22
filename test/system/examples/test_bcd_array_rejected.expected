@@ -1,0 +1,1 @@
+eu.gricom.basic.error.SyntaxErrorException: Syntax Error: arrays with the '#' (BCD) suffix are not supported yet: A#-1

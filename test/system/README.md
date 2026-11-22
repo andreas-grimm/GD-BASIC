@@ -71,6 +71,7 @@ Each test file focuses on a specific feature or aspect of the BASIC language. Te
 
 **Expected Results:**
 - 4 << 1 = 8
+- Whole-number literals in shifts: `1 << 3` = 8 and `256 >> 4` = 16 (literals are REAL, but a whole number is an integer)
 - 3 << 2 = 12
 - 16 >> 1 = 8
 - 20 >> 2 = 5
@@ -208,7 +209,7 @@ Each test file focuses on a specific feature or aspect of the BASIC language. Te
 **Expected Results:**
 - ABS(-5) = 5
 - SQR(16) = 4
-- CINT(3.7) = 4 (rounding)
+- CINT(3.7) = 3 (the fraction is removed)
 - CDBL(5) = 5.0
 - SIN(0) = 0
 - COS(0) = 1
@@ -232,7 +233,7 @@ Each test file focuses on a specific feature or aspect of the BASIC language. Te
 - LEN("Hello") = 5
 - LEFT$("BASIC", 3) = "BAS"
 - RIGHT$("BASIC", 2) = "IC"
-- MID$("PROGRAMMING", 4, 4) = "GRAM"
+- MID$("PROGRAMMING", 4, 4) = "R" (start 4 to end 4, both included; the program prints the value and does not check it)
 - ASC("A") = 65
 - CHR$(65) = "A"
 - STR$(42) = "42"
@@ -325,7 +326,7 @@ Each test file focuses on a specific feature or aspect of the BASIC language. Te
 **Features:**
 - Basic output
 - Semicolon separator (no newline)
-- Comma separator (tab)
+- Comma separator (no space is added)
 - Variable output
 - Expression output
 - Empty PRINT (blank line)
@@ -708,3 +709,26 @@ When contributing new tests:
 ## License
 
 These tests are part of the GD-BASIC project and are subject to the same license terms.
+
+---
+
+## How a Test Is Judged (updated for version 0.3.0)
+
+The runner `run_all_tests.sh` uses two kinds of check:
+
+1. **Runner tests** (most programs). A program passes when:
+   - the interpreter exits with code `0`, **and**
+   - the output does not contain the failure marker `ERROR: Test failed`.
+
+   A program that stops with a parse or runtime error exits with code `1`, so it fails. Before version 0.3.0
+   the runner only looked at the exit code, which was always `0`, so some failures were not visible.
+
+2. **Example tests** (`run_example_test`). The output is compared with a saved file in `test/system/examples/`.
+   Each program can take input from a file. The fourth argument is the expected exit code:
+   - `0` for normal programs (the seven `test_bcd_*` programs, except the three below, and `BSearch`)
+   - `1` for negative tests that must stop with an error: `test_bcd_overflow`, `test_bcd_divzero`, `test_bcd_array_rejected`
+
+**Writing a new test program:** print a step description for each check. When a check fails, `GOTO` an error
+handler that prints `ERROR: Test failed` and then `END`. When every check passes, print `PASSED`.
+
+The current list of programs is in `run_all_tests.sh` (62 programs in total; 1435 unit tests in `src/test`).

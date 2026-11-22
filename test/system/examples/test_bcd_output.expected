@@ -1,0 +1,6 @@
+=== Testing BCD output format ===
+2.50 prints as 2.5
+1000 prints as 1000
+1 / 8 prints as 0.125
+0.000001 prints as 0.000001
+=== All BCD output tests PASSED ===

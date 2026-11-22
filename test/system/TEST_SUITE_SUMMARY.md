@@ -1,19 +1,24 @@
 # GD-BASIC System Test Suite - Summary
 
+> **Status (2026-11-22, version 0.3.0):** 1435 unit tests and 62 system test programs pass. The program lists below
+> were written for an earlier version. The list the runner uses is in `run_all_tests.sh`; it includes the BCD tests
+> (`test_bcd_*.bas`) and the BSearch example. Treat the lists below as historical.
+
+
 ## Overview
 
-A comprehensive test suite has been created for the GD-BASIC interpreter, containing **69 test programs** (34 system integration tests + 35 parser atomic function tests) and comprehensive unit test coverage for all major features of the BASIC language implementation.
+A comprehensive test suite has been created for the GD-BASIC interpreter, containing **69 test programs** (62 system test programs + 35 parser atomic function tests) and comprehensive unit test coverage for all major features of the BASIC language implementation.
 
 ## Test Suite Statistics (May 30, 2026)
 
 ### Unit Tests
-- **Total Unit Tests:** 941 tests
-- **Pass Rate:** 941/941 (100%)
+- **Total Unit Tests:** 1435 tests
+- **Pass Rate:** 1435/1435 (100%)
 - **Test Classes:** 106+
 - **Code Coverage:** All core interpreter functionality
 
 ### System Integration Tests
-- **Total Test Files:** 34 BASIC programs
+- **Total Test Files:** 62 BASIC programs
 - **Total Lines of Code:** 12,426+ lines
 - **Test Runner:** 1 automated shell script
 - **Documentation:** 2 comprehensive markdown files
@@ -143,7 +148,7 @@ A comprehensive test suite has been created for the GD-BASIC interpreter, contai
 
 ### run_all_tests.sh
 A comprehensive shell script that:
-- Automatically runs all 34 system integration tests in sequence
+- Automatically runs all 62 system test programs in sequence
 - Checks for JAR file existence
 - Reports pass/fail status for each test
 - Stops on first failure
@@ -154,7 +159,7 @@ A comprehensive shell script that:
 
 ### Maven Test Execution
 - Command: `mvn clean test package`
-- Runs all 941 unit tests including:
+- Runs all 1435 unit tests including:
   - 35 new parser atomic function tests
   - 28 normalizer spacing tests
   - 6 CHDIR/DIREXISTS tests
@@ -166,7 +171,7 @@ A comprehensive shell script that:
 Comprehensive documentation including:
 - Version history with 0.1.1 extensions
 - Feature descriptions and changes
-- Test statistics (941 unit tests, 34 system tests)
+- Test statistics (1435 unit tests, 62 system tests)
 - Usage instructions
 - Test coverage matrix
 - Maintenance guidelines
@@ -263,26 +268,26 @@ java -jar target/BASIC-*-jar-with-dependencies.jar test/system/test_arithmetic_o
 
 ## Expected Results
 
-### System Integration Tests (34 programs)
-All 34 tests should pass with the current GD-BASIC implementation. The test runner will:
+### System Integration Tests (62 programs)
+All 62 tests should pass with the current GD-BASIC implementation. The test runner will:
 - Display progress for each test
 - Show green checkmarks (✓) for passing tests
 - Show red X marks (✗) for failing tests
 - Stop immediately on first failure
 - Display summary statistics
 
-### Unit Tests (941 total)
+### Unit Tests (1435 total)
 - **Parser Atomic Function Tests**: 35 tests (all passing)
 - **CHDIR/DIREXISTS Tests**: 6 tests (all passing)
 - **Normalizer Tests**: 28 tests (all passing)
 - **Core Functionality Tests**: 850+ tests (all passing)
-- **Total Pass Rate**: 941/941 (100%)
+- **Total Pass Rate**: 1435/1435 (100%)
 
 ### Build Verification
 ```bash
 mvn clean test package
 # Expected output:
-# Tests run: 941, Failures: 0, Errors: 0, Skipped: 0
+# Tests run: 1435, Failures: 0, Errors: 0, Skipped: 0
 # BUILD SUCCESS
 # Total time: ~16-22 seconds
 ```
@@ -323,14 +328,14 @@ Potential additions:
 | Three-Param Functions | 100% | 2 | ✅ Pass |
 
 ### Overall Test Results (May 30, 2026)
-- **Unit Tests**: 941/941 pass ✅
-- **System Integration Tests**: 34/34 pass ✅
+- **Unit Tests**: 1435/1435 pass ✅
+- **System Integration Tests**: 62/62 pass ✅
 - **BASIC Programs**: 21/21 pass ✅
 - **Total Test Coverage**: 996/996 (100%)
 
 ## Conclusion
 
-This comprehensive test suite provides complete coverage of the GD-BASIC language implementation with **941 unit tests** and **34 system integration tests**, ensuring reliability and correctness of the interpreter. As of May 30, 2026:
+This comprehensive test suite provides complete coverage of the GD-BASIC language implementation with **1435 unit tests** and **62 system test programs**, ensuring reliability and correctness of the interpreter. As of May 30, 2026:
 
 - **All 35 previously untested functions in BasicParser.atomic() now have unit test coverage**
 - Complete CHDIR statement and DIREXISTS function implementation and testing

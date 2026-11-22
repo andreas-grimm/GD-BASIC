@@ -2,7 +2,7 @@
 
 **Welcome to GD-BASIC Documentation!**
 
-GD-BASIC (GriCom Diminutive BASIC Interpreter) is a full-featured Java 21 implementation of a Dartmouth-style BASIC interpreter with interactive line editing, 1248+ test cases, and optional Java code generation.
+GD-BASIC (GriCom Diminutive BASIC Interpreter) is a full-featured Java 21 implementation of a Dartmouth-style BASIC interpreter with interactive line editing, 1435 unit tests and 62 system test programs, and optional Java code generation.
 
 ---
 
@@ -20,8 +20,8 @@ java -jar target/BASIC-*.jar
 java -jar target/BASIC-*.jar program.bas
 ```
 
-**Status**: Production Ready (1248/1248 tests passing)  
-**Version**: 0.2.1  
+**Status**: Production Ready (1435/1435 unit tests, 62/62 system test programs passing)  
+**Version**: 0.3.0  
 **Java Version**: 21+  
 **License**: See LICENSE.md
 
@@ -63,7 +63,7 @@ java -jar target/BASIC-*.jar program.bas
 | Document | Purpose |
 |----------|---------|
 | **REFERENCE.md** | Quick lookup tables, commands, glossary |
-| **TESTING_GUIDE.md** | Test structure and patterns (1248 tests) |
+| **TESTING_GUIDE.md** | Test structure and patterns (1435 tests) |
 | **MAINTENANCE_GUIDE.md** | Building, debugging, common issues |
 | **CHANGELOG_SUMMARY.md** | Version history highlights |
 
@@ -175,7 +175,7 @@ Line Editor
 
 ```
 Maintenance      Testing         Reference
-├─ Debugging     ├─ 1248 tests    └─ Quick lookup
+├─ Debugging     ├─ 1435 tests    └─ Quick lookup
 └─ Building      └─ Patterns      └─ Glossary
 ```
 
@@ -216,8 +216,8 @@ Maintenance      Testing         Reference
 ```
 Source Files:          60+ Java files
 Main Code:             ~15,000 lines
-Test Code:             ~8,000+ lines (1248 tests)
-Test Coverage:         100% pass rate (1248/1248)
+Test Code:             ~8,000+ lines (1435 tests)
+Test Coverage:         100% pass rate (1435/1435)
 
 Key Components:
 ├─ Tokenizer           BasicLexer, Token, TokenType
@@ -257,7 +257,7 @@ doc/                           (Documentation)
 ├─ 07_VARIABLE_TYPES.md        (Type system)
 ├─ 08_LINE_EDITOR.md           (Interactive mode)
 ├─ REFERENCE.md                (Quick lookup)
-├─ TESTING_GUIDE.md            (1248 tests)
+├─ TESTING_GUIDE.md            (1435 tests)
 ├─ MAINTENANCE_GUIDE.md        (Build & debug)
 └─ CHANGELOG_SUMMARY.md        (Version history)
 

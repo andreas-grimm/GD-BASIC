@@ -17,9 +17,6 @@ graph TD
     
     B -.->|"Optional"| H["LineEditor<br/>Interactive Mode"]
     H -.->|"Commands"| I["LOAD/SAVE/LIST/RUN"]
-    
-    E -.->|"Optional"| J["CodeGenerator<br/>Java Output"]
-    J -->|".java"| K["Compiled Output"]
 ```
 
 ---
@@ -197,23 +194,29 @@ Categories:
 ```
 Type Hierarchy:
   Value (interface)
-    ├─ RealValue      (default, floating point)
+    ├─ RealValue      (default, double precision; no suffix)
     ├─ IntegerValue   (% suffix, 32-bit)
     ├─ LongValue      (& suffix, 64-bit)
     ├─ StringValue    ($ suffix, text)
-    ├─ DoubleValue    (! suffix, 64-bit float)
-    └─ BooleanValue   (@ suffix, true/false)
+    ├─ BooleanValue   (! suffix in 0.3.0; @ suffix in 0.2.x)
+    └─ BcdValue       (# suffix, decimal, up to 40 significant digits; implemented in 0.3.0)
 
-Variable Naming:
+Variable Naming (released 0.2.1; version 0.3.0 differs, see below):
   X      → Real
   I%     → Integer
   L&     → Long
   S$     → String
-  D!     → Double
+  D!     → Double (VariableManagement.java maps `!` to VariableType.DOUBLE)
   B@     → Boolean
+
+Variable Naming (version 0.3.0, branch feature/bcd-arithmetic):
+  X      → Real
+  A#     → Decimal (BCD)
+  F!     → Boolean
+  B@     → error (use `!`)
 ```
 
-**Note**: v0.2.0+ removed # suffix (was alternative Real syntax)
+**Note**: v0.2.0 removed the `#` suffix. Version 0.3.0 on branch `feature/bcd-arithmetic` uses `#` for BCD, keeps untyped variables as REAL, and makes `!` BOOLEAN. The authoritative status table is in `doc/BASIC.md`.
 
 ---
 
@@ -405,8 +408,8 @@ Input: "10 PRINT X + 5"
 ### Test Coverage
 
 ```
-Total Tests:       1248
-Passing:          1248 (100%)
+Total Tests:       1435
+Passing:          1435 (100%)
 Failing:          0
 
 Test Categories:
@@ -464,7 +467,7 @@ Benchmarks:
   - Small programs: <50ms
   - Medium programs: <200ms
   - Large programs: <1s
-  - 1248 tests run: ~5s
+  - 1435 tests run: ~5s
 ```
 
 ---
@@ -474,9 +477,9 @@ Benchmarks:
 ```
 0.1.0: Initial BASIC interpreter
 0.2.0: Added line editor, fixed types
-0.2.1: Current (v0.2.1)
-       Production ready
-       1248 tests passing
+0.2.1: Production ready (1248 tests passing)
+0.3.0: Implemented on branch feature/bcd-arithmetic (not yet merged): decimal (BCD) type with `#` suffix
+       See doc/BASIC.md
 ```
 
 ---

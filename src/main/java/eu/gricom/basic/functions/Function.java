@@ -3,6 +3,7 @@ package eu.gricom.basic.functions;
 import eu.gricom.basic.tokenizer.Token;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.statements.Expression;
+import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.Value;
 
 
@@ -248,6 +249,68 @@ public class Function implements Expression {
                 yield Upper.execute(_oFirstParam.evaluate());
             }
 
+            // CALL Token: send the payload to the URL (two parameters)
+            case CALL -> {
+                assert _oFirstParam != null;
+                assert _oSecondParam != null;
+                yield Call.execute(_oFirstParam.evaluate(), _oSecondParam.evaluate());
+            }
+
+            // DIREXISTS Token: true when the directory name exists
+            case DIREXISTS -> {
+                assert _oFirstParam != null;
+                yield DirExists.execute(_oFirstParam.evaluate());
+            }
+
+            // FEXISTS Token: true when the file name exists
+            case FEXISTS -> {
+                assert _oFirstParam != null;
+                yield FExists.execute(_oFirstParam.evaluate());
+            }
+
+            // FCOMPARE Token: compare the content of two open files (two file IDs)
+            case FCOMPARE -> {
+                assert _oFirstParam != null;
+                assert _oSecondParam != null;
+                yield FCompare.execute(fileId(_oFirstParam.evaluate()), fileId(_oSecondParam.evaluate()));
+            }
+
+            // FGETNAME Token: name of an open file (file ID)
+            case FGETNAME -> {
+                assert _oFirstParam != null;
+                yield FGetFileName.execute(fileId(_oFirstParam.evaluate()));
+            }
+
+            // FGETSIZE Token: size of an open file (file ID)
+            case FGETSIZE -> {
+                assert _oFirstParam != null;
+                yield FGetSize.execute(fileId(_oFirstParam.evaluate()));
+            }
+
+            // FISOPEN Token: true when the file ID is open
+            case FISOPEN -> {
+                assert _oFirstParam != null;
+                yield FIsOpen.execute(fileId(_oFirstParam.evaluate()));
+            }
+
+            // FLINECOUNT Token: number of lines in an open file (file ID)
+            case FLINECOUNT -> {
+                assert _oFirstParam != null;
+                yield FLineCount.execute(fileId(_oFirstParam.evaluate()));
+            }
+
+            // FMODTIME Token: last modification time of an open file (file ID)
+            case FMODTIME -> {
+                assert _oFirstParam != null;
+                yield FModTime.execute(fileId(_oFirstParam.evaluate()));
+            }
+
+            // GETCWD Token: the current working directory
+            case GETCWD -> GetCwd.execute();
+
+            // TIME Token: the current time
+            case TIME -> Time.execute();
+
             default -> throw new RuntimeException("Unknown Function Called: " + _oToken.getText());
         };
     }
@@ -300,5 +363,19 @@ public class Function implements Expression {
         }
         strReturn += "}}";
         return strReturn;
+    }
+
+    /**
+     * fileId converts a file ID value into a Java int. A file ID must be an INTEGER.
+     *
+     * @param oValue the evaluated parameter
+     * @return the file ID as int
+     * @throws RuntimeException when the value is not an INTEGER
+     */
+    private static int fileId(final Value oValue) throws RuntimeException {
+        if (oValue instanceof IntegerValue) {
+            return ((IntegerValue) oValue).toInt();
+        }
+        throw new RuntimeException("File ID is not an integer: " + oValue);
     }
 }

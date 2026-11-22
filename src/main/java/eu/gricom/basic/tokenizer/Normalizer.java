@@ -46,7 +46,8 @@ public final class Normalizer {
             cPreviousChar = cCurrentChar;
             cCurrentChar = strWork.charAt(i);
 
-            if (cCurrentChar == '[') {
+            // a "[" inside a string is text, not an index (Phase 7 fix: it used to remove the spaces of the string)
+            if (cCurrentChar == '[' && !bQuotationMark) {
                 bSquareBrackets = true;
             }
 
@@ -111,10 +112,23 @@ public final class Normalizer {
                     case '=':
                     case '>':
                     case '<':
-                    case '!':
                         // Comparison operators: don't add spaces to avoid breaking multi-char operators
                         // (e.g., >=, <=, ==, !=, <<, >>)
                         strOutput += cCurrentChar;
+                        break;
+                    case '!':
+                        // "!" directly after a name, outside brackets, is the boolean suffix (decision A7).
+                        // "A!=TRUE" becomes "A! = TRUE" (Boolean assignment). Inside brackets, and anywhere
+                        // else, "!" stays part of an operator such as "!=" (comparison).
+                        if (iParenthesisDepth == 0 && isBooleanSuffix(strWork, i, strOutput)) {
+                            strOutput += "!";
+                            if (i + 1 < strWork.length() && strWork.charAt(i + 1) == '=') {
+                                strOutput += " = ";
+                                i++;
+                            }
+                        } else {
+                            strOutput += cCurrentChar;
+                        }
                         break;
                     default:
                         strOutput += cCurrentChar;
@@ -125,15 +139,18 @@ public final class Normalizer {
     }
 
     /**
-<<<<<<< Updated upstream
-=======
      * Normalizes spacing around operators to ensure exactly one space before and after each operator.
      * Handles multiple spaces and removes extra whitespace around arithmetic and assignment operators.
      * Respects variable type suffixes (%, $, #, &, !) which should not be treated as operators.
+     * <p>
+     * Not called. It was parked in an unmerged change and conflicts with the expected output of
+     * NormalizerTest (operators outside parentheses are not spaced). The "!" suffix rule is in normalize() and
+     * isBooleanSuffix(). Kept until the owner approves removal.
      *
      * @param strInput string with potentially multiple spaces
      * @return normalized string with consistent operator spacing
      */
+    @Deprecated
     private static String normalizeOperatorSpacing(final String strInput) {
         String strWork = strInput;
         boolean bQuotationMark = false;
@@ -211,10 +228,11 @@ public final class Normalizer {
             return false;
         }
 
-        // Check for two-character operators that start with these characters
-        // != (not equal), and ! should not be treated as type suffix if followed by =
-        if (c == '!' && iIndex + 1 < strInput.length() && strInput.charAt(iIndex + 1) == '=') {
-            return false; // != is an operator, not a type suffix
+        // A suffix belongs to a variable name. The name must start with a letter, so a number such as
+        // "10#" never receives a suffix. The check is done first, so "A!=TRUE" is read as "A!" followed by "="
+        // (Boolean assignment), while "A != 2" (space before !) stays the not-equal operator.
+        if (!nameStartsWithLetter(strOutput)) {
+            return false;
         }
 
         // Check if the character before this is alphanumeric or another type suffix
@@ -235,6 +253,44 @@ public final class Normalizer {
             }
         }
         return false;
+    }
+
+    /**
+     * Checks whether the word being built at the end of the output starts with a letter.
+     * A word is a run of letters, digits and underscores directly before the current position.
+     *
+     * @param strOutput output built so far
+     * @return true if the run of name characters at the end of the output starts with a letter
+     */
+    private static boolean nameStartsWithLetter(final CharSequence strOutput) {
+        int iStart = strOutput.length();
+        while (iStart > 0 && (Character.isLetterOrDigit(strOutput.charAt(iStart - 1))
+                || strOutput.charAt(iStart - 1) == '_')) {
+            iStart--;
+        }
+        return iStart < strOutput.length() && Character.isLetter(strOutput.charAt(iStart));
+    }
+
+    /**
+     * Decides whether the "!" at a given position is the boolean suffix of a variable name (decision A7).
+     * It is a suffix when it directly follows a name that starts with a letter, and it is followed by the end of the
+     * line, a space, "=", a bracket, a comma, a semicolon or a colon.
+     *
+     * @param strInput the input line
+     * @param iIndex position of the "!"
+     * @param strOutput output built so far
+     * @return true if the "!" is a boolean suffix
+     */
+    private static boolean isBooleanSuffix(final String strInput, final int iIndex, final String strOutput) {
+        if (!nameStartsWithLetter(strOutput)) {
+            return false;
+        }
+        if (iIndex + 1 >= strInput.length()) {
+            return true;
+        }
+        char cNext = strInput.charAt(iIndex + 1);
+        return cNext == ' ' || cNext == '=' || cNext == '(' || cNext == ')' || cNext == ','
+                || cNext == ';' || cNext == ':';
     }
 
     /**
@@ -282,7 +338,6 @@ public final class Normalizer {
     }
 
     /**
->>>>>>> Stashed changes
      * The normalizeIndex function converts the input string by removing un-needed spaces and ensures that the format of
      * the
      * line in working with the lexer.

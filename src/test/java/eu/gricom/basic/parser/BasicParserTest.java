@@ -448,7 +448,7 @@ public class BasicParserTest {
         Lexer oTokenizer = new BasicLexer();
 
         // Create a simple test with DIREXISTS in an IF statement
-        String strProgram = "10 IF DIREXISTS(\"/tmp\") THEN\n20 PRINT \"exists\"\n30 END";
+        String strProgram = "10 IF DIREXISTS(\"/tmp\") THEN PRINT \"exists\"\n20 END";
         List<Token> aoTokens = oTokenizer.tokenize(strProgram);
 
         BasicParser oParser = new BasicParser(aoTokens, false);
@@ -478,7 +478,7 @@ public class BasicParserTest {
         Lexer oTokenizer = new BasicLexer();
 
         // Create a test with DIREXISTS using a variable
-        String strProgram = "10 strPath$ = \"/home\"\n20 IF DIREXISTS(strPath$) THEN\n30 PRINT \"path exists\"\n40 END";
+        String strProgram = "10 strPath$ = \"/home\"\n20 IF DIREXISTS(strPath$) THEN PRINT \"path exists\"\n30 END";
         List<Token> aoTokens = oTokenizer.tokenize(strProgram);
 
         BasicParser oParser = new BasicParser(aoTokens, false);
@@ -1610,5 +1610,35 @@ public class BasicParserTest {
         oRun.loadEnvironment();   // runs the DATA statements, which fill the READ queue
         oRun.runProgram();
         return oRun.getFinalStatement();
+    }
+
+    /**
+     * Test: a block IF with ELSE, nested inside another block IF, parses and keeps its own ELSE and END-IF.
+     * Positive test for the block IF fix (Phase 6).
+     */
+    @Test
+    public void testNestedBlockIfWithElseParses() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strProgram = "10 IF 1 > 0 THEN\n20 IF 2 > 1 THEN\n30 PRINT 1\n40 ELSE\n50 PRINT 2\n60 END-IF\n"
+                + "70 ELSE\n80 PRINT 3\n90 END-IF\n100 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strProgram);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+
+        List<Statement> aoStatements = oParser.parse();
+
+        assertTrue(aoStatements.get(0) instanceof IfThenStatement, "Outer block IF should be parsed");
+    }
+
+    /**
+     * Test: a block IF without END-IF is rejected. Negative test for the block IF fix (Phase 6).
+     */
+    @Test
+    public void testBlockIfWithoutEndIfFails() throws Exception {
+        Lexer oTokenizer = new BasicLexer();
+        String strProgram = "10 IF 1 > 0 THEN\n20 PRINT 1\n30 END";
+        List<Token> aoTokens = oTokenizer.tokenize(strProgram);
+        BasicParser oParser = new BasicParser(aoTokens, false);
+
+        assertThrows(SyntaxErrorException.class, oParser::parse);
     }
 }
