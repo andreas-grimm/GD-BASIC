@@ -1,11 +1,11 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
-import eu.gricom.basic.memoryManager.Stack;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
+import eu.gricom.basic.memorymanager.Stack;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,22 +79,22 @@ public final class IfThenStatement implements Statement {
      */
     public IfThenStatement(final Expression oCondition,
                            final int iTokenNumber,
-                           final List<Statement> aoIfBlockStatements,
-                           final List<Statement> aoElseBlockStatements,
+                           final List<Statement> voIfBlockStatements,
+                           final List<Statement> voElseBlockStatements,
                            final int iEndIfLine) {
         _iTokenNumber = iTokenNumber;
         _oCondition = oCondition;
         _strLabel = "";
-        _iElseStatement = (aoElseBlockStatements != null && !aoElseBlockStatements.isEmpty()) ? 1 : 0;
+        _iElseStatement = (voElseBlockStatements != null && !voElseBlockStatements.isEmpty()) ? 1 : 0;
         _iEndIfLine = iEndIfLine;
         _iTargetLineNumber = 0;
         _bHasBlockStatements = true;
 
-        if (aoIfBlockStatements != null) {
-            _aoIfBlockStatements.addAll(aoIfBlockStatements);
+        if (voIfBlockStatements != null) {
+            _aoIfBlockStatements.addAll(voIfBlockStatements);
         }
-        if (aoElseBlockStatements != null) {
-            _aoElseBlockStatements.addAll(aoElseBlockStatements);
+        if (voElseBlockStatements != null) {
+            _aoElseBlockStatements.addAll(voElseBlockStatements);
         }
     }
 
@@ -145,8 +145,8 @@ public final class IfThenStatement implements Statement {
 
         // This part of the method is executed if the BASIC interpreter uses labels (e.g., we are using JASIC)
         if (_oLabelStatement.containsLabelKey(_strLabel)) {
-            BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
-            if (bValue.isTrue()) {
+            BooleanValue oValue = (BooleanValue) _oCondition.evaluate();
+            if (oValue.isTrue()) {
                 _oProgramPointer.setCurrentStatement(_oLabelStatement.getLabelStatement(_strLabel));
             }
 
@@ -155,8 +155,8 @@ public final class IfThenStatement implements Statement {
 
         // For block IF statements with stored statements, execute them directly
         if (_bHasBlockStatements) {
-            BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
-            if (bValue.isTrue()) {
+            BooleanValue oValue = (BooleanValue) _oCondition.evaluate();
+            if (oValue.isTrue()) {
                 for (Statement oStatement : _aoIfBlockStatements) {
                     oStatement.execute();
                 }
@@ -169,11 +169,11 @@ public final class IfThenStatement implements Statement {
         }
 
         // Here we are using line numbers to jump to the destination. This is only done for BASIC programs.
-        BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
+        BooleanValue oValue = (BooleanValue) _oCondition.evaluate();
 
         // different to the code above: when the result of the condition is false, then ignore the next block and
         // jump to the END-IF statement.
-        if (!bValue.isTrue()) {
+        if (!oValue.isTrue()) {
             try {
 
                 int iStatementNo = 0;
@@ -200,7 +200,7 @@ public final class IfThenStatement implements Statement {
                 }
 
                 return;
-            } catch (NumberFormatException eNumberException) {
+            } catch (NumberFormatException oException) {
                 throw new SyntaxErrorException("IF [incorrect format]: Target: " + _strLabel);
             }
         }
@@ -247,12 +247,22 @@ public final class IfThenStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"IF\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"CONDITION\": "+ _oCondition.structure() +",";
-        strReturn += "\"ELSE_STATEMENT\": \""+ _iElseStatement +"\",";
-        strReturn += "\"END_IF\": \""+ _iEndIfLine +"\",";
-        strReturn += "\"TARGET_LINE\": \"" + _iTargetLineNumber +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"CONDITION\": " + _oCondition.structure() + ",";
+        strReturn += "\"ELSE_STATEMENT\": \"" + _iElseStatement + "\",";
+        strReturn += "\"END_IF\": \"" + _iEndIfLine + "\",";
+        strReturn += "\"TARGET_LINE\": \"" + _iTargetLineNumber + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the condition (used by the compiler) */
+    public Expression getCondition() {
+        return _oCondition;
+    }
+
+    /** @return the target line number of a single-line IF, 0 if none (used by the compiler) */
+    public int getTargetLineNumber() {
+        return _iTargetLineNumber;
     }
 }

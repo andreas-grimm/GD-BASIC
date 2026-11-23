@@ -2,10 +2,8 @@ package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.StringValue;
 
 /**
  * FGetStatement.java
@@ -106,9 +104,9 @@ public class FGetStatement implements Statement {
             AssignStatement oAssignStatement = new AssignStatement(_iTokenNumber, _strVariableName, oCharValue);
             oAssignStatement.execute();
 
-        } catch (Exception e) {
+        } catch (Exception oException) {
             Logger oLogger = new Logger("eu.gricom.basic.statements.FGetStatement");
-            oLogger.error(e.getMessage());
+            oLogger.error(oException.getMessage());
             System.exit(-1);
         }
     }
@@ -142,5 +140,15 @@ public class FGetStatement implements Statement {
         strReturn += "\"VARIABLE\": \"" + _strVariableName + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the FileId of this statement (used by the compiler) */
+    public int getFileId() {
+        return _iFileId;
+    }
+
+    /** @return the VariableName of this statement (used by the compiler) */
+    public String getVariableName() {
+        return _strVariableName;
     }
 }

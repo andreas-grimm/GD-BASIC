@@ -1,9 +1,9 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.io.File;
 
@@ -34,8 +34,8 @@ public class DirExists {
      */
     public static Value execute(final Value oValue) throws Exception {
         if (oValue instanceof StringValue) {
-            StringValue strValue = (StringValue) oValue;
-            File oDir = new File(strValue.toString());
+            StringValue oDirName = (StringValue) oValue;
+            File oDir = new File(oDirName.toString());
             return new BooleanValue(oDir.isDirectory());
         }
 

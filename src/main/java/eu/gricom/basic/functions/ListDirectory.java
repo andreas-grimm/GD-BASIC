@@ -1,14 +1,13 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -116,7 +115,7 @@ public class ListDirectory {
 
         try {
             // Step 4: List directory contents with filtering
-            List<String> oFileNames = Files.list(oPath)
+            List<String> vstrFileNames = Files.list(oPath)
                     .filter(path -> {
                         try {
                             // Filter based on hidden file flag
@@ -131,7 +130,7 @@ public class ListDirectory {
                             }
 
                             return true;
-                        } catch (IOException e) {
+                        } catch (IOException oException) {
                             return false;
                         }
                     })
@@ -139,11 +138,11 @@ public class ListDirectory {
                     .collect(Collectors.toList());
 
             // Step 5: Join names with semicolon separator
-            String strResult = String.join(";", oFileNames);
+            String strResult = String.join(";", vstrFileNames);
 
             // Step 6: Return as StringValue
             return new StringValue(strResult);
-        } catch (IOException e) {
+        } catch (IOException oException) {
             // Return empty string if directory cannot be read
             return new StringValue("");
         }

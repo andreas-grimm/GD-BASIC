@@ -1,358 +1,116 @@
-# GD-BASIC: Complete Project Documentation Index
+# GD-BASIC: Documentation Index
 
-**Welcome to GD-BASIC Documentation!**
+**Version:** 0.4.0 (branch `feature/compiler`, not yet merged) · **Checked:** 2026-11-23
 
-GD-BASIC (GriCom Diminutive BASIC Interpreter) is a full-featured Java 21 implementation of a Dartmouth-style BASIC interpreter with interactive line editing, 1435 unit tests and 62 system test programs, and optional Java code generation.
-
----
-
-## 🚀 Quick Start (5 Minutes)
-
-```bash
-# Build the project
-cd /Users/andreas/Projects/Sources/Java/GD-BASIC
-mvn clean test package
-
-# Run interactively
-java -jar target/BASIC-*.jar
-
-# Run a program
-java -jar target/BASIC-*.jar program.bas
-```
-
-**Status**: Production Ready (1435/1435 unit tests, 62/62 system test programs passing)  
-**Version**: 0.3.0  
-**Java Version**: 21+  
-**License**: See LICENSE.md
+This page lists every document in the project, says who it is for, and gives a reading path. It replaces an earlier
+index that linked to 14 files which do not exist. Every link on this page was checked on 2026-11-23.
 
 ---
 
-## 📚 Documentation Structure
+## 1. Where to start
 
-### Entry Points
-
-| Document | Purpose | Time |
-|----------|---------|------|
-| **QUICK_START.md** | 5-minute quick reference | 5 min |
-| **ARCHITECTURE.md** | System design overview | 30 min |
-
-### Learning Path
-
-| Document | Purpose | Time |
-|----------|---------|------|
-| **01_PIPELINE_OVERVIEW.md** | Tokenization → Parsing → Execution | 45 min |
-| **02_TOKENIZER.md** | Lexical analysis and token types | 30 min |
-| **03_PARSER.md** | Recursive descent parser explained | 45 min |
-| **04_EXECUTION.md** | Runtime execution engine | 40 min |
-| **05_STATEMENT_GUIDE.md** | Statement implementations | 30 min |
-| **06_FUNCTION_GUIDE.md** | Built-in functions (40+) | 35 min |
-| **07_VARIABLE_TYPES.md** | Type system and memory | 25 min |
-| **08_LINE_EDITOR.md** | Interactive editor (NEW in v0.2.0) | 20 min |
-
-### Code Walkthroughs
-
-**Detailed code analysis located in: `../code-walkthroughs/`**
-
-- `CORE_CLASSES.md` - Basic.java, Token, BasicLexer
-- `PARSER_WALKTHROUGH.md` - BasicParser in detail
-- `STATEMENT_WALKTHROUGH.md` - Common statements (IF, FOR, PRINT)
-- `FUNCTION_WALKTHROUGH.md` - Function implementations
-
-### Reference & Maintenance
-
-| Document | Purpose |
-|----------|---------|
-| **REFERENCE.md** | Quick lookup tables, commands, glossary |
-| **TESTING_GUIDE.md** | Test structure and patterns (1435 tests) |
-| **MAINTENANCE_GUIDE.md** | Building, debugging, common issues |
-| **CHANGELOG_SUMMARY.md** | Version history highlights |
-
----
-
-## 🎯 Choose Your Learning Path
-
-### 👶 **New Developer - First Time**
-
-**Goal**: Understand the project basics  
-**Time**: ~3 hours  
-
-1. Read: `QUICK_START.md` (5 min)
-2. Read: `ARCHITECTURE.md` (30 min)
-3. Read: `01_PIPELINE_OVERVIEW.md` (45 min)
-4. Skim: `02_TOKENIZER.md` (20 min)
-5. Skim: `03_PARSER.md` (20 min)
-6. Explore: Code walkthroughs (30 min)
-
-**Result**: Understand overall flow and key concepts
-
----
-
-### 🔍 **Code Understanding - Reading Code**
-
-**Goal**: Understand how code works  
-**Time**: ~4 hours  
-
-1. Read: `01_PIPELINE_OVERVIEW.md` (45 min)
-2. Read: `02_TOKENIZER.md` (30 min)
-3. Read: `03_PARSER.md` (45 min)
-4. Read: `../code-walkthroughs/CORE_CLASSES.md` (30 min)
-5. Read: `../code-walkthroughs/PARSER_WALKTHROUGH.md` (30 min)
-
-**Result**: Understand code structure and design
-
----
-
-### 🐛 **Bug Fixing & Maintenance**
-
-**Goal**: Know how to fix issues  
-**Time**: ~2 hours  
-
-1. Read: `MAINTENANCE_GUIDE.md` (45 min)
-2. Read: `TESTING_GUIDE.md` (30 min)
-3. Reference: `REFERENCE.md` (as needed)
-4. Explore: Relevant code walkthroughs (30 min)
-
-**Result**: Can debug and fix issues
-
----
-
-### ➕ **Adding Features**
-
-**Goal**: Extend the interpreter  
-**Time**: ~5 hours  
-
-1. Read: `01_PIPELINE_OVERVIEW.md` (45 min)
-2. Read: `05_STATEMENT_GUIDE.md` or `06_FUNCTION_GUIDE.md` (30 min)
-3. Read: Relevant code walkthroughs (60 min)
-4. Study: Similar existing implementation (30 min)
-5. Hands-on: Write tests then implement (120 min)
-
-**Result**: Can add statements or functions
-
----
-
-### 🏗️ **Architecture Deep Dive**
-
-**Goal**: Understand system design  
-**Time**: ~6 hours  
-
-1. Read: `ARCHITECTURE.md` (30 min)
-2. Read: `01_PIPELINE_OVERVIEW.md` (45 min)
-3. Read: All pipeline docs `02_*.md` through `08_*.md` (2.5 hours)
-4. Read: All code walkthroughs (1.5 hours)
-
-**Result**: Complete understanding of system design
-
----
-
-## 📖 Documentation by Topic
-
-### Understanding the Pipeline
-
-```
-Tokenization  →  Parsing  →  Execution
-├─ 02_TOKENIZER.md
-├─ 03_PARSER.md
-└─ 04_EXECUTION.md
-```
-
-### Language Features
-
-```
-Statements       Functions       Variables
-├─ 05_STATEMENT  ├─ 06_FUNCTION  └─ 07_VARIABLE_TYPES
-└─ code-walk...  └─ code-walk...
-```
-
-### Interactive Features
-
-```
-Line Editor
-└─ 08_LINE_EDITOR.md
-```
-
-### Working with Code
-
-```
-Maintenance      Testing         Reference
-├─ Debugging     ├─ 1435 tests    └─ Quick lookup
-└─ Building      └─ Patterns      └─ Glossary
+```mermaid
+flowchart TD
+    Start(["New to GD-BASIC?"]) --> Q1{"Do you know<br/>what a variable is?"}
+    Q1 -- "No" --> G["doc/GLOSSARY.md"]
+    Q1 -- "Yes" --> QS["doc/QUICK_START.md<br/>run your first program"]
+    G --> QS
+    QS --> Use{"What do you want to do?"}
+    Use -- "Write programs" --> UG["doc/USER_GUIDE.md"]
+    Use -- "Look up a statement" --> BAS["doc/BASIC.md"]
+    Use -- "Compile to a jar" --> CMP["doc/COMPILER.md"]
+    Use -- "Change the code" --> DEV["doc/ARCHITECTURE.md<br/>then prompts/STYLEGUIDE.md"]
+    Use -- "Check what is broken" --> KI["doc/KNOWN_ISSUES.md"]
 ```
 
 ---
 
-## 🔍 Finding Information
+## 2. Documents for everyone
 
-### "I want to understand..."
+| Document | What it is | Read it when |
+|---|---|---|
+| [`README.md`](../README.md) | The project front page: status, test results, quick start, folder layout. | First, to see the current state. |
+| [`doc/QUICK_START.md`](QUICK_START.md) | A 15-minute guide. Every example was run on 2026-11-23. | You want to run a program now. |
+| [`doc/GLOSSARY.md`](GLOSSARY.md) | Plain-English meanings of the words used in the documents. | A word is new to you. |
+| [`doc/KNOWN_ISSUES.md`](KNOWN_ISSUES.md) | The open problems, with a repro program, the expected and actual output, and the source line. | A program does not behave as documented. |
+| [`CHANGELOG.md`](../CHANGELOG.md) | The version history, including what changed on each day in 0.4.0. | You want to know what changed. |
 
-| Topic | Read This | Time |
-|-------|-----------|------|
-| Overall system | ARCHITECTURE.md | 30 min |
-| How tokenization works | 02_TOKENIZER.md | 30 min |
-| How parsing works | 03_PARSER.md | 45 min |
-| How execution works | 04_EXECUTION.md | 40 min |
-| Statement implementation | code-walk/STATEMENT_WALKTHROUGH.md | 30 min |
-| Function implementation | code-walk/FUNCTION_WALKTHROUGH.md | 30 min |
-| Type system | 07_VARIABLE_TYPES.md | 25 min |
-| Interactive editor | 08_LINE_EDITOR.md | 20 min |
-| Code quality | TESTING_GUIDE.md | 30 min |
+## 3. Documents for users of the language
 
-### "I need to..."
+| Document | What it is | Status (2026-11-23) |
+|---|---|---|
+| [`doc/USER_GUIDE.md`](USER_GUIDE.md) | How to run the interpreter, the command-line options, the editor, and troubleshooting. | Checked for the options and editor commands. |
+| [`doc/BASIC.md`](BASIC.md) | The language reference: syntax, variable types, operators, the reserved-word table with a status for each word, statements and functions. | Reserved-word table rebuilt and checked. Statements not re-run are marked as such. |
+| [`doc/BASIC_CODING_STANDARD.md`](BASIC_CODING_STANDARD.md) | Rules for writing BASIC programs, and the history of older suffix rules (0.1.x to 0.2.0). | Older sections are history. The suffix table is current. |
 
-| Task | Read This | Time |
-|------|-----------|------|
-| Build locally | MAINTENANCE_GUIDE.md → Building | 10 min |
-| Run tests | MAINTENANCE_GUIDE.md → Testing | 10 min |
-| Fix a bug | MAINTENANCE_GUIDE.md → Debugging | 30 min |
-| Add a statement | 05_STATEMENT_GUIDE.md + code-walk | 60 min |
-| Add a function | 06_FUNCTION_GUIDE.md + code-walk | 60 min |
-| Understand a test | TESTING_GUIDE.md | 30 min |
-| Find a command | REFERENCE.md → Commands | 5 min |
+## 4. Documents for developers
 
----
+| Document | What it is | Status (2026-11-23) |
+|---|---|---|
+| [`doc/ARCHITECTURE.md`](ARCHITECTURE.md) | How the parts fit together: the package map (measured), the execution pipeline, the decimal value path and the compiler path, with diagrams. | Updated 2026-11-23. |
+| [`doc/GD-BASIC_Detailed_Design.md`](GD-BASIC_Detailed_Design.md) | The full design: every package, its classes, and the decisions. Long reference document. | Older sections may still describe 0.2.x. See KNOWN_ISSUES. |
+| [`doc/COMPILER.md`](COMPILER.md) | The BASIC-to-Java compiler: options, commands, how it works, what is not supported yet. | Updated 2026-11-23. |
+| [`prompts/STYLEGUIDE.md`](../prompts/STYLEGUIDE.md) | The Java coding rules: naming with Hungarian prefixes, line length 160, formatting. Checkstyle follows it. | Applied to the code on 2026-11-23. |
+| [`etc/checkstyle-config.xml`](../etc/checkstyle-config.xml) | The style checker's rules (not a document, but it must match the style guide). | Updated 2026-11-23. |
+| [`CLAUDE.md`](../CLAUDE.md) | The project guide for AI-assisted work: build commands, rules, and the list of documents. | Updated 2026-11-23. |
+| [`doc/Java22ComplianceGuide.md`](Java22ComplianceGuide.md) | Notes on running on Java 22. | Not re-checked on 2026-11-23. |
+| [`doc/Java_25_Needed_Changes.md`](Java_25_Needed_Changes.md) | A roadmap for a move to Java 25. | Not re-checked on 2026-11-23. Its status lines are older. |
+| [`prompts/CURSOR_PROMPT_TEMPLATE.md`](../prompts/CURSOR_PROMPT_TEMPLATE.md) | A prompt template for AI-assisted development (Cursor). | Reference only. |
 
-## 📊 Project Statistics
+## 5. Testing documents
 
-```
-Source Files:          60+ Java files
-Main Code:             ~15,000 lines
-Test Code:             ~8,000+ lines (1435 tests)
-Test Coverage:         100% pass rate (1435/1435)
+| Document | What it is |
+|---|---|
+| [`test/system/SYSTEM_TEST_GUIDE.md`](../test/system/SYSTEM_TEST_GUIDE.md) | How the system test programs work, how a program is judged, and which program covers which feature. |
+| `test/system/run_all_tests.sh` | The script that runs every system test program (109 runs on 2026-11-23). |
+| `src/test/java/eu/gricom/basic/` | The unit tests (1560 tests on 2026-11-23). |
 
-Key Components:
-├─ Tokenizer           BasicLexer, Token, TokenType
-├─ Parser              BasicParser (recursive descent)
-├─ Statements          35+ implementations (IF, FOR, PRINT, etc.)
-├─ Functions           40+ built-in functions
-├─ Variable Types      6 types (Real, Integer, String, etc.)
-├─ Memory Management   Program, Stack, Variables
-├─ Execution Engine    Execute, ProgramPointer
-├─ Line Editor         Interactive mode (v0.2.0+)
-└─ Code Generator      Compiles to Java
+## 6. Requirements and analysis (in `requirements/`)
 
-Supported Dialects:
-├─ Dartmouth BASIC (standard)
-├─ TRS-80 BASIC
-├─ PET BASIC
-└─ Apple BASIC
-```
+| Document | What it is |
+|---|---|
+| `BCD_ARITHMETIC_REQUIREMENTS.md` | The decimal (BCD) requirements. Its title says it is superseded. The current rules are in `doc/BASIC.md`. |
+| `FILE_IO_STATUS.md` | A status report for file input and output. Historical. |
+| `GD_BASIC_vs_APPLE_II_BASIC_ANALYSIS.md` | Comparison with Apple II BASIC. |
+| `GD_BASIC_vs_COMMODORE_PET_BASIC_ANALYSIS.md` | Comparison with Commodore PET BASIC. |
+| `GD_BASIC_vs_TANDY_BASIC_LEVEL_II_ANALYSIS.md` | Comparison with Tandy (TRS-80) BASIC Level II. |
 
----
+These are analysis documents for the language design. They describe other BASICs, not GD-BASIC 0.4.0.
 
-## 🗺️ File Structure
+## 7. Reference material and examples
 
-```
-/Users/andreas/JottaCloud/Notes/Projects/GD-Basic/
-
-doc/                           (Documentation)
-├─ INDEX.md                    ← You are here
-├─ QUICK_START.md              (5-min quick reference)
-├─ ARCHITECTURE.md             (System design)
-├─ 01_PIPELINE_OVERVIEW.md     (Complete flow)
-├─ 02_TOKENIZER.md             (Lexical analysis)
-├─ 03_PARSER.md                (Syntax analysis)
-├─ 04_EXECUTION.md             (Runtime)
-├─ 05_STATEMENT_GUIDE.md       (IF, FOR, PRINT, etc.)
-├─ 06_FUNCTION_GUIDE.md        (40+ built-ins)
-├─ 07_VARIABLE_TYPES.md        (Type system)
-├─ 08_LINE_EDITOR.md           (Interactive mode)
-├─ REFERENCE.md                (Quick lookup)
-├─ TESTING_GUIDE.md            (1435 tests)
-├─ MAINTENANCE_GUIDE.md        (Build & debug)
-└─ CHANGELOG_SUMMARY.md        (Version history)
-
-code-walkthroughs/             (Detailed code analysis)
-├─ CORE_CLASSES.md             (Basic.java, Token, Lexer)
-├─ PARSER_WALKTHROUGH.md       (BasicParser details)
-├─ STATEMENT_WALKTHROUGH.md    (Statement examples)
-└─ FUNCTION_WALKTHROUGH.md     (Function examples)
-
-scripts/                       (Automation)
-└─ refresh-docs.sh             (Auto-generate docs)
-
-README.md                      (This directory's guide)
-```
+| Item | What it is |
+|---|---|
+| `doc/Dartmouth_BASIC_Oct64.pdf` | The Dartmouth BASIC reference from October 1964. |
+| `doc/ECMA-55,1st_Edition,_January_1978.pdf` | The ECMA-55 BASIC standard (1978). |
+| `doc/GD_Basic_Examples/` | Example programs (`BSearch.bas`, `Eratosthenese.bas`, `Fibonacci.bas`). |
+| `doc/Jasic/` | A folder with a `Basic.java` and example programs. It is not part of the build. Its origin is not documented in this project. |
+| `test/system/examples/` | Programs with saved expected output (`.expected`) and input (`.input`), used by the system tests. |
+| `LICENSE.md` | The licence. |
 
 ---
 
-## ✨ Documentation Features
+## 8. Find a topic
 
-✅ **Comprehensive** - 60+ Java files documented  
-✅ **Structured** - Multiple learning paths for different roles  
-✅ **Visual** - Diagrams and flowcharts  
-✅ **Practical** - Real code examples from the project  
-✅ **Beginner-Friendly** - Written for junior developers  
-✅ **Code Walkthroughs** - Detailed line-by-line analysis  
-✅ **Reference Material** - Quick lookup tables and glossary  
-✅ **Actionable** - Clear steps for common tasks  
-
----
-
-## 🚀 Next Steps
-
-### 1. Choose Your Role
-- New Developer → **Start with QUICK_START.md**
-- Reading Code → **Go to 01_PIPELINE_OVERVIEW.md**
-- Fixing Bugs → **Go to MAINTENANCE_GUIDE.md**
-- Adding Features → **Go to 05_STATEMENT_GUIDE.md**
-
-### 2. Follow Your Path
-Each path is designed to take you from basics to mastery
-
-### 3. Explore Code
-Use code walkthroughs to understand real implementations
-
-### 4. Practice
-Build, test, and experiment with the project
+| I want to know about... | Read |
+|---|---|
+| How to run a program | `doc/QUICK_START.md`, section 3 |
+| The command-line options | `doc/USER_GUIDE.md`, "Command-Line Parameters" |
+| Decimal numbers (`#`) | `doc/BASIC.md`, "Decimal Numbers (BCD)"; `doc/KNOWN_ISSUES.md`, KI-01 and KI-02 |
+| True-or-false values (`!`) | `doc/BASIC.md`, "Suffix rules and ambiguities" and the reserved-word table |
+| Whether a word works | `doc/BASIC.md`, "Reserved Words" (the status column) |
+| Errors such as `Incorrect Command` | `doc/USER_GUIDE.md`, troubleshooting; `doc/KNOWN_ISSUES.md` |
+| The compiler | `doc/COMPILER.md` |
+| The package layout | `doc/ARCHITECTURE.md`, "Package Map" |
+| Why a test is missing | `doc/KNOWN_ISSUES.md`, the test gap notes |
+| Coding rules | `prompts/STYLEGUIDE.md` |
 
 ---
 
-## 📝 Documentation Maintenance
+## 9. Keeping the documents correct
 
-These documents are generated from the project source.  
-Use the refresh script to update documentation:
-
-```bash
-/Users/andreas/JottaCloud/Notes/Projects/GD-Basic/scripts/refresh-docs.sh
-```
-
-**Last Generated: 2026-08-31 09:55:10
-**Version**: 1.0  
-**Status**: Current ✓
-
----
-
-## 💡 Quick Reference
-
-```bash
-# Build
-mvn clean test package
-
-# Test
-mvn test
-mvn test -Dtest=BasicParserTest
-
-# Run
-java -jar target/BASIC-*.jar                    # Interactive
-java -jar target/BASIC-*.jar program.bas        # Run program
-java -jar target/BASIC-*.jar -r program.bas     # Direct run
-
-# Documentation
-cat /Users/andreas/JottaCloud/Notes/Projects/GD-Basic/doc/QUICK_START.md
-/Users/andreas/JottaCloud/Notes/Projects/GD-Basic/scripts/refresh-docs.sh
-```
-
----
-
-## 🤝 Contributing
-
-1. **Read**: Choose your learning path above
-2. **Understand**: Study relevant documentation + code walkthroughs
-3. **Code**: Make your changes with tests
-4. **Test**: Run full test suite (`mvn test`)
-5. **Document**: Update docs if you change functionality
-
----
-
-**Start here**: Pick your role above and read the recommended first document!
-
+- When a behaviour changes, update the section of `doc/BASIC.md` that describes it, and the matching entry in
+  `doc/KNOWN_ISSUES.md`.
+- Every date in a document means "checked on that day". When you check a statement again, change the date.
+- Do not delete history. Mark an old section as history, as `doc/BASIC_CODING_STANDARD.md` does.
+- Links must point to files that exist. Check them after each change.

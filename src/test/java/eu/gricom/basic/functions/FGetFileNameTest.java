@@ -1,9 +1,9 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.FileOpenType;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - NEGATIVE TESTS: File IDs that don't exist or have been closed
  * - EDGE CASES: Boundary conditions, invalid IDs, and special scenarios
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Returns StringValue containing the file name for open files
  * - Returns StringValue containing empty string for unknown/closed file IDs
  * - Never returns null; always returns a StringValue
@@ -55,7 +55,7 @@ public class FGetFileNameTest {
     private int _iCurrentTestFileId3;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary test files, unique file IDs, and a FileManager instance.
      * Uses unique file IDs for each test to avoid interference from previous tests.
      */

@@ -1,6 +1,6 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.Value;
 import eu.gricom.basic.error.EmptyStackException;
 
 /**
@@ -17,7 +17,7 @@ public class Stack {
 
 
     /**
-     * Initializes the stack if it does not exist.
+     * Initialises the stack if it does not exist.
      */
     public Stack() {
         if (_oStack == null) {

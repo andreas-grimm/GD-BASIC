@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.StringValue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - EDGE CASES: Non-existent directories, directories with contents and force flag
  * - INTERFACE TESTS: getTokenNumber(), content(), and structure() methods
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Removes empty directories without force flag
  * - Recursively removes directories with contents when force flag is true
  * - Returns success if directory does not exist
@@ -43,7 +43,7 @@ public class RmDirStatementTest {
     private Path _oTestDirectory;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates a temporary directory to use as a test base.
      */
     @BeforeEach

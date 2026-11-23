@@ -1,332 +1,360 @@
 # GD-BASIC: Quick Start Guide
 
-**For the impatient developer who wants to get started in 5 minutes.**
+**Version:** 0.4.0 (branch `feature/compiler`, not yet merged) · **Checked:** 2026-11-23
+
+This guide gets you from nothing to a running BASIC program in about 15 minutes. Every example here was run on
+2026-11-23 and the output shown is the real output. If something in this guide does not match your screen, check
+`doc/KNOWN_ISSUES.md` first.
+
+**New to programming?** Read `doc/GLOSSARY.md` alongside this page. It explains words such as *interpreter*,
+*variable* and *suffix*.
 
 ---
 
-## ⚡ 5-Minute Setup
+## 1. What you need
+
+| Tool | Version | Check with |
+|---|---|---|
+| Java **JDK** (not only a JRE) | 21 | `java -version` and `javac -version` |
+| Maven | 3.6.3 or newer | `mvn -version` |
+
+A JDK includes the Java compiler `javac`. You need it for the `COMPILE` command (section 9). Running a program does not
+need it.
+
+---
+
+## 2. Build the interpreter
+
+From the project folder:
 
 ```bash
-# Clone/Enter project
-cd /Users/andreas/Projects/Sources/Java/GD-BASIC
-
-# Build
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home   # macOS path; adjust for your system
 mvn clean test package
-
-# Run interactively (new!)
-java -jar target/BASIC-*.jar
-
-# Or run a program
-java -jar target/BASIC-*.jar examples/hello.bas
-
-# Run tests
-mvn test
 ```
 
----
+What happens:
 
-## 🎯 What is GD-BASIC?
+1. `clean` deletes old build output in `target/`.
+2. `test` runs all unit tests. The last run had **1560 tests, 0 failures**.
+3. `package` builds the jar.
 
-A complete BASIC interpreter written in Java that:
-- ✅ Executes BASIC programs (`.bas` files)
-- ✅ Interactive line editor with LOAD/SAVE commands
-- ✅ Supports multiple BASIC dialects (Dartmouth, TRS-80, PET, Apple)
-- ✅ 40+ built-in functions (PRINT, INPUT, SIN, RND, etc.)
-- ✅ Type system (Integer, Real, String, Long, Boolean, decimal BCD `#` in version 0.3.0 on branch `feature/bcd-arithmetic`)
-- ✅ 1435 comprehensive unit tests (100% pass rate) and 62 system test programs
-- ✅ Optional Java code generation
+The file you need is:
 
----
-
-## 📊 Project Stats
-
-```
-Java Version:    21+
-Maven:           3.6.3+
-Files:           60+ Java source files
-Main Code:       ~15,000 lines
-Tests:           1435 unit (100% passing); 62 system programs
-Status:          Production Ready
+```text
+target/BASIC-0.4.0-jar-with-dependencies.jar
 ```
 
----
-
-## 🚀 Common Commands
+To check that the jar works:
 
 ```bash
-# Build & Test
-mvn clean test package        # Build + tests + JAR
-mvn test                      # Just tests
-mvn test -Dtest=BasicTest     # Specific test
-
-# Run Modes
-java -jar BASIC-*.jar                      # Interactive editor
-java -jar BASIC-*.jar prog.bas              # Run program
-java -jar BASIC-*.jar -r prog.bas           # Direct run (no editor)
-java -jar BASIC-*.jar -d prog.bas           # Dartmouth mode
-java -jar BASIC-*.jar -v debug prog.bas     # Verbose logging
-java -jar BASIC-*.jar -h                    # Help
-
-# Reports
-mvn site                      # Generate Checkstyle, PMD, JavaDoc
-mvn javadoc:javadoc          # Generate JavaDoc
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -h
 ```
 
 ---
 
-## 📚 Understanding the Pipeline
+## 3. Your first program
 
-```
-.bas File
-   ↓
-Macro Processing (replace includes)
-   ↓
-Tokenization (BasicLexer) → Tokens
-   ↓
-Parsing (BasicParser) → AST
-   ↓
-Execution (Execute) → Output
-   ↓
-Results
-```
+### 3.1 In the line editor
 
-**Each stage is documented separately** in the doc/ directory.
+Start the interpreter with no file. You get a prompt (`>`). Type line numbers and statements:
 
----
-
-## 📁 Project Structure
-
-```
-src/main/java/eu/gricom/basic/
-├─ Basic.java              (Entry point)
-├─ tokenizer/              (Lexical analysis)
-│  ├─ BasicLexer.java
-│  ├─ Token.java
-│  └─ TokenType.java
-├─ parser/                 (Syntax analysis)
-│  ├─ BasicParser.java
-│  └─ BasicListener.java
-├─ statements/             (35+ statement types)
-│  ├─ If.java
-│  ├─ For.java
-│  ├─ Print.java
-│  └─ ...
-├─ functions/              (40+ built-in functions)
-│  ├─ Sin.java
-│  ├─ Cos.java
-│  ├─ Len.java
-│  └─ ...
-├─ variableTypes/          (Type system)
-│  ├─ RealValue.java
-│  ├─ IntegerValue.java
-│  └─ ...
-├─ memoryManager/          (State management)
-│  ├─ Program.java
-│  ├─ Stack.java
-│  └─ VariableManagement.java
-├─ runtimeManager/         (Execution engine)
-│  └─ Execute.java
-├─ lineEditor/             (Interactive editor - v0.2.0+)
-│  └─ LineEditor.java
-└─ helper/                 (Utilities)
-   ├─ Logger.java
-   ├─ FileHandler.java
-   └─ Printer.java
+```text
+$ java -jar target/BASIC-0.4.0-jar-with-dependencies.jar
+Starting line editor
+Welcome
+>10 PRINT "Hello, World!"
+>20 END
+>LIST
+10 PRINT "Hello, World!"
+20 END
+>RUN
+Hello, World!
+>EXIT
+Good bye.
 ```
 
----
+(The lines you type are shown after each `>` prompt. The interpreter prints its own text; your screen may differ a little.)
 
-## 🎮 Interactive Editor Commands
+- A line that starts with a number is stored as part of the program.
+- `LIST` shows the program, `RUN` runs it, `EXIT` leaves the editor.
 
-**NEW in v0.2.0+** - Run without a file:
+### 3.2 As a file
 
-```bash
-java -jar BASIC-*.jar
-> LIST          # Show program
-> RUN           # Execute program
-> LOAD file.bas # Load file
-> SAVE file.bas # Save program
-> DELETE n      # Delete line n
-> NEW           # Clear program
-> HELP          # Show help
-> QUIT          # Exit
-```
+Save this as `hello.bas`:
 
----
-
-## 📝 Writing BASIC Programs
-
-### Hello World
 ```basic
 10 PRINT "Hello, World!"
 20 END
 ```
 
-### Variables (Multiple Types)
-```basic
-10 LET X = 3.14         ' Real number (default)
-20 LET I% = 42          ' Integer
-30 LET S$ = "Hello"     ' String
-40 LET B@ = TRUE        ' Boolean
-50 PRINT X, I%, S$, B@
+Run it directly (`-r` means "run now, without the editor"):
+
+```bash
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -r hello.bas
 ```
 
-### Loops
+Output:
+
+```text
+Hello, World!
+```
+
+Every program must end with `END`.
+
+---
+
+## 4. The line editor commands
+
+These are the commands the editor accepts (checked in `lineeditor/LineEditor.java` on 2026-11-23):
+
+| Command | What it does |
+|---|---|
+| `LIST` | Shows the program. |
+| `RUN` | Runs the program. |
+| `LOAD <file>` | Loads a `.bas` file. |
+| `SAVE <file>` | Saves the program to a new file. It does not overwrite an existing file. |
+| `DELETE <line>` or `DELETE <start> <end>` | Deletes one line, or a range of lines. |
+| `HELP` | Shows the built-in help. |
+| `COMPILE` | Builds a jar from the loaded program. Needs the `-o` option (section 9). |
+| `SAVEJAVA [file.java]` | Writes the Java source for the program. |
+| `EXIT`, `QUIT`, `BYE` | Leave the editor. |
+
+There is **no** `NEW` command. To start again, use `DELETE` with the full range, or start the interpreter again.
+
+---
+
+## 5. Variables and types
+
+A variable's type is shown by its last character (its *suffix*). Every example below was run on 2026-11-23.
+
 ```basic
-10 FOR I = 1 TO 10
+10 X = 3.14
+20 I% = 42
+30 S$ = "Hello"
+40 B! = TRUE
+50 A# = 0.1
+60 PRINT X
+70 PRINT I%
+80 PRINT S$
+90 PRINT B!
+100 PRINT A# + 0.2
+110 END
+```
+
+Output:
+
+```text
+3.14
+42
+Hello
+True
+0.3
+```
+
+| Ending | Type | Example | Notes |
+|---|---|---|---|
+| none | Real (binary floating point) | `X = 3.14` | `0.1 + 0.2` shows `0.30000000000000004`. |
+| `%` | Integer | `I% = 42` | Whole numbers. |
+| `&` | Long | `N& = 1000000` | Whole numbers. **Known problem:** values above 2147483647 are not stored correctly (KI-16). |
+| `$` | String | `S$ = "Hello"` | Text in double quotes. |
+| `!` | Boolean | `B! = TRUE` | Only `TRUE` or `FALSE`. |
+| `#` | Decimal (exact) | `A# = 0.1` | Up to 40 significant digits. Use this for money. |
+
+**Careful:** the suffix `@` is no longer valid (`F@ = TRUE` gives an error that tells you to use `!`). Older
+programs need `@` changed to `!`.
+
+For exact decimal arithmetic, use `#`. Put the number in a decimal variable first (a number written with `#`
+directly after it is refused):
+
+```basic
+10 A# = 1
+20 PRINT A# / 3
+30 END
+```
+
+Output: `0.3333333333333333333333333333333333333333` (40 digits).
+
+---
+
+## 6. Loops and decisions
+
+### 6.1 A counting loop
+
+```basic
+10 FOR I = 1 TO 3
 20   PRINT I
-30 NEXT I
+30 NEXT
 40 END
 ```
 
-### Conditionals
+Output: `1.0`, `2.0`, `3.0`. Write `NEXT` on its own; `NEXT I` is refused.
+
+### 6.2 A decision
+
 ```basic
-10 INPUT "Enter age: ", AGE
+10 INPUT AGE
 20 IF AGE >= 18 THEN
 30   PRINT "Adult"
 40 ELSE
 50   PRINT "Minor"
-60 END IF
+60 END-IF
+70 END
 ```
 
-### Functions
+Run it with `20` typed in: the output is `Adult`. With `12`: `Minor`.
+
+Notes:
+
+- The block ends with `END-IF` (with a hyphen).
+- `INPUT` reads one value and stores it in a variable. It does not take a prompt text: `INPUT "Age: ", AGE` is
+  refused.
+- Compare values with `==`, `<`, `<=`, `>`, `>=` or `!=`. A single `=` means "store a value", so
+  `IF A = 1 THEN` is refused. Use `IF A == 1 THEN`.
+
+### 6.3 A loop with a condition
+
 ```basic
-10 PRINT SIN(3.14159)   ' Math
-20 PRINT LEN("Hello")   ' String
-30 PRINT INT(3.7)       ' Conversion
-40 PRINT RND()          ' Random
+10 I = 0
+20 WHILE I < 2
+30   I = I + 1
+40   PRINT I
+50 WEND
+60 END
 ```
+
+Output: `1.0`, `2.0`.
 
 ---
 
-## 🐛 Common Issues & Solutions
+## 7. Built-in functions
 
-### "Command not found: java"
-```bash
-# Install Java 21+
-# macOS: brew install openjdk@21
-# Linux: sudo apt install openjdk-21-jdk
-# Or download from oracle.com
+These were run on 2026-11-23:
+
+```basic
+10 PRINT SIN(3.14159)
+20 PRINT LEN("Hello")
+30 PRINT CINT(3.7)
+40 PRINT RND
+50 END
 ```
 
-### "Class not found: Basic"
-```bash
-# Rebuild the JAR
-mvn clean package
+Output (the `RND` value changes every run):
+
+```text
+2.65358979335273E-6
+5
+3
+0.39090636469182416
 ```
 
-### "Program doesn't run"
-```bash
-# Check syntax (common BASIC mistakes)
-# Run with verbose logging:
-java -jar BASIC-*.jar -v debug program.bas
-
-# Or in editor, use RUN to get error messages
-```
-
-### Tests fail
-```bash
-# Full rebuild
-mvn clean test
-
-# Run specific test
-mvn test -Dtest=BasicParserTest#testIfStatement
-```
+- `CINT` removes the fraction (it truncates): `CINT(3.7)` gives `3`.
+- `RND` takes **no** brackets.
+- The full list is in `doc/BASIC.md`, section "Reserved Words", with a status for each function.
 
 ---
 
-## 📖 Going Deeper
+## 8. Run modes (command-line options)
 
-| I Want To... | Read This |
-|-------------|-----------|
-| Understand overall design | `ARCHITECTURE.md` |
-| Learn the pipeline | `01_PIPELINE_OVERVIEW.md` |
-| Understand tokenization | `02_TOKENIZER.md` |
-| Understand parsing | `03_PARSER.md` |
-| Understand execution | `04_EXECUTION.md` |
-| Add a statement | `05_STATEMENT_GUIDE.md` |
-| Add a function | `06_FUNCTION_GUIDE.md` |
-| Understand types | `07_VARIABLE_TYPES.md` |
-| Detailed code explanation | `code-walkthroughs/CORE_CLASSES.md` |
-| Fixing bugs | `MAINTENANCE_GUIDE.md` |
-| Understanding tests | `TESTING_GUIDE.md` |
+```bash
+java -jar BASIC-0.4.0-jar-with-dependencies.jar                 # line editor
+java -jar BASIC-0.4.0-jar-with-dependencies.jar prog.bas        # load prog.bas into the editor
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -r prog.bas     # run now, no editor
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -d prog.bas     # Dartmouth evaluation order
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -q -r prog.bas  # quiet: no splash screen (log lines still show)
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -v debug -r prog.bas   # more log output
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -h              # help
+```
+
+The options `-o` and `-j` are used for compiling (section 9). The complete list is in `doc/USER_GUIDE.md`.
 
 ---
 
-## 🎯 Development Workflow
+## 9. Compile a program to a jar
 
-### 1. Understand Current Code
+The compiler turns your `.bas` program into Java source and then into a jar that runs on its own. You need a **JDK**.
+
 ```bash
-# Read relevant documentation
-cat doc/02_TOKENIZER.md      # For tokenizer work
-cat doc/03_PARSER.md         # For parser work
-cat code-walkthroughs/CORE_CLASSES.md
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -o hello -j hello.java
 ```
 
-### 2. Write Tests First
-```bash
-# Add test to src/test/java/.../*Test.java
-mvn test -Dtest=YourTestClass
+- `-o hello` says the jar will be called `hello.jar`.
+- `-j hello.java` says the Java source file will be called `hello.java`.
+
+Then, in the editor:
+
+```text
+>LOAD hello.bas
+Program loaded from hello.bas
+>COMPILE
+Java source written to hello.java
+Build target created: hello.jar (start it with: java -jar hello.jar)
+>EXIT
+Good bye.
 ```
 
-### 3. Implement
+Run the compiled program:
+
 ```bash
-# Add implementation to src/main/java/...
-# Follow existing patterns
+java -jar hello.jar
 ```
 
-### 4. Verify
-```bash
-# Full test suite
-mvn clean test
+`SAVEJAVA` writes only the Java source (no compile). `COMPILE` without `-o` gives an error.
 
-# Build
-mvn package
-
-# Manual test
-java -jar target/BASIC-*.jar -r test_program.bas
-```
+Known limits of the compiler (arrays, `DATA`/`READ`, labels) are in `doc/COMPILER.md`, section 5.3.
 
 ---
 
-## 💡 Pro Tips
+## 10. When something goes wrong
 
-1. **Read CLAUDE.md** - Project configuration and recent changes
-2. **Check tests** - Best examples of how to use code
-3. **Use verbose mode** - `java -jar BASIC-*.jar -v debug program.bas`
-4. **Study existing statements** - All follow same pattern
-5. **Keep tests passing** - 1435 tests are your safety net
+| What you see | What it means | Where to look |
+|---|---|---|
+| `Incorrect Command: 10: [LET]` | `LET` is not accepted in this version. Write `A = 4`. | `doc/KNOWN_ISSUES.md`, KI-08 |
+| `Found: = expected THEN.` | You used `=` to compare. Use `==`. | `doc/KNOWN_ISSUES.md`, D1 |
+| `Incorrect Command: 40: [EXIT]` | `EXIT` does not work yet. | `doc/KNOWN_ISSUES.md`, KI-06 |
+| `Missing statement END-IF` | A block `IF` has no `END-IF`. | `doc/BASIC.md`, section IF |
+| `EmptyStackException: Stack Empty` after `WEND` | A `WEND` has no `WHILE` before it. | `doc/KNOWN_ISSUES.md`, KI-11 |
 
----
-
-## 🚀 Next Steps
-
-1. **Build the project**: `mvn clean package`
-2. **Run interactively**: `java -jar target/BASIC-*.jar`
-3. **Pick a learning path** from INDEX.md
-4. **Read relevant documentation** for your task
-5. **Explore code walkthroughs** for detailed understanding
+For more messages and fixes, see `doc/USER_GUIDE.md` (troubleshooting). To see every step of the interpreter, run with
+`-v debug`.
 
 ---
 
-## 📞 Quick Reference
+## 11. Developer quick commands
 
 ```bash
-# Most Common
-mvn clean test package              # Full build
-java -jar target/BASIC-*.jar        # Run interactive
-mvn test -Dtest=BasicParserTest     # Specific test
-
-# For Documentation
-cat /Users/andreas/JottaCloud/Notes/Projects/GD-Basic/doc/INDEX.md
-
-# For Refresh
-/Users/andreas/JottaCloud/Notes/Projects/GD-Basic/scripts/refresh-docs.sh
+mvn clean test package                      # build, all unit tests, jar
+mvn test -Dtest=BasicParserTest             # one test class
+test/system/run_all_tests.sh                # all system programs
+mvn -o checkstyle:check -Dcheckstyle.config.location=$PWD/etc/checkstyle-config.xml   # style check
 ```
+
+Before you change code, read `prompts/STYLEGUIDE.md` (the coding rules) and `doc/ARCHITECTURE.md` (how the parts fit
+together).
 
 ---
 
-**Version**: 0.3.0  
-**Updated: 2026-08-31
-**Status**: Production Ready ✓
+## 12. Where to read next
 
+| I want to... | Read |
+|---|---|
+| Learn the words of the project | `doc/GLOSSARY.md` |
+| Use the interpreter day to day | `doc/USER_GUIDE.md` |
+| Look up a statement or function | `doc/BASIC.md` |
+| Understand the compiler | `doc/COMPILER.md` |
+| Understand the code structure | `doc/ARCHITECTURE.md` and `doc/GD-BASIC_Detailed_Design.md` |
+| See what is broken | `doc/KNOWN_ISSUES.md` |
+| See what changed | `CHANGELOG.md` |
+| Find any document | `doc/INDEX.md` |
+
+---
+
+## 13. Corrections to earlier versions of this guide
+
+The earlier version of this guide contained errors, which were removed on 2026-11-23:
+
+- It said GD-BASIC "supports multiple BASIC dialects (Dartmouth, TRS-80, PET, Apple)". Only Dartmouth evaluation (`-d`)
+  exists. The dialect packages are empty (see `doc/KNOWN_ISSUES.md`, KI-12).
+- Its examples used `LET`, `B@`, `END IF`, `INT(3.7)` and `RND()`. None of these works in 0.4.0 as written.
+- It listed a `NEW` command and example folders (`examples/`, `scripts/`) that do not exist in the repository.
+- It gave the test count as 1435 and the status as "Production Ready". The current run is 1560 unit tests and 109 system
+  program runs. The status is "in development", because the known issues in `doc/KNOWN_ISSUES.md` are still open.

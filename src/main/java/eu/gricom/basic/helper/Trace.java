@@ -19,8 +19,8 @@ public class Trace {
      *
      * @param strTraceLevel - name of the class that instantiates the logger
      */
-  public Trace(final boolean strTraceLevel) {
-      _bTraceLevel = strTraceLevel;
+  public Trace(final boolean bTraceLevel) {
+      _bTraceLevel = bTraceLevel;
   }
 
   /**

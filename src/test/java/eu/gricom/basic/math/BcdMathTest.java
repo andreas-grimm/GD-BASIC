@@ -3,7 +3,7 @@ package eu.gricom.basic.math;
 import eu.gricom.basic.error.DivideByZeroException;
 import eu.gricom.basic.error.OverflowException;
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.variableTypes.BcdValue;
+import eu.gricom.basic.variabletypes.BcdValue;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

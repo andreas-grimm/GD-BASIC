@@ -11,6 +11,7 @@ public enum BasicTokenType {
     CALL,
     CDBL,
     CHDIR,
+    MKDIR,
     CHR, // token for the CHR$ function
     CINT,
     CLEAN,

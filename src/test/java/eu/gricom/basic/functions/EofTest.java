@@ -1,14 +1,14 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.VariableManagement;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.VariableManagement;
 import eu.gricom.basic.statements.FInputStatement;
 import eu.gricom.basic.statements.FOpenStatement;
 import eu.gricom.basic.statements.FPrintStatement;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,10 +1,10 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.FileNotFoundException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.FileOpenType;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - NEGATIVE TESTS: File IDs that don't exist or have been closed
  * - EDGE CASES: Format verification, consistency, and error conditions
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Returns StringValue containing date and time in format "yyyy-MM-dd HH:mm:ss"
  * - Throws FileNotFoundException for unknown or closed file IDs
  * - Does not modify FileManager state (file remains open after function)
@@ -63,7 +63,7 @@ public class FModTimeTest {
     private int _iCurrentTestFileId3;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary test files, unique file IDs, and a FileManager instance.
      */
     @BeforeEach
@@ -180,7 +180,7 @@ public class FModTimeTest {
      * When: FModTime.execute() is called multiple times
      * Then: All calls return identical results
      * <p>
-     * Purpose: Verifies deterministic behavior and no side effects
+     * Purpose: Verifies deterministic behaviour and no side effects
      */
     @Test
     public void testFModTime_WithMultipleCalls_ReturnsConsistentResults() throws Exception {

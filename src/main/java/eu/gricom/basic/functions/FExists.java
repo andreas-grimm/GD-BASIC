@@ -1,10 +1,9 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.RealValue;
+import eu.gricom.basic.variabletypes.BooleanValue;
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.io.File;
 
@@ -34,8 +33,8 @@ public final class FExists {
      */
     public static Value execute(final Value oValue) throws Exception {
         if (oValue instanceof StringValue) {
-            StringValue strValue = (StringValue) oValue;
-            File oFile = new File(strValue.toString());
+            StringValue oFileName = (StringValue) oValue;
+            File oFile = new File(oFileName.toString());
             return new BooleanValue(oFile.exists());
         }
 

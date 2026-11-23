@@ -4,125 +4,110 @@
           "http://checkstyle.sourceforge.net/dtds/configuration_1_3.dtd">
 
 <!--
-  Checkstyle configuration that checks the sun coding conventions from:
-    - the Java Language Specification at
-      http://java.sun.com/docs/books/jls/second_edition/html/index.html
-    - the Sun Code Conventions at http://java.sun.com/docs/codeconv/
-    - the Javadoc guidelines at
-      http://java.sun.com/j2se/javadoc/writingdoccomments/index.html
-    - the JDK Api documentation http://java.sun.com/j2se/docs/api/index.html
-    - some best practices
-  Checkstyle is very configurable. Be sure to read the documentation at
-  http://checkstyle.sf.net (or in your downloaded distribution).
-  Most Checks are configurable, be sure to consult the documentation.
-  To completely disable a check, just comment it out or delete it from the file.
-  Finally, it is worth reading the documentation.
+  Checkstyle configuration for GD-BASIC. It checks the rules of prompts/STYLEGUIDE.md.
+
+  Rules that the STYLEGUIDE does not mention are commented out with the note "not in STYLEGUIDE". They can be
+  switched on again by removing the comment markers, after the maintainers decide on them.
+
+  Name patterns used below:
+    member, static member, local variable, parameter:  optional a/m/v, then str/e/i/l/b/f/o/c, then a name
+    constant:                                           UPPER_SNAKE_CASE, or a member pattern with the _ prefix
+    catch parameter:                                    o followed by a name (oException)
 -->
 
 <!--suppress ALL -->
 <module name="Checker">
     <property name="severity" value="warning"/>
-    
-    <!--
-        If you set the basedir property below, then all reported file
-        names will be relative to the specified directory. See
-        http://checkstyle.sourceforge.net/5.x/config.html#Checker
-        <property name="basedir" value="${basedir}"/>
-    -->
-
     <property name="fileExtensions" value="java, properties, xml"/>
 
-    <!-- Checks that a package-info.java file exists for each package.     -->
-    <!-- See http://checkstyle.sf.net/config_javadoc.html#JavadocPackage -->
-    <module name="JavadocPackage"/>
+    <!-- STYLEGUIDE: maximum 160 characters per line. -->
+    <module name="LineLength">
+        <property name="max" value="160"/>
+    </module>
 
-    <!-- Checks whether files end with a new line.                        -->
-    <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
+    <!-- Files: spaces, not tabs; newline at the end of the file. -->
+    <module name="FileTabCharacter"/>
     <module name="NewlineAtEndOfFile"/>
-
-    <!-- Checks that property files contain the same keys.         -->
-    <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
-    <module name="Translation"/>
-
-    <!-- Checks for Size Violations.                    -->
-    <!-- See http://checkstyle.sf.net/config_sizes.html -->
     <module name="FileLength"/>
 
-    <!-- Checks for whitespace                               -->
-    <!-- See http://checkstyle.sf.net/config_whitespace.html -->
-    <module name="FileTabCharacter"/>
-
-    <!-- Miscellaneous other checks.                   -->
-    <!-- See http://checkstyle.sf.net/config_misc.html -->
-    <!-- module name="RegexpSingleline">
-       <property name="format" value="\s+$"/>
-       <property name="minimum" value="0"/>
-       <property name="maximum" value="0"/>
-       <property name="message" value="Line has trailing spaces."/>
-       <property name="severity" value="info"/>
-    </module -->
-
-    <!-- Checks for Headers                                -->
-    <!-- See http://checkstyle.sf.net/config_header.html   -->
-    <!-- <module name="Header"> -->
-    <!--   <property name="headerFile" value="${checkstyle.header.file}"/> -->
-    <!--   <property name="fileExtensions" value="java"/> -->
-    <!-- </module> -->
+    <!-- <module name="JavadocPackage"/> not in STYLEGUIDE -->
 
     <module name="TreeWalker">
 
-        <!-- Checks for Javadoc comments.                     -->
-        <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="JavadocMethod"/>
-        <module name="JavadocType"/>
-        <!-- module name="JavadocVariable"/-->
-        <module name="JavadocStyle"/>
-
-        <!-- Checks for Naming Conventions.                  -->
-        <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <module name="ConstantName"/>
-        <module name="LocalFinalVariableName"/>
-        <module name="LocalVariableName"/>
-        <module name="MemberName">
-           <property name="format" value="^_[abfdilosv][a-zA-Z0-9]*$"/>
+        <!-- STYLEGUIDE "Naming Conventions", "Fields and Variables", "Constants". -->
+        <module name="ConstantName">
+            <property name="format"
+                      value="^([A-Z][A-Z0-9]*(_[A-Z0-9]+)*|_(a|m|v)?(str|[eilbofc])[A-Z][A-Za-z0-9]*)$"/>
         </module>
-        <module name="MethodName"/>
-        <module name="PackageName"/>
-        <module name="ParameterName"/>
+        <module name="LocalFinalVariableName">
+            <property name="format" value="^(a|m|v)?(str|[eilbofc])[A-Z][A-Za-z0-9]*$"/>
+        </module>
+        <module name="LocalVariableName">
+            <property name="format" value="^(a|m|v)?(str|[eilbofc])[A-Z][A-Za-z0-9]*$"/>
+        </module>
+        <module name="MemberName">
+            <property name="format" value="^_(a|m|v)?(str|[eilbofc])[A-Z][A-Za-z0-9]*$"/>
+        </module>
         <module name="StaticVariableName">
-           <property name="format" value="^_[abfdilosv][a-zA-Z0-9]*$"/>
+            <property name="format" value="^_(a|m|v)?(str|[eilbofc])[A-Z][A-Za-z0-9]*$"/>
+        </module>
+        <module name="ParameterName">
+            <property name="format" value="^(a|m|v)?(str|[eilbofc])[A-Z][A-Za-z0-9]*$"/>
+        </module>
+        <module name="CatchParameterName">
+            <property name="format" value="^o[A-Z][A-Za-z0-9]*$"/>
+        </module>
+        <!-- STYLEGUIDE: methods use lowerCamelCase (no underscore prefix). -->
+        <module name="MethodName"/>
+        <!-- STYLEGUIDE "Packages": lowercase letters only, no separators. -->
+        <module name="PackageName">
+            <property name="format" value="^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)*$"/>
         </module>
         <module name="TypeName"/>
 
-        <!-- Checks for imports                              -->
-        <!-- See http://checkstyle.sf.net/config_import.html -->
+        <!-- STYLEGUIDE "Field and Variable Declarations": one variable per line. -->
+        <module name="MultipleVariableDeclarations"/>
+
+        <!-- STYLEGUIDE "Annotations": annotations on the line before the method or class. -->
+        <module name="AnnotationLocation"/>
+
+        <!-- STYLEGUIDE "Access Level Modifiers" and "Getters and Setters": no public or protected fields. -->
+        <module name="VisibilityModifier"/>
+
+        <!-- STYLEGUIDE "Method Length": aim for methods under 50 lines. -->
+        <module name="MethodLength">
+            <property name="max" value="50"/>
+        </module>
+
+        <!-- Imports: STYLEGUIDE does not list them, but unused and wildcard imports are not allowed in this project. -->
         <module name="AvoidStarImport"/>
-        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <module name="IllegalImport"/>
         <module name="RedundantImport"/>
         <module name="UnusedImports">
             <property name="processJavadoc" value="false"/>
         </module>
 
-        <!-- Checks for Size Violations.                    -->
-        <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength">
-          <property name="max" value="150"/>
-        </module>
-        <module name="MethodLength">
-          <property name="max" value="500"/>
-        </module>
-        <module name="ParameterNumber">
-            <property name="max" value="12"/>
-        </module>
+        <!-- STYLEGUIDE "Indentation", "Brace Style": 4 spaces, braces on the same line, always braces. -->
+        <module name="LeftCurly"/>
+        <module name="RightCurly"/>
+        <module name="NeedBraces"/>
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
 
-        <!-- Checks for whitespace                               -->
-        <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+        <!-- STYLEGUIDE "Switch Statements": always a default case. -->
+        <module name="MissingSwitchDefault"/>
+
+        <!-- STYLEGUIDE "Modifier" and whitespace: keep the Java layout consistent. -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+        <module name="ArrayTypeStyle"/>
+        <module name="UpperEll"/>
         <module name="EmptyForIteratorPad"/>
         <module name="GenericWhitespace"/>
         <module name="MethodParamPad"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore">
-           <property name="allowLineBreaks" value="true"/>
+            <property name="allowLineBreaks" value="true"/>
         </module>
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
@@ -130,47 +115,32 @@
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
 
-        <!-- Modifier Checks                                    -->
-        <!-- See http://checkstyle.sf.net/config_modifiers.html -->
-        <module name="ModifierOrder"/>
-        <module name="RedundantModifier"/>
-
-        <!-- Checks for blocks. You know, those {}'s         -->
-        <!-- See http://checkstyle.sf.net/config_blocks.html -->
-        <module name="AvoidNestedBlocks"/>
-        <module name="EmptyBlock"/>
-        <module name="LeftCurly"/>
-        <module name="NeedBraces"/>
-        <module name="RightCurly"/>
-
-        <!-- Checks for common coding problems               -->
-        <!-- See http://checkstyle.sf.net/config_coding.html -->
-        <module name="AvoidInlineConditionals"/>
+        <!-- Correctness checks (not named in the STYLEGUIDE, but they find real errors). -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField"/>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <!-- module name="MagicNumber"/ -->
-        <module name="MissingSwitchDefault"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
-
-        <!-- Checks for class design                         -->
-        <!-- See http://checkstyle.sf.net/config_design.html -->
-        <module name="DesignForExtension"/>
-        <module name="FinalClass"/>
-        <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
 
-        <!-- Miscellaneous other checks.                   -->
-        <!-- See http://checkstyle.sf.net/config_misc.html -->
-        <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
-        <module name="TodoComment"/>
-        <module name="UpperEll"/>
-        <module name="SuppressWarningsHolder"/>
+        <!-- STYLEGUIDE "Comments": TODO markers are used to tag code that is marked for later work. -->
+        <!-- <module name="TodoComment"/> --> <!-- TODO tags are allowed; see the TODO rule in the style guide -->
+
+        <!-- Not in STYLEGUIDE (commented out, to be decided by the maintainers) -->
+        <!-- <module name="JavadocMethod"/> -->
+        <!-- <module name="JavadocType"/> -->
+        <!-- <module name="JavadocStyle"/> -->
+        <!-- <module name="JavadocVariable"/> -->
+        <!-- <module name="ParameterNumber"/> not in STYLEGUIDE -->
+        <!-- <module name="AvoidInlineConditionals"/> not in STYLEGUIDE -->
+        <!-- <module name="HiddenField"/> not in STYLEGUIDE: setters use this.field = field -->
+        <!-- <module name="DesignForExtension"/> not in STYLEGUIDE -->
+        <!-- <module name="FinalClass"/> not in STYLEGUIDE -->
+        <!-- <module name="HideUtilityClassConstructor"/> not in STYLEGUIDE -->
+        <!-- <module name="FinalParameters"/> not in STYLEGUIDE -->
+        <!-- <module name="MagicNumber"/> not in STYLEGUIDE -->
+        <!-- <module name="SuppressWarningsHolder"/> not in STYLEGUIDE -->
 
     </module>
     <module name="SuppressWarningsFilter"/>

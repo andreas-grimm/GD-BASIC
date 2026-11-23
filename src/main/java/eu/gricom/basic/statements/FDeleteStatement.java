@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.memoryManager.FileManager;
+import eu.gricom.basic.memorymanager.FileManager;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -85,8 +85,8 @@ public class FDeleteStatement implements Statement {
             if (!bDeleted) {
                 _oLogger.warning("File does not exist: " + strFileName);
             }
-        } catch (Exception e) {
-            _oLogger.warning("Failed to delete file: " + strFileName + ": " + e.getMessage());
+        } catch (Exception oException) {
+            _oLogger.warning("Failed to delete file: " + strFileName + ": " + oException.getMessage());
         }
     }
 
@@ -118,5 +118,10 @@ public class FDeleteStatement implements Statement {
         strReturn += "\"FILE_ID\": \"" + _iFileId + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the FileId of this statement (used by the compiler) */
+    public int getFileId() {
+        return _iFileId;
     }
 }

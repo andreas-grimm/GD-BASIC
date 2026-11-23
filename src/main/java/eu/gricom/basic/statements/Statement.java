@@ -18,7 +18,7 @@ public interface Statement {
     int getTokenNumber();
 
     /**
-     * Statements implement this to actually perform whatever behavior the
+     * Statements implement this to actually perform whatever behaviour the
      * statement causes. "print" statements will display text here, "goto"
      * statements will change the current statement, etc.
      *

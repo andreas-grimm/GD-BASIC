@@ -1,10 +1,14 @@
 package eu.gricom.basic.statements;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,6 +21,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * and negative cases (invalid input types).
  */
 public class ChDirStatementTest {
+
+    /** Every test starts in the directory in which the program (the JVM) was started. */
+    @BeforeEach
+    public void startInProgramDirectory() {
+        new FileManager().setCurrentDirectory(System.getProperty("user.dir"));
+    }
+
+    /** The absolute path that CHDIR must store: the text is resolved against the start directory and normalised. */
+    private static String absoluteFrom(final String strPath) {
+        return Paths.get(System.getProperty("user.dir")).resolve(strPath).toAbsolutePath().normalize().toString();
+    }
 
     /**
      * Positive test: Change directory to an absolute path.
@@ -31,7 +46,7 @@ public class ChDirStatementTest {
         oStatement.execute();
 
         FileManager oFileManager = new FileManager();
-        assertEquals(strTestPath, oFileManager.getCurrentDirectory());
+        assertEquals(absoluteFrom(strTestPath), oFileManager.getCurrentDirectory());
     }
 
     /**
@@ -47,7 +62,7 @@ public class ChDirStatementTest {
         oStatement.execute();
 
         FileManager oFileManager = new FileManager();
-        assertEquals(strRelativePath, oFileManager.getCurrentDirectory());
+        assertEquals(absoluteFrom(strRelativePath), oFileManager.getCurrentDirectory());
     }
 
     /**
@@ -63,7 +78,7 @@ public class ChDirStatementTest {
         oStatement.execute();
 
         FileManager oFileManager = new FileManager();
-        assertEquals(strCurrentPath, oFileManager.getCurrentDirectory());
+        assertEquals(absoluteFrom(strCurrentPath), oFileManager.getCurrentDirectory());
     }
 
     /**
@@ -79,7 +94,7 @@ public class ChDirStatementTest {
         oStatement.execute();
 
         FileManager oFileManager = new FileManager();
-        assertEquals(strHomePath, oFileManager.getCurrentDirectory());
+        assertEquals(absoluteFrom(strHomePath), oFileManager.getCurrentDirectory());
     }
 
     /**
@@ -101,7 +116,7 @@ public class ChDirStatementTest {
         oStatement3.execute();
 
         FileManager oFileManager = new FileManager();
-        assertEquals(strThird, oFileManager.getCurrentDirectory());
+        assertEquals(absoluteFrom(strThird), oFileManager.getCurrentDirectory());
     }
 
     /**
@@ -117,7 +132,7 @@ public class ChDirStatementTest {
         oStatement.execute();
 
         FileManager oFileManager = new FileManager();
-        assertEquals(strPathWithSpaces, oFileManager.getCurrentDirectory());
+        assertEquals(absoluteFrom(strPathWithSpaces), oFileManager.getCurrentDirectory());
     }
 
     /**
@@ -133,7 +148,7 @@ public class ChDirStatementTest {
         oStatement.execute();
 
         FileManager oFileManager = new FileManager();
-        assertEquals(strEmptyPath, oFileManager.getCurrentDirectory());
+        assertEquals(absoluteFrom(strEmptyPath), oFileManager.getCurrentDirectory());
     }
 
     /**
@@ -172,7 +187,7 @@ public class ChDirStatementTest {
         oStatement.execute();
 
         FileManager oFileManager = new FileManager();
-        assertEquals(strWindowsPath, oFileManager.getCurrentDirectory());
+        assertEquals(absoluteFrom(strWindowsPath), oFileManager.getCurrentDirectory());
     }
 
     /**
@@ -188,7 +203,7 @@ public class ChDirStatementTest {
         oStatement.execute();
 
         FileManager oFileManager = new FileManager();
-        assertEquals(strLongPath, oFileManager.getCurrentDirectory());
+        assertEquals(absoluteFrom(strLongPath), oFileManager.getCurrentDirectory());
     }
 
     /**
@@ -225,5 +240,34 @@ public class ChDirStatementTest {
         assertEquals(true, strStructure.contains("\"CHDIR\""));
         assertEquals(true, strStructure.contains("\"TOKEN_NR\": \"130\""));
         assertEquals(true, strStructure.contains("/test/path"));
+    }
+
+    /** Relative names are taken from the current directory, and ".." goes one level up. */
+    @Test
+    public void testChDir_RelativeNamesChainFromCurrentDirectory() throws Exception {
+        String strStart = System.getProperty("user.dir");
+        new ChDirStatement(10, new StringValue("alpha")).execute();
+        new ChDirStatement(20, new StringValue("beta")).execute();
+        FileManager oFileManager = new FileManager();
+        assertEquals(Paths.get(strStart, "alpha", "beta").toString(), oFileManager.getCurrentDirectory());
+
+        new ChDirStatement(30, new StringValue("..")).execute();
+        assertEquals(Paths.get(strStart, "alpha").toString(), oFileManager.getCurrentDirectory());
+    }
+
+    /** An empty name means "stay here", so the stored directory does not change. */
+    @Test
+    public void testChDir_EmptyNameStaysInCurrentDirectory() throws Exception {
+        new ChDirStatement(10, new StringValue("alpha")).execute();
+        String strBefore = new FileManager().getCurrentDirectory();
+        new ChDirStatement(20, new StringValue("")).execute();
+        assertEquals(strBefore, new FileManager().getCurrentDirectory());
+    }
+
+    /** The tilde is not expanded: "~" is an ordinary directory name in BASIC. */
+    @Test
+    public void testChDir_TildeIsNotExpanded() throws Exception {
+        new ChDirStatement(10, new StringValue("~")).execute();
+        assertTrue(new FileManager().getCurrentDirectory().endsWith(Paths.get("~").toString()));
     }
 }

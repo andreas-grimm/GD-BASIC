@@ -2,10 +2,10 @@ package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.statements.Expression;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 
 /**
  * Mid.java
@@ -70,8 +70,8 @@ public final class Mid {
             return true;
         }
         if (oExpression instanceof RealValue) {
-            double dValue = ((RealValue) oExpression).toReal();
-            return dValue == Math.rint(dValue);
+            double fValue = ((RealValue) oExpression).toReal();
+            return fValue == Math.rint(fValue);
         }
         return false;
     }

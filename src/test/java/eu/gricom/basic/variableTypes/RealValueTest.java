@@ -1,4 +1,4 @@
-package eu.gricom.basic.variableTypes;
+package eu.gricom.basic.variabletypes;
 
 import eu.gricom.basic.error.DivideByZeroException;
 import eu.gricom.basic.error.SyntaxErrorException;

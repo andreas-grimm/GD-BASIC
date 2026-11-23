@@ -1,8 +1,7 @@
 package eu.gricom.basic;
 
-import eu.gricom.basic.error.EndOfProgramException;
 import eu.gricom.basic.functions.Mem;
-import eu.gricom.basic.lineEditor.LineEditor;
+import eu.gricom.basic.lineeditor.LineEditor;
 import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.Lexer;
 import eu.gricom.basic.tokenizer.Token;
@@ -11,10 +10,10 @@ import eu.gricom.basic.helper.EnvParam;
 import eu.gricom.basic.helper.FileHandler;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.helper.Printer;
-import eu.gricom.basic.macroManager.MacroProcessor;
-import eu.gricom.basic.memoryManager.Program;
+import eu.gricom.basic.macromanager.MacroProcessor;
+import eu.gricom.basic.memorymanager.Program;
 import eu.gricom.basic.parser.BasicParser;
-import eu.gricom.basic.runtimeManager.Execute;
+import eu.gricom.basic.runtimemanager.Execute;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -39,6 +38,10 @@ public class Basic {
     private Program _oProgram = new Program();
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private static boolean _bDartmouthFlag = EnvParam.getBoolean("dartmouth");
+    /** Build target name from the -o option (null when not given). */
+    private static String _strTargetName = null;
+    /** Java source file name from the -j option (null when not given). */
+    private static String _strJavaFile = null;
     private static String _strVersion = EnvParam.getString("version");
     private static boolean _bEditorFlag = true;
 
@@ -52,7 +55,7 @@ public class Basic {
 
     /**
      * MacroProcessing.
-     * This function manages all macros that need to be processed before the actual tokenization and parsing is
+     * This function manages all macros that need to be processed before the actual tokenisation and parsing is
      * executed.
      *
      * @param oProgram The program object, containing the source code of a .bas script to interpret.
@@ -65,8 +68,8 @@ public class Basic {
 
         try {
             oProgram.setProgram(oMacroProcessor.process(oProgram.getProgram()));
-        } catch (SyntaxErrorException eSyntaxErrorException) {
-            System.out.println(eSyntaxErrorException.getMessage());
+        } catch (SyntaxErrorException oException) {
+            System.out.println(oException.getMessage());
             System.exit(1);
         }
         return oProgram;
@@ -92,23 +95,23 @@ public class Basic {
 
         try {
             _oProgram.setProgram(oMacroProcessor.process(oProgram.getProgram()));
-        } catch (SyntaxErrorException eSyntaxErrorException) {
-            System.out.println(eSyntaxErrorException.getMessage());
+        } catch (SyntaxErrorException oException) {
+            System.out.println(oException.getMessage());
             System.exit(1);
         }
 
-        // Tokenize. At the end of the tokenization, I have the program transferred into a list of tokens and parameters
-        _oLogger.info("Starting tokenization...");
+        // Tokenise. At the end of the tokenisation, I have the program transferred into a list of tokens and parameters
+        _oLogger.info("Starting tokenisation...");
 
         Lexer oTokenizer = new BasicLexer();
 
         try {
             _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
-        } catch (SyntaxErrorException eSyntaxErrorException) {
+        } catch (SyntaxErrorException oException) {
             // This syntax error has to generate due to the use of the macro. Original code errors in the lexer are
             // discovered in the previous step.
-            System.out.println(eSyntaxErrorException.getMessage());
+            System.out.println(oException.getMessage());
             System.exit(1);
         }
 
@@ -129,8 +132,8 @@ public class Basic {
             BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
             _oProgram.setPreRunStatements(oParser.parsePreRun());
             _oProgram.setStatements(oParser.parse());
-        } catch (SyntaxErrorException eSyntaxError) {
-            _oLogger.error(eSyntaxError.getMessage());
+        } catch (SyntaxErrorException oException) {
+            _oLogger.error(oException.getMessage());
         }
     }
 
@@ -153,23 +156,23 @@ public class Basic {
 
         try {
             _oProgram.setProgram(oMacroProcessor.process(oProgram.getProgram()));
-        } catch (SyntaxErrorException eSyntaxErrorException) {
-            System.out.println(eSyntaxErrorException.getMessage());
+        } catch (SyntaxErrorException oException) {
+            System.out.println(oException.getMessage());
             System.exit(1);
         }
 
-        // Tokenize. At the end of the tokenization, I have the program transferred into a list of tokens and parameters
-        _oLogger.info("Starting tokenization...");
+        // Tokenise. At the end of the tokenisation, I have the program transferred into a list of tokens and parameters
+        _oLogger.info("Starting tokenisation...");
 
         Lexer oTokenizer = new BasicLexer();
 
         try {
             _oProgram.setTokens(oTokenizer.tokenize(oProgram.getProgram()));
 
-        } catch (SyntaxErrorException eSyntaxErrorException) {
+        } catch (SyntaxErrorException oException) {
             // This syntax error has to generate due to the use of the macro. Original code errors in the lexer are
             // discovered in the previous step.
-            System.out.println(eSyntaxErrorException.getMessage());
+            System.out.println(oException.getMessage());
             System.exit(1);
         }
 
@@ -187,6 +190,7 @@ public class Basic {
         if (_bEditorFlag) {
             Printer.println("Starting line editor");
             LineEditor oLineEditor = new LineEditor(oProgram, _bDartmouthFlag);
+            oLineEditor.setCompileTargets(_strTargetName, _strJavaFile);
             oLineEditor.execute();
         } else {
             // Parse.
@@ -195,9 +199,9 @@ public class Basic {
                 BasicParser oParser = new BasicParser(oProgram.getTokens(), _bDartmouthFlag);
                 _oProgram.setPreRunStatements(oParser.parsePreRun());
                 _oProgram.setStatements(oParser.parse());
-            } catch (SyntaxErrorException eSyntaxError) {
+            } catch (SyntaxErrorException oException) {
                 // a program that does not parse must not run (Phase 7: exit code 1 so that tests see the error)
-                _oLogger.error(eSyntaxError.getMessage());
+                _oLogger.error(oException.getMessage());
                 System.exit(1);
             }
 
@@ -227,7 +231,7 @@ public class Basic {
      *
      * @param args Command-line arguments.
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] astrArgs) {
         Logger oLogger = new Logger("main");
         Program oProgram = new Program();
         oLogger.setLogLevel(EnvParam.getString("log_level"));
@@ -242,12 +246,14 @@ public class Basic {
             oOptions.addOption("q", false, "quiet mode");
             oOptions.addOption("v", true, "verbose level: (info, debug, trace, or error)");
             oOptions.addOption("d", false, "dartmouth mode");
-            oOptions.addOption("r",false, "execute the loaded program directly, do not use the line editor");
+            oOptions.addOption("r", false, "execute the loaded program directly, do not use the line editor");
+            oOptions.addOption("o", true, "compiler build target name (used by the COMPILE command)");
+            oOptions.addOption("j", true, "Java source file for the compiler (used by COMPILE and SAVEJAVA)");
 
-            CommandLineParser parser = new DefaultParser();
-            oCommandLine = parser.parse(oOptions, args);
-        } catch (ParseException eParseException) {
-            System.out.println(eParseException.getMessage());
+            CommandLineParser oParser = new DefaultParser();
+            oCommandLine = oParser.parse(oOptions, astrArgs);
+        } catch (ParseException oException) {
+            System.out.println(oException.getMessage());
             System.exit(-1);
         }
 
@@ -282,13 +288,23 @@ public class Basic {
             // automatically generator the help statement
             oLogger.debug("Display help message...");
 
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("java -jar BASIC-<build-name>.jar [<filename.bas>]", oOptions);
+            HelpFormatter oFormatter = new HelpFormatter();
+            oFormatter.printHelp("java -jar BASIC-<build-name>.jar [<filename.bas>]", oOptions);
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("d")) {
             _bDartmouthFlag = true;
             oLogger.debug("Dartmouth mode selected...");
+        }
+
+        if (oCommandLine != null && oCommandLine.hasOption("o")) {
+            _strTargetName = oCommandLine.getOptionValue("o");
+            oLogger.debug("Compiler build target: " + _strTargetName);
+        }
+
+        if (oCommandLine != null && oCommandLine.hasOption("j")) {
+            _strJavaFile = oCommandLine.getOptionValue("j");
+            oLogger.debug("Compiler Java file: " + _strJavaFile);
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("r")) {
@@ -297,9 +313,9 @@ public class Basic {
         }
 
         if (oCommandLine != null) {
-            List<String> astrArguments = oCommandLine.getArgList();
+            List<String> vstrArguments = oCommandLine.getArgList();
 
-            if (astrArguments.isEmpty()) {
+            if (vstrArguments.isEmpty()) {
                 // No program file provided; start with empty program in line editor
                 oLogger.info("Starting with empty program in line editor mode...");
                 _bEditorFlag = true;
@@ -312,7 +328,7 @@ public class Basic {
                 System.exit(-1);
             }
 
-            String strFileName = astrArguments.getLast();
+            String strFileName = vstrArguments.getLast();
 
             // Read the file.
             oLogger.info("Read file: " + strFileName + "...");

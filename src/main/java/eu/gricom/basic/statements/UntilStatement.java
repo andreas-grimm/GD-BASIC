@@ -1,10 +1,10 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
-import eu.gricom.basic.memoryManager.Stack;
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
+import eu.gricom.basic.memorymanager.Stack;
+import eu.gricom.basic.variabletypes.IntegerValue;
 
 /**
  * UntilStatement.java
@@ -58,7 +58,7 @@ public final class UntilStatement implements Statement {
                 if (iStatementNo != 0) {
                     _oProgramPointer.setCurrentStatement(iStatementNo);
                 }
-            } catch (NumberFormatException eNumberException) {
+            } catch (NumberFormatException oException) {
                 throw new SyntaxErrorException("UNTIL [incorrect format]: Target: " + iDoCommandLine);
             }
         }
@@ -80,9 +80,15 @@ public final class UntilStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"UNTIL\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"CONDITION\": \""+ _oCondition.structure() +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"CONDITION\": \"" + _oCondition.structure() + "\"";
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the loop condition (used by the compiler) */
+    public Expression getCondition() {
+        return _oCondition;
+    }
 }
+

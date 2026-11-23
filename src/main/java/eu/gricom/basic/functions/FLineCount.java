@@ -1,9 +1,9 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.FileNotFoundException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -127,7 +127,7 @@ public class FLineCount {
                 // Step 7: Always close the temporary file handle
                 try {
                     oReader.close();
-                } catch (IOException eCloseException) {
+                } catch (IOException oException) {
                     // Ignore close exceptions - we have the line count
                 }
             }
@@ -135,37 +135,37 @@ public class FLineCount {
             // Step 8: Return the line count as IntegerValue
             return new IntegerValue(iLineCount);
 
-        } catch (FileNotFoundException eFNFException) {
+        } catch (FileNotFoundException oException) {
             // Re-throw FileNotFoundException - it means file ID is not registered
-            throw eFNFException;
+            throw oException;
 
-        } catch (java.nio.file.NoSuchFileException e) {
+        } catch (java.nio.file.NoSuchFileException oException) {
             // File does not exist on disk - throw FileNotFoundException
-            throw new FileNotFoundException("File not found: " + e.getMessage());
+            throw new FileNotFoundException("File not found: " + oException.getMessage());
 
-        } catch (java.nio.file.AccessDeniedException e) {
+        } catch (java.nio.file.AccessDeniedException oException) {
             // File exists but cannot be accessed - throw FileNotFoundException
-            throw new FileNotFoundException("Access denied to file: " + e.getMessage());
+            throw new FileNotFoundException("Access denied to file: " + oException.getMessage());
 
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException oException) {
             // Other I/O errors (permission denied, I/O error, etc.) - throw FileNotFoundException
-            throw new FileNotFoundException("I/O error reading file: " + e.getMessage());
+            throw new FileNotFoundException("I/O error reading file: " + oException.getMessage());
 
-        } catch (java.nio.file.InvalidPathException e) {
+        } catch (java.nio.file.InvalidPathException oException) {
             // Invalid path format - throw FileNotFoundException
-            throw new FileNotFoundException("Invalid file path: " + e.getMessage());
+            throw new FileNotFoundException("Invalid file path: " + oException.getMessage());
 
-        } catch (SecurityException e) {
+        } catch (SecurityException oException) {
             // Security manager prevents file access - throw FileNotFoundException
-            throw new FileNotFoundException("Security manager denied access: " + e.getMessage());
+            throw new FileNotFoundException("Security manager denied access: " + oException.getMessage());
 
-        } catch (NullPointerException e) {
+        } catch (NullPointerException oException) {
             // Unexpected null reference - throw FileNotFoundException
-            throw new FileNotFoundException("Unexpected null reference: " + e.getMessage());
+            throw new FileNotFoundException("Unexpected null reference: " + oException.getMessage());
 
-        } catch (Exception e) {
+        } catch (Exception oException) {
             // Catch-all for any other unexpected exceptions
-            throw new FileNotFoundException("Unexpected error counting lines: " + e.getMessage());
+            throw new FileNotFoundException("Unexpected error counting lines: " + oException.getMessage());
         }
     }
 }

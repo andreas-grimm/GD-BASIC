@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.VariableManagement;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.VariableManagement;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.util.List;
 import java.util.StringJoiner;
@@ -35,11 +35,11 @@ public final class ArrayAssignStatement implements Statement {
      */
     public ArrayAssignStatement(final int iTokenNumber,
                                 final String strArrayName,
-                                final List<Expression> aoIndexExpressions,
+                                final List<Expression> voIndexExpressions,
                                 final Expression oValue) {
         _iTokenNumber = iTokenNumber;
         _strArrayName = strArrayName;
-        _aoIndexExpressions = aoIndexExpressions;
+        _aoIndexExpressions = voIndexExpressions;
         _oValue = oValue;
     }
 
@@ -90,9 +90,9 @@ public final class ArrayAssignStatement implements Statement {
         oBuilder.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
         oBuilder.append("\"NAME\": \"").append(_strArrayName).append("\",");
         oBuilder.append("\"INDICES\": [");
-        for (int i = 0; i < _aoIndexExpressions.size(); i++) {
-            oBuilder.append(_aoIndexExpressions.get(i).structure());
-            if (i < _aoIndexExpressions.size() - 1) {
+        for (int iIndex = 0; iIndex < _aoIndexExpressions.size(); iIndex++) {
+            oBuilder.append(_aoIndexExpressions.get(iIndex).structure());
+            if (iIndex < _aoIndexExpressions.size() - 1) {
                 oBuilder.append(",");
             }
         }

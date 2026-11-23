@@ -1,12 +1,12 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
 import eu.gricom.basic.error.EmptyStackException;
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.variabletypes.StringValue;
 import org.junit.jupiter.api.Test;
 
 public class StackTest {

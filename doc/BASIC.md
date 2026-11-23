@@ -1,6 +1,6 @@
 # GD-BASIC Language Reference
 
-**Version:** 0.3.0  
+**Version:** 0.4.0  
 **Interpreter:** GriCom Diminutive BASIC Interpreter  
 **Language:** Java 21  
 **Last Updated:** 2026-11-22
@@ -15,10 +15,10 @@ very similar to the original BASIC interpreters and additional functions are add
 If the functionality of the interpreter does not match the documentation, refer to the error reporting processing in 
 GitHub. Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
-> **Updated for v0.2.0**: The `#` suffix for real variables has been removed. Variables without a suffix now default to Real type (floating-point). Examples throughout this document reflect the current syntax.
+> **Status (checked 2026-11-23, version 0.4.0, branch `feature/compiler`)**: this document describes the 0.4.0 rules. Version 0.4.0 contains the decimal (BCD) work from branch `feature/bcd-arithmetic` and the compiler from branch `feature/compiler`; neither is merged yet. In 0.4.0 a variable with no suffix is REAL, `#` marks decimal (BCD) variables, and `!` is the BOOLEAN suffix. `@` is no longer a variable suffix and gives an error. The status column in the variable table says which rules are in 0.4.0 and which are in the released 0.2.1 code.
 >
-> **Version 0.3.0 (branch `feature/bcd-arithmetic`, not yet merged)**: a variable with no suffix is REAL. `#` marks decimal (BCD) variables. `!` is the BOOLEAN suffix, and `@` is no longer a variable suffix (it gives an error). The status column in the variable table below says which rules are in version 0.3.0 and which are in the released 0.2.1 code.
-
+> **Problems found on 2026-11-23** are listed in `doc/KNOWN_ISSUES.md`. Where a section below says a feature does not work, it links to that page.
+>
 > **Updated for v0.2.0+**: Interactive line editor now supports LOAD, SAVE, DELETE, and HELP commands. See Line Editor section below.
 
 ---
@@ -213,7 +213,7 @@ the example of `JRUBY` for Ruby or `JYTHON` for Python.
 
 GD-BASIC is based on the **Dartmouth BASIC October 1964** specification, the original and definitive version of the BASIC programming language. The implementation maintains backward compatibility with the original Dartmouth BASIC while adding modern extensions for enhanced functionality.
 
-**Primary Reference**: [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf)
+**Primary Reference**: [Dartmouth BASIC October 1964 Manual](Dartmouth_BASIC_Oct64.pdf)
 
 #### `GD-BASIC`
 
@@ -223,13 +223,13 @@ GD-BASIC is based on the **Dartmouth BASIC October 1964** specification, the ori
 | `INTEGER` | `AB%` (32-bit) | 1, 2, 9999 | Implemented |
 | `LONG` | `AB&` (64-bit) | 1, 2, 9999 | Implemented |
 | `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | "A Text" | Implemented |
-| `BOOLEAN` | `AB@` | `true` or `false` | Released 0.2.1 only. In 0.3.0 `@` gives an error |
-| `BOOLEAN` | `AB!` | `true` or `false` | Implemented in 0.3.0. In 0.2.1 `!` is DOUBLE |
-| `BCD` (decimal) | `AB#` (up to 40 significant digits) | 1.5, 0.1, 1234.56 | Implemented in 0.3.0. In 0.2.1 `#` is rejected |
+| `BOOLEAN` | `AB@` | `true` or `false` | Released 0.2.1 only. In 0.4.0 `@` gives an error |
+| `BOOLEAN` | `AB!` | `true` or `false` | Implemented in 0.4.0. In 0.2.1 `!` is DOUBLE |
+| `BCD` (decimal) | `AB#` (up to 40 significant digits) | 1.5, 0.1, 1234.56 | Implemented in 0.4.0. In 0.2.1 `#` is rejected |
 
 **Status column:** "Implemented" means the behaviour is in the code. Where the status says "0.2.1 only" or "In 0.2.1", the rule of the released code is shown. The decisions and their status are listed in `doc/GD-BASIC_Detailed_Design.md`, section "Decision register".
 
-#### Suffix rules and ambiguities (version 0.3.0)
+#### Suffix rules and ambiguities (version 0.4.0)
 
 The suffix set is `%`, `$`, `#`, `&`, `!`. A character is read as a suffix only when:
 1. the character before it is a letter, a digit or another suffix (`Normalizer.java`), and
@@ -269,7 +269,7 @@ gives a high level overview on their expected use.
 ## Language Elements
 
 #### Structure of BASIC Programs
-**Reference**: [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf), Section 1.1 - Program Structure
+**Reference**: [Dartmouth BASIC October 1964 Manual](Dartmouth_BASIC_Oct64.pdf), Section 1.1 - Program Structure
 
 The Dartmouth version of the program structure consists of a program line in two parts:
 1. A line number, which is a unique integer ahead of every single line. This number has to be constantly growing in 
@@ -345,7 +345,7 @@ this variable type is already implemented using the largest representation.
 
 #### Decimal Numbers (BCD)
 A variable whose name ends with `#` holds a decimal (Binary Coded Decimal) number. Decimal
-numbers keep the digits you type, so `0.1 + 0.2` gives exactly `0.3`. This type is implemented in version 0.3.0
+numbers keep the digits you type, so `0.1 + 0.2` gives exactly `0.3`. This type is implemented in version 0.4.0
 (branch `feature/bcd-arithmetic`).
 
 ```basic
@@ -370,7 +370,7 @@ Rules:
 
 #### Booleans
 Booleans are variables with two possible results: True or False. The suffix is `!` (`FLAG! = TRUE`).
-In version 0.2.1 the suffix was `@`; in version 0.3.0 `@` gives an error (see the suffix rules above).
+In version 0.2.1 the suffix was `@`; in version 0.4.0 `@` gives an error (see the suffix rules above).
 
 ##### Definition of the Boolean Algebra
 
@@ -422,107 +422,173 @@ Example:
 40 END
 ```
 
+### Unary Minus and Operators Without Spaces
+
+**Unary minus.** `-A` means the value of A times -1. The type of A is kept: an integer stays an integer, and a decimal (BCD) stays a decimal.
+
+- `A% = 5` then `PRINT -A%` prints `-5`.
+- A string is refused. `S$ = "x"` then `PRINT -S$` stops the program with `Cannot apply unary minus to a string: x`.
+- A boolean swaps the value: `-TRUE` is `FALSE`, and `-FALSE` is `TRUE`.
+
+**Operators without spaces.** The operators do not need spaces around them. The lexer splits them out:
+
+| Written | Read as |
+|---------|---------|
+| `A-B` | `A - B` (subtraction) |
+| `2*A` | `2 * A` |
+| `X=-A` | `X = - A` (assignment of the negated value) |
+| `A<=B` | `A <= B` |
+
+The operators that are split out are `+ - * / ^ = < > <= >= == != << >>`.
+
+- A minus in front of a number after an operator or a keyword stays a negative number: `X = -5`, `DATA -1`, `STEP -1`.
+- A minus after a name or a number is subtraction: `A-1` is `A - 1`, and `1-A` is `1 - A`.
+- The characters `%`, `&`, `|` and `!` are not split out, because they are also type suffixes (`A%`, `A&`, `A!`). A minus after a suffix is still split out: `A%-1` is read as `A% - 1`. The internal key `A%-1` belongs to the array element `A%(1)` only; a programmer's `A%-1` never finds it.
+- Text inside quotation marks is never changed, and comment lines (REM, DIM, `'`) are never changed.
+
 ## Reserved Words
-The following keywords are reserved and cannot be used for variables. The following list defines the use of the keywords:
 
-- `implemented`: the keyword is actively used in the interpreter
-- `planned`: the keyword is used in the current development and/or released as a beta
-- `reserved`: the keyword might be used in the future or is already on the roadmap. Do not use these keywords in order to be compatible in the future.
+This table lists the keywords and built-in words of GD-BASIC 0.4.0, and what each one does. It was rebuilt on 2026-11-23 from `tokenizer/ReservedWords.java`, the parser and the function classes.
 
-| Reserved Word |  `GD-BASIC` | Jasic | 
-|---------------|-----------|-------|
-| `ABS` | implemented | |
-| `AND` | implemented | |
-| `ASC` | implemented | |
-| `ATN` | implemented | |
-| `CALL` | implemented | |
-| `CDBL` | implemented | |
-| `CHR` | implemented | |
-| `CINT` | implemented | |
-| `CLOSE` | reserved | |
-| `CLS` | reserved | |
-| `CMD` | reserved | |
-| `CONT` | reserved | |
-| `COS` | implemented | |
-| `DATA` | implemented | |
-| `DEF FN` | planned | |
-| `DIM` | depreciated | |
-| `DO` | implemented | |
-| `ELSE` | implemented | |
-| `END` | implemented | |
-| `END-IF` | implemented | |
-| `END-WHILE` | implemented | |
-| `EOF` | implemented | |
-| `EOL` | reserved | |
-| `ERL` | reserved | |
-| `ERR` | reserved | |
-| `EXIT` | planned | |
-| `EXP` | implemented | |
-| `FCLOSE` | implemented | |
-| `FOPEN` | implemented | |
-| `FOR` | implemented | |
-| `FINPUT` | implemented | |
-| `FREE` | reserved | |
-| `FPRINT` | implemented | |
-| `GOSUB` | implemented | |
-| `GOTO` | implemented | implemented |
-| `IF` | implemented | implemented |
-| `INSTR` | implemented | |
-| `INPUT` | implemented | implemented |
-| `LEFT` | implemented | |
-| `LEN` | implemented | |
-| `LET` | depreciated | |
-| `LOG` | implemented | |
-| `MEM` | implemented | |
-| `MID` | implemented | |
-| `NEXT` | implemented | |
-| `NOT` | implemented | |
-| `ON` | reserved | |
-| `OPEN` | reserved | |
-| `OR` | implemented | |
-| `PRINT` | implemented | implemented |
-| `RANDOM` | reserved | |
-| `READ` | implemented | |
-| `REM` | implemented | |
-| `REMINDER` | reserved | |
-| `RETURN` | implemented | |
-| `RIGHT` | implemented | |
-| `RND` | implemented | |
-| `SHIFT_LEFT` | implemented (operator `<<`, see Shift Operators) | |
-| `SHIFT_RIGHT` | implemented (operator `>>`, see Shift Operators) | |
-| `SIN` | implemented | |
-| `SQR` | implemented | |
-| `STEP` | implemented | |
-| `STOP` | planned | |
-| `STRING` | reserved | |
-| `STR` | implemented | |
-| `SYSTEM` | implemented | |
-| `TAB` | reserved | |
-| `TAN` | implemented | |
-| `THEN` | implemented | implemented |
-| `TIME` | implemented | |
-| `TO` | implemented | |
-| `UNTIL` | implemented | |
-| `VAL` | implemented | |
-| `WEND` | implemented (alias of END-WHILE) | |
-| `WHILE` | implemented | |
-| `+` | implemented | implemented |
-| `-` | implemented | implemented |
-| `*` | implemented | implemented |
-| `/` | implemented | implemented |
-| `:` | reserved | implemented |
-| `>` | implemented | implemented |
-| `=>` | implemented | |
-| `<` | implemented | implemented |
-| `=<` | implemented |  |
-| `=` | implemented | implemented |
-| `:=` | reserved | |
-| `==` | implemented | |
-| `!=` | implemented | |
-| `^` | implemented | |
-| `'` | implemented | |
-| `&&` | implemented | |
-| `||` | implemented | |
+**How to read the status column**
+
+- `implemented`: works in 0.4.0.
+- `implemented (partly)` or `implemented (broken)`: the word is accepted, but one documented use fails. The note names the problem in `doc/KNOWN_ISSUES.md`.
+- `deprecated`: still accepted, but do not use it in new programs.
+- `planned`: documented as intended, not working yet.
+- `not supported`: the interpreter refuses it with an error.
+- `reserved`: the word cannot be used as a variable name, and it has no working meaning yet.
+
+**Checked on 2026-11-23?** `yes` means the word was run in a small program on that day. `no` means the status comes from the source code and the earlier table, and the word was not run again. Words marked `no` are covered by the system tests in `test/system/` or by unit tests.
+
+| Word | Status | Checked on 2026-11-23? | Note | Jasic |
+|------|--------|------------------------|------|-------|
+| `ABS` | implemented | yes | |  |
+| `ASC` | implemented | yes | |  |
+| `ATN` | implemented | yes | |  |
+| `CALL` | implemented | yes | HTTP POST. Only the connection-failure path was run (there is no server) | |
+| `CDBL` | implemented | yes | |  |
+| `CHDIR` | implemented | yes | absolute path becomes the new working directory | |
+| `CHR` | implemented | yes | `CHR(66)` and `CHR$(65)` both work | |
+| `CINT` | implemented | yes | |  |
+| `CLEAN` | reserved | yes | `Incorrect Command` | |
+| `CLOSE` | reserved | yes | `Incorrect Command` | |
+| `CLS` | reserved | yes | `Incorrect Command` | |
+| `CMD` | reserved | yes | `Incorrect Command` | |
+| `CONT` | reserved | yes | `Incorrect Command` | |
+| `COS` | implemented | yes | |  |
+| `DATA` | implemented | no | |  |
+| `DEF` | implemented | yes | macro body in double quotes works. A bare `DEF` crashes (KI-03) | |
+| `DEF FN` | planned | no | use `DEF FNA(X) = "..."`, see `DEF` | |
+| `DIM` | deprecated | yes | runs, prints a warning, and is otherwise ignored | |
+| `DIREXISTS` | implemented | yes | |  |
+| `DO` | implemented | yes | `DO ... UNTIL` works. `EXIT` inside `DO` does not (KI-06) | |
+| `ELSE` | implemented | yes | works in block IF. After a single-line IF it crashes (KI-09) | |
+| `END` | implemented | yes | |  |
+| `END-IF` | implemented | yes | |  |
+| `END-WHILE` | implemented | no | |  |
+| `EOF` | implemented | yes | |  |
+| `EOL` | reserved | yes | `Incorrect Command` | |
+| `ERL` | reserved | yes | `Incorrect Command` | |
+| `ERR` | reserved | yes | `Incorrect Command` | |
+| `EXIT` | planned | yes | does not work yet (KI-06) | |
+| `EXP` | implemented | yes | |  |
+| `FCLOSE` | implemented | yes | needs an action string: `"KEEP"` or `"DELETE"` | |
+| `FCOMPARE` | implemented | no | takes two file IDs | |
+| `FCOPY` | implemented | no | |  |
+| `FDELETE` | implemented | no | |  |
+| `FEXISTS` | implemented | yes | |  |
+| `FGET` | implemented | no | |  |
+| `FGETNAME` | implemented | yes | takes a file ID | |
+| `FGETSIZE` | implemented | yes | takes a file ID, not a file name | |
+| `FINPUT` | implemented | yes | reads one line into a variable | |
+| `FISOPEN` | implemented | yes | takes a file ID | |
+| `FLINECOUNT` | implemented | yes | takes the ID of an open file | |
+| `FMODTIME` | implemented | yes | takes a file ID | |
+| `FOPEN` | implemented | yes | `FOPEN 1 "data.txt" "write"` | |
+| `FOR` | implemented | yes | the `NEXT` line has no variable name (see FOR) | |
+| `FPEEK` | implemented | no | |  |
+| `FPRINT` | implemented | yes | |  |
+| `FPUT` | implemented | no | |  |
+| `FREE` | reserved | yes | `Incorrect Command` | |
+| `FRENAME` | implemented | no | |  |
+| `FREWIND` | implemented | no | |  |
+| `GETCWD` | implemented | yes | returns the absolute working directory | |
+| `GOSUB` | implemented | no | |  |
+| `GOTO` | implemented | no | | implemented |
+| `IF` | implemented | yes | block form and `THEN line` form. Comparisons use `==` | implemented |
+| `INPUT` | implemented | no | reads from standard input | implemented |
+| `INSTR` | implemented | yes | one-based position | |
+| `LEFT` | implemented | yes | `LEFT$` | |
+| `LEN` | implemented | yes | |  |
+| `LENGTH` | reserved | yes | `Incorrect Command` | |
+| `LET` | not supported | yes | refused with `Incorrect Command` (KI-08) | |
+| `LISTDIR` | reserved | yes | the function is `LISTDIRECTORY` | |
+| `LISTDIRECTORY` | implemented (broken) | yes | crashes in a BASIC program (KI-04) | |
+| `LOG` | implemented | yes | |  |
+| `LOG10` | implemented | yes | |  |
+| `LOWER` | implemented | yes | `LOWER$` | |
+| `MEM` | implemented | yes | `MEM()` gives free memory, which changes between runs | |
+| `MID` | implemented | yes | `MID$` | |
+| `MKDIR` | implemented | yes | creates a directory | |
+| `NEXT` | implemented | yes | bare `NEXT` only. `NEXT I` is refused (D2 in KNOWN_ISSUES) | |
+| `NOT` | implemented | yes | |  |
+| `ON` | implemented | yes | `ON ... GOTO` checked. `ON ... GOSUB` not re-run | |
+| `OPEN` | reserved | yes | `Incorrect Command` | |
+| `OR` | implemented | no | operator | |
+| `@PRAGMA` | implemented | yes | brackets and quotes are required: `@PRAGMA( "log" = "info" )` | |
+| `PRINT` | implemented | yes | | implemented |
+| `RANDOM` | reserved | yes | `Incorrect Command` | |
+| `READ` | implemented | no | |  |
+| `REM` | implemented | no | comment | |
+| `REMINDER` | reserved | no | not found in `tokenizer/ReservedWords.java`; kept from the earlier table | |
+| `RETURN` | implemented | no | |  |
+| `RIGHT` | implemented | yes | `RIGHT$` | |
+| `RMDIR` | implemented | yes | removes an empty directory | |
+| `RND` | implemented | yes | takes no parentheses: `PRINT RND` | |
+| `SHIFT_LEFT` | implemented | no | operator `<<`, see Shift Operators | |
+| `SHIFT_RIGHT` | implemented | no | operator `>>`, see Shift Operators | |
+| `SIN` | implemented | yes | |  |
+| `SQL` | reserved | yes | `Incorrect Command` | |
+| `SQR` | implemented | yes | |  |
+| `STEP` | implemented | no | part of `FOR` | |
+| `STOP` | planned | yes | not supported (KI-07) | |
+| `STR` | implemented | yes | `STR$` | |
+| `STRING` | reserved | yes | `STRING$` does not parse | |
+| `SYSTEM` | implemented (partly) | yes | `RUN` works. `START` gives `Parameter error` (KI-05) | |
+| `TAB` | reserved | yes | `Incorrect Command` | |
+| `TAN` | implemented | yes | |  |
+| `THEN` | implemented | no | part of `IF` | implemented |
+| `TIME` | implemented | yes | `TIME()` gives milliseconds | |
+| `TO` | implemented | no | part of `FOR` | |
+| `UNTIL` | implemented | yes | part of `DO` | |
+| `UPPER` | implemented | yes | `UPPER$` | |
+| `VAL` | implemented | yes | |  |
+| `WEND` | implemented | yes | second spelling of `END-WHILE` | |
+| `WHILE` | implemented | yes | |  |
+| `WRITE` | reserved | yes | `Incorrect Command` | |
+
+**Operators**
+
+| Operator | Status | Checked on 2026-11-23? | Note | Jasic |
+|---|---|---|---|---|
+| `+` | implemented | yes | | implemented |
+| `-` | implemented | yes | `A-1` is `A - 1` | implemented |
+| `*` | implemented | no | | implemented |
+| `/` | implemented | no | | implemented |
+| `:` | implemented | yes | separates statements on one line: `10 A = 1 : PRINT A` | implemented |
+| `>` | implemented | no | | implemented |
+| `=>` | not supported | yes | refused with `Incorrect Command` (KI-15). Use `>=` | |
+| `<` | implemented | yes | | implemented |
+| `=<` | not supported | yes | refused with `Incorrect Command` (KI-15). Use `<=` | |
+| `=` | implemented (assignment only; use `==` to compare) | yes | `A = 1` assigns. `IF A = 1` is refused | implemented |
+| `:=` | reserved | no | |  |
+| `==` | implemented (comparison) | yes | | |
+| `!=` | implemented | yes | | |
+| `^` | implemented | yes | `2^10` is `1024.0` | |
+| `'` | implemented | yes | starts a comment, for example `10 PRINT 1 ' note` | |
+| `&&` | implemented | yes | boolean AND | |
+| `||` | not supported | yes | refused with `Incorrect Operator` (KI-15). Use `OR` | |
 
 ## Statements
 
@@ -535,6 +601,28 @@ of the line numbers is not allowed. The structure of a statement is:
 Example:
 
     100 PRINT "This is an example"
+
+### Keyboard Input (INPUT)
+
+The `INPUT` command reads one line from standard input (the keyboard, or a file piped into the program) and stores it in a variable.
+
+###### BASIC Syntax
+`INPUT <variable>`
+
+- If the line is a number (for example `21` or `-2.5`), it is stored as a REAL value.
+- Any other line is stored as a string.
+- A number typed for a string variable (`N$`) stops the program with a type mismatch error.
+- A text typed for a numeric variable (`A`) stops the program with the message `Unknown Exception: For input string: "..."`. This message is not clear. It is recorded as a finding for a later change.
+- When no more input is available, the program stops with `Incorrect input detected: no more input is available`.
+
+Example:
+```basic
+10 INPUT N$
+20 PRINT "Hello "; N$
+30 INPUT A
+40 PRINT -A
+50 END
+```
 
 ### File I/O
 
@@ -747,10 +835,97 @@ Example:
 150 RETURN
 ```
 
+#### FCOPY
+
+The `FCOPY` command copies the content of one open file to another open file.
+
+###### BASIC Syntax
+`FCOPY <source_file_id>, <destination_file_id>`
+
+- Both file IDs must be open (opened with `FOPEN`).
+- The content of the source file is written to the destination file.
+
+Example:
+```basic
+10 FOPEN 1 "a.txt" "read"
+20 FOPEN 2 "b.txt" "write"
+30 FCOPY 1, 2
+40 FCLOSE 1 ""
+50 FCLOSE 2 ""
+60 END
+```
+
+#### FDELETE
+
+The `FDELETE` command deletes the file that belongs to a file ID.
+
+###### BASIC Syntax
+`FDELETE <file_id>`
+
+- The file ID must still be registered in the file manager. After `FCLOSE <id> ""` or `FRENAME`, the ID is not registered. `FDELETE` then writes a warning (`File ID <id> is not registered in FileManager`) and deletes nothing.
+- To close a file and delete it in one step, use `FCLOSE <id> "DELETE"` instead.
+
+Example:
+```basic
+10 FOPEN 1 "temp.txt" "write"
+20 FPRINT 1 "temporary"
+30 FDELETE 1
+40 END
+```
+
 ### Comments
 Comments start with ' and proceed to the end of the line:
 
     PRINT "hi there" ' this is a comment
+
+### File Functions
+
+These functions return information about a file. The argument is a file ID (an integer, or a whole number such as `2`).
+
+| Function | Returns |
+|----------|---------|
+| `FEXISTS("name")` | TRUE if a file with that name exists in the working directory. Takes a file name, not a file ID. |
+| `FISOPEN(id)` | TRUE if the file with that ID is open. |
+| `FGETNAME(id)` | The file name that belongs to the ID. Nothing is returned if the ID is not open. |
+| `FGETSIZE(id)` | The size of the file in bytes (LONG). |
+| `FLINECOUNT(id)` | The number of lines in the file. The file is not left open. |
+| `FMODTIME(id)` | The date and time of the last change of the file. The file is not left open. |
+| `FCOMPARE(id1, id2)` | TRUE if both files have the same lines, FALSE otherwise. |
+
+A file ID that is not a whole number (for example the text `"2"`) stops the program with `File ID is not an integer`.
+
+Example:
+```basic
+10 FOPEN 2 "data.txt" "write"
+20 FPRINT 2 "hello"
+30 FCLOSE 2 ""
+40 PRINT FEXISTS("data.txt")
+50 END
+```
+
+### Directory Commands
+
+###### BASIC Syntax
+- `CHDIR "<directory>"`
+- `MKDIR "<directory>"`
+- `RMDIR "<directory>"` or `RMDIR "<directory>", TRUE`
+- `DIREXISTS("<directory>")` (function, returns TRUE or FALSE)
+- `GETCWD()` (function, returns the working directory as an absolute path)
+
+- The working directory starts as the directory in which the program was started. `GETCWD()` returns it as an absolute path (no trailing separator).
+- `CHDIR` changes the working directory. A relative name is taken from the current working directory, and `..` goes one level up. The result is stored as an absolute path, so `GETCWD()` always returns the absolute path.
+- `CHDIR ""` keeps the current working directory. `~` is not expanded; it is an ordinary directory name.
+- `MKDIR` creates a new directory. It stops the program if the directory already exists.
+- `RMDIR "dir"` removes an empty directory. With `, TRUE` it also removes everything inside it. Without `TRUE`, a directory that is not empty stops the program.
+
+Example:
+```basic
+10 MKDIR "reports"
+20 PRINT DIREXISTS("reports")
+30 RMDIR "reports"
+40 PRINT DIREXISTS("reports")
+50 END
+```
 
 ### Assignments
 
@@ -773,7 +948,7 @@ operation only the assignment operator can be used. The comparison user is gener
 GD-BASIC supports two expression evaluation modes to maintain compatibility with different BASIC dialects:
 
 #### Dartmouth Mode (`_bDartmouthFlag = true`)
-**Reference**: [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf)
+**Reference**: [Dartmouth BASIC October 1964 Manual](Dartmouth_BASIC_Oct64.pdf)
 
 Follows the original Dartmouth BASIC specification with **left-to-right evaluation**:
 - All operators have equal precedence
@@ -840,11 +1015,13 @@ flowchart TD
     50 UNTIL X# >= 10
 
 ###### `EXIT` Command
+> **Status (checked 2026-11-23): not working yet.** A standalone `EXIT` is refused (`Incorrect Command`), and inside a block IF in a `WHILE` loop it does not stop the loop. See KI-06 in `doc/KNOWN_ISSUES.md`.
+>
 The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
 statement.
 
 ###### `UNTIL` Command
-The `UNTIL` command closes the `DO` loop. It contains the exit condition, which needs to be true in order to lease the loop. If the
+The `UNTIL` command closes the `DO` loop. It contains the exit condition, which needs to be true in order to leave the loop. If the
 condition is false, the loop will return to the `DO` command and will continue from there.
 
 ###### References
@@ -860,6 +1037,8 @@ Between the increment number after the step and the `NEXT` command, which trigge
 The syntax looks as follows:
 
 `FOR <variable> = <number> TO <number> STEP <number> <statement> NEXT`
+
+> **Note (checked 2026-11-23):** the `NEXT` line takes no variable name. Write `NEXT`, not `NEXT I`. `NEXT I` is refused with `Incorrect Operator` (see D2 in `doc/KNOWN_ISSUES.md`).
 
 ###### BASIC Syntax
 
@@ -893,7 +1072,7 @@ The syntax of the `WHILE` loop is as follows:
 
 `WHILE <condition> <statement> EXIT <statement> END-WHILE`
 
-`WEND` is a second spelling of `END-WHILE` (version 0.3.0).
+`WEND` is a second spelling of `END-WHILE` (version 0.4.0).
 
 ###### BASIC Syntax
 
@@ -903,6 +1082,8 @@ The syntax of the `WHILE` loop is as follows:
     240 END-WHILE
 
 ###### `EXIT` Command
+> **Status (checked 2026-11-23): not working yet.** A standalone `EXIT` is refused (`Incorrect Command`), and inside a block IF in a `WHILE` loop it does not stop the loop. See KI-06 in `doc/KNOWN_ISSUES.md`.
+>
 The `EXIT` command terminates the `WHILE` and the `DO` loop immediately and continues with the first command after the `END-WHILE` or the `UNTIL`
 statement.
 
@@ -940,6 +1121,8 @@ Evaluates the expression and prints the result.
 The `PRINT` command terminates its output with CRLF (Carriage return / line feed) character, the next output is at the beginning
 of a new line. By ending the `PRINT` command with a semicolon (`;`), the CRLF character sequence is not printed, the next output starts
 after the last output printed.
+
+Items separated by a comma (`,`) are printed next to each other with **no space** between them. This was confirmed by the owner on 2026-11-22 (see `CHANGELOG.md`). For example, `PRINT 1,2` prints `1.02.0`. To get a space, use `;` and a quoted space: `PRINT 1; " "; 2`. See KI-17 in `doc/KNOWN_ISSUES.md`.
 
 Example:
 
@@ -1094,6 +1277,8 @@ The BASIC version of the `IF` command supports to coding versions:
 
 `IF <condition> THEN <statements> ELSE <statements> END-IF` and
 `IF <condition> THEN <line_number>`
+
+> **Notes (checked 2026-11-23):** (a) Comparisons use `==`. A single `=` in an `IF` is refused, because `=` means assignment (see the Operators section). (b) A single-line form with a statement after `THEN`, such as `IF A == 1 THEN PRINT "one" ELSE PRINT "other"`, is not supported: it crashes after the `THEN` part runs (KI-09). Use one of the two forms above.
 
 When the `IF` command is used, it evaluates the condition in the command. If this condition evaluates to a true 
 value, then either the commands in the block between the `THEN` and the `END-IF` is executed, or the program jumps to 
@@ -1261,7 +1446,7 @@ The function `EXP` gives the exponential value or the parameter to the base e. T
 The function `LOG` returns the logarithm naturalis of the parameter given. The parameter needs to be of type `real`.
 
 #### `LOG10`
-The function `LOG10` returns the logarithm decimalis of the parameter given. The parameter needs to be of type `real`.
+The function `LOG10` returns the decimal (base 10) logarithm of the parameter given. The parameter needs to be of type `real`.
 
 #### `NOT`
 The function `NOT` reverses the logical or boolean content of a variable and returns that content: `true` becomes 
@@ -1307,7 +1492,7 @@ A fractional position gives an error.
 `MID$(text, start, end)` returns the characters from `start` to `end`, both included. `MID$("Hello", 2, 3)` gives `ll` (owner confirmed, 2026-11-22: the code is correct).
 
 #### `INSTR`
-Returns the one-based position of the first match, or `0` when the text is not found (version 0.3.0).
+Returns the one-based position of the first match, or `0` when the text is not found (version 0.4.0).
 
 #### `RIGHT`
 Get the right side of a string
@@ -1350,7 +1535,11 @@ Example:
 The `MEM` function returns the size of the available memory as an integer. The function does not require any parameter.
 
 #### `SYSTEM`
-The `SYSTEM` executes a command on OS level. The function works is called with two parameters:
+The `SYSTEM` executes a command on OS level. The function is called with two parameters.
+
+> **Status (checked 2026-11-23):** only `RUN` is implemented. `SYSTEM("RUN", "echo hi")` returns `hi`. The `START` command described below gives `Parameter error` (KI-05).
+
+The function works as follows:
 - Command: defines what the function is going to do: `RUN` executes a shell command, `START` executes any program 
   from the system. The first command returns the result of the execution as a `String` value - while the second 
   command starts any program, and does not return a result.
@@ -1384,8 +1573,8 @@ The macros are called in the program as follows:
 
 The following standard Basic commands are depreciated and should not be used.
 
-- The `LET` command is depreciated and will be ignored
-- The `DIM` command is depreciated and will be ignored
+- The `LET` command is deprecated and is **not accepted**. A line that starts with `LET` gives `Incorrect Command` (checked 2026-11-23, KI-08). Write the assignment without it: `A = 4`.
+- The `DIM` command is deprecated. It still runs, but it prints a warning (`not supported`) and is otherwise ignored. Arrays do not need it.
 
 The `SINGLE` data type of the old BASIC implementations does not exist in `GD-BASIC`. The developer is asked to use 
 the simple integer data type. Therefore, the conversions functions are not implemented:
@@ -1417,7 +1606,7 @@ The implementation follows the **Dartmouth BASIC October 1964** specification, w
 
 **Dartmouth BASIC Resources:**
 - [Dartmouth BASIC 50th Anniversary](https://www.dartmouth.edu/basicfifty/commands.html) - Online reference
-- [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf) - Original specification document
+- [Dartmouth BASIC October 1964 Manual](Dartmouth_BASIC_Oct64.pdf) - Original specification document
 - [Wikipedia: Dartmouth BASIC](https://en.wikipedia.org/wiki/Dartmouth_BASIC) - Historical overview
 
 The language support is most complete for the Dartmouth version, with additional modern features added as extensions.
@@ -1443,7 +1632,7 @@ differences, where GDBasic programs exceed the different dialects.
 Variable names can be a single letter, or a single letter followed by a
 single digit. This provides for 286 possible variable names (26 letters × 11 digits including 0).
 
-**Reference**: [Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf), Section 2.1 - Variable Names
+**Reference**: [Dartmouth BASIC October 1964 Manual](Dartmouth_BASIC_Oct64.pdf), Section 2.1 - Variable Names
 
 #### Applesoft Basic
 
@@ -1469,6 +1658,13 @@ the `IF` command is followed by a single command, followed by a potential `ELSE`
 commands, with the blocks terminating in an `ELSE` and `END-IF` statement.
 
 ## Known Issues and Workarounds
+
+The complete list of problems found on 2026-11-23, with repro programs, expected and actual output, and source lines, is in **`doc/KNOWN_ISSUES.md`**. The high-impact items are:
+
+- KI-01: long number literals lose digits before they become decimal (`#`) values.
+- KI-04: `LISTDIRECTORY(...)` crashes in a BASIC program.
+- KI-06: `EXIT` does not end a `WHILE` or `DO` loop.
+- KI-09: a single-line `IF ... THEN statement ELSE statement` crashes.
 
 ### `NEXT` before `REM` and `DATA`
 As the `DATA` and `REM` command are not executing a command during the processing of the program, the interpreter 
@@ -1502,7 +1698,7 @@ As a result of the extension, Basic code in VSC should be optically supported:
 ## Dartmouth BASIC Documentation Reference
 
 ### Primary Documentation
-- **[Dartmouth BASIC October 1964 Manual](doc/Dartmouth_BASIC_Oct64.pdf)** - The original and definitive specification of the BASIC programming language
+- **[Dartmouth BASIC October 1964 Manual](Dartmouth_BASIC_Oct64.pdf)** - The original and definitive specification of the BASIC programming language
 - **[Dartmouth BASIC 50th Anniversary](https://www.dartmouth.edu/basicfifty/commands.html)** - Online reference and historical information
 - **[Wikipedia: Dartmouth BASIC](https://en.wikipedia.org/wiki/Dartmouth_BASIC)** - Historical overview and context
 
@@ -1529,6 +1725,16 @@ can change the behaviour of the interpreter at the time from the point of the di
 >[!Note]
 > The `@pragma` needs a line number like all BASIC programming statements.
 
+The syntax is exact:
+- The name and the value are text in double quotes, joined by `=`, inside round brackets: `@PRAGMA( "name" = "value" )`.
+- The round brackets are required. `@PRAGMA "Trace" = "on"` (no brackets) is refused with `Found: Trace expected LEFT_PAREN.`
+- The form without quotes, `@PRAGMA( bDartmouthFlag = true )`, is **not** accepted. The parser reports `Found: bDartmouthFlag expected STRING.`
+- A name that the interpreter does not know is refused with `Unknown pragma: <name>`. A name is known when it contains
+  `log` or `trace` (in any letter case).
+
 The following directives are supported:
-- `@PRAGMA( bDartmouthFlag = true )` - Enables the Dartmouth BASIC mode. This is not tested yet.
-- `@PRAGMA( "LOG_LEVEL" = "INFO" )` - Changes the log level of the interpeter.
+- `@PRAGMA( "LOG_LEVEL" = "INFO" )` - Changes the log level of the interpreter. The values are `trace`, `debug`, `info`,
+  `warning` and `off` (in any letter case).
+- `@PRAGMA( "Trace" = "on" )` - Switches the trace on (`on`) or off (`off`).
+
+Note: the Dartmouth mode is set with the `-d` command-line option, not with a pragma.

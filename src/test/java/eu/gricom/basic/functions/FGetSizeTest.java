@@ -1,9 +1,9 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
-import eu.gricom.basic.variableTypes.LongValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.FileOpenType;
+import eu.gricom.basic.variabletypes.LongValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - NEGATIVE TESTS: Unknown file IDs, closed files, missing files
  * - EDGE CASES: Empty files, large files, special characters in paths
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Returns LongValue containing file size in bytes for open files
  * - Returns LongValue(0) for unknown/closed file IDs
  * - Returns LongValue(0) for inaccessible files
@@ -58,7 +58,7 @@ public class FGetSizeTest {
     private int _iCurrentTestFileId3;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary test files with different sizes and unique file IDs.
      */
     @BeforeEach
@@ -258,7 +258,7 @@ public class FGetSizeTest {
      * When: FGetSize.execute() is called multiple times
      * Then: All calls return identical LongValue results
      * <p>
-     * Purpose: Verifies deterministic behavior and no side effects
+     * Purpose: Verifies deterministic behaviour and no side effects
      */
     @Test
     public void testFGetSize_WithMultipleCalls_ReturnsConsistentResults() throws Exception {

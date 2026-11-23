@@ -1,6 +1,6 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.variabletypes.StringValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

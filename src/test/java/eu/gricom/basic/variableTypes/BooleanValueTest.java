@@ -1,4 +1,4 @@
-package eu.gricom.basic.variableTypes;
+package eu.gricom.basic.variabletypes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

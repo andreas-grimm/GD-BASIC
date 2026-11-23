@@ -1,6 +1,6 @@
 # Java 25 Compliance & Future Changes Guide for GD-BASIC
 
-**Version:** 0.2.0+  
+**Version:** 0.4.0  
 **Current Java Target:** Java 21  
 **Target Java Version:** Java 25+  
 **Last Updated:** 2026-07-26 10:40 UTC  
@@ -348,7 +348,7 @@ public sealed interface Value permits IntegerValue, RealValue, StringValue {
 
 **Recommended Approach:**
 - Continue Java 21 as minimum version for v0.2.x series
-- Plan Java 25 upgrade for v0.3.0+
+- Plan Java 25 upgrade for v0.4.0+
 - Use feature detection for optional enhancements
 - Maintain compatibility layer for tools
 

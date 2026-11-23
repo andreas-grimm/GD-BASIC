@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.FiFoQueue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FiFoQueue;
+import eu.gricom.basic.variabletypes.Value;
 import java.util.List;
 
 /**
@@ -24,10 +24,10 @@ public class DataStatement implements Statement {
      * @param iTokenNumber - number of the command in the basic program
      * @param aoValues - List of all Values to be pushed into the queue
      */
-    public DataStatement(final int iTokenNumber, final List<Value> aoValues) {
+    public DataStatement(final int iTokenNumber, final List<Value> voValues) {
 
         _iTokenNumber = iTokenNumber;
-        _aoValues = aoValues;
+        _aoValues = voValues;
     }
 
     /**
@@ -63,13 +63,13 @@ public class DataStatement implements Statement {
      */
     @Override
     public final String content() {
-        StringBuilder strValue = new StringBuilder();
+        StringBuilder oBuilder = new StringBuilder();
 
         for (Value oValue: _aoValues) {
-            strValue.append(" <").append(oValue.toString()).append(">");
+            oBuilder.append(" <").append(oValue.toString()).append(">");
         }
 
-        return "DATA" + strValue;
+        return "DATA" + oBuilder;
     }
 
     /**
@@ -82,12 +82,12 @@ public class DataStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        StringBuilder strReturn = new StringBuilder("{\"DATA\": {");
-        strReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\"{");
+        StringBuilder oReturn = new StringBuilder("{\"DATA\": {");
+        oReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\"{");
         for (Value oValue: _aoValues) {
-            strReturn.append("\"").append(oValue.toString()).append("\"");
+            oReturn.append("\"").append(oValue.toString()).append("\"");
         }
-        strReturn.append("}}}");
-        return strReturn.toString();
+        oReturn.append("}}}");
+        return oReturn.toString();
     }
 }

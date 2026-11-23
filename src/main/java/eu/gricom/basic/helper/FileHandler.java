@@ -47,11 +47,11 @@ public final class FileHandler {
 
                 // read the file in blocks of 8K until EOF
                 StringBuilder oBuilder = new StringBuilder();
-                char[] aBuffer = new char[8192];
+                char[] acBuffer = new char[8192];
                 int iRead;
 
-                while ((iRead = oReader.read(aBuffer, 0, aBuffer.length)) > 0) {
-                    oBuilder.append(aBuffer, 0, iRead);
+                while ((iRead = oReader.read(acBuffer, 0, acBuffer.length)) > 0) {
+                    oBuilder.append(acBuffer, 0, iRead);
                 }
 
                 // HACK: The parser expects every statement to end in a newline, even the very last one, so we'll just
@@ -60,12 +60,12 @@ public final class FileHandler {
 
                 _oLogger.debug("Read File:\n" + oBuilder);
                 return oBuilder.toString();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException oException) {
+                oException.printStackTrace();
             } finally {
                 oStream.close();
             }
-        } catch (IOException e) {
+        } catch (IOException oException) {
             _oLogger.error("[ERR-IO-EXCEPT] Program file could not be read.");
             System.exit(-1);
         }

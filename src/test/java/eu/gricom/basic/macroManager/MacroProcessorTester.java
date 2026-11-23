@@ -1,4 +1,4 @@
-package eu.gricom.basic.macroManager;
+package eu.gricom.basic.macromanager;
 
 import org.junit.jupiter.api.Test;
 

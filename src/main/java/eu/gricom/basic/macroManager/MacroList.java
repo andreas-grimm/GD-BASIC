@@ -1,4 +1,4 @@
-package eu.gricom.basic.macroManager;
+package eu.gricom.basic.macromanager;
 
 import eu.gricom.basic.helper.Logger;
 import java.util.HashMap;
@@ -93,7 +93,7 @@ public class MacroList {
         _oLogger.debug("Parameters: " + _aoParameterList.toString());
     }
 
-    private Vector<String> toVector (String strStringCodedVector) {
+    private Vector<String> toVector(String strStringCodedVector) {
         Vector<String> vstrVectorFromString = new Vector<String>();
         String strValue = new String();
 

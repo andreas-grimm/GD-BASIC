@@ -8,7 +8,7 @@ import java.util.GregorianCalendar;
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  *
  * This software is protected according to Dutch and International Law. Certain components of this package might have
- * been released under terms of conditions of the General Public License of the GNU organization. Those modules are
+ * been released under terms of conditions of the General Public License of the GNU organisation. Those modules are
  * named with name and version number under the following URL: http://www.gricom.nl/public_released
  *
  * Modules and versions not named on this location are not released and cannot be used without written consent of the
@@ -45,7 +45,7 @@ public class Time {
      * Time Constructor, sets the object with a date or datetime.
      *
      * @param strDate
-     *            initialize the Time object with a date string (YYYY-MM-DD)
+     *            initialise the Time object with a date string (YYYY-MM-DD)
      *            or datetime string (YYYY-MM-DD HH:mm:ss)
      */
     public Time(final String strDate) {
@@ -55,8 +55,8 @@ public class Time {
             } else {
                 parseDate(strDate);
             }
-        } catch (Exception eException) {
-            System.err.println(eException.getMessage());
+        } catch (Exception oException) {
+            System.err.println(oException.getMessage());
         }
     }
 
@@ -385,7 +385,7 @@ public class Time {
         int iMonth = _iMonth + iInputMonths;
         int iYear = _iYear;
 
-        // Normalize month and year (handle overflow)
+        // Normalise month and year (handle overflow)
         while (iMonth > 12) {
             iYear++;
             iMonth -= 12;
@@ -397,7 +397,7 @@ public class Time {
             iMonth += 12;
         }
 
-        // Normalize day: if day is too large for target month, cap it to max day of month
+        // Normalise day: if day is too large for target month, cap it to max day of month
         int iMaxDays = getDaysInMonth(iMonth, iYear);
         int iDay = _iDay;
         if (iDay > iMaxDays) {

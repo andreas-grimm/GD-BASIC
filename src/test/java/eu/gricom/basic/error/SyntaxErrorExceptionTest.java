@@ -54,7 +54,7 @@ public class SyntaxErrorExceptionTest {
     @Test
     public void testCanBeThrownAndCaught() {
         assertThrows(SyntaxErrorException.class, () -> {
-            throw new SyntaxErrorException("Unrecognized keyword");
+            throw new SyntaxErrorException("Unrecognised keyword");
         });
     }
 

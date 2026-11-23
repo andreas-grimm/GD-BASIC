@@ -1,6 +1,6 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
 
 /**
  * Mem.java

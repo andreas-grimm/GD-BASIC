@@ -1,8 +1,8 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - EDGE CASES: Empty directories, hidden files, subdirectories, and path resolution
  * - INTEGRATION TESTS: ListDirectory works correctly with FileManager current directory
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Returns StringValue containing semicolon-separated file/directory names
  * - Filters hidden files based on bIncludeHidden parameter
  * - Filters subdirectories based on bIncludeSubdirectories parameter
@@ -49,7 +49,7 @@ public class ListDirectoryTest {
     private FileManager _oFileManager;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary directory and resets FileManager.
      */
     @BeforeEach

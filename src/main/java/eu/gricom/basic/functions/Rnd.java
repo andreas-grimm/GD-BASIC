@@ -1,6 +1,6 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.variableTypes.RealValue;
+import eu.gricom.basic.variabletypes.RealValue;
 
 /**
  * Rnd.java

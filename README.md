@@ -4,9 +4,9 @@
 
 &copy; 2020 - 2026 Andreas Grimm | Use according to the included licence file ([LICENSE.md](LICENSE.md))
 
-**Version:** 0.3.0 (implemented on branch `feature/bcd-arithmetic`, not yet merged; last released version 0.2.1)  
-**Status:** Production Ready (1435/1435 unit tests, 62/62 system test programs)  
-**Last Updated:** 2026-11-22
+**Version:** 0.4.0 (branch `feature/compiler`, not yet merged; it contains the decimal work from `feature/bcd-arithmetic`; last released version 0.2.1)  
+**Status:** In development. On 2026-11-23: 1560 of 1560 unit tests and 109 of 109 system test runs passed. Open problems are listed in [doc/KNOWN_ISSUES.md](doc/KNOWN_ISSUES.md).  
+**Last Updated:** 2026-11-23
 
 ---
 
@@ -18,12 +18,13 @@
 
 - ✅ **Interactive Line Editor** — Build and test programs without file setup
 - ✅ **File I/O** — LOAD, SAVE, DELETE commands in the editor
-- ✅ **Comprehensive BASIC Support** — 40+ built-in functions, 35+ statements
+- ✅ **Comprehensive BASIC Support** — 41 files in `functions/` (39 function classes) and 46 files in `statements/` (40 statement classes), counted 2026-11-23
 - ✅ **Computed Branches** — ON GOTO and ON GOSUB for dynamic control flow
 - ✅ **Type Safety** — Strongly-typed variable system, including exact decimal (BCD) numbers
 - ✅ **Advanced Features** — Arrays, loops, conditionals, file operations
-- ✅ **Production Ready** — 1435/1435 unit tests and 62/62 system test programs passing, zero failures
-- ✅ **Well Documented** — User guides, architecture docs, code examples
+- ✅ **Tested** — 1560/1560 unit tests passing on 2026-11-23. System test programs: 109/109 runs passing. Open defects are in `doc/KNOWN_ISSUES.md`
+- ✅ **BASIC-to-Java compiler** — `COMPILE` builds a runnable jar from a `.bas` program (0.4.0)
+- ✅ **Well Documented** — User guides, architecture docs, glossary, code examples
 
 ---
 
@@ -36,13 +37,13 @@
 java -version  # Should show Java 21 or later
 
 # Download the JAR
-# File: BASIC-0.3.0-jar-with-dependencies.jar
+# File: BASIC-0.4.0-jar-with-dependencies.jar
 ```
 
 ### Run Interactive Mode (No File Required)
 
 ```bash
-java -jar BASIC-0.3.0-jar-with-dependencies.jar
+java -jar BASIC-0.4.0-jar-with-dependencies.jar
 >10 PRINT "HELLO WORLD"
 >20 END
 >RUN
@@ -53,7 +54,7 @@ HELLO WORLD
 ### Load and Modify a Program
 
 ```bash
-java -jar BASIC-0.3.0-jar-with-dependencies.jar existing.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar existing.bas
 >LIST
 >DELETE 15
 >30 PRINT "Modified"
@@ -63,7 +64,7 @@ java -jar BASIC-0.3.0-jar-with-dependencies.jar existing.bas
 ### Direct Execution (No Editor)
 
 ```bash
-java -jar BASIC-0.3.0-jar-with-dependencies.jar -r -q program.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -r -q program.bas
 ```
 
 ---
@@ -71,6 +72,9 @@ java -jar BASIC-0.3.0-jar-with-dependencies.jar -r -q program.bas
 ## 📖 Documentation
 
 ### For Users
+- **[QUICK_START.md](doc/QUICK_START.md)** — Start in 15 minutes, every example checked
+- **[GLOSSARY.md](doc/GLOSSARY.md)** — Plain-English explanation of the words used in the documents
+- **[KNOWN_ISSUES.md](doc/KNOWN_ISSUES.md)** — Open problems, with repro programs and source lines
 - **[USER_GUIDE.md](doc/USER_GUIDE.md)** — Complete user manual
   - Installation and setup
   - Command-line parameters with examples
@@ -111,22 +115,21 @@ java -jar BASIC-0.3.0-jar-with-dependencies.jar -r -q program.bas
   - Timeline estimates
 
 - **[CHANGELOG.md](CHANGELOG.md)** — Complete version history
-  - All releases from v0.0.1 to v0.2.0+
+  - All releases from v0.0.1 to v0.4.0 (0.4.0 not yet merged)
   - Features by version
   - Test results
   - Bug fixes and improvements
 
-- **[TEST_SUMMARY.md](TEST_SUMMARY.md)** — Test documentation
-  - Test coverage analysis
-  - New tests in 0.2.0+
-  - Test execution instructions
-  - Quality metrics
+- **[SYSTEM_TEST_GUIDE.md](test/system/SYSTEM_TEST_GUIDE.md)** — System test programs
+  - How to run them, and how a program is judged
+  - Which program covers which feature
+- **[COMPILER.md](doc/COMPILER.md)** — The BASIC-to-Java compiler, step by step
 
 ---
 
-## 📋 Current Version (0.3.0, branch `feature/bcd-arithmetic`)
+## 📋 Current Version (0.4.0, branch `feature/bcd-arithmetic`)
 
-### What is new in 0.3.0
+### What is new in 0.4.0
 
 **Decimal numbers (BCD)**:
 - `amount#` holds a decimal number with up to 40 significant digits: `0.1 + 0.2` gives exactly `0.3`
@@ -142,8 +145,10 @@ java -jar BASIC-0.3.0-jar-with-dependencies.jar -r -q program.bas
 **Test runner**: `test/system/run_all_tests.sh` now fails when a program stops with an error or prints `ERROR: Test failed`. The interpreter exits with code 1 on a parse error or a runtime error.
 
 **Test coverage**:
-- 1435/1435 unit tests passing ✅
-- 62/62 system test programs passing ✅ (includes 7 BCD tests and the BSearch example with its expected output)
+- 1560/1560 unit tests passing ✅ (run on 2026-11-23)
+- 109/109 system test runs passing ✅ (62 BASIC programs, with the BCD, start-directory and compiler tests)
+- BASIC-to-Java compiler: `-o`, `-j`, `COMPILE` and `SAVEJAVA` (see `doc/COMPILER.md`)
+- Directory and PRAGMA fixes: `GETCWD` returns the absolute start directory; `@PRAGMA( "key" = "value" )` needs brackets; unary minus on a boolean swaps `TRUE` and `FALSE`
 
 ### Previous Releases
 
@@ -190,9 +195,9 @@ mvn site
 
 ### Test Results
 ```
-Tests: 1435/1435 unit tests pass ✅ (62/62 system test programs)
+Tests: 1560/1560 unit tests pass ✅ (109/109 system test runs, 2026-11-23)
 Build: SUCCESS
-Quality: Zero violations (Checkstyle, PMD)
+Quality: Checkstyle reports 32 warnings (all `MethodLength`, approved to stay as warnings). PMD was not run on 2026-11-23.
 ```
 
 ---
@@ -234,8 +239,8 @@ Quality: Zero violations (Checkstyle, PMD)
 ### Key Components
 - **Tokenizer** (`BasicLexer`) — Lexical analysis
 - **Parser** (`BasicParser`) — Recursive-descent parser
-- **Statements** (35+) — Statement implementations
-- **Functions** (40+) — Built-in functions
+- **Statements** (40 classes) — Statement implementations
+- **Functions** (39 function classes in 41 files) — Built-in functions
 - **Variables** (6 types) — Type system
 - **Memory** (`VariableManagement`) — Variable storage
 - **File I/O** (`FileManager`) — File operations
@@ -246,18 +251,18 @@ Quality: Zero violations (Checkstyle, PMD)
 - **Integer** — `count%`, `index%`
 - **Long** — `bignum&`, `largeint&`
 - **String** — `name$`, `text$`
-- **Boolean** — `flag!`, `condition!` (version 0.3.0; in 0.2.1 the suffix is `@`)
-- **Decimal (BCD)** — `amount#`, up to 40 significant digits (version 0.3.0)
+- **Boolean** — `flag!`, `condition!` (version 0.4.0; in 0.2.1 the suffix is `@`)
+- **Decimal (BCD)** — `amount#`, up to 40 significant digits (version 0.4.0)
 
-Version 0.3.0: a variable with no suffix is REAL, `#` is the decimal (BCD) suffix, and `!` is the boolean suffix. In 0.2.1 `#` is rejected and `!` is Double. See `doc/BASIC.md`, section "Variables, Arrays, and Constants".
+Version 0.4.0: a variable with no suffix is REAL, `#` is the decimal (BCD) suffix, and `!` is the boolean suffix. In 0.2.1 `#` is rejected and `!` is Double. See `doc/BASIC.md`, section "Variables, Arrays, and Constants".
 
 ---
 
 ## 📊 Statistics
 
-- **1435/1435 unit tests** pass ✅ and **62/62 system test programs** pass ✅
-- **35+ statements** implemented
-- **40+ functions** available
+- **1560/1560 unit tests** pass ✅ and **109/109 system test runs** pass ✅ (2026-11-23)
+- **40 statement classes** in `statements/`
+- **39 function classes** in `functions/`
 - **6 variable types** supported
 - **Zero code quality issues** (Checkstyle, PMD)
 - **~5 years** development history
@@ -292,6 +297,10 @@ GD-BASIC/
 │   ├── USER_GUIDE.md .................. User manual
 │   ├── BASIC.md ....................... Language reference
 │   ├── BASIC_CODING_STANDARD.md ....... Coding standards
+│   ├── GLOSSARY.md .................... Plain-English word list
+│   ├── QUICK_START.md ................. Start in 15 minutes
+│   ├── COMPILER.md .................... BASIC-to-Java compiler
+│   ├── KNOWN_ISSUES.md ................ Open problems, with repro steps
 │   ├── GD-BASIC_Detailed_Design.md .... Architecture
 │   └── Java_25_Needed_Changes.md ...... Future roadmap
 │
@@ -299,12 +308,12 @@ GD-BASIC/
 │   ├── main/java/eu/gricom/basic/ .... Source code
 │   │   ├── tokenizer/ ................. Lexer
 │   │   ├── parser/ .................... Parser
-│   │   ├── statements/ ................ Statements (35+)
-│   │   ├── functions/ ................. Functions (40+)
-│   │   ├── variableTypes/ ............. Type system
-│   │   ├── memoryManager/ ............. Memory & storage
-│   │   ├── lineEditor/ ................ Interactive editor
-│   │   ├── runtimeManager/ ............ Execution engine
+│   │   ├── statements/ ................ Statements (40 classes)
+│   │   ├── functions/ ................. Functions (39 classes)
+│   │   ├── variabletypes/ ............. Type system
+│   │   ├── memorymanager/ ............. Memory & storage
+│   │   ├── lineeditor/ ................ Interactive editor
+│   │   ├── runtimemanager/ ............ Execution engine
 │   │   ├── helper/ .................... Utilities
 │   │   └── error/ ..................... Exceptions
 │   │
@@ -312,13 +321,13 @@ GD-BASIC/
 │   │   ├── application.yaml ........... Configuration
 │   │   └── help.txt ................... Editor help
 │   │
-│   └── test/java/eu/gricom/basic/ .... Tests (1435 unit tests; 62 system test programs)
+│   └── test/java/eu/gricom/basic/ .... Tests (1560 unit tests)
 │
 ├── target/
-│   ├── BASIC-0.2.0.jar ................ Standard JAR
-│   └── BASIC-0.3.0-jar-with-dependencies.jar .. Executable JAR
+│   ├── BASIC-0.4.0.jar ................ Standard JAR
+│   └── BASIC-0.4.0-jar-with-dependencies.jar .. Executable JAR
 │
-└── test/system/ ....................... System tests (34+)
+└── test/system/ ....................... System tests (62 programs, plus test/system/compiler/)
 ```
 
 ---
@@ -365,7 +374,8 @@ The Netherlands / Norway
 - Provide example BASIC code if applicable
 
 ### Questions
-- Check FAQ in USER_GUIDE.md
+- Check the troubleshooting section in USER_GUIDE.md
+- Check [KNOWN_ISSUES.md](doc/KNOWN_ISSUES.md) before reporting a bug
 - Review example programs
 - Read BASIC_CODING_STANDARD.md
 
@@ -373,13 +383,13 @@ The Netherlands / Norway
 
 ## 🎯 Roadmap
 
-### Current Status (v0.2.0+)
-✅ Production Ready  
+### Current Status (0.4.0, 2026-11-23)
+In development (2026-11-23); open defects in `doc/KNOWN_ISSUES.md`  
 ✅ All Core Features Complete  
 ✅ Comprehensive Documentation  
 ✅ Full Test Coverage  
 
-### Future (v0.3.0+)
+### Future (v0.4.0+)
 - Java 25+ upgrade path
 - Enhanced pattern matching
 - Virtual thread support
@@ -406,8 +416,8 @@ The Netherlands / Norway
 ---
 
 **Last Updated:** 2026-11-22  
-**Status:** ✅ Production Ready  
-**Test Pass Rate:** 1435/1435 unit tests (100%); 62/62 system test programs
+**Status:** In development (2026-11-23)  
+**Test Pass Rate:** 1560/1560 unit tests (100%); 109/109 system test runs
 
 ---
 
@@ -420,7 +430,7 @@ The Netherlands / Norway
 | Coding Standards | [doc/BASIC_CODING_STANDARD.md](doc/BASIC_CODING_STANDARD.md) |
 | Architecture | [doc/GD-BASIC_Detailed_Design.md](doc/GD-BASIC_Detailed_Design.md) |
 | Version History | [CHANGELOG.md](CHANGELOG.md) |
-| Test Info | [TEST_SUMMARY.md](TEST_SUMMARY.md) |
+| Test Info | [test/system/SYSTEM_TEST_GUIDE.md](test/system/SYSTEM_TEST_GUIDE.md) (system tests); unit tests are in `src/test/java/` |
 | Upgrade Plans | [doc/Java_25_Needed_Changes.md](doc/Java_25_Needed_Changes.md) |
 | License | [LICENSE.md](LICENSE.md) |
 

@@ -582,7 +582,7 @@ public class TokenizerTest {
                 }
             }
 
-            assertEquals(3, fopenCount, "All case variations of FOPEN should be recognized");
+            assertEquals(3, fopenCount, "All case variations of FOPEN should be recognised");
 
         } catch (SyntaxErrorException e) {
             fail();

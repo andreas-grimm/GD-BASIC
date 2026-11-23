@@ -1,9 +1,12 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * ChDirStatement.java
@@ -50,9 +53,12 @@ public class ChDirStatement implements Statement {
     @Override
     public void execute() throws Exception {
         if (_oValue instanceof StringValue) {
-            StringValue strValue = (StringValue) _oValue;
+            StringValue oValue = (StringValue) _oValue;
             FileManager oFileManager = new FileManager();
-            oFileManager.setCurrentDirectory(strValue.toString());
+            // Always store the absolute path. A relative name is taken from the current directory.
+            Path oBase = Paths.get(oFileManager.getCurrentDirectory()).toAbsolutePath();
+            Path oTarget = oBase.resolve(oValue.toString()).toAbsolutePath().normalize();
+            oFileManager.setCurrentDirectory(oTarget.toString());
             return;
         }
 
@@ -87,5 +93,10 @@ public class ChDirStatement implements Statement {
         strReturn += ",\"PATH\": \"" + _oValue.toString() + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the Value of this statement (used by the compiler) */
+    public Value getValue() {
+        return _oValue;
     }
 }

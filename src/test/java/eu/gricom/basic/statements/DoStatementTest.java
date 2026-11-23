@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.memoryManager.Stack;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.memorymanager.Stack;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -3,15 +3,15 @@ package eu.gricom.basic.parser;
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.functions.Function;
 import eu.gricom.basic.helper.FileHandler;
-import eu.gricom.basic.memoryManager.FiFoQueue;
-import eu.gricom.basic.memoryManager.Program;
-import eu.gricom.basic.runtimeManager.Execute;
+import eu.gricom.basic.memorymanager.FiFoQueue;
+import eu.gricom.basic.memorymanager.Program;
+import eu.gricom.basic.runtimemanager.Execute;
 import eu.gricom.basic.statements.*;
 import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.BasicTokenType;
 import eu.gricom.basic.tokenizer.Lexer;
 import eu.gricom.basic.tokenizer.Token;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -320,7 +320,7 @@ public class BasicParserTest {
      * 20 PRINT "Changed directory"
      * 30 END
      * <p>
-     * Expected behavior:
+     * Expected behaviour:
      * - First statement should be ChDirStatement with path "/tmp"
      * - Second statement should be PrintStatement
      * - Third statement should be EndStatement
@@ -370,7 +370,7 @@ public class BasicParserTest {
      * <p>
      * Verifies that the parser creates a ChDirStatement with correct content information.
      * <p>
-     * Expected behavior:
+     * Expected behaviour:
      * - ChDirStatement should return "CHDIR" from content() method
      * - Token number should be properly preserved
      */
@@ -405,8 +405,8 @@ public class BasicParserTest {
      * Verifies that the atomic() method correctly parses a DIREXISTS function call.
      * DIREXISTS is a single-parameter function that checks if a directory exists.
      * <p>
-     * Expected behavior:
-     * - Parser recognizes DIREXISTS as a single-parameter function
+     * Expected behaviour:
+     * - Parser recognises DIREXISTS as a single-parameter function
      * - Returns a Function object (Expression)
      * - Function is correctly created with DIREXISTS token
      * - Function accepts a string parameter (directory path)
@@ -438,7 +438,7 @@ public class BasicParserTest {
      * <p>
      * Verifies that DIREXISTS can correctly parse with a string literal parameter.
      * <p>
-     * Expected behavior:
+     * Expected behaviour:
      * - DIREXISTS("existing_path") is parsed as a Function
      * - Parser correctly handles parentheses and string parameter
      * - Expression is evaluated without errors
@@ -468,7 +468,7 @@ public class BasicParserTest {
      * <p>
      * Verifies that DIREXISTS correctly parses with a variable as the path parameter.
      * <p>
-     * Expected behavior:
+     * Expected behaviour:
      * - DIREXISTS(strPath$) is parsed as a Function with variable expression
      * - Parser handles the variable reference inside parentheses
      * - Expression object is returned correctly
@@ -497,10 +497,10 @@ public class BasicParserTest {
     /**
      * Test: DIREXISTS token classification
      * <p>
-     * Verifies that DIREXISTS is correctly recognized as a single-parameter function.
+     * Verifies that DIREXISTS is correctly recognised as a single-parameter function.
      * <p>
-     * Expected behavior:
-     * - DIREXISTS token is recognized in the atomic method
+     * Expected behaviour:
+     * - DIREXISTS token is recognised in the atomic method
      * - Parser treats it as a function (not a keyword or statement)
      * - Requires LEFT_PAREN after the function name
      */
@@ -522,7 +522,7 @@ public class BasicParserTest {
             }
         }
 
-        assertTrue(bDirexistsFound, "DIREXISTS token should be recognized by the lexer");
+        assertTrue(bDirexistsFound, "DIREXISTS token should be recognised by the lexer");
     }
 
     // ==================== ZERO-PARAMETER FUNCTIONS ====================
@@ -545,7 +545,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bGetcwdFound, "GETCWD token should be recognized by the lexer");
+        assertTrue(bGetcwdFound, "GETCWD token should be recognised by the lexer");
     }
 
     @Test
@@ -566,7 +566,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bMemFound, "MEM token should be recognized by the lexer");
+        assertTrue(bMemFound, "MEM token should be recognised by the lexer");
     }
 
     @Test
@@ -587,7 +587,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bRndFound, "RND token should be recognized by the lexer");
+        assertTrue(bRndFound, "RND token should be recognised by the lexer");
     }
 
     @Test
@@ -608,7 +608,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bTimeFound, "TIME token should be recognized by the lexer");
+        assertTrue(bTimeFound, "TIME token should be recognised by the lexer");
     }
 
     // ==================== SINGLE-PARAMETER MATH FUNCTIONS ====================
@@ -631,7 +631,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bAbsFound, "ABS token should be recognized by the lexer");
+        assertTrue(bAbsFound, "ABS token should be recognised by the lexer");
     }
 
     @Test
@@ -652,7 +652,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bSinFound, "SIN token should be recognized by the lexer");
+        assertTrue(bSinFound, "SIN token should be recognised by the lexer");
     }
 
     @Test
@@ -673,7 +673,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bCosFound, "COS token should be recognized by the lexer");
+        assertTrue(bCosFound, "COS token should be recognised by the lexer");
     }
 
     @Test
@@ -694,7 +694,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bTanFound, "TAN token should be recognized by the lexer");
+        assertTrue(bTanFound, "TAN token should be recognised by the lexer");
     }
 
     @Test
@@ -715,7 +715,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bLogFound, "LOG token should be recognized by the lexer");
+        assertTrue(bLogFound, "LOG token should be recognised by the lexer");
     }
 
     @Test
@@ -736,7 +736,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bLog10Found, "LOG10 token should be recognized by the lexer");
+        assertTrue(bLog10Found, "LOG10 token should be recognised by the lexer");
     }
 
     @Test
@@ -757,7 +757,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bExpFound, "EXP token should be recognized by the lexer");
+        assertTrue(bExpFound, "EXP token should be recognised by the lexer");
     }
 
     @Test
@@ -778,7 +778,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bSqrFound, "SQR token should be recognized by the lexer");
+        assertTrue(bSqrFound, "SQR token should be recognised by the lexer");
     }
 
     @Test
@@ -799,7 +799,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bAtnFound, "ATN token should be recognized by the lexer");
+        assertTrue(bAtnFound, "ATN token should be recognised by the lexer");
     }
 
     // ==================== SINGLE-PARAMETER CONVERSION FUNCTIONS ====================
@@ -822,7 +822,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bChrFound, "CHR token should be recognized by the lexer");
+        assertTrue(bChrFound, "CHR token should be recognised by the lexer");
     }
 
     @Test
@@ -843,7 +843,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bAscFound, "ASC token should be recognized by the lexer");
+        assertTrue(bAscFound, "ASC token should be recognised by the lexer");
     }
 
     @Test
@@ -864,7 +864,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bValFound, "VAL token should be recognized by the lexer");
+        assertTrue(bValFound, "VAL token should be recognised by the lexer");
     }
 
     @Test
@@ -885,7 +885,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bStrFound, "STR token should be recognized by the lexer");
+        assertTrue(bStrFound, "STR token should be recognised by the lexer");
     }
 
     @Test
@@ -906,7 +906,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bCintFound, "CINT token should be recognized by the lexer");
+        assertTrue(bCintFound, "CINT token should be recognised by the lexer");
     }
 
     @Test
@@ -927,7 +927,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bCdblFound, "CDBL token should be recognized by the lexer");
+        assertTrue(bCdblFound, "CDBL token should be recognised by the lexer");
     }
 
     // ==================== SINGLE-PARAMETER FILE FUNCTIONS ====================
@@ -950,7 +950,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bEofFound, "EOF token should be recognized by the lexer");
+        assertTrue(bEofFound, "EOF token should be recognised by the lexer");
     }
 
     @Test
@@ -971,7 +971,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bFexistsFound, "FEXISTS token should be recognized by the lexer");
+        assertTrue(bFexistsFound, "FEXISTS token should be recognised by the lexer");
     }
 
     @Test
@@ -992,7 +992,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bFgetnameFound, "FGETNAME token should be recognized by the lexer");
+        assertTrue(bFgetnameFound, "FGETNAME token should be recognised by the lexer");
     }
 
     @Test
@@ -1013,7 +1013,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bFgetsizeFound, "FGETSIZE token should be recognized by the lexer");
+        assertTrue(bFgetsizeFound, "FGETSIZE token should be recognised by the lexer");
     }
 
     @Test
@@ -1034,7 +1034,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bFisopenFound, "FISOPEN token should be recognized by the lexer");
+        assertTrue(bFisopenFound, "FISOPEN token should be recognised by the lexer");
     }
 
     @Test
@@ -1055,7 +1055,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bFlinecountFound, "FLINECOUNT token should be recognized by the lexer");
+        assertTrue(bFlinecountFound, "FLINECOUNT token should be recognised by the lexer");
     }
 
     @Test
@@ -1076,7 +1076,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bFmodtimeFound, "FMODTIME token should be recognized by the lexer");
+        assertTrue(bFmodtimeFound, "FMODTIME token should be recognised by the lexer");
     }
 
     // ==================== SINGLE-PARAMETER UTILITY FUNCTIONS ====================
@@ -1099,7 +1099,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bLenFound, "LEN token should be recognized by the lexer");
+        assertTrue(bLenFound, "LEN token should be recognised by the lexer");
     }
 
     @Test
@@ -1120,7 +1120,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bNotFound, "NOT token should be recognized by the lexer");
+        assertTrue(bNotFound, "NOT token should be recognised by the lexer");
     }
 
     // ==================== TWO-PARAMETER FUNCTIONS ====================
@@ -1143,7 +1143,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bInstrFound, "INSTR token should be recognized by the lexer");
+        assertTrue(bInstrFound, "INSTR token should be recognised by the lexer");
     }
 
     @Test
@@ -1164,7 +1164,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bLeftFound, "LEFT token should be recognized by the lexer");
+        assertTrue(bLeftFound, "LEFT token should be recognised by the lexer");
     }
 
     @Test
@@ -1185,7 +1185,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bRightFound, "RIGHT token should be recognized by the lexer");
+        assertTrue(bRightFound, "RIGHT token should be recognised by the lexer");
     }
 
     @Test
@@ -1206,7 +1206,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bFcompareFound, "FCOMPARE token should be recognized by the lexer");
+        assertTrue(bFcompareFound, "FCOMPARE token should be recognised by the lexer");
     }
 
     @Test
@@ -1227,7 +1227,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bSystemFound, "SYSTEM token should be recognized by the lexer");
+        assertTrue(bSystemFound, "SYSTEM token should be recognised by the lexer");
     }
 
     @Test
@@ -1248,7 +1248,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bCallFound, "CALL token should be recognized by the lexer");
+        assertTrue(bCallFound, "CALL token should be recognised by the lexer");
     }
 
     // ==================== THREE-PARAMETER FUNCTIONS ====================
@@ -1271,7 +1271,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bMidFound, "MID token should be recognized by the lexer");
+        assertTrue(bMidFound, "MID token should be recognised by the lexer");
     }
 
     @Test
@@ -1292,7 +1292,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bListdirectoryFound, "LISTDIRECTORY token should be recognized by the lexer");
+        assertTrue(bListdirectoryFound, "LISTDIRECTORY token should be recognised by the lexer");
     }
 
     // ==================== STRING CASE CONVERSION FUNCTIONS ====================
@@ -1363,7 +1363,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bUpperFound, "UPPER token should be recognized by the lexer");
+        assertTrue(bUpperFound, "UPPER token should be recognised by the lexer");
     }
 
     @Test
@@ -1384,7 +1384,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bLowerFound, "LOWER token should be recognized by the lexer");
+        assertTrue(bLowerFound, "LOWER token should be recognised by the lexer");
     }
 
     @Test
@@ -1405,7 +1405,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bOnGotoFound, "Parser should recognize ON GOTO statement");
+        assertTrue(bOnGotoFound, "Parser should recognise ON GOTO statement");
     }
 
     @Test
@@ -1426,7 +1426,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bOnGosubFound, "Parser should recognize ON GOSUB statement");
+        assertTrue(bOnGosubFound, "Parser should recognise ON GOSUB statement");
     }
 
     @Test
@@ -1450,7 +1450,7 @@ public class BasicParserTest {
                 break;
             }
         }
-        assertTrue(bOnGotoFound, "Parser should recognize ON GOTO with expression");
+        assertTrue(bOnGotoFound, "Parser should recognise ON GOTO with expression");
     }
 
     @Test
@@ -1555,7 +1555,7 @@ public class BasicParserTest {
      * Before the fix, GotoStatement treated statement index 0 as "not found" and threw
      * "GOTO [unknown]: Target: 10" when jumping back to the first line of a program.
      * <p>
-     * Expected behavior: the loop runs, jumps back to line 10 and the program reaches END.
+     * Expected behaviour: the loop runs, jumps back to line 10 and the program reaches END.
      */
     @Test
     public void testGotoToFirstStatementOfProgram() throws Exception {
@@ -1570,7 +1570,7 @@ public class BasicParserTest {
     /**
      * Regression test: ON GOTO whose selected target is the first statement of the program.
      * <p>
-     * Expected behavior: the first READ returns 1 and jumps to line 10; the second READ returns 2 and reaches END.
+     * Expected behaviour: the first READ returns 1 and jumps to line 10; the second READ returns 2 and reaches END.
      */
     @Test
     public void testOnGotoToFirstStatementOfProgram() throws Exception {
@@ -1583,14 +1583,14 @@ public class BasicParserTest {
     }
 
     /**
-     * Helper: tokenizes, parses and runs a BASIC program held in a string.
+     * Helper: tokenises, parses and runs a BASIC program held in a string.
      * <p>
      * Execute.runProgram() prints errors instead of throwing them, so the caller checks the last executed
      * statement: it is END when the program ran to completion, and the failing statement otherwise.
      *
      * @param strProgram the BASIC source code
      * @return the last statement that was executed
-     * @throws Exception when tokenizing or parsing fails
+     * @throws Exception when tokenising or parsing fails
      */
     private Statement runProgramAndGetFinalStatement(final String strProgram) throws Exception {
         // The DATA/READ queue is static and shared between tests: clear leftovers from earlier programs

@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.EmptyStackException;
-import eu.gricom.basic.memoryManager.Stack;
+import eu.gricom.basic.memorymanager.Stack;
 import eu.gricom.basic.helper.Logger;
 
 /**
@@ -47,8 +47,8 @@ public class CleanStatement implements Statement {
 
         try {
             oStack.pop();
-        } catch (EmptyStackException eException) {
-            _oLogger.error(eException.getMessage());
+        } catch (EmptyStackException oException) {
+            _oLogger.error(oException.getMessage());
         }
     }
 
@@ -76,7 +76,7 @@ public class CleanStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"CLEAN\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\"";
         strReturn += "}}";
         return strReturn;
     }

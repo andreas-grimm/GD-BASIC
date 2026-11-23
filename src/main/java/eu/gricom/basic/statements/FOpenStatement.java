@@ -1,11 +1,8 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.FileOpenType;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * FOpenStatement.java
@@ -46,7 +43,7 @@ public class FOpenStatement implements Statement {
     }
 
     /**
-     * Statements implement this to actually perform whatever behavior the
+     * Statements implement this to actually perform whatever behaviour the
      * statement causes. "print" statements will display text here, "goto"
      * statements will change the current statement, etc.
      *
@@ -82,9 +79,9 @@ public class FOpenStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"FOPEN\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
-        strReturn += "\"FILE_ID\": \""+ _iFileId +"\"";
-        strReturn += "\"FILE_NAME\": \""+ _strFileName +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\"";
+        strReturn += "\"FILE_ID\": \"" + _iFileId + "\"";
+        strReturn += "\"FILE_NAME\": \"" + _strFileName + "\"";
         if (_eReadWrite == FileOpenType.WRITE) {
             strReturn += "\"READ_WRITE\": \"WRITE\"";
         } else {
@@ -92,5 +89,20 @@ public class FOpenStatement implements Statement {
         }
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the FileId of this statement (used by the compiler) */
+    public int getFileId() {
+        return _iFileId;
+    }
+
+    /** @return the FileName of this statement (used by the compiler) */
+    public String getFileName() {
+        return _strFileName;
+    }
+
+    /** @return true when the file is opened for writing (used by the compiler) */
+    public boolean isWriteMode() {
+        return _eReadWrite == FileOpenType.WRITE;
     }
 }

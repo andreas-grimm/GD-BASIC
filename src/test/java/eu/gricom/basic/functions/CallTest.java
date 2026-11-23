@@ -1,8 +1,8 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -76,7 +76,7 @@ public class CallTest {
 
     @Test
     public void testExecute_WithNonStringURL_ThrowsRuntimeException() {
-        Value oURL = new eu.gricom.basic.variableTypes.IntegerValue(123);
+        Value oURL = new eu.gricom.basic.variabletypes.IntegerValue(123);
         Value oPayload = new StringValue("{}");
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
@@ -88,7 +88,7 @@ public class CallTest {
     @Test
     public void testExecute_WithNonStringPayload_ThrowsRuntimeException() {
         Value oURL = new StringValue("http://localhost");
-        Value oPayload = new eu.gricom.basic.variableTypes.IntegerValue(123);
+        Value oPayload = new eu.gricom.basic.variabletypes.IntegerValue(123);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             Call.execute(oURL, oPayload);
@@ -115,7 +115,7 @@ public class CallTest {
         try {
             Value result = Call.execute(oURL, oPayload);
             // If no exception is thrown, the DNS might be intercepted by a proxy.
-            // This is acceptable behavior—skip the test in this case.
+            // This is acceptable behaviour—skip the test in this case.
             String response = result.toString().toLowerCase();
             if (response.contains("error") || response.contains("not found") ||
                 response.contains("refused") || response.contains("unreachable")) {

@@ -83,10 +83,32 @@ public class PragmaStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"PRAGMA\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"PARAMETER\": \""+ _strParameter +"\",";
-        strReturn += "\"VALUE\": \""+ _strValue +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"PARAMETER\": \"" + _strParameter + "\",";
+        strReturn += "\"VALUE\": \"" + _strValue + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /**
+     * Tells whether a pragma name is one the interpreter knows. A name is known when it contains "log" (for example
+     * LOG_LEVEL or Logger) or "trace" (for example Trace), in any letter case. Other names are refused by the parser.
+     *
+     * @param strParameter the pragma name written in the program
+     * @return true if the name is known
+     */
+    public static boolean isKnownParameter(final String strParameter) {
+        String strLower = strParameter.toLowerCase(Locale.ROOT);
+        return strLower.contains("log") || strLower.contains("trace");
+    }
+
+    /** @return the pragma name, for example LOG_LEVEL (used by the compiler) */
+    public String getParameter() {
+        return _strParameter;
+    }
+
+    /** @return the pragma value (used by the compiler) */
+    public String getValue() {
+        return _strValue;
     }
 }
