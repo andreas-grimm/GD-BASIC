@@ -12,7 +12,7 @@ All notable changes to the GD-BASIC project are documented in this file.
 design is in `doc/GD-BASIC_Detailed_Design.md` (section "BCD Arithmetic Design"). The language rules are in `doc/BASIC.md`.
 
 ### Added since the first 0.4.0 notes (2026-11-22 to 2026-11-23)
-- **BASIC-to-Java compiler** (commit `bf1d35e`). Options `-o <target>` and `-j <file.java>`; editor commands `COMPILE`
+- **BASIC-to-Java compiler** (commit `bf1d35e`). Option `-o <target>`; editor commands `COMPILE <name>`
   and `SAVEJAVA`. The compiled jar runs on its own and prints what the interpreter prints. See `doc/COMPILER.md`,
   which also lists the statements that are not supported yet (arrays, `DATA`/`READ`, labels).
 - **Compiler system tests**: `test/system/compiler/` (9 BASIC programs and one input file, `compiler_input.in`).
@@ -35,6 +35,9 @@ design is in `doc/GD-BASIC_Detailed_Design.md` (section "BCD Arithmetic Design")
   gives the right file name.
 
 ### Changed since the first 0.4.0 notes (2026-11-23)
+- **`COMPILE` takes a name.** `COMPILE hello` writes `hello.java` and `hello.jar`. The `-j` option was removed, and `-o`
+  stays as the default build target. `SAVEJAVA` without a name writes `<target>.java` (or `BasicProgram.java` when `-o`
+  is not given). Tests: 8 new unit tests (`LineEditorTest`) and a new system test `compile_no_name`.
 - **Package names are lowercase**: `macromanager`, `memorymanager`, `runtimemanager`, `variabletypes`, `lineeditor`.
   Imports, the code that the compiler generates, and the current documents use the new names. Older entries in this
   file are not changed.

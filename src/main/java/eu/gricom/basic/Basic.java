@@ -38,10 +38,8 @@ public class Basic {
     private Program _oProgram = new Program();
     private final transient Logger _oLogger = new Logger(this.getClass().getName());
     private static boolean _bDartmouthFlag = EnvParam.getBoolean("dartmouth");
-    /** Build target name from the -o option (null when not given). */
+    /** Default build target name from the -o option (null when not given). */
     private static String _strTargetName = null;
-    /** Java source file name from the -j option (null when not given). */
-    private static String _strJavaFile = null;
     private static String _strVersion = EnvParam.getString("version");
     private static boolean _bEditorFlag = true;
 
@@ -190,7 +188,7 @@ public class Basic {
         if (_bEditorFlag) {
             Printer.println("Starting line editor");
             LineEditor oLineEditor = new LineEditor(oProgram, _bDartmouthFlag);
-            oLineEditor.setCompileTargets(_strTargetName, _strJavaFile);
+            oLineEditor.setCompileTargets(_strTargetName);
             oLineEditor.execute();
         } else {
             // Parse.
@@ -247,8 +245,7 @@ public class Basic {
             oOptions.addOption("v", true, "verbose level: (info, debug, trace, or error)");
             oOptions.addOption("d", false, "dartmouth mode");
             oOptions.addOption("r", false, "execute the loaded program directly, do not use the line editor");
-            oOptions.addOption("o", true, "compiler build target name (used by the COMPILE command)");
-            oOptions.addOption("j", true, "Java source file for the compiler (used by COMPILE and SAVEJAVA)");
+            oOptions.addOption("o", true, "default build target name for COMPILE (COMPILE <name> overrides it)");
 
             CommandLineParser oParser = new DefaultParser();
             oCommandLine = oParser.parse(oOptions, astrArgs);
@@ -300,11 +297,6 @@ public class Basic {
         if (oCommandLine != null && oCommandLine.hasOption("o")) {
             _strTargetName = oCommandLine.getOptionValue("o");
             oLogger.debug("Compiler build target: " + _strTargetName);
-        }
-
-        if (oCommandLine != null && oCommandLine.hasOption("j")) {
-            _strJavaFile = oCommandLine.getOptionValue("j");
-            oLogger.debug("Compiler Java file: " + _strJavaFile);
         }
 
         if (oCommandLine != null && oCommandLine.hasOption("r")) {

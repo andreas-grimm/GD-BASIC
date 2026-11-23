@@ -606,7 +606,7 @@ Open problems that touch the architecture are listed in `doc/KNOWN_ISSUES.md`. T
 0.1.0: Initial BASIC interpreter
 0.2.0: Added line editor, fixed types
 0.2.1: Production ready (1248 tests passing)
-0.4.0: Decimal (BCD) type with `#` suffix, BOOLEAN suffix `!`, and the BASIC-to-Java compiler (`-o`, `-j`, `COMPILE`).
+0.4.0: Decimal (BCD) type with `#` suffix, BOOLEAN suffix `!`, and the BASIC-to-Java compiler (`-o`, `COMPILE <name>`).
        Branch feature/compiler (includes feature/bcd-arithmetic); not yet merged. 1560 unit tests on 2026-11-23.
        See doc/BASIC.md, doc/COMPILER.md and doc/KNOWN_ISSUES.md
 ```

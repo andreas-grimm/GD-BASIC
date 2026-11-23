@@ -132,4 +132,49 @@ public class LineEditorTest {
         assertTrue(strUpdated.contains("REPLACED"));
         assertFalse(strUpdated.contains("ORIGINAL"));
     }
+
+
+    // ---- COMPILE and SAVEJAVA target names ----
+
+    @Test
+    public void testTargetNameFromCommandReadsTheName() {
+        assertEquals("hello", LineEditor.targetNameFromCommand("COMPILE hello"));
+    }
+
+    @Test
+    public void testTargetNameFromCommandIgnoresSurroundingSpaces() {
+        assertEquals("hello", LineEditor.targetNameFromCommand("   COMPILE    hello   "));
+    }
+
+    @Test
+    public void testTargetNameFromCommandWithoutNameIsNull() {
+        assertNull(LineEditor.targetNameFromCommand("COMPILE"));
+        assertNull(LineEditor.targetNameFromCommand("   COMPILE   "));
+    }
+
+    @Test
+    public void testBaseNameOfPlainNameIsUnchanged() {
+        assertEquals("hello", LineEditor.baseNameOf("hello"));
+    }
+
+    @Test
+    public void testBaseNameOfRemovesJarSuffix() {
+        assertEquals("hello", LineEditor.baseNameOf("hello.jar"));
+    }
+
+    @Test
+    public void testBaseNameOfKeepsDirectoryPart() {
+        assertEquals("out/hello", LineEditor.baseNameOf("out/hello.jar"));
+    }
+
+    @Test
+    public void testBaseNameOfEmptyNameIsNull() {
+        assertNull(LineEditor.baseNameOf(""));
+        assertNull(LineEditor.baseNameOf(null));
+    }
+
+    @Test
+    public void testBaseNameOfOnlyJarSuffixIsNull() {
+        assertNull(LineEditor.baseNameOf(".jar"));
+    }
 }
