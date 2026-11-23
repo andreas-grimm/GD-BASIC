@@ -1,11 +1,10 @@
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/andreas-grimm/GD-BASIC?utm_source=oss&utm_medium=github&utm_campaign=andreas-grimm%2FGD-BASIC&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
-
 # GriCom Diminutive BASIC Interpreter (GD-BASIC)
 
 &copy; 2020 - 2026 Andreas Grimm | Use according to the included licence file ([LICENSE.md](LICENSE.md))
 
-**Version:** 0.4.0 (branch `feature/compiler`, not yet merged; it contains the decimal work from `feature/bcd-arithmetic`; last released version 0.2.1)  
-**Status:** In development. On 2026-11-23: 1560 of 1560 unit tests and 109 of 109 system test runs passed. Open problems are listed in [doc/KNOWN_ISSUES.md](doc/KNOWN_ISSUES.md).  
+**Version:** 0.4.0 
+
+**Status:** Released. On 2026-11-23: 1560 of 1560 unit tests and 109 of 109 system test runs passed. Open problems are listed in [doc/KNOWN_ISSUES.md](doc/KNOWN_ISSUES.md).  
 **Last Updated:** 2026-11-23
 
 ---
@@ -147,7 +146,7 @@ java -jar BASIC-0.4.0-jar-with-dependencies.jar -r -q program.bas
 **Test coverage**:
 - 1560/1560 unit tests passing ✅ (run on 2026-11-23)
 - 109/109 system test runs passing ✅ (62 BASIC programs, with the BCD, start-directory and compiler tests)
-- BASIC-to-Java compiler: `-o`, `-j`, `COMPILE` and `SAVEJAVA` (see `doc/COMPILER.md`)
+- BASIC-to-Java compiler: `-o`, `COMPILE <name>` and `SAVEJAVA` (see `doc/COMPILER.md`)
 - Directory and PRAGMA fixes: `GETCWD` returns the absolute start directory; `@PRAGMA( "key" = "value" )` needs brackets; unary minus on a boolean swaps `TRUE` and `FALSE`
 
 ### Previous Releases

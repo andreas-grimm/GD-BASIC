@@ -1313,7 +1313,7 @@ No class in `src/` calls `BCDConverter` (checked by search). It is a packing uti
 
 **Status:** Implemented in version 0.4.0 on branch `feature/bcd-arithmetic` (not yet merged). The decisions D1–D16 in the register above give the status of each point. The text below is the design as written before the work started.
 
-**Source:** This section replaces `requirements/BCD_ARITHMETIC_REQUIREMENTS.md` (version 1.0, 2026-05-14). That file's content is merged here. Where the requirements and the owner's decisions differ, the decision register wins.
+**Source:** This section replaces the former file `requirements/BCD_ARITHMETIC_REQUIREMENTS.md` (version 1.0, 2026-05-14; removed 2026-11-23). That file's content is merged here. Where the requirements and the owner's decisions differ, the decision register wins.
 
 #### Decision register
 

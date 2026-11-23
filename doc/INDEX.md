@@ -69,7 +69,6 @@ flowchart TD
 
 | Document | What it is |
 |---|---|
-| `BCD_ARITHMETIC_REQUIREMENTS.md` | The decimal (BCD) requirements. Its title says it is superseded. The current rules are in `doc/BASIC.md`. |
 | `FILE_IO_STATUS.md` | A status report for file input and output. Historical. |
 | `GD_BASIC_vs_APPLE_II_BASIC_ANALYSIS.md` | Comparison with Apple II BASIC. |
 | `GD_BASIC_vs_COMMODORE_PET_BASIC_ANALYSIS.md` | Comparison with Commodore PET BASIC. |

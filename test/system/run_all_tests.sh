@@ -168,8 +168,8 @@ run_compiler_test() {
     java -jar "$JAR_FILE" -r -q "$program_file" < "$stdin_file" 2>&1 \
         | sed -E "$filter" | grep -v -E '^[0-9]{4}-[0-9]{2}-[0-9]{2} |^[[:space:]]+at |^$|^(RND\(\)|MEM|TIME\$) ' > "$interp_file"
 
-    (cd "$work_dir" && printf 'LOAD %s\nCOMPILE\nEXIT\n' "$program_file" \
-        | java -jar "$JAR_FILE" -o "$test_name" -j "$test_name.java" > "$work_dir/compile.log" 2>&1)
+    (cd "$work_dir" && printf 'LOAD %s\nCOMPILE %s\nEXIT\n' "$program_file" "$test_name" \
+        | java -jar "$JAR_FILE" > "$work_dir/compile.log" 2>&1)
 
     if [ ! -f "$work_dir/$test_name.jar" ]; then
         FAILED_TESTS=$((FAILED_TESTS + 1))
@@ -214,8 +214,8 @@ run_compiler_error_test() {
 
     java -jar "$JAR_FILE" -r -q "$program_file" < /dev/null > "$work_dir/interpreter.txt" 2>&1
     local interp_code=$?
-    (cd "$work_dir" && printf 'LOAD %s\nCOMPILE\nEXIT\n' "$program_file" \
-        | java -jar "$JAR_FILE" -o "$test_name" -j "$test_name.java" > "$work_dir/compile.log" 2>&1)
+    (cd "$work_dir" && printf 'LOAD %s\nCOMPILE %s\nEXIT\n' "$program_file" "$test_name" \
+        | java -jar "$JAR_FILE" > "$work_dir/compile.log" 2>&1)
     local compiled_code=-1
     if [ -f "$work_dir/$test_name.jar" ]; then
         (cd "$work_dir" && java -jar "$test_name.jar" < /dev/null > "$work_dir/compiled.txt" 2>&1)
@@ -237,6 +237,31 @@ run_compiler_error_test() {
     fi
     FAILED_TESTS=$((FAILED_TESTS + 1))
     print_test_fail "$test_name" "error"
+    return 1
+}
+
+# Function to check the COMPILE usage message: COMPILE without a name, and without -o, must print the message and must
+# not write any file.
+run_compile_usage_test() {
+    local work_dir=$(mktemp -d)
+    local filter='s/\x1b\[[0-9;]*m//g'
+
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    print_test_start "compile_no_name (COMPILE without a name and without -o prints the usage message)"
+
+    (cd "$work_dir" && printf 'COMPILE\nEXIT\n' | java -jar "$JAR_FILE" > "$work_dir/out.txt" 2>&1)
+
+    local files_written=$(ls -A "$work_dir" | grep -v '^out.txt$' | wc -l | tr -d ' ')
+    if sed -E "$filter" "$work_dir/out.txt" | grep -q "COMPILE: give a target name" && [ "$files_written" -eq 0 ]; then
+        rm -rf "$work_dir"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        print_test_pass "compile_no_name"
+        return 0
+    fi
+    echo "  expected the usage message and no files; files written: $files_written"
+    rm -rf "$work_dir"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+    print_test_fail "compile_no_name" "usage"
     return 1
 }
 
@@ -467,6 +492,12 @@ main() {
             exit 1
         fi
     done
+
+    run_compile_usage_test
+    if [ $? -ne 0 ]; then
+        print_header "TEST SUITE FAILED"
+        exit 1
+    fi
 
     # Error tests: the program must stop with the stated message (interpreter and compiled program)
     run_compiler_error_test "$TEST_DIR/compiler/compiler_error_unary_string.bas" "Cannot apply unary minus to a string"
