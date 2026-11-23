@@ -3,7 +3,8 @@
 &copy; 2020 - 2026 Andreas Grimm | Use according to the included licence file ([LICENSE.md](LICENSE.md))
 
 **Version:** 0.4.0 
-**Status:** In development. On 2026-11-23: 1560 of 1560 unit tests and 109 of 109 system test runs passed. Open problems are listed in [doc/KNOWN_ISSUES.md](doc/KNOWN_ISSUES.md).  
+
+**Status:** Released. On 2026-11-23: 1560 of 1560 unit tests and 109 of 109 system test runs passed. Open problems are listed in [doc/KNOWN_ISSUES.md](doc/KNOWN_ISSUES.md).  
 **Last Updated:** 2026-11-23
 
 ---
