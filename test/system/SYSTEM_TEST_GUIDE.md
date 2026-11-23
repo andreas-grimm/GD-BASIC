@@ -234,6 +234,7 @@ are left out of the comparison.
 | `compiler/compiler_file_io.bas` | `FOPEN`, `FPRINT`, `FCLOSE`, `FINPUT`, `FGET`, `FPEEK`, `FREWIND`, `FCOPY`, `FRENAME`, `FDELETE`, `FEXISTS`, `EOF`, `FISOPEN`, `FGETSIZE`, `FLINECOUNT`. The files are removed at the end. |
 | `compiler/compiler_directories.bas` | `MKDIR`, `RMDIR` (with and without `TRUE`), `DIREXISTS`, `CHDIR`, `GETCWD`. The directories are removed at the end. |
 | `compiler/compiler_error_unary_string.bas` | Negative: `PRINT -S$` must stop with `Cannot apply unary minus to a string` (checked for both the interpreter and the compiled program) |
+| (script function `run_compile_usage_test`, not a `.bas` file) | `COMPILE` with no name and no `-o` must print `COMPILE: give a target name` and write no file. |
 | `compiler/compiler_error_mkdir_exists.bas` | Negative: `MKDIR "."` must stop with `already exists` (checked for both) |
 
 The two negative programs are run by `run_compiler_error_test`.

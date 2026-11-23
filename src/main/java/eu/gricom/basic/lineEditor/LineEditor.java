@@ -23,14 +23,13 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class LineEditor {
-    /** The file name used by SAVEJAVA and COMPILE when -j is not given. */
+    /** The file name used by SAVEJAVA when no name is given and no -o target is set. */
     private static final String DEFAULT_JAVA_FILE = "BasicProgram.java";
 
     private Program _oProgram;
     private BufferedReader _oReader;
     private boolean _bDartmouthFlag = false;
     private String _strTargetName = null;
-    private String _strJavaFile = null;
     private static final Logger _oLogger = new Logger(LineEditor.class.getName());
 
 
@@ -41,14 +40,12 @@ public class LineEditor {
     }
 
     /**
-     * Sets the compiler options given on the command line (-o and -j).
+     * Sets the default build target given on the command line (-o). COMPILE uses it when no name is typed.
      *
      * @param strTargetName the build target name from -o, or null when it was not given
-     * @param strJavaFile the Java file name from -j, or null when it was not given
      */
-    public void setCompileTargets(String strTargetName, String strJavaFile) {
+    public void setCompileTargets(String strTargetName) {
         _strTargetName = strTargetName;
-        _strJavaFile = strJavaFile;
     }
 
     public void execute() {
@@ -141,7 +138,7 @@ public class LineEditor {
                         save(strLine);
                         break;
                     case "COMPILE":
-                        compileProgram();
+                        compileProgram(strLine);
                         break;
                     case "SAVEJAVA":
                         saveJava(strLine);
@@ -287,20 +284,51 @@ public class LineEditor {
      * Print help information from help.txt resource file.
      */
     /**
-     * COMPILE: writes the Java source file (-j), compiles it, and builds the runnable jar named after the
-     * build target (-o). Both options must be given on the command line.
+     * Returns the name typed after a command, or null when no name was typed.
+     * For example "COMPILE hello" gives "hello", and "COMPILE" gives null.
+     *
+     * @param strLine the command line as entered
+     * @return the name, or null
      */
-    private void compileProgram() {
-        if (_strTargetName == null) {
-            Printer.println("COMPILE: no build target. Start the interpreter with -o <target-name>.");
+    static String targetNameFromCommand(String strLine) {
+        String[] astrWords = strLine.trim().split("\\s+");
+        return astrWords.length > 1 ? astrWords[1] : null;
+    }
+
+    /**
+     * Removes a trailing ".jar" from a target name, so "hello.jar" and "hello" both give "hello".
+     *
+     * @param strName the target name as typed
+     * @return the base name, or null when nothing is left (for example "" or ".jar")
+     */
+    static String baseNameOf(String strName) {
+        if (strName == null) {
+            return null;
+        }
+        String strBase = strName.endsWith(".jar") ? strName.substring(0, strName.length() - ".jar".length()) : strName;
+        return strBase.isEmpty() ? null : strBase;
+    }
+
+    /**
+     * COMPILE [name]: writes the Java source file (name.java), compiles it, and builds the runnable jar (name.jar).
+     * The name is typed after the command; without a name the -o target is used. Given "hello" or "hello.jar",
+     * both hello.java and hello.jar are written.
+     *
+     * @param strLine the command line as entered
+     */
+    private void compileProgram(String strLine) {
+        String strGiven = targetNameFromCommand(strLine);
+        String strBase = baseNameOf(strGiven != null ? strGiven : _strTargetName);
+        if (strBase == null) {
+            Printer.println("COMPILE: give a target name, for example COMPILE hello (or start with -o hello).");
             return;
         }
         List<Statement> voStatements = parseProgram();
         if (voStatements == null) {
             return;
         }
-        Path oJavaFile = Paths.get(javaFileName());
-        Path oJarFile = Paths.get(jarFileName());
+        Path oJavaFile = Paths.get(strBase + ".java");
+        Path oJarFile = Paths.get(strBase + ".jar");
         try {
             BasicCompiler.compileToJar(_oProgram.getPreRunStatements(), voStatements, oJavaFile, oJarFile);
             Printer.println("Java source written to " + oJavaFile);
@@ -314,7 +342,7 @@ public class LineEditor {
 
     /**
      * SAVEJAVA [file.java]: writes the generated Java source to a file without compiling it. Without a file name,
-     * the file from -j is used (or BasicProgram.java when -j is not given).
+     * the Java file is named after the -o target (or BasicProgram.java when -o is not given).
      *
      * @param strLine the command line as entered
      */
@@ -323,8 +351,11 @@ public class LineEditor {
         if (voStatements == null) {
             return;
         }
-        String[] astrWords = strLine.trim().split("\\s+");
-        String strFile = astrWords.length > 1 ? astrWords[1] : javaFileName();
+        String strFile = targetNameFromCommand(strLine);
+        if (strFile == null) {
+            String strBase = baseNameOf(_strTargetName);
+            strFile = strBase != null ? strBase + ".java" : DEFAULT_JAVA_FILE;
+        }
         try {
             BasicCompiler.saveJava(_oProgram.getPreRunStatements(), voStatements, Paths.get(strFile));
             Printer.println("Java source saved to " + strFile);
@@ -350,14 +381,6 @@ public class LineEditor {
             Printer.println(oException.getMessage());
             return null;
         }
-    }
-
-    private String javaFileName() {
-        return _strJavaFile != null ? _strJavaFile : DEFAULT_JAVA_FILE;
-    }
-
-    private String jarFileName() {
-        return _strTargetName.endsWith(".jar") ? _strTargetName : _strTargetName + ".jar";
     }
 
     private void printHelp() {

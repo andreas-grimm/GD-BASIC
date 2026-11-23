@@ -136,13 +136,13 @@ Enable Dartmouth-style left-to-right expression evaluation instead of standard B
 java -jar BASIC-0.4.0-jar-with-dependencies.jar -d program.bas
 ```
 
-### Options `-o` and `-j` (compile)
+### Option `-o` and the `COMPILE` command
 
-These options build a jar file from a program. They are described with a tested transcript in
-`doc/QUICK_START.md`, section 9, and in full in `doc/COMPILER.md`.
+`-o <name>` sets the default build target. The `COMPILE` command writes files from the loaded program: `COMPILE hello`
+writes `hello.java` and `hello.jar`. The full details are in `doc/QUICK_START.md`, section 9, and `doc/COMPILER.md`.
 
 ```bash
-java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -o hello -j hello.java
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -o hello
 ```
 
 ### Option: `-r` (Run Directly)

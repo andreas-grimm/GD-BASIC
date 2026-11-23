@@ -36,31 +36,26 @@ using the interpreter's own building blocks.
 
 ## 3. How to use it
 
-### 3.1 Command-line options
-
-Two new options are given when the interpreter is started:
+### 3.1 Command-line option
 
 | Option | Meaning | Example |
 |---|---|---|
-| `-o <target-name>` | The build target. The compiled jar is called `<target-name>.jar`. | `-o hello` creates `hello.jar` |
-| `-j <filename.java>` | The Java source file. The class name is the file name without `.java`. | `-j hello.java` |
+| `-o <target-name>` | The default build target, used by `COMPILE` and `SAVEJAVA` when no name is typed. | `-o hello` |
 
-If `-j` is not given, the Java file is `BasicProgram.java`.
+The `-j` option was removed in version 0.4.0. The Java file name now comes from the name typed after `COMPILE`.
 
 ### 3.2 Editor commands
 
-Start the editor with `java -jar BASIC-0.4.0-jar-with-dependencies.jar -o hello -j hello.java`, then:
-
 | Command | What it does |
 |---|---|
-| `COMPILE` | Writes the Java source (the `-j` file), compiles it, and builds the jar (the `-o` target). Needs `-o`. |
-| `SAVEJAVA [file.java]` | Writes the generated Java source only. Nothing is compiled. Without a file name the `-j` file is used. |
+| `COMPILE <name>` | Writes `<name>.java`, compiles it, and builds `<name>.jar`. `COMPILE <name>.jar` gives the same two files. Without a name, the `-o` target is used. |
+| `SAVEJAVA [file.java]` | Writes the generated Java source only. Nothing is compiled. Without a file name it writes `<target>.java` when `-o` is given, and `BasicProgram.java` when it is not. |
 
 Example session:
 
 ```text
 >LOAD hello.bas
->COMPILE
+>COMPILE hello
 Java source written to hello.java
 Build target created: hello.jar (start it with: java -jar hello.jar)
 >EXIT
@@ -69,14 +64,14 @@ Build target created: hello.jar (start it with: java -jar hello.jar)
 The commands can also be piped in, which is how the system tests use them:
 
 ```bash
-printf 'LOAD hello.bas\nCOMPILE\nEXIT\n' | java -jar BASIC-0.4.0-jar-with-dependencies.jar -o hello -j hello.java
+printf 'LOAD hello.bas\nCOMPILE hello\nEXIT\n' | java -jar BASIC-0.4.0-jar-with-dependencies.jar
 ```
 
-### 3.3 What the messages mean
+
 
 | Message | Cause |
 |---|---|
-| `COMPILE: no build target. Start the interpreter with -o <target-name>.` | `COMPILE` was used without `-o`. |
+| `COMPILE: give a target name, for example COMPILE hello (or start with -o hello).` | `COMPILE` was used with no name and without `-o`. No file is written. |
 | `No program loaded. Use LOAD command or enter program lines.` | There is no program in memory. |
 | `The Java file name is not a valid class name: my-prog.java` | The file name contains a character that is not allowed in a Java class name (only letters, digits and `_`, and it must not start with a digit). |
 | `Statement not supported by the compiler yet (BASIC line 10): Read` | The program uses a statement that the compiler does not support yet (section 5.3). |

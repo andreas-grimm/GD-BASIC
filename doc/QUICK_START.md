@@ -115,7 +115,7 @@ These are the commands the editor accepts (checked in `lineeditor/LineEditor.jav
 | `SAVE <file>` | Saves the program to a new file. It does not overwrite an existing file. |
 | `DELETE <line>` or `DELETE <start> <end>` | Deletes one line, or a range of lines. |
 | `HELP` | Shows the built-in help. |
-| `COMPILE` | Builds a jar from the loaded program. Needs the `-o` option (section 9). |
+| `COMPILE <name>` | Writes `<name>.java` and builds `<name>.jar` from the loaded program. Without a name it uses the `-o` option (section 9). |
 | `SAVEJAVA [file.java]` | Writes the Java source for the program. |
 | `EXIT`, `QUIT`, `BYE` | Leave the editor. |
 
@@ -265,7 +265,7 @@ java -jar BASIC-0.4.0-jar-with-dependencies.jar -v debug -r prog.bas   # more lo
 java -jar BASIC-0.4.0-jar-with-dependencies.jar -h              # help
 ```
 
-The options `-o` and `-j` are used for compiling (section 9). The complete list is in `doc/USER_GUIDE.md`.
+The option `-o` sets the default build target for compiling (section 9). The complete list is in `doc/USER_GUIDE.md`.
 
 ---
 
@@ -274,23 +274,23 @@ The options `-o` and `-j` are used for compiling (section 9). The complete list 
 The compiler turns your `.bas` program into Java source and then into a jar that runs on its own. You need a **JDK**.
 
 ```bash
-java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -o hello -j hello.java
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar
 ```
-
-- `-o hello` says the jar will be called `hello.jar`.
-- `-j hello.java` says the Java source file will be called `hello.java`.
 
 Then, in the editor:
 
 ```text
 >LOAD hello.bas
 Program loaded from hello.bas
->COMPILE
+>COMPILE hello
 Java source written to hello.java
 Build target created: hello.jar (start it with: java -jar hello.jar)
 >EXIT
 Good bye.
 ```
+
+- `COMPILE hello` writes `hello.java` (the Java source) and `hello.jar` (the runnable jar).
+- `COMPILE hello.jar` gives the same two files.
 
 Run the compiled program:
 
@@ -298,7 +298,7 @@ Run the compiled program:
 java -jar hello.jar
 ```
 
-`SAVEJAVA` writes only the Java source (no compile). `COMPILE` without `-o` gives an error.
+`SAVEJAVA` writes only the Java source (no compile). `COMPILE` with no name and no `-o` prints a message and writes no file.
 
 Known limits of the compiler (arrays, `DATA`/`READ`, labels) are in `doc/COMPILER.md`, section 5.3.
 
