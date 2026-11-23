@@ -40,7 +40,9 @@ public final class Instr {
                 throw new RuntimeException("Input string or search string is empty");
             }
 
-            return new IntegerValue(oValue.toString().indexOf(oSearch.toString()));
+            // Phase 7 fix: the result is one-based (as documented): 0 when not found, otherwise index + 1
+            int iIndex = oValue.toString().indexOf(oSearch.toString());
+            return new IntegerValue(iIndex < 0 ? 0 : iIndex + 1);
         }
 
         throw new RuntimeException("Input values are not String");

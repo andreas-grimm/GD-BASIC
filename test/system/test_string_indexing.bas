@@ -19,7 +19,7 @@
 140 REM Test string indexing in loop
 150 PRINT "Testing String Indexing in Loop:"
 160 word$ = "TEST"
-170 FOR i% = 1 TO LEN(word$)
+170 FOR i% = 0 TO LEN(word$) - 1
 180   PRINT word$[i%];
 190 NEXT
 200 PRINT ""

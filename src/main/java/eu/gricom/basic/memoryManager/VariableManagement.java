@@ -1,7 +1,9 @@
 package eu.gricom.basic.memoryManager;
 
+import eu.gricom.basic.error.OverflowException;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.tokenizer.Normalizer;
+import eu.gricom.basic.variableTypes.BcdValue;
 import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.RealValue;
@@ -26,6 +28,7 @@ import java.util.Map;
  */
 public class VariableManagement {
     private final static Map<String, BooleanValue> _moBooleans = new HashMap<>();
+    private final static Map<String, BcdValue> _moBcds = new HashMap<>();
     private final static Map<String, IntegerValue> _moIntegers = new HashMap<>();
     private final static Map<String, RealValue> _moReals = new HashMap<>();
     private final static Map<String, StringValue> _moStrings = new HashMap<>();
@@ -45,7 +48,7 @@ public class VariableManagement {
     private boolean _hasTypeSuffix(final String strKey) {
         return strKey.contains("$") || strKey.contains("%") ||
                strKey.contains("&") || strKey.contains("!") ||
-               strKey.contains("@");
+               strKey.contains("#") || strKey.contains("@");
     }
 
 // section managing internal variables...
@@ -56,8 +59,10 @@ public class VariableManagement {
      * @param oValue value part of the pair, here as a Value object
      * @throws SyntaxErrorException if the parenthesis is not set correctly
      */
-    public final void putMap(final String strKey, final Value oValue) throws SyntaxErrorException {
-        VariableType eVariableType = VariableType.UNDEFINED;
+    public final void putMap(final String strKey, final Value oValue) throws SyntaxErrorException, OverflowException {
+        _rejectBcdArray(strKey);
+        // Untyped variables are DOUBLE (decision D5: the DOUBLE type remains for variables without a suffix)
+        VariableType eVariableType = VariableType.DOUBLE;
 
         if (strKey.contains("$")) {
             eVariableType = VariableType.STRING;
@@ -66,17 +71,20 @@ public class VariableManagement {
         } else if (strKey.contains("&")) {
             eVariableType = VariableType.LONG;
         } else if (strKey.contains("#")) {
-            throw new SyntaxErrorException(
-                "Syntax Error: Variable name [" + strKey +
-                "] uses unsupported '#' suffix. Use untyped (no suffix) or '!' for real numbers.");
+            eVariableType = VariableType.BCD;
         } else if (strKey.contains("!")) {
-            eVariableType = VariableType.DOUBLE;
-        } else if (strKey.contains("@")) {
             eVariableType = VariableType.BOOLEAN;
+        } else if (strKey.contains("@")) {
+            throw _retiredSuffixError(strKey);
         }
 
         switch (eVariableType) {
             case STRING:
+                // Phase 7: a clear error instead of a ClassCastException when a number is put in a string variable
+                if (!(oValue instanceof StringValue)) {
+                    throw new SyntaxErrorException("Type mismatch: the string variable " + strKey
+                            + " cannot receive the value " + oValue.content());
+                }
                 _moStrings.put(Normalizer.normalizeIndex(strKey), (StringValue) oValue);
                 break;
 
@@ -84,29 +92,75 @@ public class VariableManagement {
             case LONG:
                 _moIntegers.put(Normalizer.normalizeIndex(strKey), new IntegerValue((int) oValue.toReal()));
                 break;
-            case REAL:
-            case DOUBLE:
-                _moReals.put(Normalizer.normalizeIndex(strKey), (RealValue) oValue);
+            case BCD:
+                // A name with the '#' suffix holds a decimal number (BCD). INTEGER, LONG and REAL values convert.
+                _moBcds.put(Normalizer.normalizeIndex(strKey), BcdValue.of(oValue));
                 break;
             case BOOLEAN:
-                _moBooleans.put(Normalizer.normalizeIndex(strKey), (BooleanValue) oValue);
-                break;
-            case UNDEFINED:
-                // Untyped variables default to REAL type
-                if (oValue instanceof RealValue) {
-                    _moReals.put(Normalizer.normalizeIndex(strKey), (RealValue) oValue);
+                // A name with the '!' suffix holds TRUE or FALSE. A number is converted (decision A11):
+                // a number equal to 0 gives TRUE, any other number gives FALSE. Text is rejected.
+                if (oValue instanceof BooleanValue) {
+                    _moBooleans.put(Normalizer.normalizeIndex(strKey), (BooleanValue) oValue);
+                } else if (oValue instanceof StringValue) {
+                    throw _typeMismatchError(strKey, "TRUE or FALSE", oValue);
                 } else {
-                    // Convert untyped to real
-                    _moReals.put(Normalizer.normalizeIndex(strKey),
-                        new RealValue(oValue.toReal()));
+                    _moBooleans.put(Normalizer.normalizeIndex(strKey),
+                        new BooleanValue(oValue.toReal() == 0.0));
                 }
                 break;
             default:
-                // Should not reach here with current suffix logic
-                _moReals.put(Normalizer.normalizeIndex(strKey),
-                    new RealValue(oValue.toReal()));
+                // DOUBLE (untyped variables): numbers only
+                if (oValue instanceof BooleanValue) {
+                    throw _typeMismatchError(strKey, "a number", oValue);
+                }
+                if (oValue instanceof RealValue) {
+                    _moReals.put(Normalizer.normalizeIndex(strKey), (RealValue) oValue);
+                } else {
+                    _moReals.put(Normalizer.normalizeIndex(strKey), new RealValue(oValue.toReal()));
+                }
                 break;
         }
+    }
+
+    /**
+     * Rejects array access with the '#' (BCD) suffix, such as N#(I#). BCD arrays are not implemented yet, so the access
+     * is reported as an error instead of silently using one shared scalar value.
+     *
+     * @param strKey the variable name, including any subscript. An array key has the form NAME-index, for example F#-0
+     * @throws SyntaxErrorException if the name has the '#' suffix and a subscript
+     */
+    private static void _rejectBcdArray(final String strKey) throws SyntaxErrorException {
+        if (strKey.contains("#") && (strKey.contains("-") || strKey.contains("(") || strKey.contains("["))) {
+            throw new SyntaxErrorException("Syntax Error: arrays with the '#' (BCD) suffix are not supported yet: "
+                    + strKey);
+        }
+    }
+
+    /**
+     * Error for the retired suffix '@' (decision D2). Only '!' marks true-or-false variables.
+     *
+     * @param strKey the variable name
+     * @return the syntax error to throw
+     */
+    private static SyntaxErrorException _retiredSuffixError(final String strKey) {
+        return new SyntaxErrorException("Syntax Error: Variable name [" + strKey + "] uses '@', which is not a "
+                + "variable suffix. Use '!' for true or false.");
+    }
+
+    /**
+     * Error for a value of the wrong type for a variable name (decision A11).
+     *
+     * @param strKey the variable name
+     * @param strExpected the description of the expected value
+     * @param oValue the value that was offered
+     * @return the syntax error to throw
+     */
+    private static SyntaxErrorException _typeMismatchError(final String strKey, final String strExpected,
+                                                           final Value oValue) {
+        String strGot = oValue instanceof BooleanValue ? "TRUE or FALSE"
+                : oValue instanceof StringValue ? "text" : "a number";
+        return new SyntaxErrorException("Type mismatch: [" + strKey + "] expects " + strExpected
+                + ", but got " + strGot);
     }
 
     /**
@@ -116,22 +170,32 @@ public class VariableManagement {
      * @param dValue - value part of the pair, here as an double
      * @throws SyntaxErrorException variable cannot store double value
      */
-    public final void putMap(final String strKey, final double dValue) throws SyntaxErrorException {
-        // Reject # suffix explicitly
+    public final void putMap(final String strKey, final double dValue) throws SyntaxErrorException, OverflowException {
+        _rejectBcdArray(strKey);
         if (strKey.contains("#")) {
-            throw new SyntaxErrorException("Syntax Error: Variable name [" + strKey +
-                    "] uses unsupported '#' suffix. Use untyped (no suffix) or '!' for real numbers.");
+            _moBcds.put(Normalizer.normalizeIndex(strKey), new BcdValue(dValue));
+            return;
         }
 
-        // Explicit ! suffix or untyped variables both map to REAL
-        if (strKey.contains("!") || !_hasTypeSuffix(strKey)) {
+        // A number is converted for a true-or-false variable: 0 gives TRUE, any other number gives FALSE (A11)
+        if (strKey.contains("!")) {
+            _moBooleans.put(Normalizer.normalizeIndex(strKey), new BooleanValue(dValue == 0.0));
+            return;
+        }
+
+        if (strKey.contains("@")) {
+            throw _retiredSuffixError(strKey);
+        }
+
+        // Untyped variables are DOUBLE
+        if (!_hasTypeSuffix(strKey)) {
             RealValue oValue = new RealValue(dValue);
             _moReals.put(Normalizer.normalizeIndex(strKey), oValue);
             return;
         }
 
         throw new SyntaxErrorException("Syntax Error: Variable name [" + strKey
-                + "] cannot store double value. Use untyped (no suffix) or '!' for real numbers.");
+                + "] cannot store double value.");
     }
 
     /**
@@ -177,9 +241,48 @@ public class VariableManagement {
      * @throws SyntaxErrorException if the parenthesis is not set correctly
      * @throws RuntimeException escalated exception
      */
+    /**
+     * resolveIndexVariables replaces the variables inside the square brackets of a string index by their values,
+     * e.g. "word$[i%]" becomes "word$[3]" when i% is 3. Numbers are kept as they are. (Phase 7 fix.)
+     *
+     * @param strKey the key with the brackets, for example word$[i%] or A$[1,i%]
+     * @return the key with the index values filled in
+     * @throws SyntaxErrorException when an index variable does not exist
+     * @throws RuntimeException when the index variable is not numeric
+     */
+    private String resolveIndexVariables(final String strKey) throws SyntaxErrorException, RuntimeException {
+        int iStart = strKey.indexOf("[");
+        int iEnd = strKey.indexOf("]");
+        if (iStart < 0 || iEnd < iStart) {
+            return strKey;
+        }
+
+        String[] astrParts = strKey.substring(iStart + 1, iEnd).split(",");
+        StringBuilder oBuilder = new StringBuilder(strKey.substring(0, iStart + 1));
+        for (int iPart = 0; iPart < astrParts.length; iPart++) {
+            if (iPart > 0) {
+                oBuilder.append(",");
+            }
+            String strPart = astrParts[iPart].trim();
+            if (strPart.matches("-?\\d+")) {
+                oBuilder.append(strPart);
+            } else {
+                Value oIndex = getMap(strPart);
+                if (!(oIndex instanceof IntegerValue || oIndex instanceof RealValue)) {
+                    throw new RuntimeException("String index is not a number: " + strPart);
+                }
+                oBuilder.append((int) oIndex.toReal());
+            }
+        }
+        oBuilder.append(strKey.substring(iEnd));
+        return oBuilder.toString();
+    }
+
     public final Value getMap(final String strKey) throws SyntaxErrorException, RuntimeException {
         Logger oLogger = new Logger(this.getClass().getName());
         boolean bProcess = false;
+
+        _rejectBcdArray(strKey);
 
         String strWork = strKey;
 
@@ -191,12 +294,15 @@ public class VariableManagement {
 
         strWork = Normalizer.normalizeIndex(strWork);
 
+        // Phase 7 fix: an index such as word$[i%] uses a variable. The variables are replaced by their values first.
+        String strIndexedKey = bProcess ? resolveIndexVariables(strKey) : strKey;
+
         if (_moStrings.containsKey(strWork)) {
             oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [string] " + _moStrings.get(strWork));
             Value oString = _moStrings.get(strWork);
 
             if (bProcess) {
-                return ((StringValue) oString).process(strKey);
+                return ((StringValue) oString).process(strIndexedKey);
             }
 
             return _moStrings.get(strWork);
@@ -215,6 +321,11 @@ public class VariableManagement {
         if (_moBooleans.containsKey(strWork)) {
             oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [boolean] ");
             return _moBooleans.get(strWork);
+        }
+
+        if (_moBcds.containsKey(strWork)) {
+            oLogger.debug("-getMap-> retrieving key: <" + strWork + "> [bcd] ");
+            return _moBcds.get(strWork);
         }
 
         return null;
@@ -238,6 +349,7 @@ public class VariableManagement {
         strWork = Normalizer.normalizeIndex(strWork);
 
         if (_moBooleans.containsKey(strWork)
+                || _moBcds.containsKey(strWork)
                 || _moIntegers.containsKey(strWork)
                 || _moReals.containsKey(strWork)
                 || _moStrings.containsKey(strWork)) {

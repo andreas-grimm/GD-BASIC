@@ -98,51 +98,14 @@ public class FPeekStatement implements Statement {
                 throw new RuntimeException("File name is empty for file ID " + _iFileId);
             }
 
-            // Step 4: Close the current file
-            try {
-                oFileManager.closeFile(_iFileId, false);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to close file before re-opening: " + e.getMessage());
+            // Step 4: Read the character at the stored position with a temporary reader. The file is not closed or
+            // re-opened, so the line reader of FINPUT keeps its place (Phase 7 fix).
+            String strCharacter = oFileManager.peekCharacter(_iFileId, iStoredPosition);
+
+            // Step 5: The position is not changed by FPEEK (it only looks ahead). At the end of the file, EOF is set.
+            if ("EOF".equals(strCharacter)) {
+                oFileManager.markEndOfFile(_iFileId);
             }
-
-            // Step 5: Re-open the file for reading
-            try {
-                boolean bOpened = oFileManager.openFile(strFileName, _iFileId, FileOpenType.READ);
-                if (!bOpened) {
-                    throw new RuntimeException("Failed to re-open file: " + strFileName);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to re-open file: " + e.getMessage());
-            }
-
-            // Step 6: Read lines until we reach or pass the stored position
-            int iAccumulatedChars = 0;
-            String strCharacter = "EOF";
-
-            while (true) {
-                Value oCurrentLine = oFileManager.read(_iFileId);
-                String strCurrentLine = oCurrentLine.toString();
-
-                // Check for EOF (empty string returned by FileManager.read() at EOF)
-                if (strCurrentLine.isEmpty()) {
-                    // EOF reached
-                    break;
-                }
-
-                // Check if the position is within this line
-                if (iAccumulatedChars + strCurrentLine.length() > iStoredPosition) {
-                    // Extract the character at the correct position within this line
-                    int iCharIndex = iStoredPosition - iAccumulatedChars;
-                    strCharacter = strCurrentLine.substring(iCharIndex, iCharIndex + 1);
-                    // NOTE: DO NOT update position (unlike FGetStatement)
-                    break;
-                }
-
-                iAccumulatedChars += strCurrentLine.length();
-            }
-
-            // Step 7: Restore the original position (peek doesn't advance)
-            oFileManager.putReadPos(_iFileId, iStoredPosition);
 
             // Step 8: Assign the character to the variable
             StringValue oCharValue = new StringValue(strCharacter);

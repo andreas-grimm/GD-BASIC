@@ -1,9 +1,9 @@
 # GD-BASIC Language Reference
 
-**Version:** 0.2.0+  
+**Version:** 0.3.0  
 **Interpreter:** GriCom Diminutive BASIC Interpreter  
 **Language:** Java 21  
-**Last Updated:** 2026-07-26 10:40 UTC
+**Last Updated:** 2026-11-22
 
 ---
 
@@ -16,6 +16,8 @@ If the functionality of the interpreter does not match the documentation, refer 
 GitHub. Errors in the documentation can be reported and fixed as any software bug (Hint!).
 
 > **Updated for v0.2.0**: The `#` suffix for real variables has been removed. Variables without a suffix now default to Real type (floating-point). Examples throughout this document reflect the current syntax.
+>
+> **Version 0.3.0 (branch `feature/bcd-arithmetic`, not yet merged)**: a variable with no suffix is REAL. `#` marks decimal (BCD) variables. `!` is the BOOLEAN suffix, and `@` is no longer a variable suffix (it gives an error). The status column in the variable table below says which rules are in version 0.3.0 and which are in the released 0.2.1 code.
 
 > **Updated for v0.2.0+**: Interactive line editor now supports LOAD, SAVE, DELETE, and HELP commands. See Line Editor section below.
 
@@ -23,7 +25,7 @@ GitHub. Errors in the documentation can be reported and fixed as any software bu
 
 ## Interactive Line Editor (v0.2.0+)
 
-**Last Updated:** 2026-07-26
+**Last Updated:** 2026-11-22
 
 The GD-BASIC interpreter includes an interactive line editor for interactive program development. All program files are loaded into this editor by default.
 
@@ -215,13 +217,37 @@ GD-BASIC is based on the **Dartmouth BASIC October 1964** specification, the ori
 
 #### `GD-BASIC`
 
-| Type | Variable Name Structure | Values |
-|------|-------------------------|--------|
-| `REAL` | `AB` or `AB!` | 1, 1.01, 3.14 |
-| `INTEGER` | `AB%` or `AB&` | 1, 2, 9999 |
-| `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | "A Text" |
-| `BOOLEAN` | `AB@` | `true` or `false` |
+| Type | Variable Name Structure | Values | Status |
+|------|-------------------------|--------|--------|
+| `REAL` (double precision) | `AB` (no suffix) | 1, 1.01, 3.14 | Implemented |
+| `INTEGER` | `AB%` (32-bit) | 1, 2, 9999 | Implemented |
+| `LONG` | `AB&` (64-bit) | 1, 2, 9999 | Implemented |
+| `STRING` | `AB$` (note: without the backslash, this has been added by Markdown) | "A Text" | Implemented |
+| `BOOLEAN` | `AB@` | `true` or `false` | Released 0.2.1 only. In 0.3.0 `@` gives an error |
+| `BOOLEAN` | `AB!` | `true` or `false` | Implemented in 0.3.0. In 0.2.1 `!` is DOUBLE |
+| `BCD` (decimal) | `AB#` (up to 40 significant digits) | 1.5, 0.1, 1234.56 | Implemented in 0.3.0. In 0.2.1 `#` is rejected |
 
+**Status column:** "Implemented" means the behaviour is in the code. Where the status says "0.2.1 only" or "In 0.2.1", the rule of the released code is shown. The decisions and their status are listed in `doc/GD-BASIC_Detailed_Design.md`, section "Decision register".
+
+#### Suffix rules and ambiguities (version 0.3.0)
+
+The suffix set is `%`, `$`, `#`, `&`, `!`. A character is read as a suffix only when:
+1. the character before it is a letter, a digit or another suffix (`Normalizer.java`), and
+2. the character after it is a space, an operator, `(`, `)`, `,`, `;`, `:` or the end of the line.
+
+| Case | What happens | Rule for programmers |
+|------|--------------|----------------------|
+| `A#` followed by a space, operator, bracket or end of line | BCD variable `A` | Normal use |
+| `A! = TRUE` or `A!=TRUE` | Boolean assignment to `A`. A number is converted: 0 gives TRUE, any other number gives FALSE | Use `!` for true-or-false names |
+| `A != 2` | Not-equal comparison. The `!` is not after a name, so it is the operator | Put a space before `!=` in comparisons |
+| `10#` | Syntax error when the program is parsed: `the decimal suffix '#' cannot follow a number` | Do not put a suffix on a number. Decimal constants have no suffix |
+| `A@` | Syntax error: `uses '@', which is not a variable suffix. Use '!' for true or false` | Use `!` for true-or-false names |
+| `10 ! Comment` (a `!` as the first token of a line) | Accepted as a comment | Prefer `REM` for comments |
+| `10 PRINT A : ! Comment` (a `!` after a colon) | Accepted with a warning (`Comment after colon: use REM in place of !`) | Use `REM` for comments |
+| `@PRAGMA` | Pragma keyword (`ReservedWords.java`) | Pragmas use `@`, not `#` |
+| `X % 5`, `X & 5` | Operators, because a space comes before them | Keep spaces around `%` and `&` used as operators |
+
+Decision D5 keeps the internal type name `DOUBLE` for untyped variables. Users see it as REAL.
 
 ## Document Conventions
 
@@ -285,9 +311,8 @@ The Colon is used to have multiple BASIC commands in a single command line:
 Basic is a strongly typed programming language, which means that type conversion can only be done using conversion functions. These functions 
 will be implemented in one of the next versions of the interpreter.
 
-Currently, implemented are Numbers (as double floats in Java), Strings, Integers, and Booleans. The code base supports positive integers and strings,
-which will change in the next version when the other types will be supported,too. Strings should be in "double quotes", and only positive integers can 
-be parsed (though numbers are double internally).
+Implemented types are REAL numbers (double precision Java `double`, for variables with no suffix), decimal numbers (`#`, BCD, see
+"Decimal Numbers (BCD)"), INTEGER (`%`), LONG (`&`), STRING (`$`) and BOOLEAN (`!`). Strings should be in "double quotes".
 
 Variables are identified by name which must start with a letter and can contain letters or numbers. Case is significant for names and keywords.
 
@@ -318,8 +343,34 @@ range. It is the default representation of variables in the interpreter.
 *Note:* This version does only support double length floating-point variables, as 
 this variable type is already implemented using the largest representation.
 
+#### Decimal Numbers (BCD)
+A variable whose name ends with `#` holds a decimal (Binary Coded Decimal) number. Decimal
+numbers keep the digits you type, so `0.1 + 0.2` gives exactly `0.3`. This type is implemented in version 0.3.0
+(branch `feature/bcd-arithmetic`).
+
+```basic
+10 AMOUNT# = 1234.56
+20 RATE# = 0.035
+30 INTEREST# = AMOUNT# * RATE#
+40 PRINT INTEREST#
+```
+
+Running this program prints `43.2096`.
+
+Rules:
+- A decimal variable holds up to **40 significant digits**. Shorter numbers are stored at their natural length.
+- A result that needs more than 40 digits in its whole-number part raises an overflow error (`OverflowException`).
+- Digits after the decimal point are rounded so the result fits in 40 significant digits (rounding mode HALF_UP, decision D7, confirmed by the owner on 2026-11-22).
+- Mixing a decimal value with a REAL, INTEGER or LONG value gives a decimal result (decision D11). A REAL is converted with `BigDecimal.valueOf(double)`.
+- Division by zero raises `DivideByZeroException`.
+- Results are printed without trailing zeros.
+- Trigonometric, logarithmic and exponential functions (`SQR`, `EXP`, `LOG`, `LOG10`, `SIN`, `COS`, `TAN`, `ATN`) accept decimal values.
+- Arrays with a `#` suffix are rejected: `Syntax Error: arrays with the '#' (BCD) suffix are not supported yet`.
+- Shift operators (`<<`, `>>`) take integer operands. A decimal value that is a whole number (for example `3.0`) is accepted; a value with a fraction (for example `3.9`) gives an error (see "Shift Operators").
+
 #### Booleans
-Booleans Variables have two possible results: True or False.
+Booleans are variables with two possible results: True or False. The suffix is `!` (`FLAG! = TRUE`).
+In version 0.2.1 the suffix was `@`; in version 0.3.0 `@` gives an error (see the suffix rules above).
 
 ##### Definition of the Boolean Algebra
 
@@ -345,6 +396,31 @@ Allowed operations for strings are:
 prints the character `e`
 
 ### Naming Conventions and Support
+
+### Shift Operators (`<<`, `>>`)
+
+The shift operators move the bits of an integer. Both operands are taken as **integers** (owner decision, 2026-11-22).
+
+| Left operand | Right operand (number of bits) | Result |
+|--------------|--------------------------------|--------|
+| INTEGER, or a whole number (REAL, LONG or BCD) | INTEGER, or a whole number (REAL, LONG or BCD) | INTEGER |
+
+- `a << n` multiplies `a` by 2 to the power `n`. `1 << 3` gives `8`.
+- `a >> n` divides `a` by 2 to the power `n`, rounding down. `256 >> 4` gives `16`, and `-5 >> 1` gives `-3`.
+- A number literal such as `1` or `3` is a REAL value, but a whole number is accepted as an integer. `1 << 3` works.
+- An operand with a fraction is an error: `3.9 << 2` stops the program with `Operator '<<' needs whole numbers within the INTEGER range, but got 3.9`.
+- An operand outside the INTEGER range (about -2.1 billion to 2.1 billion) is an error.
+- A text or true-or-false operand is an error: `Operator '<<' needs integers, but got ...`.
+- The shift count uses only its low five bits, as in Java. `1 << 40` gives `256`, and `1 << -1` gives `-2147483648`. This is the behaviour of the code. Whether a count outside 0 to 31 should be an error is an open question.
+
+Example:
+
+```basic
+10 four% = 4
+20 PRINT 1 << 3        REM 8
+30 PRINT 256 >> four%  REM 16
+40 END
+```
 
 ## Reserved Words
 The following keywords are reserved and cannot be used for variables. The following list defines the use of the keywords:
@@ -412,8 +488,8 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `RETURN` | implemented | |
 | `RIGHT` | implemented | |
 | `RND` | implemented | |
-| `SHIFT_LEFT` | planned | |
-| `SHIFT_RIGHT` | planned | |
+| `SHIFT_LEFT` | implemented (operator `<<`, see Shift Operators) | |
+| `SHIFT_RIGHT` | implemented (operator `>>`, see Shift Operators) | |
 | `SIN` | implemented | |
 | `SQR` | implemented | |
 | `STEP` | implemented | |
@@ -428,6 +504,7 @@ The following keywords are reserved and cannot be used for variables. The follow
 | `TO` | implemented | |
 | `UNTIL` | implemented | |
 | `VAL` | implemented | |
+| `WEND` | implemented (alias of END-WHILE) | |
 | `WHILE` | implemented | |
 | `+` | implemented | implemented |
 | `-` | implemented | implemented |
@@ -490,6 +567,8 @@ The `FPRINT` command writes data to an open file.
 - `<expression>`: One or more expressions (strings, numbers, etc.) to write to the file.
 - `;`: A trailing semicolon prevents the command from writing a newline (CRLF) at the end.
 
+Items are written next to each other with no space added between them. Put the spaces inside the strings yourself.
+
 Example:
 ```basic
 20 FPRINT 1 "Name: ", N$, " Age: ", A%
@@ -506,6 +585,8 @@ The `FINPUT` command reads a single line from an open file into a variable.
 - `<file_id>`: The ID of a file opened in `"read"` mode.
 - `<variable>`: The variable where the read line will be stored.
 
+A comma after the file ID is optional: `FINPUT 1, L$` and `FINPUT 1 L$` both work.
+
 Example:
 ```basic
 40 FINPUT 1 L$
@@ -519,7 +600,7 @@ The `FCLOSE` command closes a previously opened file.
 `FCLOSE <file_id> "<action>"`
 
 - `<file_id>`: The ID of the file to close.
-- `<action>`: Either `"KEEP"` to save the file, or `"DELETE"` to remove the file from the system after closing.
+- `<action>`: Either `"KEEP"` to save the file, or `"DELETE"` to remove the file from the system after closing. `"DELETE"` also works for files opened in `"read"` mode.
 
 Example:
 ```basic
@@ -535,7 +616,7 @@ The `EOF` function checks if the end of a file has been reached.
 
 Returns `true` (boolean) if the end of the specified file has been reached, or `false` otherwise.
 
-**Note:** The EOF flag is set to true only when an attempt is made to read past the end of the file. Simply reading the last line of a file does not set EOF to true—it becomes true on the next read attempt.
+**Note:** The EOF flag is set to true only when an attempt is made to read past the end of the file. Simply reading the last line of a file does not set EOF to true—it becomes true on the next read attempt. `FGET` and `FPEEK` also set EOF when they reach the end, so a loop `WHILE NOT EOF(1)` that uses them ends.
 
 Example:
 ```basic
@@ -552,7 +633,7 @@ The `FGET` command reads a single character from an open file and advances the f
 - `<file_id>`: The ID of a file opened in `"read"` mode.
 - `<variable>`: The variable where the read character will be stored.
 
-Returns the character as a string, or "EOF" if end of file is reached. The read position advances by 1 character.
+Returns the character as a string, or "EOF" if end of file is reached. The read position advances by 1 character. The file is not closed and re-opened, so an `FINPUT` on the same file continues from the right place.
 
 Example:
 ```basic
@@ -625,7 +706,7 @@ The `FRENAME` command renames or moves a file tracked by a file ID.
 - `<file_id>`: The ID of the file to rename.
 - `<new_filename>`: The new filename (may include path).
 
-The file is closed (without deletion), renamed in the file system, and re-registered under the same file ID. Content is preserved.
+The file is closed (without deletion) and renamed in the file system. The file ID remembers the new name, and the file stays closed, so you can open it again with `FOPEN`. Content is preserved. The file ID may be used after `FCLOSE` too, because its last name is still known.
 
 Example:
 ```basic
@@ -812,6 +893,8 @@ The syntax of the `WHILE` loop is as follows:
 
 `WHILE <condition> <statement> EXIT <statement> END-WHILE`
 
+`WEND` is a second spelling of `END-WHILE` (version 0.3.0).
+
 ###### BASIC Syntax
 
     210 WHILE X# < 3
@@ -867,15 +950,15 @@ Output:
 
     These two commands will print in the same line.
 
-The `PRINT` command also allows printing multiple fields in the same command. These fields are seperated by a comma 
-(`,`).
+The `PRINT` command also allows printing multiple fields in the same command. These fields are separated by a comma
+(`,`) or a semicolon (`;`).
 
 Example:
 
     160 PRINT a#, " x 2 = ", b#;
 
-*NOTE:* In the current version of BASIC, the character behind the comma has to be a white space (" "). A missing white space will
-lead to an error message.
+*NOTE:* a comma adds no space between the printed values. `PRINT 1,2` prints `1.02.0`. To get a space, put it inside the string itself, for example `PRINT "Total: ", X`.
+A function call can be printed directly: `PRINT LEN(x$)`.
 
 ### Process Control
 
@@ -914,6 +997,94 @@ Jumps to the statement at the given line number. Processes the program from that
 
       10 PRINT "Hello"
       20 GOTO 10
+
+##### `ON GOTO` Command (v0.2.1+)
+
+The `ON GOTO` command represents a computed (dynamic) jump based on the value of an expression. It evaluates 
+an expression to an integer and uses that value to select a target line number from a list.
+
+`ON <expression> GOTO <line1>, <line2>, <line3>, ...`
+
+The expression is evaluated to determine the index (1-based):
+- If expression evaluates to 1, jumps to line1
+- If expression evaluates to 2, jumps to line2
+- If expression evaluates to 3, jumps to line3
+- etc.
+
+If the index is out of range (< 1 or > number of targets), the program continues to the next statement 
+without jumping (graceful fallthrough).
+
+**Examples:**
+
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOTO 100, 200, 300
+30 PRINT "Invalid choice"
+40 GOTO 9999
+100 PRINT "Option 1 selected"
+110 GOTO 9999
+200 PRINT "Option 2 selected"
+210 GOTO 9999
+300 PRINT "Option 3 selected"
+9999 END
+```
+
+**With expression:**
+
+```basic
+10 X% = 2
+20 Y% = 1
+30 ON X% + Y% GOTO 100, 200, 300
+40 PRINT "Invalid choice"
+50 GOTO 9999
+100 PRINT "Sum is 1"
+110 GOTO 9999
+200 PRINT "Sum is 2"
+210 GOTO 9999
+300 PRINT "Sum is 3"
+9999 END
+```
+
+**Features:**
+- Expression is evaluated at runtime (supports variables and complex expressions)
+- Real numbers are automatically converted to integers (2.7 → 2)
+- 1-based indexing (follows BASIC tradition)
+- Out-of-range indices continue normally without error
+
+##### `ON GOSUB` Command (v0.2.1+)
+
+The `ON GOSUB` command is similar to `ON GOTO` but calls a subroutine instead of performing an unconditional jump. 
+It evaluates an expression to an integer and uses that value to select a target subroutine from a list. 
+The return address is saved on the stack for the `RETURN` command.
+
+`ON <expression> GOSUB <line1>, <line2>, <line3>, ...`
+
+Works identically to `ON GOTO` but:
+- Pushes the return address onto the stack before jumping
+- Works seamlessly with the `RETURN` command
+- Allows nested subroutine calls
+
+**Example:**
+
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOSUB 100, 200, 300
+30 PRINT "Program returned from subroutine"
+40 GOTO 9999
+100 PRINT "Subroutine 1"
+110 RETURN
+200 PRINT "Subroutine 2"
+210 RETURN
+300 PRINT "Subroutine 3"
+310 RETURN
+9999 END
+```
+
+**Features:**
+- Same indexing and expression handling as `ON GOTO`
+- Saves return address for `RETURN` statement
+- Supports nested subroutine calls
+- Out-of-range indices continue normally without calling any subroutine
 
 #### Conditional Process Control
 
@@ -1075,7 +1246,10 @@ The function `ATN` returns the arch-tangens of the parameter given.  The paramet
 The function `CDBL` converts an `integer` value into the type `real`.  The parameter needs to be of type `integer`.
 
 #### `CINT`
-The function `CINT` converts a `real` value into the type `integer`.  The parameter needs to be of type `real`.
+The function `CINT` converts a `real` or decimal (`#`) value into the type `integer`. The fraction is removed (truncation):
+`CINT(3.7)` gives `3`.
+
+The fraction is always removed (truncation). `CINT(-3.7)` gives `-3`. This is the rule of the code (owner confirmed, 2026-11-22).
 
 #### `COS`
 The function `COS` returns the co-sinus of the parameter given. The parameter needs to be of type `real`.
@@ -1091,8 +1265,9 @@ The function `LOG10` returns the logarithm decimalis of the parameter given. The
 
 #### `NOT`
 The function `NOT` reverses the logical or boolean content of a variable and returns that content: `true` becomes 
-`false` and vice versa. For numerical values, any value smaller or equal to `0` becomes `1`, and all values larger 
-than `0` become `0`.
+`false` and vice versa.
+
+For a number, `NOT` gives the bitwise complement: `NOT x` is `-x - 1`. `NOT 0` gives `-1`, `NOT 5` gives `-6`, `NOT -3` gives `2` (owner confirmed, 2026-11-22). `NOT TRUE` on an untyped (REAL) variable gives a type error.
 
 #### `RND`
 The `RND` function does not require any parameter. It returns a `REAL` value which is pseudo-randomly generated and between `0` and `1`.
@@ -1126,7 +1301,13 @@ Convert a string to lowercase. All uppercase letters are converted to their lowe
 **Example**: `LOWER("HeLLo WoRLd")` returns `"hello world"`
 
 #### `MID`
-Get the middle of a string
+Get the middle of a string. The positions are whole numbers (INTEGER, or REAL values with no fraction such as `2`).
+A fractional position gives an error.
+
+`MID$(text, start, end)` returns the characters from `start` to `end`, both included. `MID$("Hello", 2, 3)` gives `ll` (owner confirmed, 2026-11-22: the code is correct).
+
+#### `INSTR`
+Returns the one-based position of the first match, or `0` when the text is not found (version 0.3.0).
 
 #### `RIGHT`
 Get the right side of a string

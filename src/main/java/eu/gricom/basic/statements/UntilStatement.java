@@ -4,7 +4,6 @@ import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.memoryManager.LineNumberXRef;
 import eu.gricom.basic.memoryManager.ProgramPointer;
 import eu.gricom.basic.memoryManager.Stack;
-import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.IntegerValue;
 
 /**
@@ -48,11 +47,11 @@ public final class UntilStatement implements Statement {
         int iDoCommandLine = ((IntegerValue) _oStack.pop()).toInt();
 
         // here we are using line numbers to jump to the destination. This is only done for BASIC programs.
-        BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
+        // Same rule as WHILE: a boolean is used as it is; a number is TRUE when it is not zero.
+        boolean bConditionTrue = WhileStatement.isConditionTrue(_oCondition.evaluate());
 
-        // different to the code above: when the result of the condition is false, then ignore the next block and
-        // jump to the END-IF statement.
-        if (!bValue.isTrue()) {
+        // when the result of the condition is false, jump back to the DO statement.
+        if (!bConditionTrue) {
             try {
                 int iStatementNo =
                     oLineNumberObject.getStatementFromToken(iDoCommandLine);

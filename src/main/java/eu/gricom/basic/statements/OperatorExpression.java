@@ -2,8 +2,14 @@ package eu.gricom.basic.statements;
 
 
 import eu.gricom.basic.error.SyntaxErrorException;
+import java.math.BigDecimal;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.tokenizer.BasicTokenType;
+import eu.gricom.basic.variableTypes.BcdValue;
+import eu.gricom.basic.variableTypes.BooleanValue;
+import eu.gricom.basic.variableTypes.LongValue;
+import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.Value;
 
 /**
@@ -75,8 +81,8 @@ public class OperatorExpression implements Expression {
                 case ">" -> oLeftValue.largerThan(oRightValue);
                 case ">=" -> oLeftValue.largerEqualThan(oRightValue);
                 case "%" -> oLeftValue.modulo(oRightValue);
-                case ">>" -> oLeftValue.shiftRight(oRightValue);
-                case "<<" -> oLeftValue.shiftLeft(oRightValue);
+                case ">>" -> integerShiftRight(oLeftValue, oRightValue);
+                case "<<" -> integerShiftLeft(oLeftValue, oRightValue);
                 default -> throw new SyntaxErrorException("Unknown operator: " + _strOperator);
             };
         }
@@ -96,8 +102,8 @@ public class OperatorExpression implements Expression {
             case GREATER -> oLeftValue.largerThan(oRightValue);
             case GREATER_EQUAL -> oLeftValue.largerEqualThan(oRightValue);
             case MODULO -> oLeftValue.modulo(oRightValue);
-            case SHIFT_RIGHT -> oLeftValue.shiftRight(oRightValue);
-            case SHIFT_LEFT -> oLeftValue.shiftLeft(oRightValue);
+            case SHIFT_RIGHT -> integerShiftRight(oLeftValue, oRightValue);
+            case SHIFT_LEFT -> integerShiftLeft(oLeftValue, oRightValue);
             default -> throw new SyntaxErrorException("Unknown operator: " + _strOperator);
         };
     }
@@ -165,5 +171,74 @@ public class OperatorExpression implements Expression {
         strReturn += "}}";
 
         return strReturn;
+    }
+
+    /**
+     * Shift left (&lt;&lt;). Both operands are taken as integers (owner decision, 2026-11-22):
+     * a whole number of any numeric type is converted to INTEGER, anything else gives an error.
+     *
+     * @param oLeftValue the value to shift
+     * @param oRightValue the number of bits
+     * @return the shifted INTEGER value
+     * @throws Exception syntax error when an operand is not a whole number in the INTEGER range
+     */
+    private Value integerShiftLeft(final Value oLeftValue, final Value oRightValue) throws Exception {
+        IntegerValue oLeft = asShiftInteger(oLeftValue, "<<");
+        IntegerValue oRight = asShiftInteger(oRightValue, "<<");
+        return oLeft.shiftLeft(oRight);
+    }
+
+    /**
+     * Shift right (&gt;&gt;). Both operands are taken as integers (owner decision, 2026-11-22):
+     * a whole number of any numeric type is converted to INTEGER, anything else gives an error.
+     *
+     * @param oLeftValue the value to shift
+     * @param oRightValue the number of bits
+     * @return the shifted INTEGER value
+     * @throws Exception syntax error when an operand is not a whole number in the INTEGER range
+     */
+    private Value integerShiftRight(final Value oLeftValue, final Value oRightValue) throws Exception {
+        IntegerValue oLeft = asShiftInteger(oLeftValue, ">>");
+        IntegerValue oRight = asShiftInteger(oRightValue, ">>");
+        return oLeft.shiftRight(oRight);
+    }
+
+    /**
+     * Converts one operand of a shift operator to an INTEGER value.
+     *
+     * @param oValue the operand
+     * @param strOperator the operator text, used in the error message
+     * @return the operand as an INTEGER value
+     * @throws SyntaxErrorException when the operand is text or a boolean, is not a whole number,
+     *         or is outside the INTEGER range
+     */
+    private static IntegerValue asShiftInteger(final Value oValue, final String strOperator)
+            throws SyntaxErrorException {
+        if (oValue instanceof IntegerValue) {
+            return (IntegerValue) oValue;
+        }
+        if (oValue instanceof StringValue || oValue instanceof BooleanValue) {
+            throw new SyntaxErrorException("Operator '" + strOperator + "' needs integers, but got "
+                + oValue.content());
+        }
+        BigDecimal oNumber;
+        if (oValue instanceof LongValue) {
+            oNumber = BigDecimal.valueOf(((LongValue) oValue).toLong());
+        } else if (oValue instanceof BcdValue) {
+            oNumber = ((BcdValue) oValue).getBigDecimal();
+        } else {
+            double dNumber = oValue.toReal();
+            if (Double.isNaN(dNumber) || Double.isInfinite(dNumber)) {
+                throw new SyntaxErrorException("Operator '" + strOperator + "' needs integers, but got "
+                    + oValue.content());
+            }
+            oNumber = BigDecimal.valueOf(dNumber);
+        }
+        try {
+            return new IntegerValue(oNumber.intValueExact());
+        } catch (ArithmeticException oException) {
+            throw new SyntaxErrorException("Operator '" + strOperator + "' needs whole numbers within the INTEGER"
+                + " range, but got " + oValue.content());
+        }
     }
 }

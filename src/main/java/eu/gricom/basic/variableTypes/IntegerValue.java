@@ -1,6 +1,7 @@
 package eu.gricom.basic.variableTypes;
 
 import eu.gricom.basic.error.DivideByZeroException;
+import eu.gricom.basic.error.OverflowException;
 import eu.gricom.basic.error.SyntaxErrorException;
 
 /**
@@ -78,6 +79,12 @@ public class IntegerValue implements Value {
 
     @Override
     public final Value equals(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.equals(this);
+        }
+        if (oValue instanceof RealValue || oValue instanceof LongValue) {
+            return new BooleanValue(this.toReal() == oValue.toReal());
+        }
         if (oValue instanceof IntegerValue) {
             if (this.toInt() == ((IntegerValue) oValue).toInt()) {
                 return new BooleanValue(true);
@@ -91,6 +98,12 @@ public class IntegerValue implements Value {
 
     @Override
     public final Value notEqual(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.notEqual(this);
+        }
+        if (oValue instanceof RealValue || oValue instanceof LongValue) {
+            return new BooleanValue(this.toReal() != oValue.toReal());
+        }
         if (oValue instanceof IntegerValue) {
             if (this.toInt() != ((IntegerValue) oValue).toInt()) {
                 return new BooleanValue(true);
@@ -103,48 +116,61 @@ public class IntegerValue implements Value {
     }
 
     @Override
-    public final Value plus(final Value oValue) throws SyntaxErrorException {
+    public final Value plus(final Value oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).plus(oValue);
+        }
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue + ((IntegerValue) oValue).toInt());
             return oReturn;
         } else if (oValue instanceof RealValue) {
-            IntegerValue oReturn = new IntegerValue(_iValue + ((RealValue) oValue).toInt());
-            return oReturn;
+            return new RealValue(this.toReal()).plus(oValue);
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
-    public final Value minus(final Value oValue) throws SyntaxErrorException {
+    public final Value minus(final Value oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).minus(oValue);
+        }
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue - ((IntegerValue) oValue).toInt());
             return oReturn;
         } else if (oValue instanceof RealValue) {
-            IntegerValue oReturn = new IntegerValue(_iValue - ((RealValue) oValue).toInt());
-            return oReturn;
+            return new RealValue(this.toReal()).minus(oValue);
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
-    public final Value multiply(final Value oValue) throws SyntaxErrorException {
+    public final Value multiply(final Value oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).multiply(oValue);
+        }
         if (oValue instanceof IntegerValue) {
             IntegerValue oReturn = new IntegerValue(_iValue * ((IntegerValue) oValue).toInt());
             return oReturn;
         } else if (oValue instanceof RealValue) {
-            IntegerValue oReturn = new IntegerValue(_iValue * ((RealValue) oValue).toInt());
-            return oReturn;
+            return new RealValue(this.toReal()).multiply(oValue);
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
     @Override
-    public final Value divide(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    public final Value divide(final Value oValue) throws DivideByZeroException, SyntaxErrorException,
+            OverflowException {
         IntegerValue oReturn;
 
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).divide(oValue);
+        }
+        if (oValue instanceof RealValue) {
+            return new RealValue(this.toReal()).divide(oValue);
+        }
         if (oValue instanceof IntegerValue) {
             if (((IntegerValue) oValue).toInt() != 0) {
                 oReturn = new IntegerValue(_iValue / ((IntegerValue) oValue).toInt());
@@ -158,9 +184,13 @@ public class IntegerValue implements Value {
     }
 
     @Override
-    public final Value modulo(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    public final Value modulo(final Value oValue) throws DivideByZeroException, SyntaxErrorException,
+            OverflowException {
         IntegerValue oReturn;
 
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).modulo(oValue);
+        }
         if (oValue instanceof IntegerValue) {
             if (((IntegerValue) oValue).toInt() != 0) {
                 oReturn = new IntegerValue(_iValue % ((IntegerValue) oValue).toInt());
@@ -173,13 +203,16 @@ public class IntegerValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " is not an integer");
     }
 
-    @Override
     public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return shiftLeft(new IntegerValue(((BcdValue) oValue).getBigDecimal().intValue()));
+        }
         if (oValue instanceof IntegerValue) {
-            IntegerValue oReturn = new IntegerValue(_iValue * 2 * ((IntegerValue) oValue).toInt());
+            // a left shift by n bits multiplies by 2 to the power n (bug fixed in Phase 7: was * 2 * n)
+            IntegerValue oReturn = new IntegerValue(_iValue << ((IntegerValue) oValue).toInt());
             return oReturn;
         } else if (oValue instanceof RealValue) {
-            IntegerValue oReturn = new IntegerValue(_iValue * 2 * ((RealValue) oValue).toInt());
+            IntegerValue oReturn = new IntegerValue(_iValue << ((RealValue) oValue).toInt());
             return oReturn;
         }
 
@@ -188,6 +221,9 @@ public class IntegerValue implements Value {
 
     @Override
     public final Value and(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return and(new IntegerValue(((BcdValue) oValue).getBigDecimal().intValue()));
+        }
         if (oValue instanceof IntegerValue) {
 
             if (_iValue > 0 && ((IntegerValue) oValue).toInt() > 0) {
@@ -202,6 +238,9 @@ public class IntegerValue implements Value {
 
     @Override
     public final Value or(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return or(new IntegerValue(((BcdValue) oValue).getBigDecimal().intValue()));
+        }
         if (oValue instanceof IntegerValue) {
 
             if (_iValue > 0 || ((IntegerValue) oValue).toInt() > 0) {
@@ -214,17 +253,16 @@ public class IntegerValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " is not of type integer");
     }
 
-    @Override
     public final Value shiftRight(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
         IntegerValue oReturn;
 
+        if (oValue instanceof BcdValue) {
+            return shiftRight(new IntegerValue(((BcdValue) oValue).getBigDecimal().intValue()));
+        }
         if (oValue instanceof IntegerValue) {
-            if (((IntegerValue) oValue).toInt() != 0) {
-                oReturn = new IntegerValue(_iValue / (2 * ((IntegerValue) oValue).toInt()));
-            } else {
-                throw new DivideByZeroException(this.toInt() + ">>" + ((IntegerValue) oValue).toInt()
-                                                        + " is a division by zero");
-            }
+            // a right shift by n bits divides by 2 to the power n (bug fixed in Phase 7: was / (2 * n)).
+            // A shift by 0 is not a division by zero, so no exception is thrown here.
+            oReturn = new IntegerValue(_iValue >> ((IntegerValue) oValue).toInt());
             return oReturn;
         }
 
@@ -232,16 +270,19 @@ public class IntegerValue implements Value {
     }
 
     @Override
-    public final Value power(final Value oValue) throws SyntaxErrorException {
+    public final Value power(final Value oValue) throws DivideByZeroException, SyntaxErrorException,
+            OverflowException {
         IntegerValue oReturn;
 
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).power(oValue);
+        }
         if (oValue instanceof IntegerValue) {
             oReturn = new IntegerValue(new RealValue(Math.pow(_iValue, ((IntegerValue) oValue).toInt())).toInt());
 
             return oReturn;
         } else if (oValue instanceof RealValue) {
-            oReturn = new IntegerValue(new RealValue(Math.pow(_iValue, ((RealValue) oValue).toInt())).toInt());
-            return oReturn;
+            return new RealValue(Math.pow(this.toReal(), oValue.toReal()));
         }
 
         throw new SyntaxErrorException(oValue.content() + " is not a integer");
@@ -249,6 +290,9 @@ public class IntegerValue implements Value {
 
     @Override
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.largerThan(this);
+        }
         if (oValue instanceof IntegerValue) {
             if (this.toInt() < ((IntegerValue) oValue).toInt()) {
                 return new BooleanValue(true);
@@ -256,7 +300,7 @@ public class IntegerValue implements Value {
 
             return new BooleanValue(false);
         } else if (oValue instanceof RealValue) {
-            if (this.toInt() < ((RealValue) oValue).toInt()) {
+            if (this.toReal() < oValue.toReal()) {
                 return new BooleanValue(true);
             }
 
@@ -268,6 +312,9 @@ public class IntegerValue implements Value {
 
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.largerEqualThan(this);
+        }
         if (oValue instanceof IntegerValue) {
             if (this.toInt() <= ((IntegerValue) oValue).toInt()) {
                 return new BooleanValue(true);
@@ -275,7 +322,7 @@ public class IntegerValue implements Value {
 
             return new BooleanValue(false);
         } else if (oValue instanceof RealValue) {
-            if (this.toInt() <= ((RealValue) oValue).toInt()) {
+            if (this.toReal() <= oValue.toReal()) {
                 return new BooleanValue(true);
             }
 
@@ -287,6 +334,9 @@ public class IntegerValue implements Value {
 
     @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.smallerThan(this);
+        }
         if (oValue instanceof IntegerValue) {
             if (this.toInt() > ((IntegerValue) oValue).toInt()) {
                 return new BooleanValue(true);
@@ -294,7 +344,7 @@ public class IntegerValue implements Value {
 
             return new BooleanValue(false);
         } else if (oValue instanceof RealValue) {
-            if (this.toInt() > ((RealValue) oValue).toInt()) {
+            if (this.toReal() > oValue.toReal()) {
                 return new BooleanValue(true);
             }
 
@@ -306,6 +356,9 @@ public class IntegerValue implements Value {
 
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.smallerEqualThan(this);
+        }
         if (oValue instanceof IntegerValue) {
             if (this.toInt() >= ((IntegerValue) oValue).toInt()) {
                 return new BooleanValue(true);
@@ -313,7 +366,7 @@ public class IntegerValue implements Value {
 
             return new BooleanValue(false);
         } else if (oValue instanceof RealValue) {
-            if (this.toInt() >= ((RealValue) oValue).toInt()) {
+            if (this.toReal() >= oValue.toReal()) {
                 return new BooleanValue(true);
             }
 

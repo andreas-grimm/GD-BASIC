@@ -98,10 +98,6 @@ public class StringValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " '%' for strings, the expression is not defined");
     }
 
-    @Override
-    public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
-        throw new SyntaxErrorException(oValue.content() + " '<<' for strings, the expression is not defined");
-    }
 
     @Override
     public final Value and(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
@@ -113,10 +109,6 @@ public class StringValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " 'or' for strings, the expression is not defined");
     }
 
-    @Override
-    public final Value shiftRight(final Value oValue) throws SyntaxErrorException {
-        throw new SyntaxErrorException(oValue.content() + " '>>' for strings, the expression is not defined");
-    }
 
     @Override
     public final Value power(final Value oValue) throws SyntaxErrorException {

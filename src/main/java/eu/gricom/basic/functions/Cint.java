@@ -2,6 +2,7 @@ package eu.gricom.basic.functions;
 
 import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.LongValue;
+import eu.gricom.basic.variableTypes.BcdValue;
 import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
@@ -32,6 +33,9 @@ public final class Cint {
      * @throws Exception as any execution error found during execution
      */
     public static Value execute(final Value oValue) throws Exception {
+        if (oValue instanceof BcdValue) {
+            return new IntegerValue(((BcdValue) oValue).getBigDecimal().intValue());
+        }
         if (oValue instanceof IntegerValue) {
             return oValue;
         } else

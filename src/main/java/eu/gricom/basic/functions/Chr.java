@@ -1,6 +1,7 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
@@ -31,8 +32,12 @@ public final class Chr {
      * @throws Exception as any execution error found during execution
      */
     public static Value execute(final Value oValue) throws Exception {
+        // Phase 7: a number literal such as 65 is a REAL value; a whole number is accepted as the character code
         if (oValue instanceof IntegerValue) {
             return new StringValue(Character.toString((char) ((IntegerValue) oValue).toInt()));
+        }
+        if (oValue instanceof RealValue && ((RealValue) oValue).toReal() == Math.rint(((RealValue) oValue).toReal())) {
+            return new StringValue(Character.toString((char) (int) ((RealValue) oValue).toReal()));
         }
 
         throw new RuntimeException("Input value not of type integer: " + oValue);

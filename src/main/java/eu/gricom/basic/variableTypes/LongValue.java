@@ -1,6 +1,7 @@
 package eu.gricom.basic.variableTypes;
 
 import eu.gricom.basic.error.DivideByZeroException;
+import eu.gricom.basic.error.OverflowException;
 import eu.gricom.basic.error.SyntaxErrorException;
 
 /**
@@ -69,6 +70,12 @@ public class LongValue implements Value {
 
     @Override
     public final Value equals(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.equals(this);
+        }
+        if (oValue instanceof IntegerValue || oValue instanceof RealValue) {
+            return new BooleanValue(this.toReal() == oValue.toReal());
+        }
         if (oValue instanceof LongValue) {
             if (this.toLong() == ((LongValue) oValue).toLong()) {
                 return new BooleanValue(true);
@@ -82,6 +89,12 @@ public class LongValue implements Value {
 
     @Override
     public final Value notEqual(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.notEqual(this);
+        }
+        if (oValue instanceof IntegerValue || oValue instanceof RealValue) {
+            return new BooleanValue(this.toReal() != oValue.toReal());
+        }
         if (oValue instanceof LongValue) {
             if (this.toLong() != ((LongValue) oValue).toLong()) {
                 return new BooleanValue(true);
@@ -94,7 +107,10 @@ public class LongValue implements Value {
     }
 
     @Override
-    public final Value plus(final Value oValue) throws SyntaxErrorException {
+    public final Value plus(final Value oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).plus(oValue);
+        }
         if (oValue instanceof LongValue) {
             LongValue oReturn = new LongValue(_lValue + ((LongValue) oValue).toLong());
             return oReturn;
@@ -104,7 +120,10 @@ public class LongValue implements Value {
     }
 
     @Override
-    public final Value minus(final Value oValue) throws SyntaxErrorException {
+    public final Value minus(final Value oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).minus(oValue);
+        }
         if (oValue instanceof LongValue) {
             LongValue oReturn = new LongValue(_lValue - ((LongValue) oValue).toLong());
             return oReturn;
@@ -114,7 +133,10 @@ public class LongValue implements Value {
     }
 
     @Override
-    public final Value multiply(final Value oValue) throws SyntaxErrorException {
+    public final Value multiply(final Value oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).multiply(oValue);
+        }
         if (oValue instanceof LongValue) {
             LongValue oReturn = new LongValue(_lValue * ((LongValue) oValue).toLong());
             return oReturn;
@@ -124,9 +146,13 @@ public class LongValue implements Value {
     }
 
     @Override
-    public final Value divide(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    public final Value divide(final Value oValue) throws DivideByZeroException, SyntaxErrorException,
+            OverflowException {
         LongValue oReturn;
 
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).divide(oValue);
+        }
         if (oValue instanceof LongValue) {
             if (((LongValue) oValue).toLong() != 0) {
                 oReturn = new LongValue(_lValue / ((LongValue) oValue).toLong());
@@ -141,9 +167,13 @@ public class LongValue implements Value {
     }
 
     @Override
-    public final Value modulo(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    public final Value modulo(final Value oValue) throws DivideByZeroException, SyntaxErrorException,
+            OverflowException {
         LongValue oReturn;
 
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).modulo(oValue);
+        }
         if (oValue instanceof LongValue) {
             if (((LongValue) oValue).toLong() != 0) {
                 oReturn = new LongValue(_lValue % ((LongValue) oValue).toLong());
@@ -157,18 +187,12 @@ public class LongValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " is not an Long");
     }
 
-    @Override
-    public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof LongValue) {
-            LongValue oReturn = new LongValue(_lValue * 2 * ((LongValue) oValue).toLong());
-            return oReturn;
-        }
-
-        throw new SyntaxErrorException(oValue.content() + " is not an Long");
-    }
 
     @Override
     public final Value and(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return and(new LongValue(((BcdValue) oValue).getBigDecimal().longValue()));
+        }
         if (oValue instanceof LongValue) {
 
             if (_lValue > 0 && ((LongValue) oValue).toLong() > 0) {
@@ -183,6 +207,9 @@ public class LongValue implements Value {
 
     @Override
     public final Value or(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return or(new LongValue(((BcdValue) oValue).getBigDecimal().longValue()));
+        }
         if (oValue instanceof LongValue) {
 
             if (_lValue > 0 || ((LongValue) oValue).toLong() > 0) {
@@ -195,27 +222,15 @@ public class LongValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " is not of type Long");
     }
 
+
     @Override
-    public final Value shiftRight(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    public final Value power(final Value oValue) throws DivideByZeroException, SyntaxErrorException,
+            OverflowException {
         LongValue oReturn;
 
-        if (oValue instanceof LongValue) {
-            if (((LongValue) oValue).toLong() != 0) {
-                oReturn = new LongValue(_lValue / (2 * ((LongValue) oValue).toLong()));
-            } else {
-                throw new DivideByZeroException(this.toLong()
-                    + ">>" + ((LongValue) oValue).toLong() + " is a division by zero");
-            }
-            return oReturn;
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).power(oValue);
         }
-
-        throw new SyntaxErrorException(oValue.content() + " is not an Long");
-    }
-
-    @Override
-    public final Value power(final Value oValue) throws SyntaxErrorException {
-        LongValue oReturn;
-
         if (oValue instanceof LongValue) {
             oReturn = new LongValue(new RealValue(Math.pow(_lValue, oValue.toReal())).toInt());
 
@@ -227,6 +242,9 @@ public class LongValue implements Value {
 
     @Override
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.largerThan(this);
+        }
         if (oValue instanceof LongValue) {
             if (this.toLong() < ((LongValue) oValue).toLong()) {
                 return new BooleanValue(true);
@@ -240,6 +258,9 @@ public class LongValue implements Value {
 
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.largerEqualThan(this);
+        }
         if (oValue instanceof LongValue) {
             if (this.toLong() <= ((LongValue) oValue).toLong()) {
                 return new BooleanValue(true);
@@ -253,6 +274,9 @@ public class LongValue implements Value {
 
     @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.smallerThan(this);
+        }
         if (oValue instanceof LongValue) {
             if (this.toLong() > ((LongValue) oValue).toLong()) {
                 return new BooleanValue(true);
@@ -266,6 +290,9 @@ public class LongValue implements Value {
 
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.smallerEqualThan(this);
+        }
         if (oValue instanceof LongValue) {
             if (this.toLong() >= ((LongValue) oValue).toLong()) {
                 return new BooleanValue(true);

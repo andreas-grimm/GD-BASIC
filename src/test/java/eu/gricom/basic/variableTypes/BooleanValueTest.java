@@ -105,7 +105,7 @@ public class BooleanValueTest {
     }
 
     @Test
-    public void testPlus() {
+    public void testPlus() throws Exception {
         try {
             BooleanValue oFirstValue = new BooleanValue(true);
             BooleanValue oSecondValue = new BooleanValue(false);
@@ -125,7 +125,7 @@ public class BooleanValueTest {
     }
 
     @Test
-    public void testMinus() {
+    public void testMinus() throws Exception {
         BooleanValue oFirstValue = new BooleanValue(true);
         BooleanValue oSecondValue = new BooleanValue(true);
 
@@ -136,7 +136,7 @@ public class BooleanValueTest {
     }
 
     @Test
-    public void testMultiply() {
+    public void testMultiply() throws Exception {
         try {
             BooleanValue oFirstValue = new BooleanValue(true);
             BooleanValue oSecondValue = new BooleanValue(false);
@@ -153,7 +153,7 @@ public class BooleanValueTest {
     }
 
     @Test
-    public void testDivide() {
+    public void testDivide() throws Exception {
         BooleanValue oFirstValue = new BooleanValue(true);
         BooleanValue oSecondValue = new BooleanValue(true);
 
@@ -164,7 +164,7 @@ public class BooleanValueTest {
     }
 
     @Test
-    public void testModulo() {
+    public void testModulo() throws Exception {
         BooleanValue oFirstValue = new BooleanValue(true);
         BooleanValue oSecondValue = new BooleanValue(true);
 
@@ -175,7 +175,7 @@ public class BooleanValueTest {
     }
 
     @Test
-    public void testPower() {
+    public void testPower() throws Exception {
         try {
             BooleanValue oFirstValue = new BooleanValue(true);
             BooleanValue oSecondValue = new BooleanValue(false);
@@ -191,7 +191,7 @@ public class BooleanValueTest {
     }
 
     @Test
-    public void testPowerTypeException() {
+    public void testPowerTypeException() throws Exception {
         BooleanValue oFirstValue = new BooleanValue(true);
         RealValue oSecondValue = new RealValue(1);
 

@@ -29,7 +29,7 @@ public class LineEditor {
     public LineEditor(Program oProgram, boolean bDartmouthFlag) {
         _oProgram = oProgram;
         _bDartmouthFlag = bDartmouthFlag;
-        _oReader = new BufferedReader(new InputStreamReader(System.in));
+        _oReader = eu.gricom.basic.helper.ConsoleInput.getReader();
     }
 
     public void execute() {

@@ -36,7 +36,7 @@ public final class ReservedWords {
             "ON", "OPEN", "OR",
             "PRINT",
             "RANDOM", "READ", "REM", "RETURN", "RIGHT", "RMDIR", "RND",
-            "SIN", "SQR", "STEP", "STOP", "STRING", "STR", "SYSTEM",
+            "SIN", "SQL", "SQR", "STEP", "STOP", "STRING", "STR", "SYSTEM",
             "TAB", "TAN", "THEN", "TIME", "TO",
             "UNTIL", "UPPER",
             "VAL",
@@ -44,7 +44,8 @@ public final class ReservedWords {
             "&&", "\\+", "\\-", "\\*", "\\/", ":",
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
             "\\(", "\\)", "\\'", "\\;", "\\,", "||", "\\?",
-            ">>", "<<"
+            ">>", "<<",
+            "WEND"  // Phase 7: alias of END-WHILE. Added at the end so that the other indices stay the same.
     };
 
     private static BasicTokenType[] _aeTokenTypes = {
@@ -71,7 +72,7 @@ public final class ReservedWords {
         BasicTokenType.PRINT,
         BasicTokenType.RANDOM, BasicTokenType.READ, BasicTokenType.REM, BasicTokenType.RETURN,
             BasicTokenType.RIGHT, BasicTokenType.RMDIR, BasicTokenType.RND,
-        BasicTokenType.SIN, BasicTokenType.SQR, BasicTokenType.STEP, BasicTokenType.STOP, BasicTokenType.TOSTRING, BasicTokenType.STR,
+        BasicTokenType.SIN, BasicTokenType.SQL, BasicTokenType.SQR, BasicTokenType.STEP, BasicTokenType.STOP, BasicTokenType.TOSTRING, BasicTokenType.STR,
             BasicTokenType.SYSTEM,
         BasicTokenType.TAB, BasicTokenType.TAN, BasicTokenType.THEN, BasicTokenType.TIME, BasicTokenType.TO,
         BasicTokenType.UNTIL, BasicTokenType.UPPER,
@@ -83,7 +84,8 @@ public final class ReservedWords {
             BasicTokenType.PASCAL_ASSIGN_EQUAL, BasicTokenType.COMPARE_EQUAL, BasicTokenType.COMPARE_NOT_EQUAL, BasicTokenType.POWER,
         BasicTokenType.LEFT_PAREN, BasicTokenType.RIGHT_PAREN, BasicTokenType.COMMENT, BasicTokenType.SEMICOLON,
             BasicTokenType.COMMA, BasicTokenType.OR, BasicTokenType.PRINT,
-        BasicTokenType.SHIFT_RIGHT, BasicTokenType.SHIFT_LEFT};
+        BasicTokenType.SHIFT_RIGHT, BasicTokenType.SHIFT_LEFT,
+        BasicTokenType.ENDWHILE};  // WEND (Phase 7 alias of END-WHILE)
 
     /**
      * getIndex returns the index of the token based on an entered reserved word.

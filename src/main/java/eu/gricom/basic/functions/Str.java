@@ -1,6 +1,7 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
+import eu.gricom.basic.variableTypes.BcdValue;
 import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.LongValue;
 import eu.gricom.basic.variableTypes.RealValue;
@@ -33,9 +34,11 @@ public final class Str {
      * @throws Exception as any execution error found during execution
      */
     public static Value execute(final Value oValue) throws Exception {
+        // BCD values print in plain decimal notation without trailing zeros (decision D10)
         if (oValue instanceof RealValue
                 || oValue instanceof IntegerValue
-                || oValue instanceof LongValue) {
+                || oValue instanceof LongValue
+                || oValue instanceof BcdValue) {
             return new StringValue(oValue.toString());
         }
 

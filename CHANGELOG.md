@@ -2,7 +2,163 @@
 
 All notable changes to the GD-BASIC project are documented in this file.
 
-**Last Updated:** 2026-07-26 10:40 UTC
+**Last Updated:** 2026-11-22
+
+---
+
+## [0.3.0] — 2026-11-22 (branch `feature/bcd-arithmetic`, not yet merged or committed)
+
+**Decimal numbers (BCD) and suffix changes.** Version 0.3.0 is implemented on branch `feature/bcd-arithmetic`. The
+design is in `doc/GD-BASIC_Detailed_Design.md` (section "BCD Arithmetic Design"). The language rules are in `doc/BASIC.md`.
+
+### Added
+- **Decimal variables with suffix `#`** (`amount# = 0.1 + 0.2` gives `0.3`). Up to 40 significant digits, rounding HALF_UP.
+  Implemented in `BcdValue` (`variableTypes`), `BcdMath` (`math`) and `OverflowException` (`error`).
+- **Overflow error**: a result with more than 40 digits before the decimal point stops the program with `OverflowException`.
+- **Division by zero** with BCD values raises `DivideByZeroException`.
+- **Maths functions for BCD values**: `ABS`, `SQR`, `EXP`, `LOG`, `LOG10`, `SIN`, `COS`, `TAN`, `ATN`, `CINT`, `CDBL`, `^`.
+- **`STR$`** accepts BCD values and prints them as plain decimals without trailing zeros (`2.50` prints `2.5`).
+- **Shift operators** `<<` and `>>` take integer operands (owner decision, 2026-11-22). A whole number of any numeric type is accepted (`1 << 3` works with number literals). A fraction, a value outside the INTEGER range, text or a boolean gives an error. See `doc/BASIC.md`, "Shift Operators".
+- **`WEND`** is a second spelling of `END-WHILE`.
+- **`ConsoleInput`** (`helper`): one shared reader for standard input. Several `INPUT` statements and the line editor now read
+  the same input.
+
+### Changed
+- **`!` is the BOOLEAN suffix** (`FLAG! = TRUE`). In 0.2.1 `!` was Double.
+- **`@` is no longer a variable suffix.** Using it gives an error that says to use `!`.
+- **Untyped variables are REAL** (double precision). The internal type name `DOUBLE` is kept for them.
+- **INTEGER with REAL gives REAL** (`5 * 2.5` is `12.5`, checked).
+- **Arrays with a `#` suffix** are rejected with a message. They are not supported yet.
+- **`INSTR`** returns a one-based position (0 when not found), as documented.
+- **Operand types**: `CHR$` and `MID$` accept whole-number REAL values (number literals are REAL). `MID$(text, start, end)` takes start and end, both included (owner confirmed, 2026-11-22).
+- **Exit code**: the interpreter exits with code 1 when a program does not parse or stops with a runtime error.
+
+### Fixed (Phase 6 and Phase 7)
+- Block `IF` with `ELSE` and `END-IF`, including nested block IFs.
+- Nested `FOR` and `WHILE` loops; `FOR` as the first statement of a program.
+- `ON GOTO` and `ON GOSUB` were added in 0.2.1; their test programs had out-of-order line numbers and are rewritten.
+- Functions `FEXISTS`, `TIME`, `GETCWD`, `DIREXISTS`, `CALL`, `FCOMPARE`, `FGETNAME`, `FGETSIZE`, `FISOPEN`,
+  `FLINECOUNT`, `FMODTIME` were parsed but not dispatched; they now work.
+- Function names ending in `$` (`STR$`, `CHR$`, `LEFT$`, `RIGHT$`, `UPPER$`) were read as array accesses in assignments.
+- `FCLOSE n "DELETE"` now deletes files opened for reading too.
+- `FRENAME` works after `FCLOSE` (the file ID keeps the last file name). The file stays closed afterwards.
+- `FPEEK` and `FGET` read a character without closing and re-opening the file.
+- `FGET` and `FPEEK` set end-of-file when they read past the end, so `WHILE NOT EOF(n)` loops end.
+- `FPRINT` and `PRINT` no longer write a space before each value. `PRINT` accepts function calls (`PRINT LEN(x$)`)
+  and `;` between items.
+- `FINPUT` accepts a comma after the file ID (`FINPUT 1, L$` and `FINPUT 1 L$`).
+- File statements, `END`, `DATA` and `DIM` inside a block `IF` or loop are parsed (before they were skipped).
+- A string index with a variable (`word$[i%]`) works.
+- `TIME` returns milliseconds since 1970, as the code always did. The coding standard was corrected to say so.
+- Assigning a number to a string variable gives a clear type error (before: `ClassCastException`).
+- Shift operators used the wrong formula. Example: `256 >> 4` gave 32; the correct result is 16.
+
+### Testing
+- **Unit tests**: 1435 (0.2.1 had 1248). All pass. New or extended test classes include `BcdArithmeticTest`, `BcdValueTest`,
+  `BcdFunctionsTest`, `BcdMathTest`, `BcdOutputFormatTest`, `ShiftOperatorTest`, `DollarFunctionLexerTest`, `NormalizerQuotedBracketTest`, `SuffixAndCommentRulesTest`, `NumericEqualityTest`, `InputStatementTest`, `Phase7RegressionTest`.
+- **System test programs**: 62 (`test/system/run_all_tests.sh`). The runner now fails when a program stops with an error
+  or prints `ERROR: Test failed`. Before, it only checked the exit code, which was always 0. Sixteen programs that
+  were not run before are now included. Seven BCD programs run with expected output files in `test/system/examples/`;
+  four of them must stop with an error and exit code 1 (overflow, division by zero, BCD array, BCD shift).
+- The BSearch example (`doc/GD_Basic_Examples/BSearch.bas`) runs with a fixed input and its output is compared.
+
+### Open points
+- Shift counts outside 0 to 31 use the low five bits, as in Java: `1 << 40` gives `256`, `1 << -1` gives `-2147483648`. Whether this should be an error is not decided.
+
+### Decisions confirmed on 2026-11-22 (owner)
+- A number assigned to a `!` name: 0 gives TRUE, any other number gives FALSE. The earlier type-error rule is withdrawn.
+- `MID$(text, start, end)`: start and end are both included. `MID$("Hello", 2, 3)` gives `ll`.
+- `CINT` removes the fraction: `CINT(3.7)` gives 3, `CINT(-3.7)` gives -3.
+- `NOT` on a number is the bitwise complement: `NOT x` is `-x - 1`.
+- A comma between `PRINT` items adds no space: `PRINT 1,2` prints `1.02.0`.
+- Shift operands are integers: whole numbers of any numeric type are accepted, fractions and out-of-range values give an error.
+- The internal type name `DOUBLE` for untyped variables is kept. No change.
+
+---
+
+## [0.2.1] - 2026-08-24 (Computed Branches: ON GOTO/GOSUB)
+
+**Computed Branch Control Release**: Implementation of ON GOTO and ON GOSUB statements for dynamic control flow.
+
+### Summary
+
+This release adds computed branch functionality allowing dynamic selection of jump targets:
+- **New**: ON GOTO statement for computed unconditional jumps
+- **New**: ON GOSUB statement for computed subroutine calls
+- **New**: Expression-based index evaluation (1-based indexing)
+- **New**: Out-of-range index handling (graceful fallthrough)
+- **New**: 34 comprehensive unit tests for new functionality
+- **Enhanced**: Parser with unified statement handling for computed branches
+- **1248/1248 tests pass** ✅ (+34 new tests)
+
+### ON GOTO Statement (NEW - August 24, 2026)
+
+**Syntax**: `ON expression GOTO line1, line2, line3, ...`
+
+Evaluates expression to an integer and uses that index to select a target line number for an unconditional jump.
+
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOTO 100, 200, 300
+30 PRINT "Invalid choice"
+40 GOTO 9999
+100 PRINT "Option 1 selected"
+110 GOTO 9999
+200 PRINT "Option 2 selected"
+210 GOTO 9999
+300 PRINT "Option 3 selected"
+9999 END
+```
+
+**Features**:
+- 1-based indexing (ON 1 → first target, ON 2 → second target, etc.)
+- Supports multiple targets separated by commas
+- Evaluates complex expressions at runtime
+- Automatically converts real numbers to integers (e.g., 2.7 → 2)
+- Out-of-range indices (< 1 or > target count) continue normally without jumping
+
+### ON GOSUB Statement (NEW - August 24, 2026)
+
+**Syntax**: `ON expression GOSUB line1, line2, line3, ...`
+
+Similar to ON GOTO but calls a subroutine and saves return address for RETURN statement.
+
+```basic
+10 INPUT "Choose (1-3): "; CHOICE%
+20 ON CHOICE% GOSUB 100, 200, 300
+30 PRINT "Program returned from subroutine"
+40 GOTO 9999
+100 PRINT "Subroutine 1"
+110 RETURN
+200 PRINT "Subroutine 2"
+210 RETURN
+300 PRINT "Subroutine 3"
+310 RETURN
+9999 END
+```
+
+**Features**:
+- Same indexing and expression handling as ON GOTO
+- Pushes return address to stack before jumping
+- Works seamlessly with RETURN statement
+- Allows nested subroutine calls
+
+### Implementation Details
+
+**New Classes**:
+- `OnGotoStatement.java` — Computed GOTO statement implementation
+- `OnGosubStatement.java` — Computed GOSUB statement implementation
+
+**Parser Enhancements**:
+- `parseOnStatement()` — Unified parser method for both ON GOTO and ON GOSUB
+- Handles expression parsing and target list parsing
+- Validates syntax and throws appropriate errors
+
+**Test Coverage**:
+- 12 unit tests for OnGotoStatement
+- 13 unit tests for OnGosubStatement
+- 10 parser integration tests for ON statement parsing
+- 3 system test programs demonstrating functionality
 
 ---
 

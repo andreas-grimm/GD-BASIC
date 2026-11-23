@@ -30,6 +30,26 @@ public class ValTest {
         }
     }
 
+    // Positive: the number at the start of the text is returned (BASIC rule for VAL).
+    @Test
+    public void testValReadsLeadingNumber() throws Exception {
+        assertEquals(12.0, ((RealValue) Val.execute(new StringValue("12abc"))).toReal());
+        assertEquals(3.14, ((RealValue) Val.execute(new StringValue("3.14xyz"))).toReal());
+        assertEquals(42.0, ((RealValue) Val.execute(new StringValue("   42"))).toReal());
+        assertEquals(-7.0, ((RealValue) Val.execute(new StringValue("-7"))).toReal());
+        assertEquals(0.5, ((RealValue) Val.execute(new StringValue(".5"))).toReal());
+        assertEquals(1000.0, ((RealValue) Val.execute(new StringValue("1e3"))).toReal());
+    }
+
+    // Positive: text without a leading number gives 0 and does not stop the program.
+    @Test
+    public void testValWithoutNumberGivesZero() throws Exception {
+        assertEquals(0.0, ((RealValue) Val.execute(new StringValue("abc"))).toReal());
+        assertEquals(0.0, ((RealValue) Val.execute(new StringValue(""))).toReal());
+        assertEquals(0.0, ((RealValue) Val.execute(new StringValue("   "))).toReal());
+        assertEquals(0.0, ((RealValue) Val.execute(new StringValue("-"))).toReal());
+    }
+
     @Test
     public void testValWithException() {
 

@@ -64,7 +64,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testPlus() {
+    public void testPlus() throws Exception {
         try {
             IntegerValue oFirstValue = new IntegerValue(1);
             IntegerValue oSecondValue = new IntegerValue(2);
@@ -78,7 +78,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testPlusTypeException() {
+    public void testPlusTypeException() throws Exception {
         IntegerValue oFirstValue = new IntegerValue(1);
         StringValue oSecondValue = new StringValue("2");
 
@@ -90,7 +90,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testMinus() {
+    public void testMinus() throws Exception {
         try {
             IntegerValue oFirstValue = new IntegerValue(1);
             IntegerValue oSecondValue = new IntegerValue(2);
@@ -104,7 +104,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testMinusTypeException() {
+    public void testMinusTypeException() throws Exception {
         IntegerValue oFirstValue = new IntegerValue(1);
         StringValue oSecondValue = new StringValue("2");
 
@@ -116,7 +116,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testMultiply() {
+    public void testMultiply() throws Exception {
         try {
             IntegerValue oFirstValue = new IntegerValue(1);
             IntegerValue oSecondValue = new IntegerValue(2);
@@ -130,7 +130,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testMultiplyTypeException() {
+    public void testMultiplyTypeException() throws Exception {
         IntegerValue oFirstValue = new IntegerValue(1);
         StringValue oSecondValue = new StringValue("2");
 
@@ -142,7 +142,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testDivide() {
+    public void testDivide() throws Exception {
         try {
             IntegerValue oFirstValue = new IntegerValue(1);
             IntegerValue oSecondValue = new IntegerValue(2);
@@ -156,19 +156,26 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testDivideTypeException() {
+    public void testDivideTypeException() throws Exception {
+        // INTEGER divided by REAL gives a REAL result (design rule: INTEGER op REAL -> REAL; changed in Phase 6)
         IntegerValue oFirstValue = new IntegerValue(1);
         RealValue oSecondValue = new RealValue(2);
 
+        Value oResult = oFirstValue.divide(oSecondValue);
 
-        assertThrows(SyntaxErrorException.class, () -> {
-            IntegerValue oResultValue = (IntegerValue) oFirstValue.divide(oSecondValue);
-            System.out.println(oResultValue.toString());
-        });
+        assertTrue(oResult instanceof RealValue);
+        assertEquals(0.5, oResult.toReal(), 0.0);
     }
 
     @Test
-    public void testDivideByZero() {
+    public void testDivideByStringIsRejected() {
+        IntegerValue oFirstValue = new IntegerValue(1);
+
+        assertThrows(SyntaxErrorException.class, () -> oFirstValue.divide(new StringValue("2")));
+    }
+
+    @Test
+    public void testDivideByZero() throws Exception {
         IntegerValue oFirstValue = new IntegerValue(1);
         IntegerValue oSecondValue = new IntegerValue(0);
 
@@ -179,7 +186,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testModulo() {
+    public void testModulo() throws Exception {
         try {
         IntegerValue oFirstValue = new IntegerValue(3);
         IntegerValue oSecondValue = new IntegerValue(2);
@@ -193,7 +200,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testPower() {
+    public void testPower() throws Exception {
         try {
             IntegerValue oFirstValue = new IntegerValue(2);
             IntegerValue oSecondValue = new IntegerValue(2);
@@ -207,7 +214,7 @@ public class IntegerValueTest {
     }
 
     @Test
-    public void testPowerTypeException() {
+    public void testPowerTypeException() throws Exception {
         IntegerValue oFirstValue = new IntegerValue(2);
         StringValue oSecondValue = new StringValue("2");
 

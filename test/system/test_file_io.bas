@@ -44,11 +44,11 @@
 353 END-IF
 360 PRINT "Read Line 3: ", L3$
 370
-380 PRINT "Testing EOF function (expecting 1)..."
+380 PRINT "Testing EOF function (expecting TRUE)..."
 390 REM Force a read to trigger EOF
 400 FINPUT 1 L4$
 410 ONE% = 1
-411 IF EOF(1) != ONE% THEN
+411 IF NOT EOF(1) THEN
 412 PRINT "ERROR: EOF not detected"
 413 GOTO 9010
 414 END-IF

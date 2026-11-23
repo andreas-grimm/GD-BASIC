@@ -10,5 +10,6 @@ public enum VariableType {
     REAL,
     DOUBLE,
     BOOLEAN,
+    BCD,
     UNDEFINED
 }

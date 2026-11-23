@@ -38,8 +38,9 @@ public final class Right {
         if (oValue instanceof StringValue) {
             String strValue = oValue.toString();
 
+            // A length equal to or greater than the string length returns the whole string.
             if (iLength >= ((IntegerValue) Len.execute(oValue)).toInt()) {
-                throw new RuntimeException("Requested length exceeds size of String");
+                return new StringValue(strValue);
             }
 
             return new StringValue(strValue.substring(strValue.length() - iLength));

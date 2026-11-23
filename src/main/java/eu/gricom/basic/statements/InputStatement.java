@@ -6,9 +6,9 @@ import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.helper.ConsoleInput;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * InputStatement.java
@@ -66,12 +66,16 @@ public class InputStatement implements Statement {
      * @throws RuntimeException if an incorrect input is detected
      */
     public final void execute() throws RuntimeException {
-        BufferedReader oReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader oReader = ConsoleInput.getReader();
         AssignStatement oAssignStatement;
         Value oValue;
 
         try {
             String strInput = oReader.readLine();
+            if (strInput == null) {
+                throw new RuntimeException("Incorrect input detected: no more input is available");
+            }
+
 
             // Store it as a number if possible, otherwise use a string.
             try {

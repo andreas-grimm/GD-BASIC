@@ -5,6 +5,9 @@ import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.StringValue;
 import eu.gricom.basic.variableTypes.Value;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Val.java
  * <p>
@@ -14,6 +17,10 @@ import eu.gricom.basic.variableTypes.Value;
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public final class Val {
+
+    /** Optional leading spaces, then an optional sign, then digits with an optional fraction and exponent. */
+    private static final Pattern NUMBER_AT_START =
+            Pattern.compile("^\\s*[+-]?(\\d+\\.?\\d*|\\.\\d+)([eE][+-]?\\d+)?");
 
     /**
      * Private Constructor.
@@ -32,7 +39,13 @@ public final class Val {
      */
     public static Value execute(final Value oValue) throws Exception {
         if (oValue instanceof StringValue) {
-            return new RealValue(Double.parseDouble(oValue.toString()));
+            // BASIC rule: skip leading spaces, read the number at the start of the text and ignore the rest.
+            // If the text does not start with a number, the result is 0.
+            Matcher oMatcher = NUMBER_AT_START.matcher(oValue.toString());
+            if (oMatcher.find()) {
+                return new RealValue(Double.parseDouble(oMatcher.group()));
+            }
+            return new RealValue(0.0);
         }
 
         throw new RuntimeException("Input value not of type String: " + oValue);
