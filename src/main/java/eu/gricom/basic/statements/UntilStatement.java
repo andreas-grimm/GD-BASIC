@@ -85,4 +85,10 @@ public final class UntilStatement implements Statement {
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the loop condition (used by the compiler) */
+    public Expression getCondition() {
+        return _oCondition;
+    }
 }
+

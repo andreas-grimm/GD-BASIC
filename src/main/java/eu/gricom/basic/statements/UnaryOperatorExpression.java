@@ -90,7 +90,7 @@ public class UnaryOperatorExpression implements Expression {
      * @return the negated value
      * @throws SyntaxErrorException if the operand cannot be negated
      */
-    private Value evaluateUnaryMinus(Value operand) throws SyntaxErrorException {
+    public static Value evaluateUnaryMinus(final Value operand) throws SyntaxErrorException {
         if (operand == null) {
             throw new SyntaxErrorException("Cannot apply unary minus to null value");
         }
@@ -113,7 +113,7 @@ public class UnaryOperatorExpression implements Expression {
      * @return the result of the NOT operation
      * @throws SyntaxErrorException if the operand cannot be processed
      */
-    private Value evaluateUnaryNot(Value operand) throws SyntaxErrorException {
+    public static Value evaluateUnaryNot(final Value operand) throws SyntaxErrorException {
         if (operand == null) {
             throw new SyntaxErrorException("Cannot apply unary NOT to null value");
         }
@@ -214,4 +214,10 @@ public class UnaryOperatorExpression implements Expression {
                 ", operand=" + _oOperand +
                 '}';
     }
-} 
+
+    /** @return the operator token type (used by the compiler) */
+    public BasicTokenType getTokenType() {
+        return _oOperator;
+    }
+}
+ 

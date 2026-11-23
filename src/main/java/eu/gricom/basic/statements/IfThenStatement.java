@@ -255,4 +255,14 @@ public final class IfThenStatement implements Statement {
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the condition (used by the compiler) */
+    public Expression getCondition() {
+        return _oCondition;
+    }
+
+    /** @return the target line number of a single-line IF, 0 if none (used by the compiler) */
+    public int getTargetLineNumber() {
+        return _iTargetLineNumber;
+    }
 }

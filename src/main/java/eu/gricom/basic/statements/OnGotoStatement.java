@@ -128,4 +128,14 @@ public final class OnGotoStatement implements Statement {
         sb.append("}}");
         return sb.toString();
     }
+
+    /** @return the expression that selects the target (used by the compiler) */
+    public Expression getSelectExpression() {
+        return _oSelectExpression;
+    }
+
+    /** @return the target line numbers as text (used by the compiler) */
+    public List<String> getTargetLineNumbers() {
+        return _aoTargetLineNumbers;
+    }
 }

@@ -89,4 +89,14 @@ public class PragmaStatement implements Statement {
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the pragma name, for example LOG_LEVEL (used by the compiler) */
+    public String getParameter() {
+        return _strParameter;
+    }
+
+    /** @return the pragma value (used by the compiler) */
+    public String getValue() {
+        return _strValue;
+    }
 }

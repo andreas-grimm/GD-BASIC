@@ -182,7 +182,7 @@ public class OperatorExpression implements Expression {
      * @return the shifted INTEGER value
      * @throws Exception syntax error when an operand is not a whole number in the INTEGER range
      */
-    private Value integerShiftLeft(final Value oLeftValue, final Value oRightValue) throws Exception {
+    public static Value integerShiftLeft(final Value oLeftValue, final Value oRightValue) throws Exception {
         IntegerValue oLeft = asShiftInteger(oLeftValue, "<<");
         IntegerValue oRight = asShiftInteger(oRightValue, "<<");
         return oLeft.shiftLeft(oRight);
@@ -197,7 +197,7 @@ public class OperatorExpression implements Expression {
      * @return the shifted INTEGER value
      * @throws Exception syntax error when an operand is not a whole number in the INTEGER range
      */
-    private Value integerShiftRight(final Value oLeftValue, final Value oRightValue) throws Exception {
+    public static Value integerShiftRight(final Value oLeftValue, final Value oRightValue) throws Exception {
         IntegerValue oLeft = asShiftInteger(oLeftValue, ">>");
         IntegerValue oRight = asShiftInteger(oRightValue, ">>");
         return oLeft.shiftRight(oRight);
@@ -241,4 +241,20 @@ public class OperatorExpression implements Expression {
                 + " range, but got " + oValue.content());
         }
     }
+
+    /** @return the operator token type, for example PLUS (used by the compiler) */
+    public BasicTokenType getTokenType() {
+        return _oOperator;
+    }
+
+    /** @return the left operand (used by the compiler) */
+    public Expression getLeftOperand() {
+        return _oLeft;
+    }
+
+    /** @return the right operand (used by the compiler) */
+    public Expression getRightOperand() {
+        return _oRight;
+    }
 }
+

@@ -133,4 +133,15 @@ public final class PrintStatement implements Statement {
         assert _aoExpression != null;
         return _aoExpression.getFirst();
     }
+
+    /** @return the expressions printed by this statement (used by the compiler) */
+    public List<Expression> getExpressions() {
+        return _aoExpression;
+    }
+
+    /** @return true when the output ends with a new line (used by the compiler) */
+    public boolean isCRLF() {
+        return _bCRLF;
+    }
 }
+

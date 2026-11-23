@@ -378,4 +378,25 @@ public class Function implements Expression {
         }
         throw new RuntimeException("File ID is not an integer: " + oValue);
     }
+
+    /** @return the function token type, for example SQR (used by the compiler) */
+    public eu.gricom.basic.tokenizer.BasicTokenType getTokenType() {
+        return _oToken.getType();
+    }
+
+    /** @return the first parameter or null (used by the compiler) */
+    public Expression getFirstParam() {
+        return _oFirstParam;
+    }
+
+    /** @return the second parameter or null (used by the compiler) */
+    public Expression getSecondParam() {
+        return _oSecondParam;
+    }
+
+    /** @return the third parameter or null (used by the compiler) */
+    public Expression getThirdParam() {
+        return _oThirdParam;
+    }
 }
+

@@ -134,4 +134,15 @@ public final class AssignStatement implements Statement {
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the variable key, for example A% (used by the compiler) */
+    public String getKey() {
+        return _strKey;
+    }
+
+    /** @return the value expression (used by the compiler) */
+    public Expression getExpression() {
+        return _oExpression;
+    }
 }
+

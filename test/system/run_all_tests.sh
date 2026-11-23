@@ -146,6 +146,54 @@ run_example_test() {
     return 1
 }
 
+# Function to check that a BASIC program, compiled to Java and run as a jar, prints exactly what the interpreter prints.
+# Arguments: program file. The compiler is driven through the editor commands (LOAD, COMPILE, EXIT) read from standard
+# input. Lines that depend on the clock, memory or random numbers (RND, MEM, TIME$) are left out of the comparison.
+run_compiler_test() {
+    local program_file="$1"
+    local test_name=$(basename "$program_file" .bas)
+    local work_dir=$(mktemp -d)
+    local interp_file="$work_dir/interpreter.txt"
+    local compiled_file="$work_dir/compiled.txt"
+    local filter='s/\x1b\[[0-9;]*m//g'
+
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    print_test_start "$test_name (compiled to Java, compared with the interpreter)"
+
+    java -jar "$JAR_FILE" -r -q "$program_file" < /dev/null 2>&1 \
+        | sed -E "$filter" | grep -v -E '^[0-9]{4}-[0-9]{2}-[0-9]{2} |^[[:space:]]+at |^$|^(RND\(\)|MEM|TIME\$) ' > "$interp_file"
+
+    (cd "$work_dir" && printf 'LOAD %s\nCOMPILE\nEXIT\n' "$program_file" \
+        | java -jar "$JAR_FILE" -o "$test_name" -j "$test_name.java" > "$work_dir/compile.log" 2>&1)
+
+    if [ ! -f "$work_dir/$test_name.jar" ]; then
+        FAILED_TESTS=$((FAILED_TESTS + 1))
+        print_test_fail "$test_name" "compile"
+        echo -e "${YELLOW}Compiler output:${NC}"
+        sed -E "$filter" "$work_dir/compile.log"
+        rm -rf "$work_dir"
+        return 1
+    fi
+
+    (cd "$work_dir" && java -jar "$test_name.jar" < /dev/null 2>&1) \
+        | sed -E "$filter" | grep -v -E '^[0-9]{4}-[0-9]{2}-[0-9]{2} |^[[:space:]]+at |^$|^(RND\(\)|MEM|TIME\$) ' > "$compiled_file"
+
+    if diff -q "$interp_file" "$compiled_file" > /dev/null; then
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        print_test_pass "$test_name"
+        rm -rf "$work_dir"
+        return 0
+    fi
+
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+    print_test_fail "$test_name" "output"
+    echo -e "${YELLOW}Difference between interpreter (<) and compiled program (>):${NC}"
+    diff "$interp_file" "$compiled_file" || true
+    echo ""
+    rm -rf "$work_dir"
+    return 1
+}
+
 # Main execution
 main() {
     print_header "GD-BASIC System Test Suite"
@@ -282,6 +330,57 @@ main() {
         echo -e "${RED}A test failed. Stopping execution.${NC}"
         exit 1
     fi
+
+    # Compiler tests: each program is compiled to Java, built into a jar, run, and its output compared with the
+    # interpreter's output. The programs in this list are the ones the compiler supports (see doc/COMPILER.md).
+    COMPILER_TESTS=(
+        "compiler/compiler_values.bas"
+        "compiler/compiler_flow.bas"
+        "test_arithmetic_operators.bas"
+        "test_comparison_operators.bas"
+        "test_logical_operators.bas"
+        "test_bitwise_operators.bas"
+        "test_assignment_operators.bas"
+        "test_variable_types.bas"
+        "test_string_assignment.bas"
+        "test_if_then_else.bas"
+        "test_block_if_else.bas"
+        "test_for_next_loop.bas"
+        "test_for_nested_restart.bas"
+        "test_for_first_statement.bas"
+        "test_do_until_loop.bas"
+        "test_while_loop.bas"
+        "test_while_nested.bas"
+        "test_goto_gosub_return.bas"
+        "test_string_functions.bas"
+        "test_string_indexing.bas"
+        "test_print_statement.bas"
+        "test_rem_comments.bas"
+        "test_colon_separator.bas"
+        "test_not_operator.bas"
+        "test_pragma_statement.bas"
+        "test_complex_expressions.bas"
+        "test_edge_cases.bas"
+        "test_end_statement.bas"
+        "test_defs_functions.bas"
+        "test_mixed_tests_4.bas"
+        "test_mixed_tests_5.bas"
+        "test_large_program.bas"
+        "test_on_gosub_basic.bas"
+        "test_on_gosub_simple.bas"
+        "test_on_goto_basic.bas"
+        "test_on_goto_simple.bas"
+        "test_on_outofrange.bas"
+        "test_bcd_pi.bas"
+    )
+    for compiler_test in "${COMPILER_TESTS[@]}"; do
+        run_compiler_test "$TEST_DIR/$compiler_test"
+        if [ $? -ne 0 ]; then
+            print_header "TEST SUITE FAILED"
+            echo -e "${RED}A compiler test failed. Stopping execution.${NC}"
+            exit 1
+        fi
+    done
 
     # Print summary
     print_header "TEST SUITE COMPLETED SUCCESSFULLY"

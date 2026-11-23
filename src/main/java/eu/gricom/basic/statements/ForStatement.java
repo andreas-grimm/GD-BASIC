@@ -130,4 +130,30 @@ public final class ForStatement implements Statement {
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the loop variable name (used by the compiler) */
+    public String getName() {
+        return _strName;
+    }
+
+    /** @return the start value expression (used by the compiler) */
+    public Expression getStartValue() {
+        return _oStartValue;
+    }
+
+    /** @return the end value expression (used by the compiler) */
+    public Expression getEndValue() {
+        return _oEndValue;
+    }
+
+    /** @return the step expression (used by the compiler) */
+    public Expression getStepSize() {
+        return _oStepSize;
+    }
+
+    /** @return the line number of the matching NEXT (used by the compiler) */
+    public int getEndForStatement() {
+        return _iEndForStatement;
+    }
 }
+

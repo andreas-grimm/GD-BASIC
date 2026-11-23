@@ -87,7 +87,7 @@ public final class WhileStatement implements Statement {
      * @return true for a TRUE boolean, and for any number that is not zero
      * @throws SyntaxErrorException when the value is text (it is neither a boolean nor a number)
      */
-    static boolean isConditionTrue(final Value oValue) throws SyntaxErrorException {
+    public static boolean isConditionTrue(final Value oValue) throws SyntaxErrorException {
         if (oValue instanceof BooleanValue) {
             return ((BooleanValue) oValue).isTrue();
         }
@@ -119,4 +119,15 @@ public final class WhileStatement implements Statement {
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the loop condition (used by the compiler) */
+    public Expression getCondition() {
+        return _oCondition;
+    }
+
+    /** @return the line number of the matching END-WHILE (used by the compiler) */
+    public int getEndWhileLine() {
+        return _iEndWhileLine;
+    }
 }
+

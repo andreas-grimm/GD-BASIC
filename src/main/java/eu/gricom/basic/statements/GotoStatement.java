@@ -110,4 +110,10 @@ public final class GotoStatement implements Statement {
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the target line number as text (used by the compiler) */
+    public String getTarget() {
+        return _strTarget;
+    }
 }
+
