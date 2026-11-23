@@ -1,6 +1,6 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.FileManager;
+import eu.gricom.basic.memorymanager.FileManager;
 
 /**
  * FCloseStatement.java
@@ -47,7 +47,7 @@ public class FCloseStatement implements Statement {
     @Override
     public void execute() throws Exception {
         FileManager oFileManager = new FileManager();
-        oFileManager.closeFile(_iFileId,_bDelete);
+        oFileManager.closeFile(_iFileId, _bDelete);
     }
 
     /**
@@ -74,8 +74,8 @@ public class FCloseStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"FCLOSE\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
-        strReturn += "\"FILE_ID\": \""+ _iFileId +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\"";
+        strReturn += "\"FILE_ID\": \"" + _iFileId + "\"";
         if (_bDelete) {
             strReturn += "\"FILE_DELETE\": \"TRUE\"";
         } else {
@@ -83,5 +83,15 @@ public class FCloseStatement implements Statement {
         }
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the FileId of this statement (used by the compiler) */
+    public int getFileId() {
+        return _iFileId;
+    }
+
+    /** @return the isDelete of this statement (used by the compiler) */
+    public boolean isDelete() {
+        return _bDelete;
     }
 }

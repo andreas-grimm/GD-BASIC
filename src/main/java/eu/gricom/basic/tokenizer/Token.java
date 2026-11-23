@@ -23,9 +23,9 @@ public final class Token {
      * @param oType type of the token
      * @param iLineNumber number of the line in the BASIC source code
      */
-    public Token(final String strText, final BasicTokenType oType, final int iLineNumber) {
+    public Token(final String strText, final BasicTokenType eType, final int iLineNumber) {
         _strText = strText;
-        _oType = oType;
+        _oType = eType;
         _iLineNumber = iLineNumber;
         _iCommandSequenceNumber = 1; // this is the first command in the line
     }
@@ -38,11 +38,11 @@ public final class Token {
      * @param iCommandSequenceNumber the number of the command in the source code line
      */
     public Token(final String strText,
-                 final BasicTokenType oType,
+                 final BasicTokenType eType,
                  final int iLineNumber,
                  final int iCommandSequenceNumber) {
         _strText = strText;
-        _oType = oType;
+        _oType = eType;
         _iLineNumber = iLineNumber;
         _iCommandSequenceNumber = iCommandSequenceNumber;
     }
@@ -102,10 +102,10 @@ public final class Token {
      */
     public String structure() {
         String strReturn = "{\"TOKEN\": {";
-        strReturn += "\"LINE_NR\": \""+ _iLineNumber +"\",";
-        strReturn += "\"TYPE\": \""+ _oType.name() +"\",";
-        strReturn += "\"COMMAND_SEQUENCE_NUMBER\": \""+ _iCommandSequenceNumber +"\",";
-        strReturn += "\"TEXT\": \""+ _strText +"\"";
+        strReturn += "\"LINE_NR\": \"" + _iLineNumber + "\",";
+        strReturn += "\"TYPE\": \"" + _oType.name() + "\",";
+        strReturn += "\"COMMAND_SEQUENCE_NUMBER\": \"" + _iCommandSequenceNumber + "\",";
+        strReturn += "\"TEXT\": \"" + _strText + "\"";
         strReturn += "}}";
 
         return strReturn;
@@ -117,10 +117,10 @@ public final class Token {
      * @return boolean - true if Token identical
      */
     public boolean equals(Token oCompareToken) {
-        return (_oType == oCompareToken._oType) &&
-                (_iLineNumber == oCompareToken._iLineNumber) &&
-                (_iCommandSequenceNumber == oCompareToken._iCommandSequenceNumber) &&
-                (Objects.equals(_strText, oCompareToken._strText));
+        return (_oType == oCompareToken._oType)
+                && (_iLineNumber == oCompareToken._iLineNumber)
+                && (_iCommandSequenceNumber == oCompareToken._iCommandSequenceNumber)
+                && (Objects.equals(_strText, oCompareToken._strText));
     }
 }
 

@@ -1,9 +1,8 @@
 package eu.gricom.basic.functions;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.Value;
 
-import java.io.File;
 
 /**
  * FExists.java

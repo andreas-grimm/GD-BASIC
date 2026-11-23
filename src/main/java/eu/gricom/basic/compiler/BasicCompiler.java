@@ -36,14 +36,14 @@ public final class BasicCompiler {
      * @return the Java source code
      * @throws CompileException if the program uses something the compiler does not support yet
      */
-    public static String generateJava(final List<Statement> aoPreRunStatements,
-                                      final List<Statement> aoStatements, final String strClassName)
+    public static String generateJava(final List<Statement> voPreRunStatements,
+                                      final List<Statement> voStatements, final String strClassName)
             throws CompileException {
-        if (aoPreRunStatements != null && !aoPreRunStatements.isEmpty()) {
+        if (voPreRunStatements != null && !voPreRunStatements.isEmpty()) {
             throw new CompileException("Statement not supported by the compiler yet: DATA (the data is read "
                     + "before the program starts, so it is not compiled yet)");
         }
-        return new JavaCodeGenerator(aoStatements, strClassName).generate();
+        return new JavaCodeGenerator(voStatements, strClassName).generate();
     }
 
     /**
@@ -55,9 +55,9 @@ public final class BasicCompiler {
      * @throws CompileException if the program uses something the compiler does not support yet
      * @throws IOException if the file cannot be written
      */
-    public static void saveJava(final List<Statement> aoPreRunStatements, final List<Statement> aoStatements,
+    public static void saveJava(final List<Statement> voPreRunStatements, final List<Statement> voStatements,
                                 final Path oJavaFile) throws CompileException, IOException {
-        String strSource = generateJava(aoPreRunStatements, aoStatements, classNameOf(oJavaFile));
+        String strSource = generateJava(voPreRunStatements, voStatements, classNameOf(oJavaFile));
         Files.writeString(oJavaFile, strSource, StandardCharsets.UTF_8);
     }
 
@@ -71,11 +71,11 @@ public final class BasicCompiler {
      * @throws CompileException if the program cannot be compiled
      * @throws IOException if a file cannot be read or written
      */
-    public static void compileToJar(final List<Statement> aoPreRunStatements, final List<Statement> aoStatements,
+    public static void compileToJar(final List<Statement> voPreRunStatements, final List<Statement> voStatements,
                                     final Path oJavaFile, final Path oJarFile)
             throws CompileException, IOException {
         String strClassName = classNameOf(oJavaFile);
-        saveJava(aoPreRunStatements, aoStatements, oJavaFile);
+        saveJava(voPreRunStatements, voStatements, oJavaFile);
 
         Path oRuntime = runtimeLocation();
         Path oClassesDir = Files.createTempDirectory("gdbasic-classes");
@@ -116,8 +116,8 @@ public final class BasicCompiler {
     public static Path runtimeLocation() throws CompileException {
         try {
             return Paths.get(BasicCompiler.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        } catch (URISyntaxException | NullPointerException eException) {
-            throw new CompileException("The GD-BASIC runtime location cannot be found: " + eException);
+        } catch (URISyntaxException | NullPointerException oException) {
+            throw new CompileException("The GD-BASIC runtime location cannot be found: " + oException);
         }
     }
 

@@ -1,9 +1,8 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.LongValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.LongValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -117,31 +116,31 @@ public class FGetSize {
             // but file sizes are always non-negative
             return new LongValue(lFileSize);
 
-        } catch (java.nio.file.NoSuchFileException e) {
+        } catch (java.nio.file.NoSuchFileException oException) {
             // File does not exist - return 0 bytes
             return new LongValue(0);
 
-        } catch (java.nio.file.AccessDeniedException e) {
+        } catch (java.nio.file.AccessDeniedException oException) {
             // File exists but cannot be accessed - return 0 bytes
             return new LongValue(0);
 
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException oException) {
             // Other I/O errors (permission denied, I/O error, etc.) - return 0 bytes
             return new LongValue(0);
 
-        } catch (java.nio.file.InvalidPathException e) {
+        } catch (java.nio.file.InvalidPathException oException) {
             // Invalid path format - return 0 bytes
             return new LongValue(0);
 
-        } catch (SecurityException e) {
+        } catch (SecurityException oException) {
             // Security manager prevents file access - return 0 bytes
             return new LongValue(0);
 
-        } catch (NullPointerException e) {
+        } catch (NullPointerException oException) {
             // Unexpected null reference (should not occur with proper FileManager) - return 0 bytes
             return new LongValue(0);
 
-        } catch (Exception e) {
+        } catch (Exception oException) {
             // Catch-all for any other unexpected exceptions - return 0 bytes gracefully
             return new LongValue(0);
         }

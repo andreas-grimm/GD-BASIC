@@ -2,7 +2,7 @@ package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.UndefinedUserFunctionException;
 import eu.gricom.basic.statements.Expression;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.Value;
 import java.util.List;
 
 
@@ -27,9 +27,9 @@ public class FnFunction implements Expression {
      * @param aoFunctionParameter list of parameters of the function
      */
     public FnFunction(final String strFunctionId,
-                      final List<Expression> aoFunctionParameter) {
+                      final List<Expression> voFunctionParameter) {
         _strFunctionId = strFunctionId;
-        _aoFunctionParameter = aoFunctionParameter;
+        _aoFunctionParameter = voFunctionParameter;
     }
 
     /**

@@ -1,4 +1,4 @@
-package eu.gricom.basic.variableTypes;
+package eu.gricom.basic.variabletypes;
 
 import eu.gricom.basic.helper.EnvParam;
 
@@ -316,12 +316,12 @@ public class RealValue implements Value {
      * @param iPlaces digits behind the decimal point
      * @return rounded number
      */
-    public static double round(final double dValue, final int iPlaces) {
+    public static double round(final double fValue, final int iPlaces) {
         if (iPlaces < 0) {
             throw new IllegalArgumentException();
         }
 
-        BigDecimal oBigDecimal = BigDecimal.valueOf(dValue);
+        BigDecimal oBigDecimal = BigDecimal.valueOf(fValue);
         oBigDecimal = oBigDecimal.setScale(iPlaces, RoundingMode.HALF_UP);
         return oBigDecimal.doubleValue();
     }

@@ -82,8 +82,8 @@ public class Logger {
          _oLogFile = new PrintWriter(new FileOutputStream(strFileName));
          _oLogFile.println(oTime.getDateTime() + "[eu.gricom.utilities.Logger] +++ initiated log file +++");
          _oLogFile.flush();
-      } catch (FileNotFoundException err) {
-          error("File generation problem: " + err);
+      } catch (FileNotFoundException oException) {
+          error("File generation problem: " + oException);
           _oLogFile = null;
       }
     }

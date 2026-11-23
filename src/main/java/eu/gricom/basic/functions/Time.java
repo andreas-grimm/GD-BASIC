@@ -1,6 +1,6 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.variableTypes.LongValue;
+import eu.gricom.basic.variabletypes.LongValue;
 
 /**
  * Time.java

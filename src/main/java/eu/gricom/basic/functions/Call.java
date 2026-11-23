@@ -1,8 +1,8 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -81,12 +81,12 @@ public final class Call {
 
         try {
             // Create the HTTP client
-            HttpClient client = HttpClient.newBuilder()
+            HttpClient oClient = HttpClient.newBuilder()
                     .connectTimeout(Duration.ofSeconds(TIMEOUT_SECONDS))
                     .build();
 
             // Build the POST request
-            HttpRequest request = HttpRequest.newBuilder()
+            HttpRequest oRequest = HttpRequest.newBuilder()
                     .uri(URI.create(strURL))
                     .timeout(Duration.ofSeconds(TIMEOUT_SECONDS))
                     .header("Content-Type", "application/json")
@@ -95,35 +95,35 @@ public final class Call {
                     .build();
 
             // Send the request and get the response
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> oResponse = oClient.send(oRequest, HttpResponse.BodyHandlers.ofString());
 
-            int statusCode = response.statusCode();
+            int iStatusCode = oResponse.statusCode();
 
             // Check if status code is in the 2xx range (200-299)
-            if (statusCode < 200 || statusCode >= 300) {
-                throw new RuntimeException("API call failed with status code: " + statusCode + ". Response: " + response.body());
+            if (iStatusCode < 200 || iStatusCode >= 300) {
+                throw new RuntimeException("API call failed with status code: " + iStatusCode + ". Response: " + oResponse.body());
             }
 
             // Return the response body as a StringValue
-            return new StringValue(response.body());
+            return new StringValue(oResponse.body());
 
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException oException) {
             throw new RuntimeException("Invalid URL format: " + strURL);
-        } catch (java.net.UnknownHostException e) {
-            throw new RuntimeException("Domain not found: " + strURL + ". Error: " + e.getMessage());
-        } catch (java.net.ConnectException e) {
-            throw new RuntimeException("Connection failed: " + e.getMessage());
-        } catch (java.io.IOException e) {
-            throw new RuntimeException("Network error during API call: " + e.getMessage());
-        } catch (InterruptedException e) {
+        } catch (java.net.UnknownHostException oException) {
+            throw new RuntimeException("Domain not found: " + strURL + ". Error: " + oException.getMessage());
+        } catch (java.net.ConnectException oException) {
+            throw new RuntimeException("Connection failed: " + oException.getMessage());
+        } catch (java.io.IOException oException) {
+            throw new RuntimeException("Network error during API call: " + oException.getMessage());
+        } catch (InterruptedException oException) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("HTTP call was interrupted: " + e.getMessage());
-        } catch (Exception e) {
+            throw new RuntimeException("HTTP call was interrupted: " + oException.getMessage());
+        } catch (Exception oException) {
             // Re-throw if it's already a RuntimeException, otherwise wrap it
-            if (e instanceof RuntimeException) {
-                throw e;
+            if (oException instanceof RuntimeException) {
+                throw oException;
             }
-            throw new RuntimeException("Error during API call: " + e.getMessage());
+            throw new RuntimeException("Error during API call: " + oException.getMessage());
         }
     }
 }

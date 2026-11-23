@@ -1,6 +1,6 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.Value;
 
 /**
  * Base interface for an expression. An expression is like a statement

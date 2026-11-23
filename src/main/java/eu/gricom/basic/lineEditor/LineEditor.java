@@ -1,17 +1,14 @@
-package eu.gricom.basic.lineEditor;
+package eu.gricom.basic.lineeditor;
 
 import eu.gricom.basic.compiler.BasicCompiler;
 import eu.gricom.basic.compiler.CompileException;
-import eu.gricom.basic.error.EndOfProgramException;
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.helper.EnvParam;
-import eu.gricom.basic.helper.FileHandler;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.helper.Printer;
-import eu.gricom.basic.macroManager.MacroProcessor;
-import eu.gricom.basic.memoryManager.Program;
+import eu.gricom.basic.macromanager.MacroProcessor;
+import eu.gricom.basic.memorymanager.Program;
 import eu.gricom.basic.parser.BasicParser;
-import eu.gricom.basic.runtimeManager.Execute;
+import eu.gricom.basic.runtimemanager.Execute;
 import eu.gricom.basic.statements.Statement;
 import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.Lexer;
@@ -65,8 +62,8 @@ public class LineEditor {
                 _oLogger.debug("Entered line: [" + strEnteredLine + "]");
                 bExit = processLine(strEnteredLine);
             }
-        } catch (IOException eException) {
-            _oLogger.error("Catastrophic error: " + eException.getMessage());
+        } catch (IOException oException) {
+            _oLogger.error("Catastrophic error: " + oException.getMessage());
             System.exit(-1);
         }
         Printer.println("Good bye.");
@@ -98,8 +95,8 @@ public class LineEditor {
 
                     _oProgram.setProgram(oMacroProcessor.process(_oProgram.getProgram()));
 
-                // Tokenize. At the end of the tokenization, I have the program transferred into a list of tokens and parameters
-                    _oLogger.info("Starting tokenization...");
+                // Tokenise. At the end of the tokenisation, I have the program transferred into a list of tokens and parameters
+                    _oLogger.info("Starting tokenisation...");
 
                     Lexer oTokenizer = new BasicLexer();
 
@@ -116,8 +113,8 @@ public class LineEditor {
                         iCounter++;
                     }
 
-                } catch (SyntaxErrorException eSyntaxErrorException) {
-                    Printer.println("Syntax Error: " + eSyntaxErrorException.getMessage());
+                } catch (SyntaxErrorException oException) {
+                    Printer.println("Syntax Error: " + oException.getMessage());
                 }
             } else {
 // let's interpret the entered command:
@@ -173,8 +170,8 @@ public class LineEditor {
             BasicParser oParser = new BasicParser(_oProgram.getTokens(), _bDartmouthFlag);
             _oProgram.setPreRunStatements(oParser.parsePreRun());
             _oProgram.setStatements(oParser.parse());
-        } catch (SyntaxErrorException eSyntaxError) {
-            _oLogger.error(eSyntaxError.getMessage());
+        } catch (SyntaxErrorException oException) {
+            _oLogger.error(oException.getMessage());
         }
 
         // Run.
@@ -229,10 +226,10 @@ public class LineEditor {
                 _oProgram.deleteLines(iMin, iMax);
                 Printer.println("Deleted lines " + iMin + " to " + iMax);
             }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException oException) {
             Printer.println("DELETE: invalid line number(s)");
-        } catch (SyntaxErrorException e) {
-            Printer.println("DELETE error: " + e.getMessage());
+        } catch (SyntaxErrorException oException) {
+            Printer.println("DELETE error: " + oException.getMessage());
         }
     }
 
@@ -254,12 +251,12 @@ public class LineEditor {
         try {
             _oProgram.loadProgram(strRemainder);
             Printer.println("Program loaded from " + strRemainder);
-        } catch (eu.gricom.basic.error.FileNotFoundException e) {
-            Printer.println("LOAD error: " + e.getMessage());
-        } catch (eu.gricom.basic.error.EmptyProgramException e) {
-            Printer.println("LOAD error: " + e.getMessage());
-        } catch (SyntaxErrorException e) {
-            Printer.println("LOAD error: " + e.getMessage());
+        } catch (eu.gricom.basic.error.FileNotFoundException oException) {
+            Printer.println("LOAD error: " + oException.getMessage());
+        } catch (eu.gricom.basic.error.EmptyProgramException oException) {
+            Printer.println("LOAD error: " + oException.getMessage());
+        } catch (SyntaxErrorException oException) {
+            Printer.println("LOAD error: " + oException.getMessage());
         }
     }
 
@@ -281,8 +278,8 @@ public class LineEditor {
         try {
             _oProgram.save(strRemainder);
             Printer.println("Program saved to " + strRemainder);
-        } catch (eu.gricom.basic.error.FileAlreadyExistsException e) {
-            Printer.println("SAVE error: " + e.getMessage());
+        } catch (eu.gricom.basic.error.FileAlreadyExistsException oException) {
+            Printer.println("SAVE error: " + oException.getMessage());
         }
     }
 
@@ -298,20 +295,20 @@ public class LineEditor {
             Printer.println("COMPILE: no build target. Start the interpreter with -o <target-name>.");
             return;
         }
-        List<Statement> aoStatements = parseProgram();
-        if (aoStatements == null) {
+        List<Statement> voStatements = parseProgram();
+        if (voStatements == null) {
             return;
         }
         Path oJavaFile = Paths.get(javaFileName());
         Path oJarFile = Paths.get(jarFileName());
         try {
-            BasicCompiler.compileToJar(_oProgram.getPreRunStatements(), aoStatements, oJavaFile, oJarFile);
+            BasicCompiler.compileToJar(_oProgram.getPreRunStatements(), voStatements, oJavaFile, oJarFile);
             Printer.println("Java source written to " + oJavaFile);
             Printer.println("Build target created: " + oJarFile + " (start it with: java -jar " + oJarFile + ")");
-        } catch (CompileException eCompileException) {
-            Printer.println("COMPILE error: " + eCompileException.getMessage());
-        } catch (IOException eIOException) {
-            Printer.println("COMPILE error: " + eIOException.getMessage());
+        } catch (CompileException oException) {
+            Printer.println("COMPILE error: " + oException.getMessage());
+        } catch (IOException oException) {
+            Printer.println("COMPILE error: " + oException.getMessage());
         }
     }
 
@@ -322,19 +319,19 @@ public class LineEditor {
      * @param strLine the command line as entered
      */
     private void saveJava(String strLine) {
-        List<Statement> aoStatements = parseProgram();
-        if (aoStatements == null) {
+        List<Statement> voStatements = parseProgram();
+        if (voStatements == null) {
             return;
         }
         String[] astrWords = strLine.trim().split("\\s+");
         String strFile = astrWords.length > 1 ? astrWords[1] : javaFileName();
         try {
-            BasicCompiler.saveJava(_oProgram.getPreRunStatements(), aoStatements, Paths.get(strFile));
+            BasicCompiler.saveJava(_oProgram.getPreRunStatements(), voStatements, Paths.get(strFile));
             Printer.println("Java source saved to " + strFile);
-        } catch (CompileException eCompileException) {
-            Printer.println("SAVEJAVA error: " + eCompileException.getMessage());
-        } catch (IOException eIOException) {
-            Printer.println("SAVEJAVA error: " + eIOException.getMessage());
+        } catch (CompileException oException) {
+            Printer.println("SAVEJAVA error: " + oException.getMessage());
+        } catch (IOException oException) {
+            Printer.println("SAVEJAVA error: " + oException.getMessage());
         }
     }
 
@@ -349,8 +346,8 @@ public class LineEditor {
             _oProgram.setPreRunStatements(oParser.parsePreRun());
             _oProgram.setStatements(oParser.parse());
             return _oProgram.getStatements();
-        } catch (SyntaxErrorException eSyntaxError) {
-            Printer.println(eSyntaxError.getMessage());
+        } catch (SyntaxErrorException oException) {
+            Printer.println(oException.getMessage());
             return null;
         }
     }
@@ -388,8 +385,8 @@ public class LineEditor {
             } else {
                 Printer.println("Help file is empty");
             }
-        } catch (Exception e) {
-            Printer.println("Error reading help file: " + e.getMessage());
+        } catch (Exception oException) {
+            Printer.println("Error reading help file: " + oException.getMessage());
         }
     }
 
@@ -397,7 +394,7 @@ public class LineEditor {
         try {
             Integer.parseInt(strToBeTested);
             return true;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException oException) {
             return false;
         }
     }

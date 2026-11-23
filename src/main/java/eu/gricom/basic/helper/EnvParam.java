@@ -4,17 +4,16 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import eu.gricom.basic.helper.Logger;
 
 public class EnvParam {
     private static final Logger LOGGER = new Logger(EnvParam.class.getName());
     private static final String CONFIG_FILE_PATH = "application.yaml";
     private static EnvParam _oInstance;
     private static String _strConfigGroup = "environment";
-    private final Map<String, Object> _mConfig;
+    private final Map<String, Object> _moConfig;
 
     private EnvParam() {
-        _mConfig = loadConfig();
+        _moConfig = loadConfig();
     }
 
     public static synchronized EnvParam getInstance() {
@@ -30,27 +29,27 @@ public class EnvParam {
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> loadConfig() {
-        Map<String, Object> mResult = new HashMap<>();
+        Map<String, Object> moResult = new HashMap<>();
         try {
             ClassLoader oClassLoader = Thread.currentThread().getContextClassLoader();
             InputStream oInputStream = oClassLoader.getResourceAsStream(CONFIG_FILE_PATH);
 
             if (oInputStream != null) {
                 Yaml oYaml = new Yaml();
-                Map<String, Object> mYamlData = oYaml.load(oInputStream);
-                if (mYamlData != null && mYamlData.containsKey(_strConfigGroup)) {
-                    Object oEnvData = mYamlData.get(_strConfigGroup);
+                Map<String, Object> moYamlData = oYaml.load(oInputStream);
+                if (moYamlData != null && moYamlData.containsKey(_strConfigGroup)) {
+                    Object oEnvData = moYamlData.get(_strConfigGroup);
                     if (oEnvData instanceof Map) {
-                        mResult.putAll((Map<String, Object>) oEnvData);
+                        moResult.putAll((Map<String, Object>) oEnvData);
                     }
                 }
             } else {
                 LOGGER.warning("Config file not found: " + CONFIG_FILE_PATH);
             }
-        } catch (Exception e) {
-            LOGGER.warning("Failed to load config file: " + e.getMessage());
+        } catch (Exception oException) {
+            LOGGER.warning("Failed to load config file: " + oException.getMessage());
         }
-        return mResult;
+        return moResult;
     }
 
     private String getValueOrEnv(String strKey) {
@@ -59,7 +58,7 @@ public class EnvParam {
             return strEnvValue;
         }
 
-        Object oConfigValue = _mConfig.get(strKey);
+        Object oConfigValue = _moConfig.get(strKey);
         if (oConfigValue != null) {
             return oConfigValue.toString();
         }
@@ -84,7 +83,7 @@ public class EnvParam {
         }
         try {
             return Integer.parseInt(strValue);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException oException) {
             LOGGER.warning("Invalid integer value for key '" + strKey + "': " + strValue);
             return 0;
         }
@@ -98,7 +97,7 @@ public class EnvParam {
         }
         try {
             return Float.parseFloat(strValue);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException oException) {
             LOGGER.warning("Invalid float value for key '" + strKey + "': " + strValue);
             return 0.0f;
         }

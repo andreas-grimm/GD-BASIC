@@ -1,11 +1,11 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,7 +28,8 @@ import java.util.Map;
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class FileManager {
-    private static String _strCurrentDirectory = new String();
+    // the absolute directory in which the program was started; CHDIR changes it (see ChDirStatement)
+    private static String _strCurrentDirectory = System.getProperty("user.dir");
     private static final Map<Integer, String> _moFileIDMap = new HashMap<>();
     // last file name used with each file ID. It is kept after FCLOSE so that FRENAME can still find the file (Phase 7).
     private static final Map<Integer, String> _moLastFileName = new HashMap<>();
@@ -40,7 +41,7 @@ public class FileManager {
     private final Logger _oLogger = new Logger(this.getClass().getName());
 
     /**
-     * Initializes the stack if it does not exist.
+     * Initialises the stack if it does not exist.
      */
     public FileManager() {
     }
@@ -59,12 +60,13 @@ public class FileManager {
         if (Paths.get(strFileName).isAbsolute()) {
             strWorkFileName = strFileName;
         } else {
-            strWorkFileName = _strCurrentDirectory + strFileName;
+            // Paths.get adds the separator, so a directory with or without a trailing '/' gives a correct file name
+            strWorkFileName = Paths.get(_strCurrentDirectory, strFileName).toString();
         }
         Integer oFileID = iFileID;
 
         // Check whether the file ID or the file name have been used before
-        if (getFileStatus(iFileID) == true) {
+        if (getFileStatus(iFileID)) {
             return false;
         }
 
@@ -100,9 +102,9 @@ public class FileManager {
                 );
                 _moFileWrite.put(oFileID, oWriter);
             }
-        } catch (IOException eException) {
-            _oLogger.error("Failed to open file: " + strWorkFileName + ": " + eException);
-            eException.printStackTrace(System.err);
+        } catch (IOException oException) {
+            _oLogger.error("Failed to open file: " + strWorkFileName + ": " + oException);
+            oException.printStackTrace(System.err);
             System.exit(-1);
         }
 
@@ -128,8 +130,8 @@ public class FileManager {
                 _moFileRead.remove(iFileID);
                 _moEoFMap.remove(iFileID);
                 _moReadPos.remove(iFileID);
-            } catch (IOException eException) {
-                _oLogger.error("Failed to close file: " + eException);
+            } catch (IOException oException) {
+                _oLogger.error("Failed to close file: " + oException);
                 System.exit(-1);
             }
         }
@@ -141,8 +143,8 @@ public class FileManager {
                 }
 
                 _moFileWrite.remove(iFileID);
-            } catch (IOException eException) {
-                _oLogger.error("Failed to close file: " + eException);
+            } catch (IOException oException) {
+                _oLogger.error("Failed to close file: " + oException);
                 System.exit(-1);
             }
         }
@@ -152,8 +154,8 @@ public class FileManager {
         if (bDeleteFile && _moFileIDMap.containsKey(iFileID)) {
             try {
                 Files.deleteIfExists(Paths.get(_moFileIDMap.get(iFileID)));
-            } catch (IOException eException) {
-                _oLogger.error("Failed to delete file: " + eException);
+            } catch (IOException oException) {
+                _oLogger.error("Failed to delete file: " + oException);
             }
         }
 
@@ -180,10 +182,10 @@ public class FileManager {
                     // Store it as a number if possible, otherwise use a string.
                     oValue = new StringValue(strInput);
                 }
-            } catch (IOException eException) {
-                throw new eu.gricom.basic.error.RuntimeException("Incorrect input detected: " + eException.getMessage());
-            } catch (Exception eUnKnownException) {
-                throw new RuntimeException("Unknown Exception: " + eUnKnownException.getMessage());
+            } catch (IOException oException) {
+                throw new eu.gricom.basic.error.RuntimeException("Incorrect input detected: " + oException.getMessage());
+            } catch (Exception oException) {
+                throw new RuntimeException("Unknown Exception: " + oException.getMessage());
             }
         }
 
@@ -346,11 +348,11 @@ public class FileManager {
      */
     public final FileOpenType getFileType(final int iFileID) {
         if (_moFileRead.containsKey(iFileID)) {
-            return FileOpenType.READ ;
+            return FileOpenType.READ;
         }
 
         if (_moFileWrite.containsKey(iFileID)) {
-            return FileOpenType.WRITE ;
+            return FileOpenType.WRITE;
         }
 
         return null;
@@ -381,11 +383,11 @@ public class FileManager {
      */
     public final IntegerValue getReadPos(final int iFileID) throws RuntimeException {
         if (_moFileRead.containsKey(iFileID)) {
-            Integer iPos = _moReadPos.get(iFileID);
-            if (iPos == null) {
+            Integer oPos = _moReadPos.get(iFileID);
+            if (oPos == null) {
                 return new IntegerValue(0);
             }
-            return new IntegerValue(iPos);
+            return new IntegerValue(oPos);
         } else {
             throw new RuntimeException("File with ID " + iFileID + " is not open for reading");
         }

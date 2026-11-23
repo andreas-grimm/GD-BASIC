@@ -43,28 +43,28 @@ public final class JarPackager {
         oManifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         oManifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, strMainClass);
 
-        Set<String> aoWritten = new HashSet<>();
+        Set<String> vstrWritten = new HashSet<>();
         try (OutputStream oFileOut = Files.newOutputStream(oJarFile);
              JarOutputStream oJar = new JarOutputStream(oFileOut, oManifest)) {
-            aoWritten.add(MANIFEST_NAME);
+            vstrWritten.add(MANIFEST_NAME);
             if (Files.isDirectory(oRuntime)) {
-                addFolder(oJar, oRuntime, aoWritten);
+                addFolder(oJar, oRuntime, vstrWritten);
             } else {
-                copyRuntimeJar(oJar, oRuntime, aoWritten);
+                copyRuntimeJar(oJar, oRuntime, vstrWritten);
             }
-            addFolder(oJar, oClassesDir, aoWritten);
+            addFolder(oJar, oClassesDir, vstrWritten);
         }
     }
 
     /** Copies every entry of the runtime jar, except the old manifest and the old signatures. */
-    private static void copyRuntimeJar(final JarOutputStream oJar, final Path oRuntime, final Set<String> aoWritten)
+    private static void copyRuntimeJar(final JarOutputStream oJar, final Path oRuntime, final Set<String> vstrWritten)
             throws IOException {
         try (JarFile oSource = new JarFile(oRuntime.toFile())) {
             var oEntries = oSource.entries();
             while (oEntries.hasMoreElements()) {
                 JarEntry oEntry = oEntries.nextElement();
                 String strName = oEntry.getName();
-                if (oEntry.isDirectory() || isSignatureOrManifest(strName) || !aoWritten.add(strName)) {
+                if (oEntry.isDirectory() || isSignatureOrManifest(strName) || !vstrWritten.add(strName)) {
                     continue;
                 }
                 oJar.putNextEntry(new JarEntry(strName));
@@ -77,12 +77,12 @@ public final class JarPackager {
     }
 
     /** Adds every file below a folder, using the path relative to that folder as the entry name. */
-    private static void addFolder(final JarOutputStream oJar, final Path oFolder, final Set<String> aoWritten)
+    private static void addFolder(final JarOutputStream oJar, final Path oFolder, final Set<String> vstrWritten)
             throws IOException {
         try (Stream<Path> oFiles = Files.walk(oFolder)) {
             for (Path oFile : (Iterable<Path>) oFiles.filter(Files::isRegularFile).sorted()::iterator) {
                 String strName = oFolder.relativize(oFile).toString().replace('\\', '/');
-                if (!aoWritten.add(strName)) {
+                if (!vstrWritten.add(strName)) {
                     continue;
                 }
                 oJar.putNextEntry(new JarEntry(strName));

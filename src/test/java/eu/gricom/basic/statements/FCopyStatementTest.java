@@ -1,8 +1,8 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.FileOpenType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - EDGE CASES: Empty files, special characters, and file state verification
  * - INTERFACE TESTS: getTokenNumber(), content(), and structure() methods
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Copies content line-by-line from source to destination
  * - Requires both file IDs to be registered in FileManager
  * - Throws RuntimeException for missing or unregistered files
@@ -51,7 +51,7 @@ public class FCopyStatementTest {
     private FileManager _oFileManager;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary files and FileManager instance.
      */
     @BeforeEach

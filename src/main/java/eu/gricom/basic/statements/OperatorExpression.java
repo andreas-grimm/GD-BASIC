@@ -5,12 +5,12 @@ import eu.gricom.basic.error.SyntaxErrorException;
 import java.math.BigDecimal;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.tokenizer.BasicTokenType;
-import eu.gricom.basic.variableTypes.BcdValue;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.LongValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.BcdValue;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.LongValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.Value;
 
 /**
  * An operator expression evaluates two expressions and then performs some
@@ -46,11 +46,11 @@ public class OperatorExpression implements Expression {
      * @param oOperator the actual operator - defined as a BasicTokenType
      * @param oRight right side of the operation
      */
-    public OperatorExpression(final Expression oLeft, final BasicTokenType oOperator, final Expression oRight) {
-        _oLogger.debug("--->  " + oLeft.content() + " " + oOperator + " " + oRight.content());
+    public OperatorExpression(final Expression oLeft, final BasicTokenType eOperator, final Expression oRight) {
+        _oLogger.debug("--->  " + oLeft.content() + " " + eOperator + " " + oRight.content());
         _oLeft = oLeft;
         _strOperator = null;
-        _oOperator = oOperator;
+        _oOperator = eOperator;
         _oRight = oRight;
     }
 
@@ -162,12 +162,12 @@ public class OperatorExpression implements Expression {
         strReturn += "\"LEFT_EXPRESSION\": " + _oLeft.structure() + ",";
 
         if (_strOperator != null) {
-            strReturn += "\"OPERATOR_STRING\": \""+ _strOperator +"\",";
+            strReturn += "\"OPERATOR_STRING\": \"" + _strOperator + "\",";
         }
         if (_oOperator != null) {
-            strReturn += "\"OPERATOR_OBJECT\": \""+ _oOperator + "\",";
+            strReturn += "\"OPERATOR_OBJECT\": \"" + _oOperator + "\",";
         }
-        strReturn += "\"RIGHT_EXPRESSION\": "+ _oRight.structure();
+        strReturn += "\"RIGHT_EXPRESSION\": " + _oRight.structure();
         strReturn += "}}";
 
         return strReturn;
@@ -227,12 +227,12 @@ public class OperatorExpression implements Expression {
         } else if (oValue instanceof BcdValue) {
             oNumber = ((BcdValue) oValue).getBigDecimal();
         } else {
-            double dNumber = oValue.toReal();
-            if (Double.isNaN(dNumber) || Double.isInfinite(dNumber)) {
+            double fNumber = oValue.toReal();
+            if (Double.isNaN(fNumber) || Double.isInfinite(fNumber)) {
                 throw new SyntaxErrorException("Operator '" + strOperator + "' needs integers, but got "
                     + oValue.content());
             }
-            oNumber = BigDecimal.valueOf(dNumber);
+            oNumber = BigDecimal.valueOf(fNumber);
         }
         try {
             return new IntegerValue(oNumber.intValueExact());

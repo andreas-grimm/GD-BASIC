@@ -1,11 +1,11 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.LongValue;
-import eu.gricom.basic.variableTypes.BcdValue;
-import eu.gricom.basic.variableTypes.RealValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.LongValue;
+import eu.gricom.basic.variabletypes.BcdValue;
+import eu.gricom.basic.variabletypes.RealValue;
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.Value;
 
 /**
  * Cdbl.java

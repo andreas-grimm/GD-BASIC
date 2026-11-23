@@ -1,9 +1,11 @@
 package eu.gricom.basic.compiler;
 
-import eu.gricom.basic.memoryManager.Program;
+import eu.gricom.basic.memorymanager.Program;
 import eu.gricom.basic.parser.BasicParser;
 import eu.gricom.basic.statements.Statement;
 import eu.gricom.basic.tokenizer.BasicLexer;
+import eu.gricom.basic.memorymanager.FileManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +34,16 @@ public class JavaCodeGeneratorTest {
 
     private static final String CLASS_NAME = "UnitProgram";
 
-    /** Parses BASIC source text the same way the editor does (tokenize, then parse). */
+    /**
+     * FileManager keeps the current directory in static fields, so a directory set by another test would leak into
+     * these tests. Each test therefore starts with the empty (default) directory.
+     */
+    @BeforeEach
+    public void resetFileManagerDirectory() {
+        new FileManager().setCurrentDirectory("");
+    }
+
+    /** Parses BASIC source text the same way the editor does (tokenise, then parse). */
     private static List<Statement> parse(final String strBasic) throws Exception {
         Program oProgram = new Program();
         oProgram.load("unit-test.bas", strBasic);
@@ -44,6 +55,13 @@ public class JavaCodeGeneratorTest {
 
     /** Compiles the program to Java, compiles the Java, runs it, and returns what it printed. */
     private static String compileAndRun(final String strBasic) throws Exception {
+        return compileAndRun(strBasic, "");
+    }
+
+    /**
+     * Same as compileAndRun, but the program reads from standard input: the given text is what INPUT reads.
+     */
+    private static String compileAndRun(final String strBasic, final String strStandardInput) throws Exception {
         List<Statement> aoStatements = parse(strBasic);
         Path oDirectory = Files.createTempDirectory("compiler-unit-test");
         Path oJavaFile = oDirectory.resolve(CLASS_NAME + ".java");
@@ -56,11 +74,14 @@ public class JavaCodeGeneratorTest {
             Method oMain = oClass.getMethod("main", String[].class);
             ByteArrayOutputStream oCaptured = new ByteArrayOutputStream();
             PrintStream oOriginal = System.out;
+            java.io.InputStream oOriginalIn = System.in;
             System.setOut(new PrintStream(oCaptured, true, StandardCharsets.UTF_8));
+            System.setIn(new java.io.ByteArrayInputStream(strStandardInput.getBytes(StandardCharsets.UTF_8)));
             try {
                 oMain.invoke(null, (Object) new String[0]);
             } finally {
                 System.setOut(oOriginal);
+                System.setIn(oOriginalIn);
             }
             return oCaptured.toString(StandardCharsets.UTF_8).replace("\r\n", "\n");
         }
@@ -161,9 +182,9 @@ public class JavaCodeGeneratorTest {
     // ---------------------------------------------------------------- negative tests
 
     @Test
-    public void testInputIsRejectedWithClearMessage() throws Exception {
+    public void testReadIsRejectedWithClearMessage() throws Exception {
         CompileException oException = assertThrows(CompileException.class,
-                () -> new JavaCodeGenerator(parse("10 INPUT A\n20 END\n"), CLASS_NAME).generate());
+                () -> new JavaCodeGenerator(parse("10 READ A\n20 END\n"), CLASS_NAME).generate());
         assertTrue(oException.getMessage().contains("not supported by the compiler yet"));
         assertTrue(oException.getMessage().contains("BASIC line 10"));
     }
@@ -179,13 +200,6 @@ public class JavaCodeGeneratorTest {
     public void testArraysAreRejected() throws Exception {
         CompileException oException = assertThrows(CompileException.class,
                 () -> new JavaCodeGenerator(parse("10 DIM A(5)\n20 END\n"), CLASS_NAME).generate());
-        assertTrue(oException.getMessage().contains("not supported by the compiler yet"));
-    }
-
-    @Test
-    public void testFileOpenIsRejected() throws Exception {
-        CompileException oException = assertThrows(CompileException.class,
-                () -> new JavaCodeGenerator(parse("10 FOPEN 1 \"x.txt\" \"write\"\n20 END\n"), CLASS_NAME).generate());
         assertTrue(oException.getMessage().contains("not supported by the compiler yet"));
     }
 
@@ -208,5 +222,75 @@ public class JavaCodeGeneratorTest {
     public void testGeneratedSourceIsNotEmptyForValidProgram() throws Exception {
         String strSource = new JavaCodeGenerator(parse("10 END\n"), CLASS_NAME).generate();
         assertFalse(strSource.isBlank());
+    }
+
+    // ---------------------------------------------------------------- unary minus, operators, I/O (added in 0.4.0)
+
+    @Test
+    public void testUnaryMinusOnIntegerPrintsNegativeValue() throws Exception {
+        assertEquals("-5\n", compileAndRun("10 A% = 5\n20 PRINT -A%\n30 END\n"));
+    }
+
+    @Test
+    public void testOperatorsWithoutSpacesAreReadAsOperators() throws Exception {
+        assertEquals("-2.0\n-5.0\n", compileAndRun(
+                "10 A% = 5\n20 PRINT A%-7\n30 X=-A%\n40 PRINT X\n50 END\n"));
+    }
+
+    @Test
+    public void testUnaryMinusOnStringFailsWhenRun() throws Exception {
+        java.lang.reflect.InvocationTargetException oException = assertThrows(
+                java.lang.reflect.InvocationTargetException.class,
+                () -> compileAndRun("10 S$ = \"x\"\n20 PRINT -S$\n30 END\n"));
+        assertTrue(oException.getCause().getMessage().contains("Cannot apply unary minus to a string"));
+    }
+
+    @Test
+    public void testInputReadsFromStandardInput() throws Exception {
+        assertEquals("Hello World\n-21.0\n", compileAndRun(
+                "10 INPUT N$\n20 PRINT \"Hello \"; N$\n30 INPUT A\n40 PRINT -A\n50 END\n", "World\n21\n"));
+    }
+
+    @Test
+    public void testSystemFunctionRunsCommand() throws Exception {
+        assertTrue(compileAndRun("10 A$ = SYSTEM(\"RUN\", \"echo unit\")\n20 PRINT A$\n30 END\n")
+                .contains("unit"));
+    }
+
+    @Test
+    public void testFexistsIsFalseForMissingFile() throws Exception {
+        assertEquals("False\n", compileAndRun(
+                "10 PRINT FEXISTS(\"no_such_file_for_unit_test.txt\")\n20 END\n"));
+    }
+
+    @Test
+    public void testFileWriteReadAndDelete() throws Exception {
+        assertEquals("hello\nFalse\n", compileAndRun(
+                "10 FOPEN 41 \"unit_compiler_io.txt\" \"write\"\n20 FPRINT 41 \"hello\"\n30 FCLOSE 41 \"\"\n"
+                        + "40 FOPEN 42 \"unit_compiler_io.txt\" \"read\"\n50 FINPUT 42, L$\n60 PRINT L$\n"
+                        + "70 FCLOSE 42 \"DELETE\"\n80 PRINT FEXISTS(\"unit_compiler_io.txt\")\n90 END\n"));
+    }
+
+    @Test
+    public void testDirectoryCreateAndRemove() throws Exception {
+        assertEquals("True\nFalse\n", compileAndRun(
+                "10 MKDIR \"unit_compiler_dir\"\n20 PRINT DIREXISTS(\"unit_compiler_dir\")\n"
+                        + "30 RMDIR \"unit_compiler_dir\"\n40 PRINT DIREXISTS(\"unit_compiler_dir\")\n50 END\n"));
+    }
+
+    @Test
+    public void testFileIdFromStringFailsWhenRun() throws Exception {
+        java.lang.reflect.InvocationTargetException oException = assertThrows(
+                java.lang.reflect.InvocationTargetException.class,
+                () -> compileAndRun("10 PRINT FISOPEN(\"2\")\n20 END\n"));
+        assertTrue(oException.getCause().getMessage().contains("File ID is not an integer"));
+    }
+
+    @Test
+    public void testFileIdLiteralWorksInCompiledProgram() throws Exception {
+        // a file ID written as a literal (43) works, and the file is removed again
+        assertEquals("True\n", compileAndRun(
+                "10 FOPEN 43 \"unit_fileid_literal.txt\" \"write\"\n20 PRINT FISOPEN(43)\n"
+                        + "30 FCLOSE 43 \"DELETE\"\n40 END\n"));
     }
 }

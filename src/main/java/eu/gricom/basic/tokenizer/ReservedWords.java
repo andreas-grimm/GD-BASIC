@@ -45,7 +45,8 @@ public final class ReservedWords {
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
             "\\(", "\\)", "\\'", "\\;", "\\,", "||", "\\?",
             ">>", "<<",
-            "WEND"  // Phase 7: alias of END-WHILE. Added at the end so that the other indices stay the same.
+            "WEND",  // Phase 7: alias of END-WHILE. Added at the end so that the other indices stay the same.
+            "MKDIR"  // MKDIR: added at the end so that the other indices stay the same.
     };
 
     private static BasicTokenType[] _aeTokenTypes = {
@@ -85,7 +86,8 @@ public final class ReservedWords {
         BasicTokenType.LEFT_PAREN, BasicTokenType.RIGHT_PAREN, BasicTokenType.COMMENT, BasicTokenType.SEMICOLON,
             BasicTokenType.COMMA, BasicTokenType.OR, BasicTokenType.PRINT,
         BasicTokenType.SHIFT_RIGHT, BasicTokenType.SHIFT_LEFT,
-        BasicTokenType.ENDWHILE};  // WEND (Phase 7 alias of END-WHILE)
+        BasicTokenType.ENDWHILE,  // WEND (Phase 7 alias of END-WHILE)
+        BasicTokenType.MKDIR};
 
     /**
      * getIndex returns the index of the token based on an entered reserved word.
@@ -119,8 +121,8 @@ public final class ReservedWords {
         int iReturn = -1;
         int iIndex = 0;
 
-        for (BasicTokenType oReserveWord: _aeTokenTypes) {
-            if (strTokenType.toUpperCase(Locale.ROOT).matches(oReserveWord.toString())) {
+        for (BasicTokenType eReserveWord: _aeTokenTypes) {
+            if (strTokenType.toUpperCase(Locale.ROOT).matches(eReserveWord.toString())) {
                 iReturn = iIndex;
                 break;
             }

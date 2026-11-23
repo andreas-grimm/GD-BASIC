@@ -1,7 +1,7 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * - NEGATIVE TESTS: Both functions handle error conditions (unregistered IDs, non-reading files)
  * - EDGE CASES: Position values (0, large numbers), multiple files, overwrites
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - putReadPos stores a read cursor position for a file open for reading
  * - getReadPos retrieves the stored read cursor position
  * - Both throw RuntimeException if file is not open for reading
@@ -45,7 +45,7 @@ public class FileManagerReadPosTest {
     private FileManager _oFileManager;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary files and FileManager instance.
      */
     @BeforeEach
@@ -249,13 +249,13 @@ public class FileManagerReadPosTest {
     }
 
     /**
-     * Test: getReadPos returns 0 when position was initialized at file open.
+     * Test: getReadPos returns 0 when position was initialised at file open.
      * <p>
-     * Given: File is opened (position initialized to 0 in openFile)
+     * Given: File is opened (position initialised to 0 in openFile)
      * When: getReadPos is called without putReadPos
      * Then: Returns 0
      * <p>
-     * Purpose: Verifies default initialization behavior
+     * Purpose: Verifies default initialisation behaviour
      */
     @Test
     public void testGetReadPos_WithoutPutReadPos_ReturnsInitializedZero() throws Exception {
@@ -265,7 +265,7 @@ public class FileManagerReadPosTest {
         // Execute: Retrieve position directly
         IntegerValue oPosition = _oFileManager.getReadPos(_iFileId1);
 
-        // Verify: Returns 0 (initialized value from openFile)
+        // Verify: Returns 0 (initialised value from openFile)
         assertEquals(0, oPosition.toInt());
     }
 
@@ -440,7 +440,7 @@ public class FileManagerReadPosTest {
      * When: getReadPos is called after each update
      * Then: Returns the most recent position
      * <p>
-     * Purpose: Verifies correct behavior with rapid updates
+     * Purpose: Verifies correct behaviour with rapid updates
      */
     @Test
     public void testReadPos_WithSequentialUpdates_ReturnsMostRecent() throws Exception {

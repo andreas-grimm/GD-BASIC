@@ -1,7 +1,22 @@
 package eu.gricom.basic.compiler;
 
-import eu.gricom.basic.memoryManager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
 import eu.gricom.basic.statements.AssignStatement;
+import eu.gricom.basic.statements.ChDirStatement;
+import eu.gricom.basic.statements.FCloseStatement;
+import eu.gricom.basic.statements.FCopyStatement;
+import eu.gricom.basic.statements.FDeleteStatement;
+import eu.gricom.basic.statements.FGetStatement;
+import eu.gricom.basic.statements.FInputStatement;
+import eu.gricom.basic.statements.FOpenStatement;
+import eu.gricom.basic.statements.FPeekStatement;
+import eu.gricom.basic.statements.FPrintStatement;
+import eu.gricom.basic.statements.FPutStatement;
+import eu.gricom.basic.statements.FRenameStatement;
+import eu.gricom.basic.statements.FRewindStatement;
+import eu.gricom.basic.statements.InputStatement;
+import eu.gricom.basic.statements.MkDirStatement;
+import eu.gricom.basic.statements.RmDirStatement;
 import eu.gricom.basic.statements.ColonStatement;
 import eu.gricom.basic.statements.DoStatement;
 import eu.gricom.basic.statements.EndStatement;
@@ -26,13 +41,12 @@ import eu.gricom.basic.statements.VariableExpression;
 import eu.gricom.basic.statements.WhileStatement;
 import eu.gricom.basic.functions.Function;
 import eu.gricom.basic.tokenizer.BasicTokenType;
-import eu.gricom.basic.variableTypes.BcdValue;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.LongValue;
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.BcdValue;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.LongValue;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.StringValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,12 +116,28 @@ public final class JavaCodeGenerator {
             Map.entry(BasicTokenType.STR, "Str"),
             Map.entry(BasicTokenType.TAN, "Tan"),
             Map.entry(BasicTokenType.UPPER, "Upper"),
-            Map.entry(BasicTokenType.VAL, "Val"));
+            Map.entry(BasicTokenType.VAL, "Val"),
+            Map.entry(BasicTokenType.EOF, "Eof"),
+            Map.entry(BasicTokenType.FEXISTS, "FExists"),
+            Map.entry(BasicTokenType.DIREXISTS, "DirExists"));
 
     private static final Map<BasicTokenType, String> TWO_PARAMETER_FUNCTIONS = Map.of(
             BasicTokenType.INSTR, "Instr",
             BasicTokenType.LEFT, "Left",
-            BasicTokenType.RIGHT, "Right");
+            BasicTokenType.RIGHT, "Right",
+            BasicTokenType.SYSTEM, "System");
+
+    /** Functions whose one parameter is a file ID (an integer), checked by Function.fileId(). */
+    private static final Map<BasicTokenType, String> FILE_ID_FUNCTIONS = Map.of(
+            BasicTokenType.FGETNAME, "FGetFileName",
+            BasicTokenType.FGETSIZE, "FGetSize",
+            BasicTokenType.FISOPEN, "FIsOpen",
+            BasicTokenType.FLINECOUNT, "FLineCount",
+            BasicTokenType.FMODTIME, "FModTime");
+
+    /** Functions with two file ID parameters. */
+    private static final Map<BasicTokenType, String> FILE_ID_TWO_PARAMETER_FUNCTIONS = Map.of(
+            BasicTokenType.FCOMPARE, "FCompare");
 
     private static final Map<BasicTokenType, String> THREE_PARAMETER_FUNCTIONS = Map.of(
             BasicTokenType.MID, "Mid");
@@ -115,7 +145,8 @@ public final class JavaCodeGenerator {
     private static final Map<BasicTokenType, String> NO_PARAMETER_FUNCTIONS = Map.of(
             BasicTokenType.MEM, "Mem",
             BasicTokenType.RND, "Rnd",
-            BasicTokenType.TIME, "Time");
+            BasicTokenType.TIME, "Time",
+            BasicTokenType.GETCWD, "GetCwd");
 
     /** Maps a binary operator token to the name of the Value method that does the work. */
     private static final Map<BasicTokenType, String> BINARY_OPERATORS = Map.ofEntries(
@@ -171,11 +202,11 @@ public final class JavaCodeGenerator {
      * @param strClassName the name of the Java class to generate (must match the file name)
      * @throws CompileException if a line number of a statement cannot be found
      */
-    public JavaCodeGenerator(final List<Statement> aoStatements, final String strClassName)
+    public JavaCodeGenerator(final List<Statement> voStatements, final String strClassName)
             throws CompileException {
-        _aoStatements = aoStatements;
+        _aoStatements = voStatements;
         _strClassName = strClassName;
-        flatten(aoStatements);
+        flatten(voStatements);
     }
 
     /**
@@ -191,18 +222,18 @@ public final class JavaCodeGenerator {
         StringBuilder oSource = new StringBuilder();
         oSource.append("// Generated by the GD-BASIC compiler from a BASIC program.\n");
         oSource.append("// Do not edit by hand: change the BASIC program and compile it again.\n");
-        oSource.append("import eu.gricom.basic.memoryManager.Stack;\n");
-        oSource.append("import eu.gricom.basic.memoryManager.VariableManagement;\n");
+        oSource.append("import eu.gricom.basic.memorymanager.Stack;\n");
+        oSource.append("import eu.gricom.basic.memorymanager.VariableManagement;\n");
         oSource.append("import eu.gricom.basic.statements.OperatorExpression;\n");
         oSource.append("import eu.gricom.basic.statements.UnaryOperatorExpression;\n");
         oSource.append("import eu.gricom.basic.statements.WhileStatement;\n");
-        oSource.append("import eu.gricom.basic.variableTypes.BcdValue;\n");
-        oSource.append("import eu.gricom.basic.variableTypes.BooleanValue;\n");
-        oSource.append("import eu.gricom.basic.variableTypes.IntegerValue;\n");
-        oSource.append("import eu.gricom.basic.variableTypes.LongValue;\n");
-        oSource.append("import eu.gricom.basic.variableTypes.RealValue;\n");
-        oSource.append("import eu.gricom.basic.variableTypes.StringValue;\n");
-        oSource.append("import eu.gricom.basic.variableTypes.Value;\n");
+        oSource.append("import eu.gricom.basic.variabletypes.BcdValue;\n");
+        oSource.append("import eu.gricom.basic.variabletypes.BooleanValue;\n");
+        oSource.append("import eu.gricom.basic.variabletypes.IntegerValue;\n");
+        oSource.append("import eu.gricom.basic.variabletypes.LongValue;\n");
+        oSource.append("import eu.gricom.basic.variabletypes.RealValue;\n");
+        oSource.append("import eu.gricom.basic.variabletypes.StringValue;\n");
+        oSource.append("import eu.gricom.basic.variabletypes.Value;\n");
         oSource.append("\n");
         oSource.append("public final class ").append(_strClassName).append(" {\n");
         oSource.append("\n");
@@ -262,8 +293,8 @@ public final class JavaCodeGenerator {
     }
 
     /** Puts the statements into the flat list of units. A block IF is split into several units. */
-    private void flatten(final List<Statement> aoStatements) throws CompileException {
-        for (Statement oStatement : aoStatements) {
+    private void flatten(final List<Statement> voStatements) throws CompileException {
+        for (Statement oStatement : voStatements) {
             if (oStatement instanceof IfThenStatement oIf && oIf.hasBlockStatements()) {
                 flattenBlockIf(oIf);
             } else {
@@ -280,15 +311,15 @@ public final class JavaCodeGenerator {
         Unit oTest = new Unit(oIf, lineOf(oIf), Kind.IF_TEST);
         _aoUnits.add(oTest);
         flatten(oIf.getIfBlockStatements());
-        List<Statement> aoElse = oIf.getElseBlockStatements();
+        List<Statement> voElse = oIf.getElseBlockStatements();
         Unit oJump = null;
-        if (aoElse != null && !aoElse.isEmpty()) {
+        if (voElse != null && !voElse.isEmpty()) {
             oJump = new Unit(null, oTest._iLine, Kind.JUMP);
             _aoUnits.add(oJump);
         }
         oTest._iTarget = _aoUnits.size();
-        if (aoElse != null) {
-            flatten(aoElse);
+        if (voElse != null) {
+            flatten(voElse);
         }
         if (oJump != null) {
             oJump._iTarget = _aoUnits.size();
@@ -298,7 +329,7 @@ public final class JavaCodeGenerator {
     private int lineOf(final Statement oStatement) throws CompileException {
         try {
             return new LineNumberXRef().getLineNumberFromToken(oStatement.getTokenNumber());
-        } catch (Exception eException) {
+        } catch (Exception oException) {
             throw new CompileException("Compiler: no BASIC line number found for a statement");
         }
     }
@@ -408,6 +439,68 @@ public final class JavaCodeGenerator {
                     + "    " + setPc(strNext) + "\n"
                     + "}";
         }
+        if (oStatement instanceof InputStatement oInput) {
+            return delegate(oUnit, "InputStatement", javaString(oInput.getName()), strNext);
+        }
+        if (oStatement instanceof FOpenStatement oOpen) {
+            String strMode = oOpen.isWriteMode() ? "write" : "read";
+            return delegate(oUnit, "FOpenStatement", oOpen.getFileId() + ", " + javaString(oOpen.getFileName())
+                    + ", " + javaString(strMode), strNext);
+        }
+        if (oStatement instanceof FCloseStatement oClose) {
+            return delegate(oUnit, "FCloseStatement", oClose.getFileId() + ", " + oClose.isDelete(), strNext);
+        }
+        if (oStatement instanceof FInputStatement oFInput) {
+            return delegate(oUnit, "FInputStatement", oFInput.getFileId() + ", "
+                    + javaString(oFInput.getName()), strNext);
+        }
+        if (oStatement instanceof FGetStatement oFGet) {
+            return delegate(oUnit, "FGetStatement", oFGet.getFileId() + ", "
+                    + javaString(oFGet.getVariableName()), strNext);
+        }
+        if (oStatement instanceof FPeekStatement oFPeek) {
+            return delegate(oUnit, "FPeekStatement", oFPeek.getFileId() + ", "
+                    + javaString(oFPeek.getVariableName()), strNext);
+        }
+        if (oStatement instanceof FRewindStatement oFRewind) {
+            return delegate(oUnit, "FRewindStatement", String.valueOf(oFRewind.getFileId()), strNext);
+        }
+        if (oStatement instanceof FRenameStatement oFRename) {
+            return delegate(oUnit, "FRenameStatement", oFRename.getFileId() + ", "
+                    + expression(oFRename.getNewFileName(), iIndex), strNext);
+        }
+        if (oStatement instanceof FCopyStatement oFCopy) {
+            return delegate(oUnit, "FCopyStatement", oFCopy.getSourceFileId() + ", "
+                    + oFCopy.getDestinationFileId(), strNext);
+        }
+        if (oStatement instanceof FDeleteStatement oFDelete) {
+            return delegate(oUnit, "FDeleteStatement", String.valueOf(oFDelete.getFileId()), strNext);
+        }
+        if (oStatement instanceof ChDirStatement oChDir) {
+            return delegate(oUnit, "ChDirStatement", expression(oChDir.getValue(), iIndex), strNext);
+        }
+        if (oStatement instanceof MkDirStatement oMkDir) {
+            return delegate(oUnit, "MkDirStatement", expression(oMkDir.getDirectory(), iIndex), strNext);
+        }
+        if (oStatement instanceof RmDirStatement oRmDir) {
+            return delegate(oUnit, "RmDirStatement", expression(oRmDir.getDirectory(), iIndex) + ", "
+                    + expression(oRmDir.getForce(), iIndex), strNext);
+        }
+        if (oStatement instanceof FPutStatement oFPut) {
+            return delegate(oUnit, "FPutStatement", oFPut.getFileId() + ", "
+                    + expressionWrapper(oFPut.getExpression(), iIndex), strNext);
+        }
+        if (oStatement instanceof FPrintStatement oFPrint) {
+            StringBuilder oList = new StringBuilder();
+            if (oFPrint.getExpressions() != null) {
+                for (Expression oExpression : oFPrint.getExpressions()) {
+                    oList.append(oList.length() > 0 ? ", " : "").append(expressionWrapper(oExpression, iIndex));
+                }
+            }
+            return delegate(oUnit, "FPrintStatement", oFPrint.getFileId() + ", "
+                    + "java.util.List.<" + STATEMENT_PACKAGE + "Expression>of(" + oList + "), "
+                    + oFPrint.isCRLF(), strNext);
+        }
         throw unsupported(oUnit, statementName(oStatement));
     }
 
@@ -427,20 +520,20 @@ public final class JavaCodeGenerator {
     }
 
     /** ON n GOTO / ON n GOSUB: a switch on the selected number. Out of range continues with the next unit. */
-    private String onBody(final Unit oUnit, final Expression oSelect, final List<String> astrTargets,
+    private String onBody(final Unit oUnit, final Expression oSelect, final List<String> vstrTargets,
                           final boolean bGosub, final String strNext) throws CompileException {
         int iIndex = _aoUnits.indexOf(oUnit);
         StringBuilder oCode = new StringBuilder();
         oCode.append("int iSelect = (int) (").append(expression(oSelect, iIndex)).append(").toReal();\n");
         if (bGosub) {
-            oCode.append("if (iSelect >= 1 && iSelect <= ").append(astrTargets.size()).append(") {\n");
+            oCode.append("if (iSelect >= 1 && iSelect <= ").append(vstrTargets.size()).append(") {\n");
             oCode.append("    _stack.push(new IntegerValue(").append(indexAfterLine(oUnit._iLine)).append("));\n");
             oCode.append("}\n");
         }
         oCode.append("switch (iSelect) {\n");
-        for (int iPosition = 0; iPosition < astrTargets.size(); iPosition++) {
+        for (int iPosition = 0; iPosition < vstrTargets.size(); iPosition++) {
             oCode.append("    case ").append(iPosition + 1).append(": ")
-                    .append(setPc(String.valueOf(indexOfTarget(oUnit, astrTargets.get(iPosition))))).append(" break;\n");
+                    .append(setPc(String.valueOf(indexOfTarget(oUnit, vstrTargets.get(iPosition))))).append(" break;\n");
         }
         oCode.append("    default: ").append(setPc(strNext)).append(" break;\n");
         oCode.append("}");
@@ -536,15 +629,15 @@ public final class JavaCodeGenerator {
     private String binary(final int iIndex, final OperatorExpression oOperator) throws CompileException {
         String strLeft = expression(oOperator.getLeftOperand(), iIndex);
         String strRight = expression(oOperator.getRightOperand(), iIndex);
-        BasicTokenType oType = oOperator.getTokenType();
-        if (oType == BasicTokenType.SHIFT_LEFT) {
+        BasicTokenType eType = oOperator.getTokenType();
+        if (eType == BasicTokenType.SHIFT_LEFT) {
             return "OperatorExpression.integerShiftLeft(" + strLeft + ", " + strRight + ")";
         }
-        if (oType == BasicTokenType.SHIFT_RIGHT) {
+        if (eType == BasicTokenType.SHIFT_RIGHT) {
             return "OperatorExpression.integerShiftRight(" + strLeft + ", " + strRight + ")";
         }
-        String strMethod = oType == null ? null : BINARY_OPERATORS.get(oType);
-        if (oType == null && oOperator.getOperator() != null) {
+        String strMethod = eType == null ? null : BINARY_OPERATORS.get(eType);
+        if (eType == null && oOperator.getOperator() != null) {
             String strText = oOperator.getOperator();
             if (">>".equals(strText)) {
                 return "OperatorExpression.integerShiftRight(" + strLeft + ", " + strRight + ")";
@@ -562,51 +655,84 @@ public final class JavaCodeGenerator {
 
     private String unary(final UnaryOperatorExpression oUnary) throws CompileException {
         String strOperand = expression(oUnary.getOperand(), _aoUnits.size());
-        BasicTokenType oType = oUnary.getTokenType();
-        if (oType == BasicTokenType.PLUS) {
+        BasicTokenType eType = oUnary.getTokenType();
+        if (eType == BasicTokenType.PLUS) {
             return strOperand;
         }
-        if (oType == BasicTokenType.MINUS) {
+        if (eType == BasicTokenType.MINUS) {
             return "UnaryOperatorExpression.evaluateUnaryMinus(" + strOperand + ")";
         }
-        if (oType == BasicTokenType.NOT) {
+        if (eType == BasicTokenType.NOT) {
             return "UnaryOperatorExpression.evaluateUnaryNot(" + strOperand + ")";
         }
-        throw unsupportedExpression("unary operator " + oType);
+        throw unsupportedExpression("unary operator " + eType);
     }
 
     private String function(final Function oFunction) throws CompileException {
-        BasicTokenType oType = oFunction.getTokenType();
+        BasicTokenType eType = oFunction.getTokenType();
         int iExpected;
         String strClass;
-        if (ONE_PARAMETER_FUNCTIONS.containsKey(oType)) {
-            strClass = ONE_PARAMETER_FUNCTIONS.get(oType);
+        if (ONE_PARAMETER_FUNCTIONS.containsKey(eType)) {
+            strClass = ONE_PARAMETER_FUNCTIONS.get(eType);
             iExpected = 1;
-        } else if (TWO_PARAMETER_FUNCTIONS.containsKey(oType)) {
-            strClass = TWO_PARAMETER_FUNCTIONS.get(oType);
+        } else if (TWO_PARAMETER_FUNCTIONS.containsKey(eType)) {
+            strClass = TWO_PARAMETER_FUNCTIONS.get(eType);
             iExpected = 2;
-        } else if (THREE_PARAMETER_FUNCTIONS.containsKey(oType)) {
-            strClass = THREE_PARAMETER_FUNCTIONS.get(oType);
+        } else if (THREE_PARAMETER_FUNCTIONS.containsKey(eType)) {
+            strClass = THREE_PARAMETER_FUNCTIONS.get(eType);
             iExpected = 3;
-        } else if (NO_PARAMETER_FUNCTIONS.containsKey(oType)) {
-            strClass = NO_PARAMETER_FUNCTIONS.get(oType);
+        } else if (NO_PARAMETER_FUNCTIONS.containsKey(eType)) {
+            strClass = NO_PARAMETER_FUNCTIONS.get(eType);
             iExpected = 0;
+        } else if (FILE_ID_FUNCTIONS.containsKey(eType)) {
+            strClass = FILE_ID_FUNCTIONS.get(eType);
+            iExpected = 1;
+        } else if (FILE_ID_TWO_PARAMETER_FUNCTIONS.containsKey(eType)) {
+            strClass = FILE_ID_TWO_PARAMETER_FUNCTIONS.get(eType);
+            iExpected = 2;
         } else {
-            throw unsupportedExpression("function " + oType);
+            throw unsupportedExpression("function " + eType);
         }
         Expression[] aoParameters = {oFunction.getFirstParam(), oFunction.getSecondParam(),
             oFunction.getThirdParam()};
         StringBuilder oArguments = new StringBuilder();
         for (int iParameter = 0; iParameter < iExpected; iParameter++) {
             if (aoParameters[iParameter] == null) {
-                throw unsupportedExpression("function " + oType + " with the wrong number of parameters");
+                throw unsupportedExpression("function " + eType + " with the wrong number of parameters");
             }
             if (iParameter > 0) {
                 oArguments.append(", ");
             }
-            oArguments.append(expression(aoParameters[iParameter], _aoUnits.size()));
+            String strArgument = expression(aoParameters[iParameter], _aoUnits.size());
+            if (FILE_ID_FUNCTIONS.containsKey(eType) || FILE_ID_TWO_PARAMETER_FUNCTIONS.containsKey(eType)) {
+                strArgument = FUNCTIONS_PACKAGE + "Function.fileId(" + strArgument + ")";
+            }
+            oArguments.append(strArgument);
         }
         return FUNCTIONS_PACKAGE + strClass + ".execute(" + oArguments + ")";
+    }
+
+    /**
+     * Creates the interpreter's own statement object with constant arguments, runs it, and then continues with the
+     * next unit. The first argument of every statement class is the token number, which is added here.
+     */
+    private String delegate(final Unit oUnit, final String strClass, final String strArguments, final String strNext) {
+        return "new " + STATEMENT_PACKAGE + strClass + "(" + oUnit._oStatement.getTokenNumber() + ", " + strArguments
+                + ").execute();\n" + setPc(strNext);
+    }
+
+    /**
+     * Wraps an expression in an object of the interpreter's Expression interface. The interpreter's PRINT-to-file
+     * classes evaluate such objects, so the compiled program can use those classes unchanged.
+     */
+    private String expressionWrapper(final Expression oExpression, final int iIndex) throws CompileException {
+        return "new " + STATEMENT_PACKAGE + "Expression() {\n"
+                + "    public eu.gricom.basic.variabletypes.Value evaluate() throws Exception {\n"
+                + "        return " + expression(oExpression, iIndex) + ";\n"
+                + "    }\n"
+                + "    public String content() { return \"\"; }\n"
+                + "    public String structure() { return \"\"; }\n"
+                + "}";
     }
 
     private static String setPc(final String strTarget) {
@@ -627,7 +753,7 @@ public final class JavaCodeGenerator {
     private int indexOfTarget(final Unit oUnit, final String strTarget) throws CompileException {
         try {
             return indexOfLine(oUnit, Integer.parseInt(strTarget.trim()));
-        } catch (NumberFormatException eException) {
+        } catch (NumberFormatException oException) {
             throw unsupported(oUnit, "jump to a label (only line numbers are supported)");
         }
     }

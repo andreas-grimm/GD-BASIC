@@ -1,10 +1,10 @@
-package eu.gricom.basic.runtimeManager;
+package eu.gricom.basic.runtimemanager;
 
 import eu.gricom.basic.helper.Trace;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.Program;
-import eu.gricom.basic.memoryManager.ProgramPointer;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.Program;
+import eu.gricom.basic.memorymanager.ProgramPointer;
 import eu.gricom.basic.statements.Statement;
 import java.util.List;
 
@@ -44,9 +44,9 @@ public class Execute {
                 _oLogger.error("Parsing delivered empty program");
                 System.exit(-1);
             }
-        } catch (Exception eException) {
+        } catch (Exception oException) {
             _bRuntimeError = true;
-            eException.printStackTrace();
+            oException.printStackTrace();
         }
     }
 
@@ -81,10 +81,10 @@ public class Execute {
                 _oLogger.error("Parsing delivered empty program");
                 System.exit(-1);
             }
-        } catch (Exception eException) {
-            if (!eException.getClass().getName().contains("EndOfProgramException")) {
+        } catch (Exception oException) {
+            if (!oException.getClass().getName().contains("EndOfProgramException")) {
                 _bRuntimeError = true;
-                eException.printStackTrace();
+                oException.printStackTrace();
             }
         }
     }

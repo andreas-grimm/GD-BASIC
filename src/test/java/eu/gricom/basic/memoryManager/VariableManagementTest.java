@@ -1,14 +1,14 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
-import eu.gricom.basic.variableTypes.BcdValue;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.variabletypes.BcdValue;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
 import eu.gricom.basic.error.OverflowException;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

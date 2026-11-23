@@ -3,8 +3,9 @@ package eu.gricom.basic.functions;
 import eu.gricom.basic.tokenizer.Token;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.statements.Expression;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.Value;
 
 
 /**
@@ -351,15 +352,15 @@ public class Function implements Expression {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"FUNCTION\": {";
-        strReturn += "\"TOKEN_TYPE\": \""+ _oToken.getType() +"\",";
+        strReturn += "\"TOKEN_TYPE\": \"" + _oToken.getType() + "\",";
         if (_oFirstParam != null) {
-            strReturn += "\"FIRST_PARAM\": \""+ _oFirstParam.structure() +"\",";
+            strReturn += "\"FIRST_PARAM\": \"" + _oFirstParam.structure() + "\",";
         }
         if (_oSecondParam != null) {
-            strReturn += "\"SECOND_PARAM\": \""+ _oSecondParam.structure() +"\",";
+            strReturn += "\"SECOND_PARAM\": \"" + _oSecondParam.structure() + "\",";
         }
         if (_oThirdParam != null) {
-            strReturn += "\"THIRD_PARAM\": \""+ _oThirdParam.structure() +"\"";
+            strReturn += "\"THIRD_PARAM\": \"" + _oThirdParam.structure() + "\"";
         }
         strReturn += "}}";
         return strReturn;
@@ -372,9 +373,23 @@ public class Function implements Expression {
      * @return the file ID as int
      * @throws RuntimeException when the value is not an INTEGER
      */
-    private static int fileId(final Value oValue) throws RuntimeException {
+    /**
+     * Converts a value to a file ID. Used by the interpreter and by the compiler, so both check the same way.
+     *
+     * @param oValue the value that holds the file ID
+     * @return the file ID
+     * @throws RuntimeException if the value is not an integer
+     */
+    public static int fileId(final Value oValue) throws RuntimeException {
         if (oValue instanceof IntegerValue) {
             return ((IntegerValue) oValue).toInt();
+        }
+        // a number literal such as 2 is read as a real value (2.0): accept it when it is a whole number
+        if (oValue instanceof RealValue) {
+            double fValue = oValue.toReal();
+            if (fValue == Math.rint(fValue) && fValue >= Integer.MIN_VALUE && fValue <= Integer.MAX_VALUE) {
+                return (int) fValue;
+            }
         }
         throw new RuntimeException("File ID is not an integer: " + oValue);
     }

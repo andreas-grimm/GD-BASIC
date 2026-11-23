@@ -1,4 +1,4 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 /**
  * This defines the different ways a file can be opened.

@@ -1,6 +1,6 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.Value;
 import eu.gricom.basic.error.EmptyStackException;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -18,7 +18,7 @@ public class FiFoQueue {
     private static Queue<Value> _oFiFo = null;
 
     /**
-     * Initializes the FiFo Queue. As the queue is static, it can be generated in every statement and gets access to
+     * Initialises the FiFo Queue. As the queue is static, it can be generated in every statement and gets access to
      * the data
      */
     public FiFoQueue() {

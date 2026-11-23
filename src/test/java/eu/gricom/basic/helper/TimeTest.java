@@ -24,7 +24,7 @@ class TimeTest {
     // ===== CONSTRUCTOR TESTS =====
 
     @Test
-    @DisplayName("Default constructor should initialize with current time")
+    @DisplayName("Default constructor should initialise with current time")
     void testDefaultConstructor() {
         Time time = new Time();
         assertNotNull(time, "Time object should be created");
@@ -445,7 +445,7 @@ class TimeTest {
     }
 
     @Test
-    @DisplayName("addMonths should handle day normalization (e.g., Jan 31 + 1 month)")
+    @DisplayName("addMonths should handle day normalisation (e.g., Jan 31 + 1 month)")
     void testAddMonthsDayNormalization() {
         assertDoesNotThrow(() -> timeObject.parseDate("2023-01-31"));
         timeObject.addMonths(1);

@@ -7,10 +7,10 @@ import eu.gricom.basic.functions.Instr;
 import eu.gricom.basic.functions.Mid;
 import eu.gricom.basic.tokenizer.BasicTokenType;
 import eu.gricom.basic.tokenizer.ReservedWords;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

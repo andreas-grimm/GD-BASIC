@@ -1,10 +1,10 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.Value;
 
 public final class Eof {
 
@@ -29,10 +29,10 @@ public final class Eof {
 
             return oFileManager.getEOF(((IntegerValue) oValue).toInt());
         }
-        if (oValue instanceof eu.gricom.basic.variableTypes.RealValue) {
+        if (oValue instanceof eu.gricom.basic.variabletypes.RealValue) {
              FileManager oFileManager = new FileManager();
 
-             return oFileManager.getEOF((int)((eu.gricom.basic.variableTypes.RealValue) oValue).toReal());
+             return oFileManager.getEOF((int) ((eu.gricom.basic.variabletypes.RealValue) oValue).toReal());
         }
 
         throw new RuntimeException("Input value not of type Numeric: " + oValue);

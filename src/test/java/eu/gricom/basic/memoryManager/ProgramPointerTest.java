@@ -1,4 +1,4 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

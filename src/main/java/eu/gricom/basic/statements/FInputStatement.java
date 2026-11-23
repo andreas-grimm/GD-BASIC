@@ -2,8 +2,8 @@ package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.Value;
 
 public class FInputStatement implements Statement {
     private final String _strName;
@@ -73,14 +73,14 @@ public class FInputStatement implements Statement {
                     String strReadInput = oStringValue.toString();
                     int iNewPosition = iOldPosition + strReadInput.length();
                     oFileManager.putReadPos(_iFileId, iNewPosition);
-                } catch (RuntimeException e) {
+                } catch (RuntimeException oException) {
                     Logger oLogger = new Logger("eu.gricom.basic.statements.FInputStatement");
-                    oLogger.warning("Failed to update read position: " + e.getMessage());
+                    oLogger.warning("Failed to update read position: " + oException.getMessage());
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception oException) {
             Logger oLogger = new Logger("eu.gricom.basic.statements.FInputStatement");
-            oLogger.error(e.getMessage());
+            oLogger.error(oException.getMessage());
             System.exit(-1);
         }
         if (oStringValue != null) {
@@ -101,7 +101,7 @@ public class FInputStatement implements Statement {
     @Override
     public final String content() {
 
-        return "FINPUT (" + _iFileId + " " +_strName + ")";
+        return "FINPUT (" + _iFileId + " " + _strName + ")";
     }
 
     /**
@@ -115,11 +115,21 @@ public class FInputStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"FINPUT\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"FILE_ID\": \""+ _iFileId +"\",";
-        strReturn += "\"VARIABLE\": \""+ _strName +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"FILE_ID\": \"" + _iFileId + "\",";
+        strReturn += "\"VARIABLE\": \"" + _strName + "\"";
         strReturn += "}}";
         return strReturn;
     }
 
+
+    /** @return the FileId of this statement (used by the compiler) */
+    public int getFileId() {
+        return _iFileId;
+    }
+
+    /** @return the Name of this statement (used by the compiler) */
+    public String getName() {
+        return _strName;
+    }
 }

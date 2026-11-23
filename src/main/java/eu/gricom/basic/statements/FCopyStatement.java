@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.memoryManager.FileManager;
+import eu.gricom.basic.memorymanager.FileManager;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -119,25 +119,25 @@ public class FCopyStatement implements Statement {
                 if (oSourceReader != null) {
                     try {
                         oSourceReader.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to close source file: " + e.getMessage());
+                    } catch (IOException oException) {
+                        throw new RuntimeException("Failed to close source file: " + oException.getMessage());
                     }
                 }
 
                 if (oDestinationWriter != null) {
                     try {
                         oDestinationWriter.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to close destination file: " + e.getMessage());
+                    } catch (IOException oException) {
+                        throw new RuntimeException("Failed to close destination file: " + oException.getMessage());
                     }
                 }
             }
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (IOException e) {
-            throw new RuntimeException("File copy operation failed: " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error during file copy: " + e.getMessage());
+        } catch (RuntimeException oException) {
+            throw oException;
+        } catch (IOException oException) {
+            throw new RuntimeException("File copy operation failed: " + oException.getMessage());
+        } catch (Exception oException) {
+            throw new RuntimeException("Unexpected error during file copy: " + oException.getMessage());
         }
     }
 
@@ -170,5 +170,15 @@ public class FCopyStatement implements Statement {
         strReturn += "\"DESTINATION_FILE_ID\": \"" + _iDestinationFileId + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the SourceFileId of this statement (used by the compiler) */
+    public int getSourceFileId() {
+        return _iSourceFileId;
+    }
+
+    /** @return the DestinationFileId of this statement (used by the compiler) */
+    public int getDestinationFileId() {
+        return _iDestinationFileId;
     }
 }

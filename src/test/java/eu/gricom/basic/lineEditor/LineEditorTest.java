@@ -1,7 +1,7 @@
-package eu.gricom.basic.lineEditor;
+package eu.gricom.basic.lineeditor;
 
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.memoryManager.Program;
+import eu.gricom.basic.memorymanager.Program;
 import eu.gricom.basic.helper.Printer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * LineEditorTest.java
  * <p>
  * Description: Unit tests for the LineEditor class, focusing on the run() method
- * behavior with empty and non-empty programs.
+ * behaviour with empty and non-empty programs.
  * <p>
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */

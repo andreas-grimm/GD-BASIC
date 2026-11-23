@@ -156,11 +156,16 @@ run_compiler_test() {
     local interp_file="$work_dir/interpreter.txt"
     local compiled_file="$work_dir/compiled.txt"
     local filter='s/\x1b\[[0-9;]*m//g'
+    # Standard input: a file named like the program with the extension .in (for INPUT tests), otherwise nothing
+    local stdin_file="/dev/null"
+    if [ -f "${program_file%.bas}.in" ]; then
+        stdin_file="${program_file%.bas}.in"
+    fi
 
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
     print_test_start "$test_name (compiled to Java, compared with the interpreter)"
 
-    java -jar "$JAR_FILE" -r -q "$program_file" < /dev/null 2>&1 \
+    java -jar "$JAR_FILE" -r -q "$program_file" < "$stdin_file" 2>&1 \
         | sed -E "$filter" | grep -v -E '^[0-9]{4}-[0-9]{2}-[0-9]{2} |^[[:space:]]+at |^$|^(RND\(\)|MEM|TIME\$) ' > "$interp_file"
 
     (cd "$work_dir" && printf 'LOAD %s\nCOMPILE\nEXIT\n' "$program_file" \
@@ -175,7 +180,7 @@ run_compiler_test() {
         return 1
     fi
 
-    (cd "$work_dir" && java -jar "$test_name.jar" < /dev/null 2>&1) \
+    (cd "$work_dir" && java -jar "$test_name.jar" < "$stdin_file" 2>&1) \
         | sed -E "$filter" | grep -v -E '^[0-9]{4}-[0-9]{2}-[0-9]{2} |^[[:space:]]+at |^$|^(RND\(\)|MEM|TIME\$) ' > "$compiled_file"
 
     if diff -q "$interp_file" "$compiled_file" > /dev/null; then
@@ -191,6 +196,82 @@ run_compiler_test() {
     diff "$interp_file" "$compiled_file" || true
     echo ""
     rm -rf "$work_dir"
+    return 1
+}
+
+# Function to check that a program stops with an error. Both the interpreter and the compiled program must exit with
+# a non-zero code and print the expected text. Arguments: program file, expected text.
+run_compiler_error_test() {
+    local program_file="$1"
+    local expected_text="$2"
+    local test_name=$(basename "$program_file" .bas)
+    local work_dir=$(mktemp -d)
+    local filter='s/\x1b\[[0-9;]*m//g'
+    local failed=0
+
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    print_test_start "$test_name (must stop with an error, interpreter and compiled)"
+
+    java -jar "$JAR_FILE" -r -q "$program_file" < /dev/null > "$work_dir/interpreter.txt" 2>&1
+    local interp_code=$?
+    (cd "$work_dir" && printf 'LOAD %s\nCOMPILE\nEXIT\n' "$program_file" \
+        | java -jar "$JAR_FILE" -o "$test_name" -j "$test_name.java" > "$work_dir/compile.log" 2>&1)
+    local compiled_code=-1
+    if [ -f "$work_dir/$test_name.jar" ]; then
+        (cd "$work_dir" && java -jar "$test_name.jar" < /dev/null > "$work_dir/compiled.txt" 2>&1)
+        compiled_code=$?
+    fi
+
+    if [ $interp_code -eq 0 ] || ! sed -E "$filter" "$work_dir/interpreter.txt" | grep -q "$expected_text"; then
+        echo "  interpreter did not stop with: $expected_text"; failed=1
+    fi
+    if [ $compiled_code -eq 0 ] || ! sed -E "$filter" "$work_dir/compiled.txt" 2>/dev/null | grep -q "$expected_text"; then
+        echo "  compiled program did not stop with: $expected_text"; failed=1
+    fi
+
+    rm -rf "$work_dir"
+    if [ $failed -eq 0 ]; then
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        print_test_pass "$test_name"
+        return 0
+    fi
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+    print_test_fail "$test_name" "error"
+    return 1
+}
+
+# Function to check the start directory: GETCWD() must return the directory in which the program was started, as an
+# absolute path, and CHDIR must change it (a relative CHDIR is taken from the current directory).
+run_start_directory_test() {
+    local work_dir=$(mktemp -d)
+    local expected=$(cd "$work_dir" && pwd -P)
+    local filter='s/\x1b\[[0-9;]*m//g'
+    local failed=0
+
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    print_test_start "start_directory (GETCWD is the start directory, absolute)"
+
+    mkdir "$work_dir/sub"
+    printf '10 PRINT GETCWD()\n20 CHDIR "sub"\n30 PRINT GETCWD()\n40 CHDIR ".."\n50 PRINT GETCWD()\n60 END\n' \
+        > "$work_dir/start.bas"
+    (cd "$work_dir" && java -jar "$JAR_FILE" -r -q start.bas < /dev/null > "$work_dir/out.txt" 2>&1)
+    local output=$(sed -E "$filter" "$work_dir/out.txt")
+
+    if ! echo "$output" | grep -qx -F "$expected"; then
+        echo "  start directory is not printed as: $expected"; failed=1
+    fi
+    if ! echo "$output" | grep -qx -F "$expected/sub"; then
+        echo "  CHDIR \"sub\" did not give: $expected/sub"; failed=1
+    fi
+
+    rm -rf "$work_dir"
+    if [ $failed -eq 0 ]; then
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        print_test_pass "start_directory"
+        return 0
+    fi
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+    print_test_fail "start_directory" "error"
     return 1
 }
 
@@ -336,6 +417,11 @@ main() {
     COMPILER_TESTS=(
         "compiler/compiler_values.bas"
         "compiler/compiler_flow.bas"
+        "compiler/compiler_unary_minus.bas"
+        "compiler/compiler_input.bas"
+        "compiler/compiler_system.bas"
+        "compiler/compiler_file_io.bas"
+        "compiler/compiler_directories.bas"
         "test_arithmetic_operators.bas"
         "test_comparison_operators.bas"
         "test_logical_operators.bas"
@@ -381,6 +467,24 @@ main() {
             exit 1
         fi
     done
+
+    # Error tests: the program must stop with the stated message (interpreter and compiled program)
+    run_compiler_error_test "$TEST_DIR/compiler/compiler_error_unary_string.bas" "Cannot apply unary minus to a string"
+    if [ $? -ne 0 ]; then
+        print_header "TEST SUITE FAILED"
+        exit 1
+    fi
+    run_compiler_error_test "$TEST_DIR/compiler/compiler_error_mkdir_exists.bas" "already exists"
+    if [ $? -ne 0 ]; then
+        print_header "TEST SUITE FAILED"
+        exit 1
+    fi
+
+    run_start_directory_test
+    if [ $? -ne 0 ]; then
+        print_header "TEST SUITE FAILED"
+        exit 1
+    fi
 
     # Print summary
     print_header "TEST SUITE COMPLETED SUCCESSFULLY"

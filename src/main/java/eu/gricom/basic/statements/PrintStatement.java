@@ -40,10 +40,10 @@ public final class PrintStatement implements Statement {
      * @param aoExpression - list of inputs to the print statement
      * @param bCRLF - if true, the line to be printed ends with a CR
      */
-    public PrintStatement(final int iTokenNumber, final List<Expression> aoExpression, final boolean bCRLF) {
+    public PrintStatement(final int iTokenNumber, final List<Expression> voExpression, final boolean bCRLF) {
         _iTokenNumber = iTokenNumber;
         _oExpression = null;
-        _aoExpression = aoExpression;
+        _aoExpression = voExpression;
         _bCRLF = bCRLF;
     }
 
@@ -88,13 +88,13 @@ public final class PrintStatement implements Statement {
     @Override
     public String content() {
         if (_aoExpression != null) {
-            StringBuilder strContent = new StringBuilder();
+            StringBuilder oContent = new StringBuilder();
 
             for (Expression oExpression : _aoExpression) {
-                strContent.append("<").append(oExpression.content()).append(">");
+                oContent.append("<").append(oExpression.content()).append(">");
             }
 
-            return "PRINT (" + strContent + ")";
+            return "PRINT (" + oContent + ")";
         }
 
         if (_oExpression != null) {
@@ -115,18 +115,18 @@ public final class PrintStatement implements Statement {
     @Override
     public String structure() throws Exception {
         assert _aoExpression != null;
-        StringBuilder strReturn = new StringBuilder("{\"PRINT\": {");
-        strReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
+        StringBuilder oReturn = new StringBuilder("{\"PRINT\": {");
+        oReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
         for (Expression oExpression : _aoExpression) {
-            strReturn.append("\"EXPRESSION\": ").append(oExpression.structure()).append(",");
+            oReturn.append("\"EXPRESSION\": ").append(oExpression.structure()).append(",");
         }
         if (_bCRLF) {
-            strReturn.append("\"CRLF\": \"TRUE\"");
+            oReturn.append("\"CRLF\": \"TRUE\"");
         } else {
-            strReturn.append("\"CRLF\": \"FALSE\"");
+            oReturn.append("\"CRLF\": \"FALSE\"");
         }
-        strReturn.append("}}");
-        return strReturn.toString();
+        oReturn.append("}}");
+        return oReturn.toString();
     }
 
     public Expression getExpression() {

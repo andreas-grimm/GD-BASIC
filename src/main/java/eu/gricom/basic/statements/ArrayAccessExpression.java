@@ -1,8 +1,8 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.memoryManager.VariableManagement;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.VariableManagement;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.util.List;
 import java.util.StringJoiner;
@@ -31,9 +31,9 @@ public final class ArrayAccessExpression implements Expression {
      * @param aoIndexExpressions one expression per dimension, evaluated left to right
      */
     public ArrayAccessExpression(final String strArrayName,
-                                 final List<Expression> aoIndexExpressions) {
+                                 final List<Expression> voIndexExpressions) {
         _strArrayName = strArrayName;
-        _aoIndexExpressions = aoIndexExpressions;
+        _aoIndexExpressions = voIndexExpressions;
     }
 
     /**
@@ -61,9 +61,9 @@ public final class ArrayAccessExpression implements Expression {
     @Override
     public String content() {
         StringBuilder oBuilder = new StringBuilder(_strArrayName).append("(");
-        for (int i = 0; i < _aoIndexExpressions.size(); i++) {
-            oBuilder.append(_aoIndexExpressions.get(i).content());
-            if (i < _aoIndexExpressions.size() - 1) {
+        for (int iIndex = 0; iIndex < _aoIndexExpressions.size(); iIndex++) {
+            oBuilder.append(_aoIndexExpressions.get(iIndex).content());
+            if (iIndex < _aoIndexExpressions.size() - 1) {
                 oBuilder.append(",");
             }
         }
@@ -84,9 +84,9 @@ public final class ArrayAccessExpression implements Expression {
         StringBuilder oBuilder = new StringBuilder("{\"ARRAY_ACCESS\": {");
         oBuilder.append("\"NAME\": \"").append(_strArrayName).append("\",");
         oBuilder.append("\"INDICES\": [");
-        for (int i = 0; i < _aoIndexExpressions.size(); i++) {
-            oBuilder.append(_aoIndexExpressions.get(i).structure());
-            if (i < _aoIndexExpressions.size() - 1) {
+        for (int iIndex = 0; iIndex < _aoIndexExpressions.size(); iIndex++) {
+            oBuilder.append(_aoIndexExpressions.get(iIndex).structure());
+            if (iIndex < _aoIndexExpressions.size() - 1) {
                 oBuilder.append(",");
             }
         }

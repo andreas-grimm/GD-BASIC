@@ -1,6 +1,6 @@
 # GD-BASIC Compiler
 
-This document explains the BASIC-to-Java compiler that is part of GD-BASIC 0.3.0 (branch `feature/compiler`).
+This document explains the BASIC-to-Java compiler that is part of GD-BASIC 0.4.0 (branch `feature/compiler`).
 It is written for a developer who is new to the project.
 
 ## 1. What the compiler does
@@ -49,7 +49,7 @@ If `-j` is not given, the Java file is `BasicProgram.java`.
 
 ### 3.2 Editor commands
 
-Start the editor with `java -jar BASIC-0.3.0-jar-with-dependencies.jar -o hello -j hello.java`, then:
+Start the editor with `java -jar BASIC-0.4.0-jar-with-dependencies.jar -o hello -j hello.java`, then:
 
 | Command | What it does |
 |---|---|
@@ -69,7 +69,7 @@ Build target created: hello.jar (start it with: java -jar hello.jar)
 The commands can also be piped in, which is how the system tests use them:
 
 ```bash
-printf 'LOAD hello.bas\nCOMPILE\nEXIT\n' | java -jar BASIC-0.3.0-jar-with-dependencies.jar -o hello -j hello.java
+printf 'LOAD hello.bas\nCOMPILE\nEXIT\n' | java -jar BASIC-0.4.0-jar-with-dependencies.jar -o hello -j hello.java
 ```
 
 ### 3.3 What the messages mean
@@ -79,7 +79,7 @@ printf 'LOAD hello.bas\nCOMPILE\nEXIT\n' | java -jar BASIC-0.3.0-jar-with-depend
 | `COMPILE: no build target. Start the interpreter with -o <target-name>.` | `COMPILE` was used without `-o`. |
 | `No program loaded. Use LOAD command or enter program lines.` | There is no program in memory. |
 | `The Java file name is not a valid class name: my-prog.java` | The file name contains a character that is not allowed in a Java class name (only letters, digits and `_`, and it must not start with a digit). |
-| `Statement not supported by the compiler yet (BASIC line 10): Input` | The program uses a statement that the compiler does not support yet (section 5). |
+| `Statement not supported by the compiler yet (BASIC line 10): Read` | The program uses a statement that the compiler does not support yet (section 5.3). |
 | `No Java compiler found. The compiler needs a JDK (not only a JRE).` | The program is running on a Java runtime (JRE) without the compiler. Use a JDK. |
 
 ## 4. How it works, step by step
@@ -164,7 +164,8 @@ matching NEXT line.
 | `REM`, `'` comments | No code is generated. |
 | `:` separator | No code is generated. |
 | Assignment (`A = 1`, `LET`) | Scalar variables only. |
-| `PRINT` | All expressions, `;` and `,` separators, and the new line. |
+| `PRINT` | All expressions, `;` and `,` separators, and the new line. A comma adds no space: `PRINT 1,2` prints `1.02.0` (KI-17, confirmed 2026-11-22). |
+| `INPUT <variable>` | Reads a line from standard input. Uses the interpreter's own statement class. |
 | `END` | Stops the program. |
 | `GOTO <line>` | Line numbers only. |
 | `GOSUB <line>` / `RETURN` | |
@@ -174,38 +175,52 @@ matching NEXT line.
 | `WHILE ... END-WHILE` | |
 | `DO ... UNTIL` | |
 | `ON n GOTO` / `ON n GOSUB` | |
-| `@PRAGMA` | |
+| `@PRAGMA( "name" = "value" )` | Same syntax as the interpreter (see `doc/BASIC.md`). |
+| File statements | `FOPEN`, `FCLOSE`, `FPRINT`, `FINPUT`, `FGET`, `FPEEK`, `FPUT`, `FREWIND`, `FRENAME`, `FCOPY`, `FDELETE`. |
+| Directory statements | `CHDIR`, `MKDIR`, `RMDIR`. |
+
+The file and directory statements create the interpreter's own statement object with the same constant values, and call its `execute()` method. So their behaviour, including their error messages, is the same as in the interpreter.
 
 ### 5.2 Supported expressions
 
 - Numbers (real, integer `%`, long `&`, decimal `#`), strings `$`, booleans `!`.
 - Operators: `+`, `-`, `*`, `/`, `^`, `%` (modulo), `=`, `==`, `!=`, `<`, `<=`, `>`, `>=`, `AND`, `OR`, `NOT`,
-  unary `-` and `+`, `<<` and `>>` (integer shifts).
+  unary `-` and `+`, `<<` and `>>` (integer shifts). Operators written without spaces (`A-B`, `2*A`, `X=-A`) are read
+  the same way as in the interpreter (see `doc/BASIC.md`, "Unary Minus and Operators Without Spaces").
+- Unary minus calls the interpreter's `UnaryOperatorExpression.evaluateUnaryMinus`. A string gives the same error.
 - Functions: `ABS`, `ASC`, `ATN`, `CDBL`, `CHR$`, `CINT`, `COS`, `EXP`, `INSTR`, `LEFT$`, `LEN`, `LOG`, `LOG10`,
   `LOWER$`, `MEM`, `MID$`, `RIGHT$`, `RND`, `SIN`, `SQR`, `STR$`, `TAN`, `TIME`, `UPPER$`, `VAL`.
+- File functions: `EOF`, `FCOMPARE`, `FEXISTS`, `FGETNAME`, `FGETSIZE`, `FISOPEN`, `FLINECOUNT`, `FMODTIME`.
+- Directory functions and system: `DIREXISTS`, `GETCWD`, `SYSTEM`.
 
 ### 5.3 Not supported yet
 
-The compiler refuses these with a message. The programs in the runner that use them are not compiled.
+The compiler refuses these with a message that names the line and the statement.
 
 | Feature | Programs that use it (examples) | Why it is not done yet |
 |---|---|---|
 | Arrays (`DIM`, `A(1) = ...`) | `test_arrays_dim`, `test_mixed_tests_1` | The interpreter builds array keys at run time with its own rules. |
 | `DATA` / `READ` | `test_data_read`, `test_mixed_tests_3` | Data is collected before the program starts. |
-| File I/O (`FOPEN`, `FPRINT`, `FINPUT`, `FGET`, `FPUT`, `FPEEK`, `FREWIND`, `FRENAME`, `FCLOSE`, `EOF`) | `test_file_io`, `test_character_level_io` and the `test_file_*` programs | Many statements and functions. |
-| `SYSTEM`, `FEXISTS` | `test_mixed_tests_2`, `test_file_exists` | Not translated yet. |
-| `INPUT` | (none of the runner programs) | Not translated yet. |
 | Labels in `GOTO` / `IF` | none | Only line numbers are supported. |
 
 ## 6. Known differences and findings
 
-- **Random and machine values.** `RND`, `MEM` and `TIME$` give different values in every run, so their output
+- **`TIME` is the name, not `TIME$`.** `PRINT TIME` gives a number of milliseconds. `TIME$` is not a valid name:
+  `PRINT TIME$` stops with `Unknown variable <TIME$>` (checked 2026-11-23 in the interpreter).
+- **LONG values.** The interpreter clamps `&` values above 2147483647 (KI-16). The compiled program was not checked for
+  this limit on 2026-11-23.
+
+- **Random and machine values.** `RND`, `MEM` and `TIME` give different values in every run, so their output
   can never match exactly. The test script leaves these lines out of the comparison.
 - **FOR with a start value above the end value** runs its body once. This is how the interpreter works, and the
   compiler copies it. It is recorded in the unit test `testForLoopWithStartAboveEndRunsOnce`.
-- **Unary minus on a variable** (`PRINT -A`) fails in the **interpreter**. The parser reads `-A` as one variable
-  name, and reports `Unknown variable <-A>`. The compiled program fails with the same message. This is an existing
-  interpreter bug. It is not fixed by this work.
+- **Unary minus** now works in the interpreter and in the compiled program: `PRINT -A` prints the value of A times -1,
+  with the type of A kept. A string is refused. (An earlier version of the interpreter read `-A` as one name.)
+- **File and directory errors stop the program.** Some file and directory statements (for example `MKDIR` of an
+  existing directory, or `FGET` at the wrong time) log the error and end the program with exit code -1. This is the
+  interpreter's design, and the compiled program does the same. Because of this, such errors are tested with a
+  process-level check in `run_all_tests.sh`, not with unit tests.
+- **`GETCWD()`** returns the working directory as an absolute path. It starts as the directory in which the program was started, and `CHDIR` changes it (the same rules as the interpreter).
 - **Huge programs** are supported. `test_large_program` (more than 10,000 lines) compiles and matches the
   interpreter, because of the split into parts (section 4.2).
 - **Speed is not measured yet.** Variables still use the interpreter's `VariableManagement` class, so the
@@ -215,12 +230,16 @@ The compiler refuses these with a message. The programs in the runner that use t
 
 ### 7.1 Unit tests
 
-`src/test/java/eu/gricom/basic/compiler/JavaCodeGeneratorTest.java` (23 tests):
-
-- **Positive tests** compile a small program, run it, and compare the printed text with the expected output.
-  They cover PRINT, FOR, GOSUB, WHILE, DO-UNTIL, single-line IF, block IF-ELSE, ON GOTO, functions, BCD values, and shifts.
-- **Negative tests** check that unsupported statements are refused with a clear message: `INPUT`, `GOTO` to a missing
-  line, `DIM` (arrays), `FOPEN` (file I/O), an empty program, and invalid Java file names.
+- `src/test/java/eu/gricom/basic/compiler/JavaCodeGeneratorTest.java`: positive tests compile a small program, run it,
+  and compare the printed text with the expected output. Negative tests check that unsupported statements (for example
+  `READ`, arrays, `GOTO` to a missing line) are refused with a clear message. Further tests cover unary minus, INPUT
+  (with standard input), SYSTEM, FEXISTS, file writing and reading, directories, and file IDs written as literals.
+  Each test resets the file manager's current directory first, because that setting is kept in a static field.
+- `src/test/java/eu/gricom/basic/tokenizer/OperatorSpacerTest.java`: spacing around operators, the tokens the lexer
+  produces, and text that must not change (strings, comments, `END-IF`).
+- `src/test/java/eu/gricom/basic/statements/UnaryMinusTest.java`: the type rules of unary minus, and the string refusal.
+- `src/test/java/eu/gricom/basic/parser/FileDirectoryAndPragmaParserTest.java`: `MKDIR`, `RMDIR`, `@PRAGMA` (accepted
+  and refused forms), and the file ID check.
 
 ### 7.2 System tests (compared with the interpreter)
 
@@ -231,7 +250,8 @@ The compiler refuses these with a message. The programs in the runner that use t
 3. runs the jar and saves its output;
 4. fails the test if the two outputs are different.
 
-The programs are in `test/system/compiler/` (`compiler_values.bas`, `compiler_flow.bas`) and in `test/system/`.
+If a file with the same name and the extension `.in` exists (for example `compiler_input.in`), its content is sent to
+standard input of both runs. The programs are in `test/system/compiler/` and in `test/system/`.
 
 ## 8. Adding support for a new statement
 

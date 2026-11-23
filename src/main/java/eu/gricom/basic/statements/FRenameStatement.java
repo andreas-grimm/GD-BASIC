@@ -1,9 +1,8 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.StringValue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -107,8 +106,8 @@ public class FRenameStatement implements Statement {
             if (bWasOpen) {
                 try {
                     oFileManager.closeFile(_iFileId, false);
-                } catch (Exception e) {
-                    throw new RuntimeException("Failed to close file before renaming: " + e.getMessage());
+                } catch (Exception oException) {
+                    throw new RuntimeException("Failed to close file before renaming: " + oException.getMessage());
                 }
             }
 
@@ -124,20 +123,20 @@ public class FRenameStatement implements Statement {
 
                 // Perform the rename
                 Files.move(oCurrentPath, oNewPath);
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to rename file from " + strCurrentFileName + " to " + strNewFileName + ": " + e.getMessage());
+            } catch (RuntimeException oException) {
+                throw oException;
+            } catch (Exception oException) {
+                throw new RuntimeException("Failed to rename file from " + strCurrentFileName + " to " + strNewFileName + ": " + oException.getMessage());
             }
 
             // Step 7: The file stays closed. The file ID remembers the new name, so that the file can be opened again
             // under any file ID. (Phase 7: the old re-registration opened the file for reading under this ID, which
             // blocked every later FOPEN of the same file name.)
             oFileManager.rememberFileName(_iFileId, strNewFileName);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error during file rename: " + e.getMessage());
+        } catch (RuntimeException oException) {
+            throw oException;
+        } catch (Exception oException) {
+            throw new RuntimeException("Unexpected error during file rename: " + oException.getMessage());
         }
     }
 
@@ -171,5 +170,15 @@ public class FRenameStatement implements Statement {
         strReturn += "\"NEW_FILE_NAME\": \"" + strNewFileName.replace("\"", "\\\"") + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the FileId of this statement (used by the compiler) */
+    public int getFileId() {
+        return _iFileId;
+    }
+
+    /** @return the NewFileName of this statement (used by the compiler) */
+    public StringValue getNewFileName() {
+        return _oNewFileName;
     }
 }

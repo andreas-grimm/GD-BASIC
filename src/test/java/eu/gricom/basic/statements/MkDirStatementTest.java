@@ -1,6 +1,6 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.variabletypes.StringValue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - EDGE CASES: Null paths, empty paths, special characters, existing directories
  * - INTERFACE TESTS: getTokenNumber(), content(), and structure() methods
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Creates directory from StringValue path
  * - Throws RuntimeException if directory path is null
  * - Throws RuntimeException if directory path is empty
@@ -42,7 +42,7 @@ public class MkDirStatementTest {
     private Path _oTestDirectory;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates a temporary directory to use as a test base.
      */
     @BeforeEach

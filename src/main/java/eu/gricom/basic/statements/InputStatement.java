@@ -3,9 +3,9 @@ package eu.gricom.basic.statements;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.error.SyntaxErrorException;
 
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import eu.gricom.basic.helper.ConsoleInput;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,16 +80,16 @@ public class InputStatement implements Statement {
             // Store it as a number if possible, otherwise use a string.
             try {
                 oValue = new RealValue(Double.parseDouble(strInput));
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException oException) {
                 oValue = new StringValue(strInput);
             }
 
             oAssignStatement = new AssignStatement(_iTokenNumber, _strName, oValue);
             oAssignStatement.execute();
-        } catch (IOException | SyntaxErrorException eException) {
-            throw new RuntimeException("Incorrect input detected: " + eException.getMessage());
-        } catch (Exception eUnKnownException) {
-            throw new RuntimeException("Unknown Exception: " + eUnKnownException.getMessage());
+        } catch (IOException | SyntaxErrorException oException) {
+            throw new RuntimeException("Incorrect input detected: " + oException.getMessage());
+        } catch (Exception oException) {
+            throw new RuntimeException("Unknown Exception: " + oException.getMessage());
         }
     }
 
@@ -117,9 +117,14 @@ public class InputStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"INPUT\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"VARIABLE\": \""+ _strName +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"VARIABLE\": \"" + _strName + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the Name of this statement (used by the compiler) */
+    public String getName() {
+        return _strName;
     }
 }

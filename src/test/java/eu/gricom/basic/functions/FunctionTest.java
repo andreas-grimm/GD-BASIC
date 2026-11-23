@@ -3,10 +3,10 @@ package eu.gricom.basic.functions;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.tokenizer.BasicTokenType;
 import eu.gricom.basic.tokenizer.Token;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.LongValue;
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.LongValue;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.StringValue;
 
 import org.junit.jupiter.api.Test;
 

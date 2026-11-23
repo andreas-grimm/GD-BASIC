@@ -2,8 +2,8 @@ package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.StringValue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,10 +48,10 @@ public class RmDirStatement implements Statement {
      * @param oDirectory the directory path as a StringValue
      * @param bForce whether to force recursive deletion (BooleanValue)
      */
-    public RmDirStatement(final int iTokenNumber, final StringValue oDirectory, final BooleanValue bForce) {
+    public RmDirStatement(final int iTokenNumber, final StringValue oDirectory, final BooleanValue oForce) {
         _iTokenNumber = iTokenNumber;
         _oDirectory = oDirectory;
-        _bForce = bForce;
+        _bForce = oForce;
     }
 
     /**
@@ -108,23 +108,23 @@ public class RmDirStatement implements Statement {
                     // Simple directory deletion (fails if not empty)
                     try {
                         Files.delete(oPath);
-                    } catch (java.nio.file.DirectoryNotEmptyException e) {
+                    } catch (java.nio.file.DirectoryNotEmptyException oException) {
                         throw new RuntimeException("Directory is not empty: " + strDirectory);
-                    } catch (java.nio.file.AccessDeniedException e) {
+                    } catch (java.nio.file.AccessDeniedException oException) {
                         throw new RuntimeException("Access denied removing directory: " + strDirectory);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Failed to remove directory: " + strDirectory + ": " + e.getMessage());
+                    } catch (Exception oException) {
+                        throw new RuntimeException("Failed to remove directory: " + strDirectory + ": " + oException.getMessage());
                     }
                 }
-            } catch (RuntimeException re) {
-                throw re;
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to remove directory: " + strDirectory + ": " + e.getMessage());
+            } catch (RuntimeException oException) {
+                throw oException;
+            } catch (Exception oException) {
+                throw new RuntimeException("Failed to remove directory: " + strDirectory + ": " + oException.getMessage());
             }
 
-        } catch (Exception e) {
+        } catch (Exception oException) {
             Logger oLogger = new Logger("eu.gricom.basic.statements.RmDirStatement");
-            oLogger.error(e.getMessage());
+            oLogger.error(oException.getMessage());
             System.exit(-1);
         }
     }
@@ -143,14 +143,14 @@ public class RmDirStatement implements Statement {
                     .forEach(p -> {
                         try {
                             Files.delete(p);
-                        } catch (java.io.IOException e) {
-                            throw new java.io.UncheckedIOException("Failed to delete: " + p.toString() + ": " + e.getMessage(), e);
+                        } catch (java.io.IOException oException) {
+                            throw new java.io.UncheckedIOException("Failed to delete: " + p.toString() + ": " + oException.getMessage(), oException);
                         }
                     });
-        } catch (java.io.UncheckedIOException uioe) {
-            throw new RuntimeException(uioe.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to recursively delete directory: " + oPath.toString() + ": " + e.getMessage());
+        } catch (java.io.UncheckedIOException oException) {
+            throw new RuntimeException(oException.getMessage());
+        } catch (Exception oException) {
+            throw new RuntimeException("Failed to recursively delete directory: " + oPath.toString() + ": " + oException.getMessage());
         }
     }
 
@@ -185,5 +185,15 @@ public class RmDirStatement implements Statement {
         strReturn += "\"FORCE\": \"" + strForce + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the Directory of this statement (used by the compiler) */
+    public StringValue getDirectory() {
+        return _oDirectory;
+    }
+
+    /** @return the Force of this statement (used by the compiler) */
+    public BooleanValue getForce() {
+        return _bForce;
     }
 }

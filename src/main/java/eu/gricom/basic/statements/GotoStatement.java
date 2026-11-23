@@ -3,8 +3,8 @@ package eu.gricom.basic.statements;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
 
 /**
  * GotoStatement.java
@@ -73,7 +73,7 @@ public final class GotoStatement implements Statement {
         int iStatementNo;
         try {
             iStatementNo = _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget));
-        } catch (RuntimeException e) {
+        } catch (RuntimeException oException) {
             throw new SyntaxErrorException("GOTO [unknown]: Target: " + _strTarget);
         }
 
@@ -105,8 +105,8 @@ public final class GotoStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"GOTO\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"TARGET\": \""+ _strTarget +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"TARGET\": \"" + _strTarget + "\"";
         strReturn += "}}";
         return strReturn;
     }

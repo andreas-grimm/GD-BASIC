@@ -1,4 +1,4 @@
-package eu.gricom.basic.variableTypes;
+package eu.gricom.basic.variabletypes;
 
 import eu.gricom.basic.error.DivideByZeroException;
 import eu.gricom.basic.error.RuntimeException;
@@ -177,7 +177,7 @@ public class StringValue implements Value {
      */
     @Override
     public String structure() throws Exception {
-        return "\""+ this.toString() + "\"";
+        return "\"" + this.toString() + "\"";
     }
 
     /**

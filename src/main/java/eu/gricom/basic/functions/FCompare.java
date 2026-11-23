@@ -1,9 +1,9 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -162,25 +162,25 @@ public class FCompare {
                 if (oReader1 != null) {
                     try {
                         oReader1.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to close first file: " + e.getMessage());
+                    } catch (IOException oException) {
+                        throw new RuntimeException("Failed to close first file: " + oException.getMessage());
                     }
                 }
 
                 if (oReader2 != null) {
                     try {
                         oReader2.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to close second file: " + e.getMessage());
+                    } catch (IOException oException) {
+                        throw new RuntimeException("Failed to close second file: " + oException.getMessage());
                     }
                 }
             }
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (IOException e) {
-            throw new RuntimeException("File comparison operation failed: " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error during file comparison: " + e.getMessage());
+        } catch (RuntimeException oException) {
+            throw oException;
+        } catch (IOException oException) {
+            throw new RuntimeException("File comparison operation failed: " + oException.getMessage());
+        } catch (Exception oException) {
+            throw new RuntimeException("Unexpected error during file comparison: " + oException.getMessage());
         }
     }
 }

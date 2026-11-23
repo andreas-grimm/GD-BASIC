@@ -1,4 +1,4 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 import eu.gricom.basic.statements.Statement;
 import eu.gricom.basic.tokenizer.Token;

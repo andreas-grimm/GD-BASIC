@@ -1,13 +1,13 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
-import eu.gricom.basic.memoryManager.Stack;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
+import eu.gricom.basic.memorymanager.Stack;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 
 /**
  * WhileStatement.java
@@ -72,7 +72,7 @@ public final class WhileStatement implements Statement {
                 }
 
                 throw new SyntaxErrorException("WHILE [unknown]: Target: [" + _iEndWhileLine + "]");
-            } catch (NumberFormatException eNumberException) {
+            } catch (NumberFormatException oException) {
                 throw new SyntaxErrorException("WHILE [incorrect format]: Target: " + _iEndWhileLine);
             }
         } else {
@@ -113,9 +113,9 @@ public final class WhileStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"WHILE\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"CONDITION\": \""+ _oCondition.structure() +"\",";
-        strReturn += "\"END_WHILE\": \""+ _iEndWhileLine +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"CONDITION\": \"" + _oCondition.structure() + "\",";
+        strReturn += "\"END_WHILE\": \"" + _iEndWhileLine + "\"";
         strReturn += "}}";
         return strReturn;
     }

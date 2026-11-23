@@ -1,9 +1,8 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.memoryManager.FileManager;
+import eu.gricom.basic.memorymanager.FileManager;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -48,10 +47,10 @@ public final class FPrintStatement implements Statement {
      * @param aoExpression - list of inputs to the print statement
      * @param bCRLF - if true, the line to be printed ends with a CR
      */
-    public FPrintStatement(final int iTokenNumber, final int iFileId, final List<Expression> aoExpression, final boolean bCRLF) {
+    public FPrintStatement(final int iTokenNumber, final int iFileId, final List<Expression> voExpression, final boolean bCRLF) {
         _iTokenNumber = iTokenNumber;
         _oExpression = null;
-        _aoExpression = aoExpression;
+        _aoExpression = voExpression;
         _bCRLF = bCRLF;
         _iFileId = iFileId;
     }
@@ -83,17 +82,17 @@ public final class FPrintStatement implements Statement {
             for (Expression oExpression : _aoExpression) {
                 try {
                     oFileManager.write(_iFileId, oExpression.evaluate().toString());
-                } catch (IOException eIoException) {
+                } catch (IOException oException) {
                     Logger oLogger = new Logger("eu.gricom.basic.statements.FPrintStatement");
-                    oLogger.error(eIoException.getMessage() + "oExpression.evaluate()");
+                    oLogger.error(oException.getMessage() + "oExpression.evaluate()");
                 }
             }
             if (_bCRLF) {
                 try {
                     oFileManager.write(_iFileId, "\n");
-                } catch (IOException eIoException) {
+                } catch (IOException oException) {
                     Logger oLogger = new Logger("eu.gricom.basic.statements.FPrintStatement");
-                    oLogger.error(eIoException.getMessage() + " CRLF write failed");
+                    oLogger.error(oException.getMessage() + " CRLF write failed");
                 }
             }
         }
@@ -107,13 +106,13 @@ public final class FPrintStatement implements Statement {
     @Override
     public String content() {
         if (_aoExpression != null) {
-            StringBuilder strContent = new StringBuilder();
+            StringBuilder oContent = new StringBuilder();
 
             for (Expression oExpression : _aoExpression) {
-                strContent.append("<").append(_iFileId).append(oExpression.content()).append(">");
+                oContent.append("<").append(_iFileId).append(oExpression.content()).append(">");
             }
 
-            return "FPRINT (" + strContent + ")";
+            return "FPRINT (" + oContent + ")";
         }
 
         if (_oExpression != null) {
@@ -134,23 +133,38 @@ public final class FPrintStatement implements Statement {
     @Override
     public String structure() throws Exception {
         assert _aoExpression != null;
-        StringBuilder strReturn = new StringBuilder("{\"FPRINT\": {");
-        strReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
-        strReturn.append("\"FILE_ID\": \"").append(_iFileId).append("\",");
+        StringBuilder oReturn = new StringBuilder("{\"FPRINT\": {");
+        oReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
+        oReturn.append("\"FILE_ID\": \"").append(_iFileId).append("\",");
         for (Expression oExpression : _aoExpression) {
-            strReturn.append("\"EXPRESSION\": ").append(oExpression.structure()).append(",");
+            oReturn.append("\"EXPRESSION\": ").append(oExpression.structure()).append(",");
         }
         if (_bCRLF) {
-            strReturn.append("\"CRLF\": \"TRUE\"");
+            oReturn.append("\"CRLF\": \"TRUE\"");
         } else {
-            strReturn.append("\"CRLF\": \"FALSE\"");
+            oReturn.append("\"CRLF\": \"FALSE\"");
         }
-        strReturn.append("}}");
-        return strReturn.toString();
+        oReturn.append("}}");
+        return oReturn.toString();
     }
 
     public Expression getExpression() {
         assert _aoExpression != null;
         return _aoExpression.getFirst();
+    }
+
+    /** @return the FileId of this statement (used by the compiler) */
+    public int getFileId() {
+        return _iFileId;
+    }
+
+    /** @return the Expressions of this statement (used by the compiler) */
+    public List<Expression> getExpressions() {
+        return _aoExpression;
+    }
+
+    /** @return the isCRLF of this statement (used by the compiler) */
+    public boolean isCRLF() {
+        return _bCRLF;
     }
 }

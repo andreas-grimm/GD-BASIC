@@ -23,7 +23,7 @@ public class BasicLexer implements Lexer {
     @Override
     public final List<Token> tokenize(final String strSource) throws SyntaxErrorException {
 
-        List<Token> aoTokens = new ArrayList<>();
+        List<Token> voTokens = new ArrayList<>();
 
         // Convert the program into a list of lines
         String[] astrProgramLines = strSource.split("\\s*\n\\s*");
@@ -62,11 +62,13 @@ public class BasicLexer implements Lexer {
 
             // here we handle all empty lines, e.g. lines that only contain the line number
             if (strProgramLine.length() < 1) {
-                aoTokens.add(new Token("empty", BasicTokenType.LINE, iLineNumber));
+                voTokens.add(new Token("empty", BasicTokenType.LINE, iLineNumber));
             } else {
-                // normalize the line: put spaces in places where needed, or remove them
+                // normalise the line: put spaces in places where needed, or remove them
                 strProgramLine = Normalizer.normalize(strProgramLine);
                 strProgramLine = Normalizer.normalizeFunction(strProgramLine);
+                // put spaces around operators written without them (A-B becomes A - B, X=-A becomes X = - A)
+                strProgramLine = OperatorSpacer.space(strProgramLine);
 
                 // find reserved words: divide the string in an array of words
                 String[] astrWords = strProgramLine.split("\\s");
@@ -85,7 +87,7 @@ public class BasicLexer implements Lexer {
                     // quotation marks ("), the string is closed.
                     if (bIsStringRunning) {
                         if (oToken == null) {
-                            throw new SyntaxErrorException("Syntax Error: Unrecognized character sequence: " + iLineNumber
+                            throw new SyntaxErrorException("Syntax Error: Unrecognised character sequence: " + iLineNumber
                                             + " " + strProgramLine);
                         }
 
@@ -93,7 +95,7 @@ public class BasicLexer implements Lexer {
                         if (strWord.endsWith("\"")) {
                             strWord = strWord.substring(0, strWord.length() - 1);
                             bIsStringRunning = false;
-                            aoTokens.add(oToken);
+                            voTokens.add(oToken);
                         }
 
                         // add the word to the string in the token
@@ -117,32 +119,32 @@ public class BasicLexer implements Lexer {
 
                         if (iIndex != -1) {
                             // we found a reserved word...
-                            BasicTokenType oTokenType = ReservedWords.getTokenType(iIndex);
+                            BasicTokenType eTokenType = ReservedWords.getTokenType(iIndex);
 
                             // this block handles all comments
-                            if (oTokenType == BasicTokenType.REM
-                                    || oTokenType == BasicTokenType.COMMENT
-                                    || oTokenType == BasicTokenType.DIM)  {
-                                aoTokens.add(new Token(strProgramLine, oTokenType, iLineNumber));
+                            if (eTokenType == BasicTokenType.REM
+                                    || eTokenType == BasicTokenType.COMMENT
+                                    || eTokenType == BasicTokenType.DIM)  {
+                                voTokens.add(new Token(strProgramLine, eTokenType, iLineNumber));
 
                                 break;
                             }
 
-                            oToken = new Token(strWord, oTokenType, iLineNumber);
+                            oToken = new Token(strWord, eTokenType, iLineNumber);
 
                         // a "!" on its own is a comment marker (decision A6 and A6b):
                         // at the start of a line it is a comment; after a colon it gives a warning and is a comment.
                         } else if (strWord.equals("!")) {
-                            Token oLastToken = aoTokens.isEmpty() ? null : aoTokens.get(aoTokens.size() - 1);
+                            Token oLastToken = voTokens.isEmpty() ? null : voTokens.get(voTokens.size() - 1);
                             boolean bFirstOnLine = oLastToken == null || oLastToken.getLine() != iLineNumber;
 
                             if (bFirstOnLine) {
-                                aoTokens.add(new Token(strProgramLine, BasicTokenType.REM, iLineNumber));
+                                voTokens.add(new Token(strProgramLine, BasicTokenType.REM, iLineNumber));
                                 break;
                             }
                             if (oLastToken.getType() == BasicTokenType.COLON) {
                                 _oLogger.warning("Comment after colon: use REM in place of !");
-                                aoTokens.add(new Token(strProgramLine, BasicTokenType.REM, iLineNumber));
+                                voTokens.add(new Token(strProgramLine, BasicTokenType.REM, iLineNumber));
                                 break;
                             }
                             throw new SyntaxErrorException("Syntax Error: '!' starts a comment only at the start of a"
@@ -171,7 +173,7 @@ public class BasicLexer implements Lexer {
                                 strWord = strWord.substring(0, strWord.length() - 1);
                                 bIsStringRunning = false;
                                 oToken = new Token(strWord, BasicTokenType.STRING, iLineNumber);
-                                aoTokens.add(oToken);
+                                voTokens.add(oToken);
                             } else {
                                 oToken = new Token(strWord, BasicTokenType.STRING, iLineNumber);
                                 bIsStringRunning = true;
@@ -183,24 +185,24 @@ public class BasicLexer implements Lexer {
 
                         } else {
                             // as it is neither a number, string, or boolean - it has to be a variable / constant...
-                            BasicTokenType oTokenType = BasicTokenType.WORD;
+                            BasicTokenType eTokenType = BasicTokenType.WORD;
 
-                            oToken = new Token(strWord, oTokenType, iLineNumber);
+                            oToken = new Token(strWord, eTokenType, iLineNumber);
                         }
 
                         if (oToken.getType() != BasicTokenType.STRING) { // Strings are added after they are completed.
-                            aoTokens.add(oToken);
+                            voTokens.add(oToken);
                         }
                     }
                 }
             }
         }
 
-        for (Token oToken: aoTokens) {
+        for (Token oToken: voTokens) {
             _oLogger.debug(" [" + oToken.getLine() + "]  [" + oToken.getType().toString() + "] " + oToken.getText());
         }
 
-        return aoTokens;
+        return voTokens;
     }
 
     /**

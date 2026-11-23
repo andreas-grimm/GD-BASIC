@@ -1,4 +1,4 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 import eu.gricom.basic.error.EmptyProgramException;
 import eu.gricom.basic.error.FileAlreadyExistsException;
@@ -6,7 +6,7 @@ import eu.gricom.basic.error.FileNotFoundException;
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.helper.FileHandler;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.macroManager.MacroProcessor;
+import eu.gricom.basic.macromanager.MacroProcessor;
 import eu.gricom.basic.tokenizer.BasicLexer;
 import eu.gricom.basic.tokenizer.Lexer;
 import eu.gricom.basic.tokenizer.Token;
@@ -43,7 +43,7 @@ public class Program {
      * current statement.
      */
     public Program() {
-        _oLogger.info("Initializing program object...");
+        _oLogger.info("Initialising program object...");
     }
 
 
@@ -114,26 +114,26 @@ public class Program {
         try (FileWriter oWriter = new FileWriter(oFile)) {
             oWriter.write(_strProgramSource);
             _oLogger.info("Program saved successfully to " + strFileName);
-        } catch (IOException e) {
-            _oLogger.error("Failed to save program: " + e.getMessage());
-            throw new FileAlreadyExistsException("Error saving file: " + e.getMessage());
+        } catch (IOException oException) {
+            _oLogger.error("Failed to save program: " + oException.getMessage());
+            throw new FileAlreadyExistsException("Error saving file: " + oException.getMessage());
         }
     }
 
     /**
      * Reprocess the program source code.
      *
-     * Internal helper method that processes macros and re-tokenizes the current program source.
+     * Internal helper method that processes macros and re-tokenises the current program source.
      * This method is called after any modification to _strProgramSource to ensure the tokens
      * remain in sync with the source code.
      *
-     * @throws SyntaxErrorException if macro processing or tokenization fails
+     * @throws SyntaxErrorException if macro processing or tokenisation fails
      */
     private void reprocessSourceCode() throws SyntaxErrorException {
         MacroProcessor oMacroProcessor = new MacroProcessor();
         setProgram(oMacroProcessor.process(getProgram()));
 
-        _oLogger.info("Starting tokenization...");
+        _oLogger.info("Starting tokenisation...");
 
         Lexer oTokenizer = new BasicLexer();
         setTokens(oTokenizer.tokenize(getProgram()));
@@ -204,10 +204,10 @@ public class Program {
      * set Tokens.
      * This method takes a list of tokens, coming out of the tokenizer.
      *
-     * @param aoTokens array of token objects, after the tokenization.
+     * @param aoTokens array of token objects, after the tokenisation.
      */
-    public final void setTokens(List<Token> aoTokens) {
-        _aoTokens = aoTokens;
+    public final void setTokens(List<Token> voTokens) {
+        _aoTokens = voTokens;
     }
 
 
@@ -226,10 +226,10 @@ public class Program {
      * set Statements.
      * This method takes a list of statements, coming out of the parser.
      *
-     * @param aoStatements array of Token objects, after the tokenization.
+     * @param aoStatements array of Token objects, after the tokenisation.
      */
-    public final void setStatements(List<Statement> aoStatements) {
-        _aoStatements = aoStatements;
+    public final void setStatements(List<Statement> voStatements) {
+        _aoStatements = voStatements;
     }
 
 
@@ -248,10 +248,10 @@ public class Program {
      * set PreRunStatements.
      * This method takes a list of pre-run statements, coming out of the parser.
      *
-     * @param aoPreRunStatements array of Token objects, after the tokenization.
+     * @param aoPreRunStatements array of Token objects, after the tokenisation.
      */
-    public final void setPreRunStatements(List<Statement> aoPreRunStatements) {
-        _aoPreRunStatements = aoPreRunStatements;
+    public final void setPreRunStatements(List<Statement> voPreRunStatements) {
+        _aoPreRunStatements = voPreRunStatements;
     }
 
 
@@ -288,9 +288,9 @@ public class Program {
 
         String          strProgramName            = oCompare.getProgramName();
         String          strProgramSource          = oCompare.getProgram();
-        List<Statement> aoComparePreRunStatements = oCompare.getPreRunStatements();
-        List<Statement> aoCompareStatements       = oCompare.getStatements();
-        List<Token>     aoCompareTokens           = oCompare.getTokens();
+        List<Statement> voComparePreRunStatements = oCompare.getPreRunStatements();
+        List<Statement> voCompareStatements       = oCompare.getStatements();
+        List<Token>     voCompareTokens           = oCompare.getTokens();
 
         if (_strProgramName == null) {
             if (strProgramName != null) {
@@ -309,41 +309,41 @@ public class Program {
         }
 
         if (_aoPreRunStatements != null) {
-            if (aoComparePreRunStatements == null) {
+            if (voComparePreRunStatements == null) {
                 return false;
             }
-            for (Statement aoPreRunStatement : _aoPreRunStatements) {
-                if (!aoComparePreRunStatements.contains(aoPreRunStatement)) {
+            for (Statement oPreRunStatement : _aoPreRunStatements) {
+                if (!voComparePreRunStatements.contains(oPreRunStatement)) {
                     return false;
                 }
             }
-        } else if (aoComparePreRunStatements != null) {
+        } else if (voComparePreRunStatements != null) {
             return false;
         }
 
         if (_aoStatements != null) {
-            if (aoCompareStatements == null) {
+            if (voCompareStatements == null) {
                 return false;
             }
-            for (Statement aoStatement : _aoStatements) {
-                if (!aoCompareStatements.contains(aoStatement)) {
+            for (Statement oStatement : _aoStatements) {
+                if (!voCompareStatements.contains(oStatement)) {
                     return false;
                 }
             }
-        } else if (aoCompareStatements != null) {
+        } else if (voCompareStatements != null) {
             return false;
         }
 
         if (_aoTokens != null) {
-            if (aoCompareTokens == null) {
+            if (voCompareTokens == null) {
                 return false;
             }
             for (Token oToken : _aoTokens) {
-                if (!aoCompareTokens.contains(oToken)) {
+                if (!voCompareTokens.contains(oToken)) {
                     return false;
                 }
             }
-        } else if (aoCompareTokens != null) {
+        } else if (voCompareTokens != null) {
             return false;
         }
 
@@ -359,16 +359,16 @@ public class Program {
      * (e.g., "100 PRINT \"HELLO\""). Only the body portion is stored; the line number is extracted
      * and used as the key for sorting.
      *
-     * After updating the program source, the method re-processes macros and re-tokenizes the program
+     * After updating the program source, the method re-processes macros and re-tokenises the program
      * to ensure consistency with the updated source code.
      *
      * @param iLineNumber The numeric line number to add or replace
      * @param strProgramLine The complete program line including line number and body
      *                        (format: "lineNumber programBody")
-     * @throws SyntaxErrorException if macro processing or tokenization fails
+     * @throws SyntaxErrorException if macro processing or tokenisation fails
      */
     public void addOrReplace(int iLineNumber, String strProgramLine) throws SyntaxErrorException {
-        Map<Integer, String> mProgramLines = new TreeMap<>();
+        Map<Integer, String> mstrProgramLines = new TreeMap<>();
 
         // Parse existing program source into individual lines
         String[] astrLines = _strProgramSource.split("\n");
@@ -383,8 +383,8 @@ public class Program {
                 try {
                     int iCurrentLineNumber = Integer.parseInt(astrParts[0].trim());
                     String strLineBody = astrParts.length > 1 ? astrParts[1] : "";
-                    mProgramLines.put(iCurrentLineNumber, strLineBody);
-                } catch (NumberFormatException e) {
+                    mstrProgramLines.put(iCurrentLineNumber, strLineBody);
+                } catch (NumberFormatException oException) {
                     _oLogger.warning("Skipping line with invalid line number: " + strLine);
                 }
             }
@@ -393,11 +393,11 @@ public class Program {
         // Extract line number and body from the input line, then add or replace
         String[] astrNewLineParts = strProgramLine.split(" ", 2);
         String strLineBody = astrNewLineParts.length > 1 ? astrNewLineParts[1] : "";
-        mProgramLines.put(iLineNumber, strLineBody);
+        mstrProgramLines.put(iLineNumber, strLineBody);
 
         // Reconstruct program source with sorted lines (TreeMap maintains order by key)
         StringBuilder oSB = new StringBuilder();
-        for (Map.Entry<Integer, String> oEntry : mProgramLines.entrySet()) {
+        for (Map.Entry<Integer, String> oEntry : mstrProgramLines.entrySet()) {
             oSB.append(oEntry.getKey()).append(" ").append(oEntry.getValue()).append("\n");
         }
 
@@ -423,7 +423,7 @@ public class Program {
      * @param iEnd The ending line number to delete (inclusive)
      */
     public void deleteLines(int iBegin, int iEnd) throws SyntaxErrorException {
-        Map<Integer, String> mProgramLines = new TreeMap<>();
+        Map<Integer, String> mstrProgramLines = new TreeMap<>();
 
         // Parse existing program source into individual lines
         String[] astrLines = _strProgramSource.split("\n");
@@ -441,9 +441,9 @@ public class Program {
 
                     // Skip lines that fall within the deletion range (inclusive)
                     if (iCurrentLineNumber < iBegin || iCurrentLineNumber > iEnd) {
-                        mProgramLines.put(iCurrentLineNumber, strLineBody);
+                        mstrProgramLines.put(iCurrentLineNumber, strLineBody);
                     }
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException oException) {
                     _oLogger.warning("Skipping line with invalid line number: " + strLine);
                 }
             }
@@ -451,7 +451,7 @@ public class Program {
 
         // Reconstruct program source with remaining lines (sorted by line number)
         StringBuilder oSB = new StringBuilder();
-        for (Map.Entry<Integer, String> oEntry : mProgramLines.entrySet()) {
+        for (Map.Entry<Integer, String> oEntry : mstrProgramLines.entrySet()) {
             oSB.append(oEntry.getKey()).append(" ").append(oEntry.getValue()).append("\n");
         }
 

@@ -3,8 +3,8 @@ package eu.gricom.basic.statements;
 import eu.gricom.basic.error.EmptyStackException;
 import eu.gricom.basic.error.OutOfDataException;
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.memoryManager.FiFoQueue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FiFoQueue;
+import eu.gricom.basic.variabletypes.Value;
 import java.util.List;
 
 /**
@@ -28,9 +28,9 @@ public class ReadStatement implements Statement {
      * @param iTokenNumber the token number of this command
      * @param astrNames the names of the variable to be read.
      */
-    public ReadStatement(final int iTokenNumber, final List<String> astrNames) {
+    public ReadStatement(final int iTokenNumber, final List<String> vstrNames) {
         _iTokenNumber = iTokenNumber;
-        _astrNames = astrNames;
+        _astrNames = vstrNames;
     }
 
     /**
@@ -60,10 +60,10 @@ public class ReadStatement implements Statement {
                 Value oInput = oFiFO.pop();
                 oAssignStatement = new AssignStatement(_iTokenNumber, strName, oInput);
                 oAssignStatement.execute();
-            } catch (EmptyStackException eOutOfDataException) {
-                throw new OutOfDataException(eOutOfDataException.getMessage());
-            } catch (Exception eUnknownException) {
-                throw new SyntaxErrorException(eUnknownException.getMessage());
+            } catch (EmptyStackException oException) {
+                throw new OutOfDataException(oException.getMessage());
+            } catch (Exception oException) {
+                throw new SyntaxErrorException(oException.getMessage());
             }
         }
     }
@@ -78,13 +78,13 @@ public class ReadStatement implements Statement {
     @Override
     public final String content() {
 
-        StringBuilder strReturn = new StringBuilder();
+        StringBuilder oReturn = new StringBuilder();
 
         for (String strName: _astrNames) {
-            strReturn.append(strName).append(" ");
+            oReturn.append(strName).append(" ");
         }
 
-        return "READ ( " + strReturn + ")";
+        return "READ ( " + oReturn + ")";
     }
 
     /**
@@ -97,13 +97,13 @@ public class ReadStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        StringBuilder strReturn = new StringBuilder("{\"READ\": {");
-        strReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
+        StringBuilder oReturn = new StringBuilder("{\"READ\": {");
+        oReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
         for (String strName: _astrNames) {
-            strReturn.append("\"NAME\": \"").append(strName).append("\",");
+            oReturn.append("\"NAME\": \"").append(strName).append("\",");
         }
-        strReturn.deleteCharAt(strReturn.length() - 1);
-        strReturn.append("}}");
-        return strReturn.toString();
+        oReturn.deleteCharAt(oReturn.length() - 1);
+        oReturn.append("}}");
+        return oReturn.toString();
     }
 }

@@ -2,8 +2,8 @@ package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.FileOpenType;
 
 /**
  * FRewindStatement.java
@@ -75,8 +75,8 @@ public class FRewindStatement implements Statement {
             // Step 3: Close the file
             try {
                 oFileManager.closeFile(_iFileId, false);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to close file: " + e.getMessage());
+            } catch (Exception oException) {
+                throw new RuntimeException("Failed to close file: " + oException.getMessage());
             }
 
             // Step 4: Re-open the file for reading (resets file pointer to beginning)
@@ -85,20 +85,20 @@ public class FRewindStatement implements Statement {
                 if (!bOpened) {
                     throw new RuntimeException("Failed to re-open file for rewind: " + strFileName);
                 }
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to re-open file: " + e.getMessage());
+            } catch (Exception oException) {
+                throw new RuntimeException("Failed to re-open file: " + oException.getMessage());
             }
 
             // Step 5: Verify position is 0 (should be set by openFile)
             try {
                 oFileManager.putReadPos(_iFileId, 0);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to reset read position: " + e.getMessage());
+            } catch (Exception oException) {
+                throw new RuntimeException("Failed to reset read position: " + oException.getMessage());
             }
 
-        } catch (Exception e) {
+        } catch (Exception oException) {
             Logger oLogger = new Logger("eu.gricom.basic.statements.FRewindStatement");
-            oLogger.error(e.getMessage());
+            oLogger.error(oException.getMessage());
             System.exit(-1);
         }
     }
@@ -131,5 +131,10 @@ public class FRewindStatement implements Statement {
         strReturn += "\"FILE_ID\": \"" + _iFileId + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the FileId of this statement (used by the compiler) */
+    public int getFileId() {
+        return _iFileId;
     }
 }

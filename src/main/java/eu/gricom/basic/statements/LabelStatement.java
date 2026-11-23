@@ -64,7 +64,7 @@ public class LabelStatement implements Statement {
 
     /**
      * Statemen objects implement this class to actually perform whatever
-     * behavior the statement causes. "Print" statements will display text
+     * behaviour the statement causes. "Print" statements will display text
      * here, "goto" statements will change the current statement, etc.
      *
      * @throws Exception as any execution error found during execution
@@ -98,8 +98,8 @@ public class LabelStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"LABEL\": {";
-        strReturn += "\"LABEL\": \""+ _strLabel +"\",";
-        strReturn += "\"STATEMENT\": \""+ _iStatementNumber +"\"";
+        strReturn += "\"LABEL\": \"" + _strLabel + "\",";
+        strReturn += "\"STATEMENT\": \"" + _iStatementNumber + "\"";
         strReturn += "}}";
         return strReturn;
     }

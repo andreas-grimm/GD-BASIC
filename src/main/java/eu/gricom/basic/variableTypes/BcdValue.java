@@ -1,4 +1,4 @@
-package eu.gricom.basic.variableTypes;
+package eu.gricom.basic.variabletypes;
 
 import eu.gricom.basic.error.DivideByZeroException;
 import eu.gricom.basic.error.OverflowException;
@@ -70,8 +70,8 @@ public final class BcdValue implements Value, Comparable<BcdValue> {
      * @throws SyntaxErrorException if the number is NaN
      * @throws OverflowException if the number is infinite or its integer part needs more than max_bcd_digits digits
      */
-    public BcdValue(final double dValue) throws SyntaxErrorException, OverflowException {
-        this(fromDouble(dValue));
+    public BcdValue(final double fValue) throws SyntaxErrorException, OverflowException {
+        this(fromDouble(fValue));
     }
 
     /**
@@ -107,11 +107,11 @@ public final class BcdValue implements Value, Comparable<BcdValue> {
             return BigDecimal.valueOf(((LongValue) oValue).toLong());
         }
         if (oValue instanceof RealValue) {
-            double dValue = oValue.toReal();
-            if (Double.isNaN(dValue) || Double.isInfinite(dValue)) {
-                throw new SyntaxErrorException("Syntax Error: " + dValue + " cannot be used in a BCD calculation");
+            double fValue = oValue.toReal();
+            if (Double.isNaN(fValue) || Double.isInfinite(fValue)) {
+                throw new SyntaxErrorException("Syntax Error: " + fValue + " cannot be used in a BCD calculation");
             }
-            return BigDecimal.valueOf(dValue);
+            return BigDecimal.valueOf(fValue);
         }
         throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
@@ -139,14 +139,14 @@ public final class BcdValue implements Value, Comparable<BcdValue> {
      * @throws SyntaxErrorException if the number is NaN
      * @throws OverflowException if the number is infinite
      */
-    private static BigDecimal fromDouble(final double dValue) throws SyntaxErrorException, OverflowException {
-        if (Double.isNaN(dValue)) {
+    private static BigDecimal fromDouble(final double fValue) throws SyntaxErrorException, OverflowException {
+        if (Double.isNaN(fValue)) {
             throw new SyntaxErrorException("Syntax Error: NaN cannot be a decimal number");
         }
-        if (Double.isInfinite(dValue)) {
+        if (Double.isInfinite(fValue)) {
             throw new OverflowException("Overflow: an infinite value cannot be a decimal number");
         }
-        return BigDecimal.valueOf(dValue);
+        return BigDecimal.valueOf(fValue);
     }
 
     /**
