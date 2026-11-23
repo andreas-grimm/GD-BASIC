@@ -4,9 +4,9 @@
 
 &copy; 2020 - 2026 Andreas Grimm | Use according to the included licence file ([LICENSE.md](LICENSE.md))
 
-**Version:** 0.2.1  
-**Status:** Production Ready  
-**Last Updated:** 2026-08-24
+**Version:** 0.3.0 (implemented on branch `feature/bcd-arithmetic`, not yet merged; last released version 0.2.1)  
+**Status:** Production Ready (1435/1435 unit tests, 62/62 system test programs)  
+**Last Updated:** 2026-11-22
 
 ---
 
@@ -20,9 +20,9 @@
 - ✅ **File I/O** — LOAD, SAVE, DELETE commands in the editor
 - ✅ **Comprehensive BASIC Support** — 40+ built-in functions, 35+ statements
 - ✅ **Computed Branches** — ON GOTO and ON GOSUB for dynamic control flow
-- ✅ **Type Safety** — Strongly-typed variable system with 6 types
+- ✅ **Type Safety** — Strongly-typed variable system, including exact decimal (BCD) numbers
 - ✅ **Advanced Features** — Arrays, loops, conditionals, file operations
-- ✅ **Production Ready** — 1248/1248 tests passing, zero failures
+- ✅ **Production Ready** — 1435/1435 unit tests and 62/62 system test programs passing, zero failures
 - ✅ **Well Documented** — User guides, architecture docs, code examples
 
 ---
@@ -36,13 +36,13 @@
 java -version  # Should show Java 21 or later
 
 # Download the JAR
-# File: BASIC-0.2.1-jar-with-dependencies.jar
+# File: BASIC-0.3.0-jar-with-dependencies.jar
 ```
 
 ### Run Interactive Mode (No File Required)
 
 ```bash
-java -jar BASIC-0.2.1-jar-with-dependencies.jar
+java -jar BASIC-0.3.0-jar-with-dependencies.jar
 >10 PRINT "HELLO WORLD"
 >20 END
 >RUN
@@ -53,7 +53,7 @@ HELLO WORLD
 ### Load and Modify a Program
 
 ```bash
-java -jar BASIC-0.2.1-jar-with-dependencies.jar existing.bas
+java -jar BASIC-0.3.0-jar-with-dependencies.jar existing.bas
 >LIST
 >DELETE 15
 >30 PRINT "Modified"
@@ -63,7 +63,7 @@ java -jar BASIC-0.2.1-jar-with-dependencies.jar existing.bas
 ### Direct Execution (No Editor)
 
 ```bash
-java -jar BASIC-0.2.1-jar-with-dependencies.jar -r -q program.bas
+java -jar BASIC-0.3.0-jar-with-dependencies.jar -r -q program.bas
 ```
 
 ---
@@ -124,26 +124,26 @@ java -jar BASIC-0.2.1-jar-with-dependencies.jar -r -q program.bas
 
 ---
 
-## 📋 Current Version (0.2.0+ Extended)
+## 📋 Current Version (0.3.0, branch `feature/bcd-arithmetic`)
 
-### Latest Features (July 26, 2026)
+### What is new in 0.3.0
 
-**Interactive Line Editor Enhancements**:
-- Start without a program file
-- LOAD command to import programs
-- SAVE command with overwrite protection
-- DELETE command for line removal
-- HELP command with documentation
-- Program validation before execution
+**Decimal numbers (BCD)**:
+- `amount#` holds a decimal number with up to 40 significant digits: `0.1 + 0.2` gives exactly `0.3`
+- Arithmetic, comparisons, `SQR`, `EXP`, `LOG`, `LOG10`, `SIN`, `COS`, `TAN`, `ATN`, `ABS`, `CINT`, `STR$`
+- An overflow (more than 40 digits before the decimal point) stops the program with an error
 
-**New Exception Classes**:
-- `EmptyProgramException` — File loading validation
-- `FileAlreadyExistsException` — File save protection
+**Suffix changes**:
+- `!` is now the BOOLEAN suffix (`FLAG! = TRUE`)
+- `@` is no longer a variable suffix and gives an error
 
-**Test Coverage**:
-- 1214/1214 unit tests passing ✅
-- 34/34 system integration tests passing ✅
-- 100% pass rate with zero failures
+**Language fixes** (Phase 6 and 7): block `IF` with `ELSE`, nested `FOR` and `WHILE` loops, `FOR` as the first statement, `INPUT` read in several places, `ON GOTO` / `ON GOSUB`, file statements inside blocks, `FRENAME`, `FPEEK`, `FGET`, `FPRINT`, `PRINT` lists, `WEND`, string index with a variable, `INSTR` (one-based), `TIME` (milliseconds)
+
+**Test runner**: `test/system/run_all_tests.sh` now fails when a program stops with an error or prints `ERROR: Test failed`. The interpreter exits with code 1 on a parse error or a runtime error.
+
+**Test coverage**:
+- 1435/1435 unit tests passing ✅
+- 62/62 system test programs passing ✅ (includes 7 BCD tests and the BSearch example with its expected output)
 
 ### Previous Releases
 
@@ -190,7 +190,7 @@ mvn site
 
 ### Test Results
 ```
-Tests: 1214/1214 pass ✅
+Tests: 1435/1435 unit tests pass ✅ (62/62 system test programs)
 Build: SUCCESS
 Quality: Zero violations (Checkstyle, PMD)
 ```
@@ -245,15 +245,17 @@ Quality: Zero violations (Checkstyle, PMD)
 - **Untyped** (default real) — `X`, `value`
 - **Integer** — `count%`, `index%`
 - **Long** — `bignum&`, `largeint&`
-- **Double** — `result!`, `sum!`
 - **String** — `name$`, `text$`
-- **Boolean** — `flag@`, `condition@`
+- **Boolean** — `flag!`, `condition!` (version 0.3.0; in 0.2.1 the suffix is `@`)
+- **Decimal (BCD)** — `amount#`, up to 40 significant digits (version 0.3.0)
+
+Version 0.3.0: a variable with no suffix is REAL, `#` is the decimal (BCD) suffix, and `!` is the boolean suffix. In 0.2.1 `#` is rejected and `!` is Double. See `doc/BASIC.md`, section "Variables, Arrays, and Constants".
 
 ---
 
 ## 📊 Statistics
 
-- **1214/1214 tests** pass ✅
+- **1435/1435 unit tests** pass ✅ and **62/62 system test programs** pass ✅
 - **35+ statements** implemented
 - **40+ functions** available
 - **6 variable types** supported
@@ -310,11 +312,11 @@ GD-BASIC/
 │   │   ├── application.yaml ........... Configuration
 │   │   └── help.txt ................... Editor help
 │   │
-│   └── test/java/eu/gricom/basic/ .... Tests (1214 tests)
+│   └── test/java/eu/gricom/basic/ .... Tests (1435 unit tests; 62 system test programs)
 │
 ├── target/
 │   ├── BASIC-0.2.0.jar ................ Standard JAR
-│   └── BASIC-0.2.1-jar-with-dependencies.jar .. Executable JAR
+│   └── BASIC-0.3.0-jar-with-dependencies.jar .. Executable JAR
 │
 └── test/system/ ....................... System tests (34+)
 ```
@@ -403,9 +405,9 @@ The Netherlands / Norway
 
 ---
 
-**Last Updated:** 2026-07-26 10:40 UTC  
+**Last Updated:** 2026-11-22  
 **Status:** ✅ Production Ready  
-**Test Pass Rate:** 1214/1214 (100%)
+**Test Pass Rate:** 1435/1435 unit tests (100%); 62/62 system test programs
 
 ---
 

@@ -78,6 +78,9 @@ public final class ForStatement implements Statement {
                 _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNumber)));
 
             } else  {
+                // the loop is finished: reset the flag so that the next time this FOR statement is reached
+                // (for example from another outer loop) it starts a new loop with the start value
+                _bForStarted = false;
                 // calculate the final sum of the current value and leave the loop
                 _oProgramPointer.setCurrentStatement(
                         oLineNumberObject.getStatementFromLineNumber(

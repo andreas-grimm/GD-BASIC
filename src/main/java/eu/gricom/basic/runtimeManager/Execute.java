@@ -17,6 +17,8 @@ public class Execute {
     private final Trace _oTrace = new Trace(false);
 
     private Statement _oStatement = null;
+    // true when the program stopped because of an error (not by END). Used for the exit code (Phase 7).
+    private boolean _bRuntimeError = false;
 
     public Execute(Program oProgram) {
         _aoPreRunStatements = oProgram.getPreRunStatements();
@@ -43,6 +45,7 @@ public class Execute {
                 System.exit(-1);
             }
         } catch (Exception eException) {
+            _bRuntimeError = true;
             eException.printStackTrace();
         }
     }
@@ -80,9 +83,19 @@ public class Execute {
             }
         } catch (Exception eException) {
             if (!eException.getClass().getName().contains("EndOfProgramException")) {
+                _bRuntimeError = true;
                 eException.printStackTrace();
             }
         }
+    }
+
+    /**
+     * hasRuntimeError tells whether the program stopped because of an error.
+     *
+     * @return true if an error (other than END) stopped the program
+     */
+    public boolean hasRuntimeError() {
+        return _bRuntimeError;
     }
 
     public Statement getFinalStatement() {

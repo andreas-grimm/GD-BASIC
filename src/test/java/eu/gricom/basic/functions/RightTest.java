@@ -24,6 +24,25 @@ public class RightTest {
         }
     }
 
+    // Positive: a length equal to the string length returns the whole string.
+    @Test
+    public void testRightLengthEqualToStringLength() throws Exception {
+        assertEquals("abc", Right.execute(new StringValue("abc"), new IntegerValue(3)).toString());
+        assertEquals("a", Right.execute(new StringValue("a"), new IntegerValue(1)).toString());
+    }
+
+    // Positive: a length of zero returns an empty string.
+    @Test
+    public void testRightLengthZero() throws Exception {
+        assertEquals("", Right.execute(new StringValue("abc"), new IntegerValue(0)).toString());
+    }
+
+    // Positive: a length larger than the string returns the whole string.
+    @Test
+    public void testRightLengthLargerThanString() throws Exception {
+        assertEquals("abc", Right.execute(new StringValue("abc"), new IntegerValue(4)).toString());
+    }
+
     @Test
     public void testRightEmptyParam() {
 
@@ -31,9 +50,8 @@ public class RightTest {
             StringValue oValue = new StringValue("");
             IntegerValue oLength = new IntegerValue(2);
 
-            assertThrows(RuntimeException.class, () -> {
-                Right.execute(oValue, oLength);
-            });
+            // Length 2 is greater than the length 0 of the string: the whole (empty) string is returned.
+            assertEquals("", Right.execute(oValue, oLength).toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -64,7 +64,7 @@ public class StringValueTest {
     }
 
     @Test
-    public void testPlus() {
+    public void testPlus() throws Exception {
         try {
             StringValue oFirstValue = new StringValue("a");
             StringValue oSecondValue = new StringValue("b");
@@ -78,7 +78,7 @@ public class StringValueTest {
     }
 
     @Test
-    public void testMinus() {
+    public void testMinus() throws Exception {
         StringValue oFirstValue = new StringValue("a");
         StringValue oSecondValue = new StringValue("b");
 
@@ -89,7 +89,7 @@ public class StringValueTest {
     }
 
     @Test
-    public void testMultiply() {
+    public void testMultiply() throws Exception {
         StringValue oFirstValue = new StringValue("a");
         StringValue oSecondValue = new StringValue("b");
 
@@ -100,7 +100,7 @@ public class StringValueTest {
     }
 
     @Test
-    public void testDivide() {
+    public void testDivide() throws Exception {
         StringValue oFirstValue = new StringValue("a");
         StringValue oSecondValue = new StringValue("b");
 
@@ -111,7 +111,7 @@ public class StringValueTest {
     }
 
     @Test
-    public void testModulo() {
+    public void testModulo() throws Exception {
         StringValue oFirstValue = new StringValue("a");
         StringValue oSecondValue = new StringValue("b");
 
@@ -122,7 +122,7 @@ public class StringValueTest {
     }
 
     @Test
-    public void testPower() {
+    public void testPower() throws Exception {
         StringValue oFirstValue = new StringValue("a");
         StringValue oSecondValue = new StringValue("b");
 

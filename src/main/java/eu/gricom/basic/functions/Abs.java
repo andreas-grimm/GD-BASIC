@@ -2,6 +2,7 @@ package eu.gricom.basic.functions;
 
 import eu.gricom.basic.variableTypes.IntegerValue;
 import eu.gricom.basic.variableTypes.LongValue;
+import eu.gricom.basic.variableTypes.BcdValue;
 import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
@@ -32,6 +33,9 @@ public final class Abs {
      * @throws Exception as any execution error found during execution
      */
     public static Value execute(final Value oValue) throws Exception {
+        if (oValue instanceof BcdValue) {
+            return new BcdValue(((BcdValue) oValue).getBigDecimal().abs());
+        }
         if (oValue instanceof IntegerValue) {
             if (((IntegerValue) oValue).toInt() < 0) {
                 return oValue.multiply(new IntegerValue(-1));

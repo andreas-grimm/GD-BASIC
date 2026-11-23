@@ -1,0 +1,1 @@
+eu.gricom.basic.error.OverflowException: Overflow: a BCD value may have at most 40 digits before the decimal point, this value needs 41

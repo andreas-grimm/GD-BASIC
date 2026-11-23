@@ -64,7 +64,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testPlus() {
+    public void testPlus() throws Exception {
         try {
             LongValue oFirstValue = new LongValue(1);
             LongValue oSecondValue = new LongValue(2);
@@ -78,7 +78,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testPlusTypeException() {
+    public void testPlusTypeException() throws Exception {
         LongValue oFirstValue = new LongValue(1);
         RealValue oSecondValue = new RealValue(2);
 
@@ -90,7 +90,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testMinus() {
+    public void testMinus() throws Exception {
         try {
             LongValue oFirstValue = new LongValue(1);
             LongValue oSecondValue = new LongValue(2);
@@ -104,7 +104,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testMinusTypeException() {
+    public void testMinusTypeException() throws Exception {
         LongValue oFirstValue = new LongValue(1);
         RealValue oSecondValue = new RealValue(2);
 
@@ -116,7 +116,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testMultiply() {
+    public void testMultiply() throws Exception {
         try {
             LongValue oFirstValue = new LongValue(1);
             LongValue oSecondValue = new LongValue(2);
@@ -130,7 +130,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testMultiplyTypeException() {
+    public void testMultiplyTypeException() throws Exception {
         LongValue oFirstValue = new LongValue(1);
         RealValue oSecondValue = new RealValue(2);
 
@@ -142,7 +142,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testDivide() {
+    public void testDivide() throws Exception {
         try {
             LongValue oFirstValue = new LongValue(1);
             LongValue oSecondValue = new LongValue(2);
@@ -156,7 +156,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testDivideTypeException() {
+    public void testDivideTypeException() throws Exception {
         LongValue oFirstValue = new LongValue(1);
         RealValue oSecondValue = new RealValue(2);
 
@@ -168,7 +168,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testDivideByZero() {
+    public void testDivideByZero() throws Exception {
         LongValue oFirstValue = new LongValue(1);
         LongValue oSecondValue = new LongValue(0);
 
@@ -179,7 +179,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testModulo() {
+    public void testModulo() throws Exception {
         try {
             LongValue oFirstValue = new LongValue(3);
             LongValue oSecondValue = new LongValue(2);
@@ -193,7 +193,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testPower() {
+    public void testPower() throws Exception {
         try {
             LongValue oFirstValue = new LongValue(2);
             LongValue oSecondValue = new LongValue(2);
@@ -207,7 +207,7 @@ public class LongValueTest {
     }
 
     @Test
-    public void testPowerTypeException() {
+    public void testPowerTypeException() throws Exception {
         LongValue oFirstValue = new LongValue(2);
         RealValue oSecondValue = new RealValue(2);
 

@@ -3,6 +3,7 @@ package eu.gricom.basic.variableTypes;
 import eu.gricom.basic.helper.EnvParam;
 
 import eu.gricom.basic.error.DivideByZeroException;
+import eu.gricom.basic.error.OverflowException;
 import eu.gricom.basic.error.SyntaxErrorException;
 
 import java.math.BigDecimal;
@@ -81,6 +82,12 @@ public class RealValue implements Value {
 
     @Override
     public final Value equals(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.equals(this);
+        }
+        if (oValue instanceof IntegerValue || oValue instanceof LongValue) {
+            return new BooleanValue(this.toReal() == oValue.toReal());
+        }
         if (oValue instanceof RealValue) {
             if (this.toReal() == oValue.toReal()) {
                 return new BooleanValue(true);
@@ -94,6 +101,12 @@ public class RealValue implements Value {
 
     @Override
     public final Value notEqual(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BcdValue) {
+            return oValue.notEqual(this);
+        }
+        if (oValue instanceof IntegerValue || oValue instanceof LongValue) {
+            return new BooleanValue(this.toReal() != oValue.toReal());
+        }
         if (oValue instanceof RealValue) {
             if (this.toReal() != oValue.toReal()) {
                 return new BooleanValue(true);
@@ -106,8 +119,11 @@ public class RealValue implements Value {
     }
 
     @Override
-    public final Value plus(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof RealValue) {
+    public final Value plus(final Value oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).plus(oValue);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             RealValue oReturn = new RealValue(_fValue + oValue.toReal());
             return oReturn;
         }
@@ -116,8 +132,11 @@ public class RealValue implements Value {
     }
 
     @Override
-    public final Value minus(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof RealValue) {
+    public final Value minus(final Value oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).minus(oValue);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             RealValue oReturn = new RealValue(_fValue - oValue.toReal());
             return oReturn;
         }
@@ -126,8 +145,11 @@ public class RealValue implements Value {
     }
 
     @Override
-    public final Value multiply(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof RealValue) {
+    public final Value multiply(final Value oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).multiply(oValue);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             RealValue oReturn = new RealValue(_fValue * oValue.toReal());
             return oReturn;
         }
@@ -136,10 +158,14 @@ public class RealValue implements Value {
     }
 
     @Override
-    public final Value divide(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    public final Value divide(final Value oValue) throws DivideByZeroException, SyntaxErrorException,
+            OverflowException {
         RealValue oReturn;
 
-        if (oValue instanceof RealValue) {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).divide(oValue);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             if (oValue.toReal() != 0) {
                 oReturn = new RealValue(_fValue / oValue.toReal());
             } else {
@@ -152,10 +178,14 @@ public class RealValue implements Value {
     }
 
     @Override
-    public final Value modulo(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
+    public final Value modulo(final Value oValue) throws DivideByZeroException, SyntaxErrorException,
+            OverflowException {
         RealValue oReturn;
 
-        if (oValue instanceof RealValue) {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).modulo(oValue);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             if (oValue.toReal() != 0) {
                 oReturn = new RealValue(_fValue % oValue.toReal());
             } else {
@@ -167,10 +197,6 @@ public class RealValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " is not a number");
     }
 
-    @Override
-    public final Value shiftLeft(final Value oValue) throws SyntaxErrorException {
-        throw new SyntaxErrorException(oValue.content() + " '<<' for real type variables is not defined");
-    }
 
     @Override
     public final Value and(final Value oValue) throws DivideByZeroException, SyntaxErrorException {
@@ -200,16 +226,16 @@ public class RealValue implements Value {
         throw new SyntaxErrorException(oValue.content() + " is not of type Real");
     }
 
-    @Override
-    public final Value shiftRight(final Value oValue) throws SyntaxErrorException {
-        throw new SyntaxErrorException(oValue.content() + " '>>' for real type variables is not defined");
-    }
 
     @Override
-    public final Value power(final Value oValue) throws SyntaxErrorException {
+    public final Value power(final Value oValue) throws DivideByZeroException, SyntaxErrorException,
+            OverflowException {
         RealValue oReturn;
 
-        if (oValue instanceof RealValue) {
+        if (oValue instanceof BcdValue) {
+            return BcdValue.of(this).power(oValue);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             oReturn = new RealValue(Math.pow(_fValue, oValue.toReal()));
 
             return oReturn;
@@ -220,7 +246,10 @@ public class RealValue implements Value {
 
     @Override
     public final Value smallerThan(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof RealValue) {
+        if (oValue instanceof BcdValue) {
+            return oValue.largerThan(this);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             if (this.toReal() < oValue.toReal()) {
                 return new BooleanValue(true);
             }
@@ -233,7 +262,10 @@ public class RealValue implements Value {
 
     @Override
     public final Value smallerEqualThan(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof RealValue) {
+        if (oValue instanceof BcdValue) {
+            return oValue.largerEqualThan(this);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             if (this.toReal() <= oValue.toReal()) {
                 return new BooleanValue(true);
             }
@@ -246,7 +278,10 @@ public class RealValue implements Value {
 
     @Override
     public final Value largerThan(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof RealValue) {
+        if (oValue instanceof BcdValue) {
+            return oValue.smallerThan(this);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             if (this.toReal() > oValue.toReal()) {
                 return new BooleanValue(true);
             }
@@ -259,7 +294,10 @@ public class RealValue implements Value {
 
     @Override
     public final Value largerEqualThan(final Value oValue) throws SyntaxErrorException {
-        if (oValue instanceof RealValue) {
+        if (oValue instanceof BcdValue) {
+            return oValue.smallerEqualThan(this);
+        }
+        if (oValue instanceof RealValue || oValue instanceof IntegerValue || oValue instanceof LongValue) {
             if (this.toReal() >= oValue.toReal()) {
                 return new BooleanValue(true);
             }

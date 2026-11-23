@@ -1,7 +1,7 @@
 # GD-BASIC User's Guide
 
 **Version:** 0.2.0+  
-**Last Updated:** 2026-07-26 10:40 UTC  
+**Last Updated:** 2026-11-22  
 **Document Type:** User Manual  
 
 ---
@@ -74,7 +74,7 @@ This loads and enters the interactive line editor with your program. You can the
 #### Run in Direct Execution Mode
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -r program.bas
+java -jar target/BASIC-0.3.0-jar-with-dependencies.jar -r program.bas
 ```
 
 The `-r` flag (run directly) skips the interactive editor and executes immediately.
@@ -139,10 +139,13 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar -d program.bas
 Execute the program immediately without entering the interactive editor.
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -r program.bas
+java -jar target/BASIC-0.3.0-jar-with-dependencies.jar -r program.bas
 ```
 
 > **Note**: The `-r` flag is ignored when no program file is provided (interactive mode).
+
+**Exit codes** (new in 0.3.0): the interpreter exits with `0` when the program ends normally (`END`), and with `1` when
+the program does not parse or stops with a runtime error. Scripts and the test runner can use this code.
 
 ### Combining Options
 
@@ -394,6 +397,60 @@ EOF
 # Run directly without editor
 java -jar BASIC-0.2.0-jar-with-dependencies.jar -r -q batch_job.bas
 ```
+
+---
+
+## Variable Types and Suffixes
+
+A variable's type is set by the character at the end of its name. A variable with no suffix holds a
+real number (double precision).
+
+| Suffix | Type | Example | Status in version 0.3.0 |
+|--------|------|---------|-------------------------|
+| *(none)* | Real number (double precision) | `X`, `VALUE` | Works |
+| `%` | Integer (32-bit) | `COUNT%` | Works |
+| `&` | Long integer (64-bit) | `BIG&` | Works |
+| `$` | Text | `NAME$` | Works |
+| `!` | True or false | `FLAG!` | Works. In version 0.2.1 `!` was a Double |
+| `#` | Decimal number, up to 40 significant digits | `AMOUNT#` | Works |
+
+`@` is no longer a variable suffix. If you use it, the interpreter stops with an error and tells you to use `!`.
+Version 0.2.1 used `@` for true-or-false values. Change `FLAG@` to `FLAG!` in your programs.
+
+### Decimal numbers for money and exact arithmetic
+
+When you need exact decimal results, for example for money, add the `#` suffix to the variable name:
+
+```basic
+10 PRICE# = 99.99
+20 TAX_RATE# = 0.0825
+30 TAX# = PRICE# * TAX_RATE#
+40 PRINT "Tax: "; TAX#
+50 END
+```
+
+Running this program prints `Tax: 8.249175`.
+
+What to expect:
+- Decimal numbers keep the digits you type. `0.1 + 0.2` gives `0.3`.
+- A decimal number can have up to 40 significant digits. If a result needs more than 40 digits before the decimal point,
+  the program stops with an overflow error.
+- Results are shown without trailing zeros: `2.50` prints as `2.5`, and `1000` prints as `1000`.
+- Decimal numbers work with `SQR`, `EXP`, `LOG`, `LOG10`, `SIN`, `COS`, `TAN`, `ATN`, `ABS` and `CINT`.
+- Dividing by zero stops the program with an error.
+- Arrays with a `#` suffix (for example `A#(1)`) are not supported yet. The program stops with a message.
+- Plain variables (no suffix) keep the double-precision behaviour, so existing programs do not change.
+
+### True-or-false variables
+
+A name followed directly by `!` is a true-or-false variable, for example `FLAG! = TRUE` or `FLAG!=TRUE`.
+A number is converted: 0 gives TRUE, any other number gives FALSE.
+For a not-equal comparison, put a space before `!=`, for example `IF A != 2 THEN ...`.
+
+### Comments
+
+Use `REM` for comments. A line that starts with `!` is accepted as a comment. A `!` after a colon gives a warning
+and the rest of the line is treated as a comment. Use `REM` to avoid the warning.
 
 ---
 

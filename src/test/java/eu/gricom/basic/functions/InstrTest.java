@@ -18,7 +18,8 @@ public class InstrTest {
 
             IntegerValue oResult = (IntegerValue) Instr.execute(oValue, oSearch);
 
-            assertEquals(1, oResult.toInt());
+            // one-based position (Phase 7): "bc" is at position 2 of "abcde"
+            assertEquals(2, oResult.toInt());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,7 +33,8 @@ public class InstrTest {
 
             IntegerValue oResult = (IntegerValue) Instr.execute(oValue, oSearch);
 
-            assertEquals(-1, oResult.toInt());
+            // 0 when the search text is not found (Phase 7, documented)
+            assertEquals(0, oResult.toInt());
         } catch (Exception e) {
             e.printStackTrace();
         }

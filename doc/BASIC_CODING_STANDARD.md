@@ -1,8 +1,8 @@
 # GD-BASIC Coding Standard
 
-**Version:** 0.2.1  
+**Version:** 0.3.0  
 **Interpreter:** GriCom Basic Interpreter  
-**Last Updated:** 2026-08-24
+**Last Updated:** 2026-11-22
 
 ## Table of Contents
 
@@ -52,14 +52,17 @@
 ### Variable Naming
 Variables are identified by their suffix character:
 
-| Suffix | Type | Example | Default Value |
-|--------|------|---------|----------------|
-| `!` | Double | `RESULT!` | 0.0 |
-| `%` | Integer | `COUNT%`, `INDEX%` | 0 |
-| `&` | Long | `BIG&` | 0 |
-| `$` | String | `NAME$`, `MESSAGE$` | "" |
-| `@` | Boolean | `FLAG@` | False |
-| *(none)* | Real (default) | `X`, `Y`, `VALUE` | 0.0 |
+| Suffix | Type | Example | Default Value | Status |
+|--------|------|---------|----------------|--------|
+| *(none)* | Real, double precision (default) | `X`, `Y`, `VALUE` | 0.0 | Implemented |
+| `%` | Integer, 32-bit | `COUNT%`, `INDEX%` | 0 | Implemented |
+| `&` | Long, 64-bit | `BIG&` | 0 | Implemented |
+| `$` | String | `NAME$`, `MESSAGE$` | "" | Implemented |
+| `@` | Boolean (0.2.1 only) | `FLAG@` | False | Error in 0.3.0. Use `!` |
+| `!` | Boolean | `FLAG!` | False | Implemented in 0.3.0 (in 0.2.1 `!` is Double) |
+| `#` | Decimal (BCD), up to 40 significant digits | `AMOUNT#` | 0 | Implemented in 0.3.0 (rejected in 0.2.1) |
+
+Full rules and open decisions: `doc/BASIC.md` and `doc/GD-BASIC_Detailed_Design.md`.
 
 ### Variable Declaration
 
@@ -80,8 +83,9 @@ Variables are identified by their suffix character:
   ```basic
   10 TOTAL_SUM = 100
   20 firstName$ = "Alice"
-  30 my_flag@ = true
+  30 my_flag! = true
   ```
+  (Version 0.3.0 syntax: the Boolean suffix is `!`. In 0.2.1 it was `@`. See `doc/BASIC.md`, "Suffix rules".)
 
 ### Array Variables
 
@@ -209,16 +213,16 @@ Negative literals are preserved correctly:
 
 | Operator | Operation | Example |
 |----------|-----------|---------|
-| `AND` | Logical AND | `IF X# > 0 AND X# < 10` |
-| `OR` | Logical OR | `IF X# < 0 OR X# > 100` |
-| `NOT` | Logical NOT | `IF NOT FLAG@` |
+| `AND` | Logical AND | `IF X > 0 AND X < 10` |
+| `OR` | Logical OR | `IF X < 0 OR X > 100` |
+| `NOT` | Logical NOT | `IF NOT FLAG!` (planned; `FLAG@` in 0.2.x) |
 
 ### Bitwise Operators
 
 | Operator | Operation | Example |
 |----------|-----------|---------|
-| `<<` | Bit shift left | `4 << 1` (result: 8) |
-| `>>` | Bit shift right | `8 >> 1` (result: 4) |
+| `<<` | Bit shift left (integer operands; see BASIC.md, Shift Operators) | `four% << 1` with `four% = 4` (result: 8) |
+| `>>` | Bit shift right (integer operands; see BASIC.md, Shift Operators) | `eight% >> 1` with `eight% = 8` (result: 4) |
 
 ### Operator Precedence (highest to lowest)
 1. `^` (Exponentiation) - right associative
@@ -466,7 +470,7 @@ RETURN
 | `LEN(S$)` | String length | `LEN("Hello")` → 5 |
 | `LEFT$(S$, N)` | Leftmost N characters | `LEFT$("Hello", 2)` → "He" |
 | `RIGHT$(S$, N)` | Rightmost N characters | `RIGHT$("Hello", 2)` → "lo" |
-| `MID$(S$, Start, Length)` | Substring | `MID$("Hello", 2, 3)` → "ell" |
+| `MID$(S$, Start, End)` | Substring from Start to End, both included | `MID$("Hello", 2, 3)` → "ll" |
 | `UPPER(S$)` | Convert to uppercase | `UPPER("hello")` → "HELLO" |
 | `LOWER(S$)` | Convert to lowercase | `LOWER("HELLO")` → "hello" |
 | `CHR$(N)` | Character from ASCII code | `CHR$(65)` → "A" |
@@ -479,12 +483,12 @@ RETURN
 |----------|---------|---------|
 | `RND()` | Random number 0-1 | `RND()` → 0.42376 |
 | `MEM()` | Available memory bytes | `MEM()` → 605006424 |
-| `TIME()` | Current time in seconds | `TIME()` → 1234567890 |
+| `TIME()` | Current time in milliseconds since 1970 (Unix epoch) | `TIME()` → 1234567890123 |
 
 #### Type Conversion Functions
 | Function | Purpose | Example |
 |----------|---------|---------|
-| `CINT(X)` | Convert to integer | `CINT(3.7)` → 3 |
+| `CINT(X)` | Convert to integer (the fraction is removed) | `CINT(3.7)` → 3 |
 | `CDBL(X)` | Convert to double | `CDBL(5)` → 5.0 |
 
 ---
@@ -506,7 +510,7 @@ PRINT Expression [, Expression] [, Expression]
 ```
 
 **Formatting:**
-- **Comma (`,`)** - aligns output in columns
+- **Comma (`,`)** - separates the values; no space is added (`PRINT 1,2` prints `1.02.0`)
 - **Semicolon (`;`)** - prints without line break (no newline)
 - **No separator** - prints with newline after
 
@@ -832,7 +836,7 @@ IF DIREXISTS("dirname") THEN ...
 - Use `LEFT$()`, `RIGHT$()`, `MID$()` to extract characters
   ```basic
   10 TEXT$ = "ABCDE"
-  20 PRINT MID$(TEXT$, 2, 2)    REM Output: BC
+  20 PRINT MID$(TEXT$, 2, 4)    REM Output: BCD (start 2, end 4)
   ```
 
 ---
@@ -1018,6 +1022,8 @@ REM But arrays work without it:
 
 ### Breaking Change: Removal of # Suffix
 
+> **Status note (branch `feature/bcd-arithmetic`):** This section describes the 0.2.0 rules and is kept as history. The planned change uses `#` for decimal (BCD) variables, keeps untyped variables as REAL, and makes `!` BOOLEAN. See `doc/BASIC.md`.
+
 **The `#` suffix for real variables has been removed in version 0.2.0.**
 
 #### What Changed
@@ -1062,7 +1068,7 @@ If you encounter: **"Syntax Error: Variable name [X#] uses unsupported '#' suffi
 This BASIC interpreter supports a substantial subset of BASIC functionality with **arrays and scalars**:
 
 ### What IS Supported ✅
-- **Scalar variables** with type suffixes (untyped for real, $ for string, % for integer, ! for double, etc.)
+- **Scalar variables** with type suffixes (untyped for real, $ for string, % for integer, & for long, @ for boolean; see the table in "Variable Naming")
 - **Arrays with auto-allocation** - Array elements are created on first use (no DIM needed)
 - Arithmetic and logical operations
 - Control flow statements (IF-THEN-ELSE, GOTO)

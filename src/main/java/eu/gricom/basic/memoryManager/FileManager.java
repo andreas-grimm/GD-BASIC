@@ -30,6 +30,8 @@ import java.util.Map;
 public class FileManager {
     private static String _strCurrentDirectory = new String();
     private static final Map<Integer, String> _moFileIDMap = new HashMap<>();
+    // last file name used with each file ID. It is kept after FCLOSE so that FRENAME can still find the file (Phase 7).
+    private static final Map<Integer, String> _moLastFileName = new HashMap<>();
     private static final Map<Integer, Boolean> _moEoFMap = new HashMap<>();
     private static final Map<Integer, BufferedReader> _moFileRead = new HashMap<>();
     private static final Map<Integer, Integer> _moReadPos = new HashMap<>();
@@ -106,6 +108,7 @@ public class FileManager {
 
         // add the file name and file ID, also add the read/write marker
         _moFileIDMap.put(oFileID, strWorkFileName);
+        _moLastFileName.put(oFileID, strWorkFileName);
 
         return true;
     }
@@ -135,16 +138,22 @@ public class FileManager {
             try {
                 if (_moFileWrite.containsKey(iFileID)) {
                     _moFileWrite.get(iFileID).close();
-
-                    if (bDeleteFile) {
-                        Files.deleteIfExists(Paths.get(_moFileIDMap.get(iFileID)));
-                    }
                 }
 
                 _moFileWrite.remove(iFileID);
             } catch (IOException eException) {
                 _oLogger.error("Failed to close file: " + eException);
                 System.exit(-1);
+            }
+        }
+
+        // Phase 7 fix: the delete used to happen only for files opened for writing. Now it happens for
+        // read handles too (FCLOSE id "DELETE").
+        if (bDeleteFile && _moFileIDMap.containsKey(iFileID)) {
+            try {
+                Files.deleteIfExists(Paths.get(_moFileIDMap.get(iFileID)));
+            } catch (IOException eException) {
+                _oLogger.error("Failed to delete file: " + eException);
             }
         }
 
@@ -193,6 +202,16 @@ public class FileManager {
     }
 
     /**
+     * markEndOfFile sets the end-of-file state of a file. FGET and FPEEK call it when they read past the end, so that
+     * "WHILE NOT EOF(n)" loops end (Phase 7).
+     *
+     * @param iFileId the file ID
+     */
+    public final void markEndOfFile(final int iFileId) {
+        _moEoFMap.put(iFileId, true);
+    }
+
+    /**
      * Write into a file based on the file ID
      *
      * @param iFileId the file that is use for the write operation
@@ -219,6 +238,58 @@ public class FileManager {
             return new StringValue("");
         }
         return new StringValue(strFileName);
+    }
+
+    /**
+     * Returns the character at a character position of an open file, without changing the state of the file.
+     * A temporary reader is used, so the line reader of FINPUT keeps its place (Phase 7 fix for FPEEK).
+     *
+     * @param iFileID the file ID
+     * @param iPosition the character position (lines are counted without their line end)
+     * @return the one character as text, or "EOF" when the position is behind the end of the file
+     * @throws IOException when the file cannot be read
+     */
+    public final String peekCharacter(final int iFileID, final int iPosition) throws IOException {
+        String strFileName = _moFileIDMap.get(iFileID);
+        if (strFileName == null) {
+            strFileName = _moLastFileName.get(iFileID);
+        }
+        if (strFileName == null) {
+            return "EOF";
+        }
+
+        int iAccumulated = 0;
+        try (BufferedReader oReader = Files.newBufferedReader(Paths.get(strFileName), StandardCharsets.UTF_8)) {
+            String strLine = oReader.readLine();
+            while (strLine != null) {
+                if (iAccumulated + strLine.length() > iPosition) {
+                    return strLine.substring(iPosition - iAccumulated, iPosition - iAccumulated + 1);
+                }
+                iAccumulated += strLine.length();
+                strLine = oReader.readLine();
+            }
+        }
+        return "EOF";
+    }
+
+    /**
+     * Remembers the file name for a file ID without opening the file. Used by FRENAME (Phase 7).
+     *
+     * @param iFileID the file ID
+     * @param strFileName the new file name
+     */
+    public final void rememberFileName(final int iFileID, final String strFileName) {
+        _moLastFileName.put(iFileID, strFileName);
+    }
+
+    /**
+     * Returns the last file name that was used with a file ID, also after the file was closed.
+     *
+     * @param iFileID the file ID to look up
+     * @return the last file name, or null when this file ID was never used
+     */
+    public final String getLastFileName(final int iFileID) {
+        return _moLastFileName.get(iFileID);
     }
 
     /**

@@ -1,5 +1,7 @@
 package eu.gricom.basic.functions;
 
+import eu.gricom.basic.math.BcdMath;
+import eu.gricom.basic.variableTypes.BcdValue;
 import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.variableTypes.Value;
@@ -30,6 +32,9 @@ public final class Sqr {
      * @throws Exception as any execution error found during execution
      */
     public static Value execute(final Value oValue) throws Exception {
+        if (oValue instanceof BcdValue) {
+            return new BcdValue(BcdMath.sqrt(((BcdValue) oValue).getBigDecimal()));
+        }
         if (oValue instanceof RealValue) {
             return new RealValue(Math.sqrt(oValue.toReal()));
         }

@@ -5,6 +5,7 @@ import eu.gricom.basic.statements.*;
 import eu.gricom.basic.tokenizer.BasicTokenType;
 import eu.gricom.basic.tokenizer.ReservedWords;
 import eu.gricom.basic.tokenizer.Token;
+import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.RealValue;
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.helper.Logger;
@@ -434,6 +435,11 @@ public class BasicParser implements Parser {
                     iFileId = Integer.parseInt(consumeToken(BasicTokenType.NUMBER).getText());
                     _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
 
+                    // Phase 7: the comma after the file ID is optional (documented as "FINPUT 1, L$", used as "FINPUT 1 L$")
+                    if (getToken(0).getType() == BasicTokenType.COMMA) {
+                        _iPosition++;
+                    }
+
                     aoStatements.add(new FInputStatement(iOrgPosition, iFileId, consumeToken(BasicTokenType.WORD).getText()));
                 }
                 break;
@@ -477,12 +483,17 @@ public class BasicParser implements Parser {
                     _oLogger.debug("-parse-> [FOPEN: FileId] <" + iFileId + "> ");
 
 
-                    if (getToken(0).getType() != BasicTokenType.NUMBER
-                            && getToken(0).getType() != BasicTokenType.STRING
-                            && getToken(0).getType() != BasicTokenType.WORD) {
-                        aoFPrintExpression.add(new StringValue(" "));
-                    } else {
+                    // Phase 7 fix: the comma after the file ID was not consumed, so a space was written before
+                    // every FPRINT value. Now the comma is consumed first; "FPRINT 1" alone writes an empty line.
+                    if (getToken(0).getType() == BasicTokenType.COMMA) {
+                        _iPosition++;
                         aoFPrintExpression.add(expression());
+                    } else if (getToken(0).getType() == BasicTokenType.NUMBER
+                            || getToken(0).getType() == BasicTokenType.STRING
+                            || getToken(0).getType() == BasicTokenType.WORD) {
+                        aoFPrintExpression.add(expression());
+                    } else {
+                        aoFPrintExpression.add(new StringValue(""));
                     }
 
                     while (getToken(0).getType() == BasicTokenType.COMMA) {
@@ -932,6 +943,14 @@ public class BasicParser implements Parser {
 
                 return new VariableExpression(oToken.getText());
 
+            // If the current token is of type BOOLEAN (TRUE or FALSE), then return the value as a boolean value
+            case BOOLEAN:
+                oToken = getToken(0);
+                _oLogger.debug("-atomic-> found token: <" + _iPosition + "> [" + oToken.getType().toString() + "] '"
+                        + oToken.getText() + "' [" + oToken.getLine() + "]");
+                _iPosition++;
+                return new BooleanValue(Boolean.parseBoolean(oToken.getText()));
+
             // If the current token is of type NUMBER, then return the value as a double value
             case NUMBER:
                 oToken = getToken(0);
@@ -1131,25 +1150,56 @@ public class BasicParser implements Parser {
         _oLineNumber.putLineNumber(getToken(0).getLine(), iPrintPosition);
         _iPosition++;
 
-        if (getToken(0).getType() != BasicTokenType.NUMBER
-                && getToken(0).getType() != BasicTokenType.STRING
-                && getToken(0).getType() != BasicTokenType.WORD) {
-            aoExpression.add(new StringValue(" "));
+        // Phase 7 fix: any value on the same line can start the list (function calls such as LEN(x) too), not only
+        // numbers, strings and words. An empty PRINT keeps the old behaviour (a space).
+        int iPrintLine = _aoTokens.get(iPrintPosition).getLine();
+        if (startsPrintItem(getToken(0), iPrintLine)) {
+            aoExpression.add(expression());
         } else {
-            aoExpression.add(expression());
+            aoExpression.add(new StringValue(" "));
         }
 
-        while (getToken(0).getType() == BasicTokenType.COMMA) {
+        // Items are separated by a comma or a semicolon. Both join the items without a space (as before).
+        while (getToken(0).getType() == BasicTokenType.COMMA || getToken(0).getType() == BasicTokenType.SEMICOLON) {
+            boolean bSemicolon = getToken(0).getType() == BasicTokenType.SEMICOLON;
             _iPosition++;
-            aoExpression.add(expression());
-        }
 
-        if (getToken(0).getType() == BasicTokenType.SEMICOLON) {
-            _iPosition++;
-            bCRLF = false;
+            if (!startsPrintItem(getToken(0), iPrintLine)) {
+                // a separator at the end of the list: a trailing semicolon keeps the cursor on the same line
+                if (bSemicolon) {
+                    bCRLF = false;
+                }
+                break;
+            }
+            aoExpression.add(expression());
         }
 
         return new PrintStatement(iPrintPosition, aoExpression, bCRLF);
+    }
+
+    /**
+     * Tells whether a token can start an item of a PRINT list: a value on the same line, and not the end of the
+     * statement (colon, end of program), a separator, or the start of ELSE / END-IF. (Phase 7)
+     *
+     * @param oToken the token to check
+     * @param iPrintLine the line number of the PRINT keyword
+     * @return true when an expression starts at this token
+     */
+    private boolean startsPrintItem(final Token oToken, final int iPrintLine) {
+        if (oToken.getLine() != iPrintLine) {
+            return false;
+        }
+        switch (oToken.getType()) {
+            case EOP:
+            case COLON:
+            case SEMICOLON:
+            case COMMA:
+            case ELSE:
+            case ENDIF:
+                return false;
+            default:
+                return true;
+        }
     }
 
     /**
@@ -1433,7 +1483,7 @@ public class BasicParser implements Parser {
             _oLogger.debug("-parse-> found Token: <" + _iPosition + "> [NUMBER] " + oStepSize.content());
         }
 
-        Token oNextToken = findToken(BasicTokenType.NEXT);
+        Token oNextToken = findMatchingNext();
         _oLogger.debug("-parse-> followed Token: <" + oNextToken.getLine() + "> [NEXT]");
 
         try {
@@ -1456,7 +1506,7 @@ public class BasicParser implements Parser {
         _iPosition++;
         Expression oWhileCondition = expression();
         _oLogger.debug("-parse-> found Token: <" + (_iPosition - 1) + "> [WHILE]");
-        Token oEndWhileToken = findToken(BasicTokenType.ENDWHILE);
+        Token oEndWhileToken = findMatchingToken(BasicTokenType.WHILE, BasicTokenType.ENDWHILE);
         _oLogger.debug("-parse-> followed Token: <" + oEndWhileToken.getLine() + "> [END-WHILE]");
 
         return new WhileStatement(iOrgPosition, oWhileCondition, oEndWhileToken.getLine());
@@ -1540,6 +1590,12 @@ public class BasicParser implements Parser {
                         oStatement = parseOnStatement();
                         break;
                     default:
+                        // Phase 7 fix: file statements (FGET, FPUT, FOPEN ...), END, DATA and DIM inside a block
+                        // were skipped, so their arguments were read as statements. They are parsed now.
+                        if (isDelegatedBlockStatement(oTokenType)) {
+                            aoBlockStatements.addAll(parseDelegatedBlockStatement());
+                            continue;
+                        }
                         // Unknown statement type in block - skip it
                         _oLogger.debug("-parseBlockStatements-> skipping unknown token: " + oTokenType);
                         _iPosition++;
@@ -1554,6 +1610,44 @@ public class BasicParser implements Parser {
         }
 
         return aoBlockStatements;
+    }
+
+    /**
+     * Finds the NEXT that closes the FOR loop whose header has just been parsed.
+     *
+     * @return the NEXT token that matches the current FOR loop
+     * @throws SyntaxErrorException if no matching NEXT exists
+     */
+    private Token findMatchingNext() throws SyntaxErrorException {
+        return findMatchingToken(BasicTokenType.FOR, BasicTokenType.NEXT);
+    }
+
+    /**
+     * Finds the closing token of a block that starts just before the current position. Blocks of the same kind that
+     * are nested inside it are counted, so the outer block ends at its own closing token and not at the first one
+     * (bug fixed in Phase 6: the first NEXT or ENDWHILE was used for every loop).
+     *
+     * @param oOpenType  token that opens a block, for example FOR or WHILE
+     * @param oCloseType token that closes a block, for example NEXT or ENDWHILE
+     * @return the closing token that matches the block
+     * @throws SyntaxErrorException if no matching closing token exists
+     */
+    private Token findMatchingToken(final BasicTokenType oOpenType, final BasicTokenType oCloseType)
+            throws SyntaxErrorException {
+        int iDepth = 0;
+        for (int iCurrentPosition = _iPosition; iCurrentPosition < _aoTokens.size(); iCurrentPosition++) {
+            Token oToken = _aoTokens.get(iCurrentPosition);
+            if (oToken.getType() == oOpenType) {
+                iDepth++;
+            } else if (oToken.getType() == oCloseType) {
+                if (iDepth == 0) {
+                    return oToken;
+                }
+                iDepth--;
+            }
+        }
+        String strReservedWord = ReservedWords.getReservedWord(ReservedWords.getTokenIndex(oCloseType.toString()));
+        throw new SyntaxErrorException("Missing statement " + strReservedWord + ".");
     }
 
     /**
@@ -1578,6 +1672,53 @@ public class BasicParser implements Parser {
     }
 
     /**
+     * Finds the ELSE or END-IF that belongs to the block IF whose header has just been parsed. Nested block IFs are
+     * counted; a single-line IF has no END-IF and is not counted.
+     *
+     * @param oTarget ELSE or ENDIF
+     * @return the position of the token in the token list, or -1 if it does not belong to this IF
+     */
+    private int findBlockIfPosition(final BasicTokenType oTarget) {
+        int iDepth = 0;
+        for (int iCurrentPosition = _iPosition; iCurrentPosition < _aoTokens.size(); iCurrentPosition++) {
+            BasicTokenType oType = _aoTokens.get(iCurrentPosition).getType();
+            if (oType == BasicTokenType.IF && isBlockIfAt(iCurrentPosition)) {
+                iDepth++;
+            } else if (oType == BasicTokenType.ENDIF) {
+                if (iDepth == 0) {
+                    return (oTarget == BasicTokenType.ENDIF) ? iCurrentPosition : -1;
+                }
+                iDepth--;
+            } else if (oType == BasicTokenType.ELSE && iDepth == 0 && oTarget == BasicTokenType.ELSE) {
+                return iCurrentPosition;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Decides whether the IF token at the given position starts a block IF. A block IF has nothing after THEN on its
+     * source line (its statements follow on the next lines). A single-line IF has its statement or line number after
+     * THEN on the same line.
+     *
+     * @param iIfPosition position of the IF token in the token list
+     * @return true if the IF starts a block with an END-IF
+     */
+    private boolean isBlockIfAt(final int iIfPosition) {
+        int iLine = _aoTokens.get(iIfPosition).getLine();
+        int iPosition = iIfPosition + 1;
+        while (iPosition < _aoTokens.size() && _aoTokens.get(iPosition).getLine() == iLine
+                && _aoTokens.get(iPosition).getType() != BasicTokenType.THEN) {
+            iPosition++;
+        }
+        if (iPosition >= _aoTokens.size() || _aoTokens.get(iPosition).getType() != BasicTokenType.THEN) {
+            return false;
+        }
+        int iAfterThen = iPosition + 1;
+        return iAfterThen >= _aoTokens.size() || _aoTokens.get(iAfterThen).getLine() != iLine;
+    }
+
+    /**
      * Parse an IF statement (handles single-line, inline, and block IF).
      *
      * @return the parsed IfThenStatement
@@ -1592,14 +1733,18 @@ public class BasicParser implements Parser {
         String strLabel = consumeToken(BasicTokenType.THEN).getText();
         _oLogger.debug("-parse-> followed Token: <" + _iPosition + "> [THEN]: <" + strLabel + ">");
 
-        // Case 1: Single-line IF with line number (IF condition THEN 100)
-        if (getToken(0).getType() == BasicTokenType.NUMBER) {
+        // Case 1: Single-line IF with line number (IF condition THEN 100). The number must be on the same source line
+        // as the IF, so that a block IF ("IF x THEN" at the end of its line) is not read as a jump.
+        int iIfLine = _aoTokens.get(iOrgPosition).getLine();
+        if (getToken(0).getType() == BasicTokenType.NUMBER && getToken(0).getLine() == iIfLine) {
             int iTargetLine = Integer.parseInt(getToken(0).getText());
             _iPosition++;
             return new IfThenStatement(oCondition, iOrgPosition, 0, 0, iTargetLine);
         }
-        // Case 2: Inline statement after THEN (IF condition THEN PRINT "msg")
-        else if (isStatementKeyword(getToken(0).getType())) {
+        // Case 2: Inline statement after THEN (IF condition THEN PRINT "msg"). The statement must be on the same source
+        // line as the IF. The lexer emits no token for a line number, so a statement at the start of the next line
+        // would look like an inline statement; such an IF is a block IF (bug fixed in Phase 6).
+        else if (isStatementKeyword(getToken(0).getType()) && getToken(0).getLine() == iIfLine) {
             _oLogger.debug("-parse-> found inline statement after THEN");
             List<Statement> aoIfStatements = new ArrayList<>();
             aoIfStatements.add(parseInlineStatement());
@@ -1608,32 +1753,32 @@ public class BasicParser implements Parser {
         // Case 3: Block IF (IF condition THEN ... END-IF)
         else {
             _oLogger.debug("-parse-> found block IF");
-            Token oElseToken = null;
-
-            try {
-                oElseToken = findTokenOnNextLine(BasicTokenType.ELSE);
-                _oLogger.debug("-parse-> found ELSE token at line: <" + oElseToken.getLine() + ">");
-            } catch (SyntaxErrorException eException) {
-                _oLogger.debug("-parse-> no ELSE token found in block");
+            // Nested block IFs are counted, so the ELSE and END-IF found belong to this IF (bug fixed in Phase 6)
+            int iElseIndex = findBlockIfPosition(BasicTokenType.ELSE);
+            int iEndIfIndex = findBlockIfPosition(BasicTokenType.ENDIF);
+            if (iEndIfIndex < 0) {
+                throw new SyntaxErrorException("Missing statement END-IF.");
             }
-
-            Token oEndIfToken = findTokenOnNextLine(BasicTokenType.ENDIF);
+            Token oEndIfToken = _aoTokens.get(iEndIfIndex);
             _oLogger.debug("-parse-> found END-IF token at line: <" + oEndIfToken.getLine() + ">");
+
+            Token oElseToken = (iElseIndex >= 0) ? _aoTokens.get(iElseIndex) : null;
+            if (oElseToken != null) {
+                _oLogger.debug("-parse-> found ELSE token at line: <" + oElseToken.getLine() + ">");
+            }
 
             int iElseOrEndLine = (oElseToken != null) ? oElseToken.getLine() : oEndIfToken.getLine();
             List<Statement> aoIfStatements = parseBlockStatements(iElseOrEndLine);
 
             List<Statement> aoElseStatements = new ArrayList<>();
             if (oElseToken != null) {
-                _iPosition = findTokenPosition(BasicTokenType.ELSE);
-                _iPosition++;
+                _iPosition = iElseIndex + 1;
                 _oLogger.debug("-parse-> parsing ELSE block");
                 aoElseStatements = parseBlockStatements(oEndIfToken.getLine());
             }
 
-            // Skip to ENDIF
-            _iPosition = findTokenPosition(BasicTokenType.ENDIF);
-            _iPosition++;
+            // Skip to END-IF
+            _iPosition = iEndIfIndex + 1;
             _oLogger.debug("-parse-> skipped to END-IF");
 
             return new IfThenStatement(oCondition, iOrgPosition, aoIfStatements, aoElseStatements, oEndIfToken.getLine());
@@ -1646,6 +1791,52 @@ public class BasicParser implements Parser {
      * @param oType the BasicTokenType to check
      * @return true if the token is a statement keyword, false otherwise
      */
+    /**
+     * Tells whether a statement inside a block is parsed by the normal statement parser (Phase 7). Loop ends and
+     * block ends (NEXT, WEND, ELSE, END-IF) are not in this list, because the block parser handles them.
+     *
+     * @param oType the token type found at the current position
+     * @return true when the statement is parsed by parseDelegatedBlockStatement
+     */
+    private boolean isDelegatedBlockStatement(final BasicTokenType oType) {
+        return oType == BasicTokenType.FOPEN || oType == BasicTokenType.FCLOSE || oType == BasicTokenType.FINPUT
+                || oType == BasicTokenType.FPRINT || oType == BasicTokenType.FGET || oType == BasicTokenType.FPUT
+                || oType == BasicTokenType.FPEEK || oType == BasicTokenType.FREWIND || oType == BasicTokenType.FRENAME
+                || oType == BasicTokenType.FCOPY || oType == BasicTokenType.FDELETE || oType == BasicTokenType.END
+                || oType == BasicTokenType.DATA || oType == BasicTokenType.DIM;
+    }
+
+    /**
+     * Parses one statement inside a block with the normal parser. The statement ends at a colon, at ELSE or END-IF,
+     * at the end of its line, or at the end of the program. The statement is parsed by a small parser that gets only
+     * the tokens of this statement. Only statements without jumps are delegated, so the statement numbers of the
+     * small parser are not used for jumps.
+     *
+     * @return the statements parsed from this part of the block (normally one)
+     * @throws SyntaxErrorException if the statement is not correct
+     */
+    private List<Statement> parseDelegatedBlockStatement() throws SyntaxErrorException {
+        int iStart = _iPosition;
+        int iLine = getToken(0).getLine();
+        int iEnd = iStart;
+
+        while (iEnd < _aoTokens.size()) {
+            Token oToken = _aoTokens.get(iEnd);
+            if (oToken.getType() == BasicTokenType.EOP || oToken.getType() == BasicTokenType.COLON
+                    || oToken.getType() == BasicTokenType.ELSE || oToken.getType() == BasicTokenType.ENDIF
+                    || oToken.getLine() != iLine) {
+                break;
+            }
+            iEnd++;
+        }
+
+        List<Token> aoPart = new ArrayList<>(_aoTokens.subList(iStart, iEnd));
+        aoPart.add(new Token("", BasicTokenType.EOP, iLine));
+        List<Statement> aoParsed = new BasicParser(aoPart, _bDartmouthFlag).parse();
+        _iPosition = iEnd;
+        return aoParsed;
+    }
+
     private boolean isStatementKeyword(final BasicTokenType oType) {
         return oType == BasicTokenType.PRINT || oType == BasicTokenType.INPUT || oType == BasicTokenType.LET ||
                oType == BasicTokenType.WORD || oType == BasicTokenType.FOR || oType == BasicTokenType.WHILE ||
@@ -1658,10 +1849,14 @@ public class BasicParser implements Parser {
     /**
      * Find a token of a specific type on the next line(s), without changing position.
      *
+     * @deprecated Not nesting-aware: it finds the first matching token. Replaced by findBlockIfPosition
+     * (block IF, Phase 6). Kept, not deleted, per project rules.
+     *
      * @param oType the token type to find
      * @return the found token
      * @throws SyntaxErrorException if token not found
      */
+    @Deprecated
     private Token findTokenOnNextLine(final BasicTokenType oType) throws SyntaxErrorException {
         int iCurrentPosition = _iPosition;
 
@@ -1681,10 +1876,14 @@ public class BasicParser implements Parser {
     /**
      * Find the position of a token of a specific type without changing the parser's position.
      *
+     * @deprecated Not nesting-aware: it finds the first matching token. Replaced by findBlockIfPosition
+     * (block IF, Phase 6). Kept, not deleted, per project rules.
+     *
      * @param oType the token type to find
      * @return the index of the token
      * @throws SyntaxErrorException if token not found
      */
+    @Deprecated
     private int findTokenPosition(final BasicTokenType oType) throws SyntaxErrorException {
         int iCurrentPosition = _iPosition;
 

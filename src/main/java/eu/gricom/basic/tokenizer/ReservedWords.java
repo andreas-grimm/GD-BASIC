@@ -44,7 +44,8 @@ public final class ReservedWords {
             "&&", "\\+", "\\-", "\\*", "\\/", ":",
             ">", ">=", "<", "<=", "=", ":=", "==", "!=", "\\^",
             "\\(", "\\)", "\\'", "\\;", "\\,", "||", "\\?",
-            ">>", "<<"
+            ">>", "<<",
+            "WEND"  // Phase 7: alias of END-WHILE. Added at the end so that the other indices stay the same.
     };
 
     private static BasicTokenType[] _aeTokenTypes = {
@@ -83,7 +84,8 @@ public final class ReservedWords {
             BasicTokenType.PASCAL_ASSIGN_EQUAL, BasicTokenType.COMPARE_EQUAL, BasicTokenType.COMPARE_NOT_EQUAL, BasicTokenType.POWER,
         BasicTokenType.LEFT_PAREN, BasicTokenType.RIGHT_PAREN, BasicTokenType.COMMENT, BasicTokenType.SEMICOLON,
             BasicTokenType.COMMA, BasicTokenType.OR, BasicTokenType.PRINT,
-        BasicTokenType.SHIFT_RIGHT, BasicTokenType.SHIFT_LEFT};
+        BasicTokenType.SHIFT_RIGHT, BasicTokenType.SHIFT_LEFT,
+        BasicTokenType.ENDWHILE};  // WEND (Phase 7 alias of END-WHILE)
 
     /**
      * getIndex returns the index of the token based on an entered reserved word.

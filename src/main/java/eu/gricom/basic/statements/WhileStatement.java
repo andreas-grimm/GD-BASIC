@@ -6,6 +6,8 @@ import eu.gricom.basic.memoryManager.ProgramPointer;
 import eu.gricom.basic.memoryManager.Stack;
 import eu.gricom.basic.variableTypes.BooleanValue;
 import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.variableTypes.Value;
 
 /**
  * WhileStatement.java
@@ -51,11 +53,13 @@ public final class WhileStatement implements Statement {
         final LineNumberXRef oLineNumberObject = new LineNumberXRef();
 
         // Here we are using line numbers to jump to the destination. This is only done for BASIC programs.
-        BooleanValue bValue = (BooleanValue) _oCondition.evaluate();
+        // BASIC rule: a boolean condition is used as it is; a number is TRUE when it is not zero.
+        // Any other value (for example text) is an error.
+        boolean bConditionTrue = isConditionTrue(_oCondition.evaluate());
 
         // different to the code above: when the result of the condition is false, then ignore the next block and
         // jump to the END-IF statement.
-        if (!bValue.isTrue()) {
+        if (!bConditionTrue) {
             try {
                 if (_iEndWhileLine != 0) {
                     int iStatementNo =
@@ -74,6 +78,23 @@ public final class WhileStatement implements Statement {
         } else {
             _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNumber)));
         }
+    }
+
+    /**
+     * Decides whether a WHILE condition is TRUE.
+     *
+     * @param oValue the evaluated condition
+     * @return true for a TRUE boolean, and for any number that is not zero
+     * @throws SyntaxErrorException when the value is text (it is neither a boolean nor a number)
+     */
+    static boolean isConditionTrue(final Value oValue) throws SyntaxErrorException {
+        if (oValue instanceof BooleanValue) {
+            return ((BooleanValue) oValue).isTrue();
+        }
+        if (oValue instanceof StringValue) {
+            throw new SyntaxErrorException("WHILE condition must be a number or a boolean: " + oValue);
+        }
+        return oValue.toReal() != 0;
     }
 
     @Override

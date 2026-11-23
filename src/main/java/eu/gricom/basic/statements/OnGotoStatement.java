@@ -72,15 +72,17 @@ public final class OnGotoStatement implements Statement {
             }
 
             String strTarget = _aoTargetLineNumbers.get(iIndex - 1);
-            int iTokenNo = _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(strTarget));
-
-            if (iTokenNo != 0) {
-                _oProgramPointer.setCurrentStatement(iTokenNo);
-                _oLogger.debug("-execute-> ON GOTO: jumped to line " + strTarget);
-                return;
+            // Statement index 0 is a valid target, so a missing line is detected by the exception, not a 0 value.
+            int iStatementNo;
+            try {
+                iStatementNo = _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(strTarget));
+            } catch (RuntimeException e) {
+                throw new SyntaxErrorException("ON GOTO: Target line " + strTarget + " not found");
             }
 
-            throw new SyntaxErrorException("ON GOTO: Target line " + strTarget + " not found");
+            _oProgramPointer.setCurrentStatement(iStatementNo);
+            _oLogger.debug("-execute-> ON GOTO: jumped to line " + strTarget);
+            return;
         } catch (SyntaxErrorException e) {
             throw e;
         } catch (Exception e) {

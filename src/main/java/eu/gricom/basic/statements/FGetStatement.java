@@ -90,47 +90,15 @@ public class FGetStatement implements Statement {
                 throw new RuntimeException("File name is empty for file ID " + _iFileId);
             }
 
-            // Step 4: Close the current file
-            try {
-                oFileManager.closeFile(_iFileId, false);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to close file before re-opening: " + e.getMessage());
-            }
+            // Step 4: Read the character at the stored position with a temporary reader (Phase 7 fix). The file is
+            // not closed or re-opened, so the line reader of FINPUT keeps its place.
+            String strCharacter = oFileManager.peekCharacter(_iFileId, iStoredPosition);
 
-            // Step 5: Re-open the file for reading
-            try {
-                boolean bOpened = oFileManager.openFile(strFileName, _iFileId, FileOpenType.READ);
-                if (!bOpened) {
-                    throw new RuntimeException("Failed to re-open file: " + strFileName);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to re-open file: " + e.getMessage());
-            }
-
-            // Step 6: Read lines until we reach or pass the stored position
-            int iAccumulatedChars = 0;
-            String strCharacter = "EOF";
-
-            while (true) {
-                Value oCurrentLine = oFileManager.read(_iFileId);
-                String strCurrentLine = oCurrentLine.toString();
-
-                // Check for EOF (empty string returned by FileManager.read() at EOF)
-                if (strCurrentLine.isEmpty()) {
-                    // EOF reached
-                    break;
-                }
-
-                // Check if the position is within this line
-                if (iAccumulatedChars + strCurrentLine.length() > iStoredPosition) {
-                    // Extract the character at the correct position within this line
-                    int iCharIndex = iStoredPosition - iAccumulatedChars;
-                    strCharacter = strCurrentLine.substring(iCharIndex, iCharIndex + 1);
-                    oFileManager.putReadPos(_iFileId, iStoredPosition + 1);
-                    break;
-                }
-
-                iAccumulatedChars += strCurrentLine.length();
+            // Step 5: Move the read position one character on, or mark the end of the file (EOF) when nothing is left
+            if ("EOF".equals(strCharacter)) {
+                oFileManager.markEndOfFile(_iFileId);
+            } else {
+                oFileManager.putReadPos(_iFileId, iStoredPosition + 1);
             }
 
             // Step 7: Assign the character to the variable

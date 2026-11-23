@@ -1,0 +1,2 @@
+=== Testing that a fractional BCD shift is rejected ===
+eu.gricom.basic.error.SyntaxErrorException: Operator '<<' needs whole numbers within the INTEGER range, but got 3.9

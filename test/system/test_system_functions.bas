@@ -14,7 +14,7 @@
 90 PRINT "MEM returned non-negative value (correct)"
 100 REM Test TIME$ function
 110 PRINT "Testing TIME$ (Current Time):"
-120 time$ = TIME
+120 time$ = STR$(TIME)
 130 PRINT "TIME$ = ";
 140 PRINT time$
 150 IF LEN(time$) == 0 THEN 9000

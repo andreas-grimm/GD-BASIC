@@ -63,7 +63,7 @@ public class RealValueTest {
     }
 
     @Test
-    public void testPlus() {
+    public void testPlus() throws Exception {
         try {
             RealValue oFirstValue = new RealValue(1);
             RealValue oSecondValue = new RealValue(2);
@@ -77,7 +77,7 @@ public class RealValueTest {
     }
 
     @Test
-    public void testMinus() {
+    public void testMinus() throws Exception {
         try {
             RealValue oFirstValue = new RealValue(1);
             RealValue oSecondValue = new RealValue(2);
@@ -91,7 +91,7 @@ public class RealValueTest {
     }
 
     @Test
-    public void testMultiply() {
+    public void testMultiply() throws Exception {
         try {
             RealValue oFirstValue = new RealValue(1);
             RealValue oSecondValue = new RealValue(2);
@@ -105,7 +105,7 @@ public class RealValueTest {
     }
 
     @Test
-    public void testDivide() {
+    public void testDivide() throws Exception {
         try {
             RealValue oFirstValue = new RealValue(1);
             RealValue oSecondValue = new RealValue(2);
@@ -119,7 +119,7 @@ public class RealValueTest {
     }
 
     @Test
-    public void testDivideByZero() {
+    public void testDivideByZero() throws Exception {
         RealValue oFirstValue = new RealValue(1);
         RealValue oSecondValue = new RealValue(0);
 
@@ -130,7 +130,7 @@ public class RealValueTest {
     }
 
     @Test
-    public void testModulo() {
+    public void testModulo() throws Exception {
         try {
             RealValue oFirstValue = new RealValue(3);
             RealValue oSecondValue = new RealValue(2);
@@ -144,7 +144,7 @@ public class RealValueTest {
     }
 
     @Test
-    public void testPower() {
+    public void testPower() throws Exception {
         try {
             RealValue oFirstValue = new RealValue(2);
             RealValue oSecondValue = new RealValue(2);
@@ -158,15 +158,22 @@ public class RealValueTest {
     }
 
     @Test
-    public void testPowerTypeException() {
+    public void testPowerWithIntegerGivesReal() throws Exception {
+        // REAL with INTEGER gives a REAL result (design rule, Phase 7): 2.0 ^ 2 = 4.0
         RealValue oFirstValue = new RealValue(2);
         IntegerValue oSecondValue = new IntegerValue(2);
 
+        Value oResult = oFirstValue.power(oSecondValue);
 
-        assertThrows(SyntaxErrorException.class, () -> {
-            RealValue oResultValue = (RealValue) oFirstValue.power(oSecondValue);
-            System.out.println(oResultValue.toString());
-        });
+        assertTrue(oResult instanceof RealValue);
+        assertEquals(4.0, oResult.toReal(), 0.0);
+    }
+
+    @Test
+    public void testPowerWithStringIsRejected() {
+        RealValue oFirstValue = new RealValue(2);
+
+        assertThrows(SyntaxErrorException.class, () -> oFirstValue.power(new StringValue("2")));
     }
 
     @Test
@@ -184,15 +191,20 @@ public class RealValueTest {
     }
 
     @Test
-    public void testSmallerThanTypeException() {
+    public void testSmallerThanWithIntegerGivesBoolean() throws Exception {
+        // REAL compared with INTEGER compares the numbers (Phase 7 fix)
         RealValue oFirstValue = new RealValue(1);
         IntegerValue oSecondValue = new IntegerValue(2);
 
+        BooleanValue oResult = (BooleanValue) oFirstValue.smallerThan(oSecondValue);
+        assertTrue(oResult.isTrue());
+    }
 
-        assertThrows(SyntaxErrorException.class, () -> {
-            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerThan(oSecondValue);
-            System.out.println(oResultValue.toString());
-        });
+    @Test
+    public void testSmallerThanWithStringIsRejected() {
+        RealValue oFirstValue = new RealValue(1);
+
+        assertThrows(SyntaxErrorException.class, () -> oFirstValue.smallerThan(new StringValue("1")));
     }
 
     @Test
@@ -210,15 +222,20 @@ public class RealValueTest {
     }
 
     @Test
-    public void testSmallerEqualThanTypeException() {
+    public void testSmallerEqualThanWithIntegerGivesBoolean() throws Exception {
+        // REAL compared with INTEGER compares the numbers (Phase 7 fix)
         RealValue oFirstValue = new RealValue(1);
         IntegerValue oSecondValue = new IntegerValue(2);
 
+        BooleanValue oResult = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
+        assertTrue(oResult.isTrue());
+    }
 
-        assertThrows(SyntaxErrorException.class, () -> {
-            BooleanValue oResultValue = (BooleanValue) oFirstValue.smallerEqualThan(oSecondValue);
-            System.out.println(oResultValue.toString());
-        });
+    @Test
+    public void testSmallerEqualThanWithStringIsRejected() {
+        RealValue oFirstValue = new RealValue(1);
+
+        assertThrows(SyntaxErrorException.class, () -> oFirstValue.smallerEqualThan(new StringValue("1")));
     }
 
     @Test
@@ -236,15 +253,20 @@ public class RealValueTest {
     }
 
     @Test
-    public void testLargerThanTypeException() {
+    public void testLargerThanWithIntegerGivesBoolean() throws Exception {
+        // REAL compared with INTEGER compares the numbers (Phase 7 fix)
         RealValue oFirstValue = new RealValue(2);
         IntegerValue oSecondValue = new IntegerValue(1);
 
+        BooleanValue oResult = (BooleanValue) oFirstValue.largerThan(oSecondValue);
+        assertTrue(oResult.isTrue());
+    }
 
-        assertThrows(SyntaxErrorException.class, () -> {
-            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerThan(oSecondValue);
-            System.out.println(oResultValue.toString());
-        });
+    @Test
+    public void testLargerThanWithStringIsRejected() {
+        RealValue oFirstValue = new RealValue(2);
+
+        assertThrows(SyntaxErrorException.class, () -> oFirstValue.largerThan(new StringValue("1")));
     }
 
     @Test
@@ -262,14 +284,19 @@ public class RealValueTest {
     }
 
     @Test
-    public void testLargerEqualThanTypeException() {
+    public void testLargerEqualThanWithIntegerGivesBoolean() throws Exception {
+        // REAL compared with INTEGER compares the numbers (Phase 7 fix)
         RealValue oFirstValue = new RealValue(2);
         IntegerValue oSecondValue = new IntegerValue(1);
 
+        BooleanValue oResult = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
+        assertTrue(oResult.isTrue());
+    }
 
-        assertThrows(SyntaxErrorException.class, () -> {
-            BooleanValue oResultValue = (BooleanValue) oFirstValue.largerEqualThan(oSecondValue);
-            System.out.println(oResultValue.toString());
-        });
+    @Test
+    public void testLargerEqualThanWithStringIsRejected() {
+        RealValue oFirstValue = new RealValue(2);
+
+        assertThrows(SyntaxErrorException.class, () -> oFirstValue.largerEqualThan(new StringValue("1")));
     }
 }

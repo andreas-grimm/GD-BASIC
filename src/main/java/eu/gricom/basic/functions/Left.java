@@ -37,8 +37,9 @@ public final class Left {
 
         if (oValue instanceof StringValue) {
 
+            // A length equal to or greater than the string length returns the whole string.
             if (iLength >= ((IntegerValue) Len.execute(oValue)).toInt()) {
-                throw new RuntimeException("Requested length exceeds size of String");
+                return new StringValue(oValue.toString());
             }
 
             return new StringValue(oValue.toString().substring(0, iLength));

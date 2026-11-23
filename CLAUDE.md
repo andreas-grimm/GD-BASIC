@@ -2,14 +2,16 @@
 
 ## Project Overview
 
-GD-BASIC (GriCom Diminutive BASIC Interpreter) is a Java 21 implementation of a Dartmouth-style BASIC interpreter. It can execute `.bas` programs, support interactive line editing, and optionally compile them to Java source code. It also serves as an embeddable scripting engine.
+GD-BASIC (GriCom Diminutive BASIC Interpreter) is a Java 21 implementation of a Dartmouth-style BASIC interpreter. It can execute `.bas` programs, support interactive line editing. It also serves as an embeddable scripting engine.
 
-- **Version**: 0.2.1
+- **Version**: 0.3.0 (implemented on branch `feature/bcd-arithmetic`; not yet merged or committed; the last released version is 0.2.1)
 - **License**: See LICENSE.md
-- **Status**: Production Ready (1248/1248 tests passing)
-- **Last Updated**: 2026-07-26
+- **Status**: 1435/1435 unit tests and 62/62 system test programs passing
+- **Last Updated**: 2026-11-22
 
 ⚠️ **Breaking Change**: Version 0.2.0 removes the `#` suffix for real variables. Use untyped variables (no suffix) instead. See BASIC_CODING_STANDARD.md for migration guide.
+
+⚠️ **Version 0.3.0 suffix rules (branch `feature/bcd-arithmetic`)**: a variable with no suffix is REAL (double precision). The suffix `#` marks decimal (BCD) variables with up to 40 significant digits. The suffix `!` is the BOOLEAN suffix. The suffix `@` is no longer valid and gives an error. The released 0.2.1 code still uses `!` for DOUBLE and `@` for BOOLEAN. The authoritative description is in `doc/BASIC.md` (section "Variables, Arrays, and Constants").
 
 ✨ **New in 0.2.0+**: Interactive line editor with LOAD, SAVE, DELETE, HELP commands. Start without a file: `java -jar BASIC-*.jar`
 
@@ -29,13 +31,13 @@ mvn test -Dtest=BasicParserTest
 mvn site
 
 # Interactive mode (no file required, NEW in 0.2.0+)
-java -jar target/BASIC-0.2.1-jar-with-dependencies.jar
+java -jar target/BASIC-0.3.0-jar-with-dependencies.jar
 
 # Run with a program file
-java -jar target/BASIC-0.2.1-jar-with-dependencies.jar program.bas
+java -jar target/BASIC-0.3.0-jar-with-dependencies.jar program.bas
 
 # Direct execution (skip interactive editor)
-java -jar target/BASIC-0.2.1-jar-with-dependencies.jar -r program.bas
+java -jar target/BASIC-0.3.0-jar-with-dependencies.jar -r program.bas
 
 # Run with options
 java -jar target/BASIC-*-jar-with-dependencies.jar -v debug program.bas   # verbose logging
@@ -46,7 +48,7 @@ java -jar target/BASIC-*-jar-with-dependencies.jar -h                     # help
 
 **Requirements**: Java 21+, Maven 3.6.3+
 
-**Test Results**: 1248/1248 tests passing (100% pass rate, zero failures)
+**Test Results**: 1435/1435 unit tests passing (JUnit); 62/62 system test programs passing (`test/system/run_all_tests.sh`). Zero failures.
 
 ## Architecture
 
@@ -57,8 +59,6 @@ Processing pipeline:
            → Parsing (BasicParser) → Execution (Execute)
 ```
 
-Optionally: instead of Execute, the Generator compiles to Java via a JSON intermediate.
-
 ### Key Packages (`eu.gricom.basic.*`)
 
 | Package | Purpose |
@@ -66,13 +66,14 @@ Optionally: instead of Execute, the Generator compiles to Java via a JSON interm
 | `tokenizer` | Lexical analysis — `BasicLexer`, `Token`, `BasicTokenType` |
 | `parser` | Recursive-descent parser — `BasicParser` |
 | `statements` | 35+ statement implementations (IF, FOR, PRINT, GOSUB, …) |
-| `variableTypes` | Type system — `RealValue`, `IntegerValue`, `StringValue`, `LongValue`, `BooleanValue` |
+| `variableTypes` | Type system — `RealValue`, `IntegerValue`, `StringValue`, `LongValue`, `BooleanValue`, `BcdValue` (decimal, `#`) |
+| `math` | Decimal (BCD) maths — `BcdMath` (SQR, EXP, LOG, SIN, COS, TAN, ATN, power, pi) |
+| `helper` (also) | `ConsoleInput` — one shared reader for standard input (INPUT and the line editor) |
 | `memoryManager` | State — `Program`, `VariableManagement`, `Stack`, `ProgramPointer` |
 | `functions` | 40+ built-in functions (math, string, system, file) |
 | `runtimeManager` | Execution engine — `Execute` |
 | `lineEditor` | Interactive line editor — `LineEditor` (NEW in 0.2.0+) |
-| `codeGenerator` | Java code generation |
-| `error` | Exception types (includes new `EmptyProgramException`, `FileAlreadyExistsException`) |
+| `error` | Exception types (includes `EmptyProgramException`, `FileAlreadyExistsException`, `OverflowException` for BCD values) |
 | `helper` | `Logger`, `Printer`, `FileHandler`, `EnvParam` |
 
 ### Parser Evaluation Modes
@@ -84,7 +85,8 @@ Controlled by `_bDartmouthFlag` in `BasicParser`:
 ### Variable Types
 
 Type is indicated by suffix on variable name:
-- `%` Integer, `&` Long, `$` String, `!` Double, `@` Boolean, (none) = Real (default)
+- `%` Integer, `&` Long, `$` String, (none) = Real (default, double precision)
+- Version 0.3.0 (branch `feature/bcd-arithmetic`): `!` is Boolean, and `#` is decimal BCD (up to 40 significant digits). `@` is not a variable suffix. Released 0.2.1: `!` is Double and `@` is Boolean. The status of each suffix is in `doc/BASIC.md`.
 
 Arrays are dynamically allocated — no DIM statement required.
 
@@ -149,7 +151,7 @@ Configuration is loaded from `src/main/resources/application.yaml` with two conf
 ```yaml
 environment:          # Default runtime settings
   app_name: GD-BASIC
-  version: 0.2.1
+  version: 0.3.0
   max_bcd_digits: 40
   dartmouth: false
   log_level: warning
@@ -180,7 +182,7 @@ JAVA_HOME=/path/to/jdk-21 log_level=debug mvn test
 The `EnvParam` singleton provides type-safe configuration access:
 
 ```java
-String version = EnvParam.getString("version");        // "0.2.1"
+String version = EnvParam.getString("version");        // "0.3.0"
 int maxDigits = EnvParam.getInt("max_bcd_digits");     // 40
 float timeout = EnvParam.getFloat("timeout_float");    // 30.5
 boolean dartmouth = EnvParam.getBoolean("dartmouth");  // false
@@ -203,8 +205,8 @@ The singleton instance is cached; reset via reflection in tests using the teardo
 | Key | Type | Default | Purpose |
 |---|---|---|---|
 | `app_name` | String | GD-BASIC | Application identifier |
-| `version` | String | 0.2.1 | Version number (displayed in splash) |
-| `max_bcd_digits` | Integer | 40 | Maximum BCD digits for real numbers |
+| `version` | String | 0.3.0 | Version number (displayed in splash) |
+| `max_bcd_digits` | Integer | 40 | Maximum significant digits of a BCD (`#`) value (see `doc/GD-BASIC_Detailed_Design.md`) |
 | `dartmouth` | Boolean | false | Enable Dartmouth-style left-to-right evaluation |
 | `log_level` | String | warning | Default logging level (trace, debug, info, warning) |
 | `debug_mode` | Boolean | false | Enable debug output |

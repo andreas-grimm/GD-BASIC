@@ -196,7 +196,9 @@ public class Basic {
                 _oProgram.setPreRunStatements(oParser.parsePreRun());
                 _oProgram.setStatements(oParser.parse());
             } catch (SyntaxErrorException eSyntaxError) {
+                // a program that does not parse must not run (Phase 7: exit code 1 so that tests see the error)
                 _oLogger.error(eSyntaxError.getMessage());
+                System.exit(1);
             }
 
             // Run.
@@ -207,6 +209,9 @@ public class Basic {
 
             // run the program
             oRun.runProgram();
+
+            // exit code 1 when the program stopped with an error, 0 when it ended normally (END)
+            System.exit(oRun.hasRuntimeError() ? 1 : 0);
         }
 
         System.exit(0);

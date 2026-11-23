@@ -67,8 +67,8 @@ public class FRenameStatement implements Statement {
     }
 
     /**
-     * execute renames the file identified by the file ID. The file is closed (without deletion),
-     * renamed in the file system, and then re-registered with the same file ID and new name.
+     * execute renames the file identified by the file ID. The file is closed (without deletion) and
+     * renamed in the file system. The file ID then remembers the new name; the file stays closed.
      *
      * @throws Exception as any execution error found during execution
      */
@@ -76,13 +76,17 @@ public class FRenameStatement implements Statement {
     public void execute() throws Exception {
         FileManager oFileManager = new FileManager();
 
-        // Step 1: Verify file ID is registered
-        if (!oFileManager.getFileStatus(_iFileId)) {
+        // Step 1: The file ID must be known. It is either open, or it was closed and its last name is remembered
+        // (Phase 7: the documented example renames a file right after FCLOSE "KEEP").
+        boolean bWasOpen = oFileManager.getFileStatus(_iFileId);
+        if (!bWasOpen && oFileManager.getLastFileName(_iFileId) == null) {
             throw new RuntimeException("File with ID " + _iFileId + " is not registered in FileManager");
         }
 
         // Step 2: Get the current file name
-        String strCurrentFileName = oFileManager.getFileName(_iFileId).toString();
+        String strCurrentFileName = bWasOpen
+                ? oFileManager.getFileName(_iFileId).toString()
+                : oFileManager.getLastFileName(_iFileId);
 
         // Step 3: Validate current file name is not empty
         if (strCurrentFileName.isEmpty()) {
@@ -99,11 +103,13 @@ public class FRenameStatement implements Statement {
         }
 
         try {
-            // Step 5: Close the file (keeping it on disk)
-            try {
-                oFileManager.closeFile(_iFileId, false);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to close file before renaming: " + e.getMessage());
+            // Step 5: Close the file (keeping it on disk). An already closed file needs no close.
+            if (bWasOpen) {
+                try {
+                    oFileManager.closeFile(_iFileId, false);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to close file before renaming: " + e.getMessage());
+                }
             }
 
             // Step 6: Rename the file in the file system
@@ -124,20 +130,10 @@ public class FRenameStatement implements Statement {
                 throw new RuntimeException("Failed to rename file from " + strCurrentFileName + " to " + strNewFileName + ": " + e.getMessage());
             }
 
-            // Step 7: Re-register the file with the same file ID and new name
-            try {
-                // Determine file open type based on the original state
-                // Since we just closed the file, we need to re-open it with appropriate permissions
-                // Try to open as READ first (most common for renamed files)
-                boolean bOpened = oFileManager.openFile(strNewFileName, _iFileId, FileOpenType.READ);
-                if (!bOpened) {
-                    throw new RuntimeException("Failed to re-register renamed file in FileManager");
-                }
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to re-register renamed file: " + e.getMessage());
-            }
+            // Step 7: The file stays closed. The file ID remembers the new name, so that the file can be opened again
+            // under any file ID. (Phase 7: the old re-registration opened the file for reading under this ID, which
+            // blocked every later FOPEN of the same file name.)
+            oFileManager.rememberFileName(_iFileId, strNewFileName);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
