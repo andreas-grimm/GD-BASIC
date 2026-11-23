@@ -47,10 +47,10 @@ public class FPutStatement implements Statement {
         _oExpression = oExpression;
 
         // Create a single-element list containing the expression
-        List<Expression> aoExpression = Collections.singletonList(oExpression);
+        List<Expression> voExpression = Collections.singletonList(oExpression);
 
         // Create the internal FPrintStatement with bCRLF set to false (no newline)
-        _oFPrintStatement = new FPrintStatement(_iTokenNumber, _iFileId, aoExpression, false);
+        _oFPrintStatement = new FPrintStatement(_iTokenNumber, _iFileId, voExpression, false);
     }
 
     /**
@@ -74,10 +74,10 @@ public class FPutStatement implements Statement {
         try {
             // Delegate to FPrintStatement with bCRLF = false
             _oFPrintStatement.execute();
-        } catch (Exception e) {
+        } catch (Exception oException) {
             Logger oLogger = new Logger("eu.gricom.basic.statements.FPutStatement");
-            oLogger.error(e.getMessage());
-            throw e;
+            oLogger.error(oException.getMessage());
+            throw oException;
         }
     }
 
@@ -104,11 +104,21 @@ public class FPutStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        StringBuilder strReturn = new StringBuilder("{\"FPUT\": {");
-        strReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
-        strReturn.append("\"FILE_ID\": \"").append(_iFileId).append("\",");
-        strReturn.append("\"EXPRESSION\": ").append(_oExpression.structure());
-        strReturn.append("}}");
-        return strReturn.toString();
+        StringBuilder oReturn = new StringBuilder("{\"FPUT\": {");
+        oReturn.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
+        oReturn.append("\"FILE_ID\": \"").append(_iFileId).append("\",");
+        oReturn.append("\"EXPRESSION\": ").append(_oExpression.structure());
+        oReturn.append("}}");
+        return oReturn.toString();
+    }
+
+    /** @return the FileId of this statement (used by the compiler) */
+    public int getFileId() {
+        return _iFileId;
+    }
+
+    /** @return the Expression of this statement (used by the compiler) */
+    public Expression getExpression() {
+        return _oExpression;
     }
 }

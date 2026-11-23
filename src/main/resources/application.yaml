@@ -3,7 +3,7 @@ environment:
   max_bcd_digits: 40
   dartmouth: false
   log_level: warning
-  version: 0.3.0
+  version: 0.4.0
 
 testing:
   max_bcd_digits: 40

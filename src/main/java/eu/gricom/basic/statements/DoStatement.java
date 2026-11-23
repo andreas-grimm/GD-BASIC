@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.Stack;
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.memorymanager.Stack;
+import eu.gricom.basic.variabletypes.IntegerValue;
 
 /**
  * DoStatement.java
@@ -55,7 +55,7 @@ public class DoStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"DO\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\"";
         strReturn += "}}";
         return strReturn;
     }

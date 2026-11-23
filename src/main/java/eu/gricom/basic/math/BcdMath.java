@@ -63,21 +63,21 @@ public final class BcdMath {
      * @return e^x
      * @throws OverflowException if e^x needs more than max_bcd_digits digits before the decimal point (x above 1000)
      */
-    public static BigDecimal exp(final BigDecimal x) throws OverflowException {
-        BigDecimal oWhole = x.setScale(0, RoundingMode.HALF_UP);
+    public static BigDecimal exp(final BigDecimal oValue) throws OverflowException {
+        BigDecimal oWhole = oValue.setScale(0, RoundingMode.HALF_UP);
         if (oWhole.compareTo(BigDecimal.valueOf(MAX_EXP)) > 0) {
-            throw new OverflowException("Overflow: EXP(" + x.toPlainString() + ") is too large for a BCD value");
+            throw new OverflowException("Overflow: EXP(" + oValue.toPlainString() + ") is too large for a BCD value");
         }
         if (oWhole.compareTo(BigDecimal.valueOf(-MAX_EXP)) < 0) {
             // below 1E-434: such a small value is shown as zero
             return BigDecimal.ZERO;
         }
 
-        BigDecimal oRemainder = x.subtract(oWhole, MC);
+        BigDecimal oRemainder = oValue.subtract(oWhole, MC);
         BigDecimal oSum = BigDecimal.ONE;
         BigDecimal oTerm = BigDecimal.ONE;
-        for (int k = 1;; k++) {
-            oTerm = oTerm.multiply(oRemainder, MC).divide(BigDecimal.valueOf(k), MC);
+        for (int iIndex = 1;; iIndex++) {
+            oTerm = oTerm.multiply(oRemainder, MC).divide(BigDecimal.valueOf(iIndex), MC);
             if (oTerm.abs().compareTo(EPS) < 0) {
                 break;
             }
@@ -99,14 +99,14 @@ public final class BcdMath {
      * @throws SyntaxErrorException if x is zero or negative
      * @throws OverflowException if an intermediate result is too large (not possible for values of 40 digits)
      */
-    public static BigDecimal ln(final BigDecimal x) throws SyntaxErrorException, OverflowException {
-        if (x.signum() <= 0) {
-            throw new SyntaxErrorException("Syntax Error: LOG needs a value greater than 0, not " + x.toPlainString());
+    public static BigDecimal ln(final BigDecimal oValue) throws SyntaxErrorException, OverflowException {
+        if (oValue.signum() <= 0) {
+            throw new SyntaxErrorException("Syntax Error: LOG needs a value greater than 0, not " + oValue.toPlainString());
         }
-        BigDecimal oY = BigDecimal.valueOf(Math.log(x.doubleValue()));
-        for (int i = 0; i < 10; i++) {
+        BigDecimal oY = BigDecimal.valueOf(Math.log(oValue.doubleValue()));
+        for (int iIndex = 0; iIndex < 10; iIndex++) {
             BigDecimal oExpY = exp(oY);
-            BigDecimal oStep = x.subtract(oExpY, MC).multiply(TWO, MC).divide(x.add(oExpY, MC), MC);
+            BigDecimal oStep = oValue.subtract(oExpY, MC).multiply(TWO, MC).divide(oValue.add(oExpY, MC), MC);
             oY = oY.add(oStep, MC);
             if (oStep.abs().compareTo(STOP) < 0) {
                 break;
@@ -123,8 +123,8 @@ public final class BcdMath {
      * @throws SyntaxErrorException if x is zero or negative
      * @throws OverflowException as for ln
      */
-    public static BigDecimal log10(final BigDecimal x) throws SyntaxErrorException, OverflowException {
-        return ln(x).divide(ln(BigDecimal.TEN), MC);
+    public static BigDecimal log10(final BigDecimal oValue) throws SyntaxErrorException, OverflowException {
+        return ln(oValue).divide(ln(BigDecimal.TEN), MC);
     }
 
     /**
@@ -134,12 +134,12 @@ public final class BcdMath {
      * @return the square root of x
      * @throws SyntaxErrorException if x is negative
      */
-    public static BigDecimal sqrt(final BigDecimal x) throws SyntaxErrorException {
-        if (x.signum() < 0) {
+    public static BigDecimal sqrt(final BigDecimal oValue) throws SyntaxErrorException {
+        if (oValue.signum() < 0) {
             throw new SyntaxErrorException("Syntax Error: SQR of a negative value has no real result: "
-                    + x.toPlainString());
+                    + oValue.toPlainString());
         }
-        return x.sqrt(MC);
+        return oValue.sqrt(MC);
     }
 
     /**
@@ -148,8 +148,8 @@ public final class BcdMath {
      * @param x the angle in radians
      * @return sin(x)
      */
-    public static BigDecimal sin(final BigDecimal x) {
-        return sinSeries(reduce(x));
+    public static BigDecimal sin(final BigDecimal oValue) {
+        return sinSeries(reduce(oValue));
     }
 
     /**
@@ -158,8 +158,8 @@ public final class BcdMath {
      * @param x the angle in radians
      * @return cos(x)
      */
-    public static BigDecimal cos(final BigDecimal x) {
-        return cosSeries(reduce(x));
+    public static BigDecimal cos(final BigDecimal oValue) {
+        return cosSeries(reduce(oValue));
     }
 
     /**
@@ -169,11 +169,11 @@ public final class BcdMath {
      * @return tan(x)
      * @throws DivideByZeroException if the cosine is exactly zero (no finite tangent)
      */
-    public static BigDecimal tan(final BigDecimal x) throws DivideByZeroException {
-        BigDecimal oReduced = reduce(x);
+    public static BigDecimal tan(final BigDecimal oValue) throws DivideByZeroException {
+        BigDecimal oReduced = reduce(oValue);
         BigDecimal oCosine = cosSeries(oReduced);
         if (oCosine.signum() == 0) {
-            throw new DivideByZeroException("TAN(" + x.toPlainString() + ") is a division by zero");
+            throw new DivideByZeroException("TAN(" + oValue.toPlainString() + ") is a division by zero");
         }
         return sinSeries(oReduced).divide(oCosine, MC);
     }
@@ -184,16 +184,16 @@ public final class BcdMath {
      * @param x the value
      * @return atan(x), between -PI/2 and PI/2
      */
-    public static BigDecimal atan(final BigDecimal x) {
-        if (x.signum() < 0) {
-            return atan(x.negate()).negate();
+    public static BigDecimal atan(final BigDecimal oValue) {
+        if (oValue.signum() < 0) {
+            return atan(oValue.negate()).negate();
         }
-        if (x.compareTo(BigDecimal.ONE) > 0) {
-            return PI.divide(TWO, MC).subtract(atan(BigDecimal.ONE.divide(x, MC)), MC);
+        if (oValue.compareTo(BigDecimal.ONE) > 0) {
+            return PI.divide(TWO, MC).subtract(atan(BigDecimal.ONE.divide(oValue, MC)), MC);
         }
 
         // atan(x) = 2 * atan(x / (1 + sqrt(1 + x*x))), repeated until x is small
-        BigDecimal oWork = x;
+        BigDecimal oWork = oValue;
         int iHalvings = 0;
         BigDecimal oSmall = new BigDecimal("0.1");
         while (oWork.compareTo(oSmall) > 0) {
@@ -207,9 +207,9 @@ public final class BcdMath {
         BigDecimal oPower = oWork;
         BigDecimal oSum = oWork;
         boolean bSubtract = true;
-        for (int k = 1;; k++) {
+        for (int iIndex = 1;; iIndex++) {
             oPower = oPower.multiply(oX2, MC);
-            BigDecimal oTerm = oPower.divide(BigDecimal.valueOf(2L * k + 1), MC);
+            BigDecimal oTerm = oPower.divide(BigDecimal.valueOf(2L * iIndex + 1), MC);
             if (oTerm.abs().compareTo(EPS) < 0) {
                 break;
             }
@@ -230,19 +230,19 @@ public final class BcdMath {
      * @throws SyntaxErrorException if x is negative (a fractional power of a negative number has no real result)
      * @throws OverflowException if the result is too large
      */
-    public static BigDecimal power(final BigDecimal x, final BigDecimal y)
+    public static BigDecimal power(final BigDecimal oBase, final BigDecimal oExponent)
             throws DivideByZeroException, SyntaxErrorException, OverflowException {
-        if (x.signum() == 0) {
-            if (y.signum() < 0) {
-                throw new DivideByZeroException("0 to the power " + y.toPlainString() + " is a division by zero");
+        if (oBase.signum() == 0) {
+            if (oExponent.signum() < 0) {
+                throw new DivideByZeroException("0 to the power " + oExponent.toPlainString() + " is a division by zero");
             }
             return BigDecimal.ZERO;
         }
-        if (x.signum() < 0) {
+        if (oBase.signum() < 0) {
             throw new SyntaxErrorException("Syntax Error: a negative value to a fractional power has no real result: "
-                    + x.toPlainString() + " ^ " + y.toPlainString());
+                    + oBase.toPlainString() + " ^ " + oExponent.toPlainString());
         }
-        return exp(y.multiply(ln(x), MC));
+        return exp(oExponent.multiply(ln(oBase), MC));
     }
 
     /**
@@ -251,10 +251,10 @@ public final class BcdMath {
      * @param x the angle in radians
      * @return the equivalent angle in the range -PI to PI
      */
-    private static BigDecimal reduce(final BigDecimal x) {
+    private static BigDecimal reduce(final BigDecimal oValue) {
         BigDecimal oTwoPi = PI.multiply(TWO, MC);
-        BigDecimal oTurns = x.divide(oTwoPi, MC).setScale(0, RoundingMode.HALF_UP);
-        return x.subtract(oTwoPi.multiply(oTurns, MC), MC);
+        BigDecimal oTurns = oValue.divide(oTwoPi, MC).setScale(0, RoundingMode.HALF_UP);
+        return oValue.subtract(oTwoPi.multiply(oTurns, MC), MC);
     }
 
     /**
@@ -263,12 +263,12 @@ public final class BcdMath {
      * @param r the angle
      * @return sin(r)
      */
-    private static BigDecimal sinSeries(final BigDecimal r) {
-        BigDecimal oR2 = r.multiply(r, MC);
-        BigDecimal oTerm = r;
-        BigDecimal oSum = r;
-        for (long k = 1;; k++) {
-            oTerm = oTerm.multiply(oR2, MC).divide(BigDecimal.valueOf((2 * k) * (2 * k + 1)), MC).negate();
+    private static BigDecimal sinSeries(final BigDecimal oValue) {
+        BigDecimal oR2 = oValue.multiply(oValue, MC);
+        BigDecimal oTerm = oValue;
+        BigDecimal oSum = oValue;
+        for (long lIndex = 1;; lIndex++) {
+            oTerm = oTerm.multiply(oR2, MC).divide(BigDecimal.valueOf((2 * lIndex) * (2 * lIndex + 1)), MC).negate();
             if (oTerm.abs().compareTo(EPS) < 0) {
                 break;
             }
@@ -283,12 +283,12 @@ public final class BcdMath {
      * @param r the angle
      * @return cos(r)
      */
-    private static BigDecimal cosSeries(final BigDecimal r) {
-        BigDecimal oR2 = r.multiply(r, MC);
+    private static BigDecimal cosSeries(final BigDecimal oValue) {
+        BigDecimal oR2 = oValue.multiply(oValue, MC);
         BigDecimal oTerm = BigDecimal.ONE;
         BigDecimal oSum = BigDecimal.ONE;
-        for (long k = 1;; k++) {
-            oTerm = oTerm.multiply(oR2, MC).divide(BigDecimal.valueOf((2 * k - 1) * (2 * k)), MC).negate();
+        for (long lIndex = 1;; lIndex++) {
+            oTerm = oTerm.multiply(oR2, MC).divide(BigDecimal.valueOf((2 * lIndex - 1) * (2 * lIndex)), MC).negate();
             if (oTerm.abs().compareTo(EPS) < 0) {
                 break;
             }
@@ -303,15 +303,15 @@ public final class BcdMath {
      * @param n the whole number n, greater than 1
      * @return atan(1 / n)
      */
-    private static BigDecimal atanInverse(final int n) {
-        BigDecimal oX = BigDecimal.ONE.divide(BigDecimal.valueOf(n), MC);
+    private static BigDecimal atanInverse(final int iValue) {
+        BigDecimal oX = BigDecimal.ONE.divide(BigDecimal.valueOf(iValue), MC);
         BigDecimal oX2 = oX.multiply(oX, MC);
         BigDecimal oPower = oX;
         BigDecimal oSum = oX;
         boolean bSubtract = true;
-        for (int k = 1;; k++) {
+        for (int iIndex = 1;; iIndex++) {
             oPower = oPower.multiply(oX2, MC);
-            BigDecimal oTerm = oPower.divide(BigDecimal.valueOf(2L * k + 1), MC);
+            BigDecimal oTerm = oPower.divide(BigDecimal.valueOf(2L * iIndex + 1), MC);
             if (oTerm.abs().compareTo(EPS) < 0) {
                 break;
             }
@@ -339,8 +339,8 @@ public final class BcdMath {
     private static BigDecimal computeE() {
         BigDecimal oSum = BigDecimal.ONE;
         BigDecimal oTerm = BigDecimal.ONE;
-        for (int k = 1;; k++) {
-            oTerm = oTerm.divide(BigDecimal.valueOf(k), MC);
+        for (int iIndex = 1;; iIndex++) {
+            oTerm = oTerm.divide(BigDecimal.valueOf(iIndex), MC);
             if (oTerm.abs().compareTo(EPS) < 0) {
                 break;
             }

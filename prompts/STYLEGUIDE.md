@@ -74,78 +74,73 @@ public String getTokenText() { }
 
 ### Fields and Variables
 
-#### General Rules
+**Rule**: Every field, parameter and local variable starts with a Hungarian prefix that shows its type. The rest of the name is lowerCamelCase. A prefix is written in lower case, and the first letter after the prefix is upper case.
 
-**Rule**: Use **lowerCamelCase** for regular fields and variables.
+#### Hungarian Prefixes
 
-#### Hungarian Notation for Member Variables
+| Prefix | Type | Example |
+|--------|------|---------|
+| `str` | String | `strName` |
+| `i` | int | `iCount` |
+| `l` | long | `lTotal` |
+| `b` | boolean | `bIsValid` |
+| `f` | float or double | `fRate` |
+| `c` | char | `cLetter` |
+| `o` | Object (any class) | `oLogger` |
+| `e` | enumeration (see Enum Classes) | `eReadWrite` |
+| `a` | array (written before the type prefix) | `astrNames`, `aoValues` |
+| `v` | Vector or List (written before the type prefix) | `vstrItems`, `viNumbers` |
+| `m` | Map (written before the type prefix) | `mstrValues`, `moTokens` |
 
-**Rule**: Member variables (class-level fields) use Hungarian notation with type prefixes and underscore prefix.
+#### Member Variables
 
-**Type Prefixes**:
+**Rule**: Member variables (class-level fields) use the same prefixes, and also start with an underscore: `_strName`, `_oLogger`. Static members use the same rule: `_moBooleans`.
 
-- `str` - String
-- `i` - Integer
-- `l` - Long
-- `b` - Boolean
-- `o` - Object (undetermined type)
-- `f` - Float/Double
-- `c` - Character
-
-**Collection Prefixes**:
-
-- `v` - Vector
-- `a` - Array
-- `m` - Map
-
-Variable Validity:
-- _   - Member (valid throughout the object), alternative
-
-✅ **Examples**:
+✅ **Examples**:
 
 ```java
-// Constants
+public class MyClass {
+    private static MyClass _oSingleton;
+    private String _strName;
+    private boolean _bIsValid;
+    private Vector<String> _vstrItems;
+    private List<Integer> _viNumbers;
+    private Map<String, Value> _mstrValues;
+}
+```
+
+#### Constants
+
+**Rule**: Static final values that never change (primitive types, String, and other immutable values) use **UPPER_SNAKE_CASE**. A static final reference to an object that can change (for example a Map) uses the member rule with the `_` prefix.
+
+✅ **Examples**:
+
+```java
 public static final int MAX_ARRAY_SIZE = 1000;
 public static final String DEFAULT_ENCODING = "UTF-8";
-
-// Member variables (with underscore prefix)
-private static MyClass _oSingleton;
-private int iCount;
-private String strName;
-private boolean bIsValid;
-private Vector<String> vstrItems;
-private List<Integer> liNumbers;
-private Map<String, Value> mstrValues;
+private static final Map<String, Value> _mstrValues = new HashMap<>();
 ```
 
-#### Static Fields
+#### Single-Character Names
 
-**Rule**: Use **UPPER_SNAKE_CASE** for static final constants.
+**Rule**: No name may consist of a single character. This includes loop counters and exception variables.
 
-✅ **Example**:
-
-```java
-public static final int THE_ANSWER = 42;
-public static final String DEFAULT_CONFIG_PATH = "/etc/config.yaml";
-```
-
-### Variables and Parameters
-
-**Rule**: Use **lowerCamelCase**. Avoid single-character names except for loop variables.
-
-❌ **Incorrect**:
+❌ **Incorrect**:
 
 ```java
 String s;
 int x;
+for (int i = 0; i < oItems.size(); i++) { }
+} catch (Exception e) { }
 ```
 
-✅ **Correct**:
+✅ **Correct**:
 
 ```java
 String strUsername;
 int iCounter;
-for (int iX = 0; iX < oItems.size(); iX++) { }  // Loop variable is acceptable
+for (int iIndex = 0; iIndex < oItems.size(); iIndex++) { }
+} catch (Exception oException) { }
 ```
 
 ### Acronyms
@@ -229,7 +224,9 @@ public class OuterClass {
 
 **Exception**: Simple enums without methods may be formatted inline.
 
-✅ **Examples**:
+**Rule (prefix)**: A variable of an enumeration type starts with the prefix `e`, for example `eReadWrite`. A member variable of an enumeration type starts with `_e`, for example `_eReadWrite`.
+
+✅ **Examples**:
 
 ```java
 // Preferred: Static constants
@@ -238,8 +235,12 @@ public static final int DIRECTION_NORTH = 1;
 public static final int DIRECTION_WEST = 2;
 public static final int DIRECTION_SOUTH = 3;
 
-// Acceptable: Simple enum
+// Acceptable: Simple enum, with the prefix e for a variable of this type
 private enum CompassDirection { EAST, NORTH, WEST, SOUTH }
+CompassDirection eDirection = CompassDirection.EAST;
+
+// Member variable of an enumeration type
+private FileOpenType _eReadWrite;
 ```
 
 ## Formatting
@@ -277,7 +278,7 @@ public void longMethodName(String parameter1, String parameter2,
 
 ### Line Length
 
-**Rule**: Maximum 100 characters per line, in exceptional cases 120 character per line.
+**Rule**: Maximum 160 characters per line.
 
 ### Vertical Spacing
 

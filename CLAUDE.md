@@ -4,14 +4,14 @@
 
 GD-BASIC (GriCom Diminutive BASIC Interpreter) is a Java 21 implementation of a Dartmouth-style BASIC interpreter. It can execute `.bas` programs, support interactive line editing. It also serves as an embeddable scripting engine.
 
-- **Version**: 0.3.0 (implemented on branch `feature/bcd-arithmetic`; not yet merged or committed; the last released version is 0.2.1)
+- **Version**: 0.4.0 (implemented on branch `feature/bcd-arithmetic`; not yet merged or committed; the last released version is 0.2.1)
 - **License**: See LICENSE.md
-- **Status**: 1435/1435 unit tests and 62/62 system test programs passing
+- **Status**: 1560/1560 unit tests passing; 109/109 system test runs passing (2026-11-23). Open defects: `doc/KNOWN_ISSUES.md`
 - **Last Updated**: 2026-11-22
 
 ⚠️ **Breaking Change**: Version 0.2.0 removes the `#` suffix for real variables. Use untyped variables (no suffix) instead. See BASIC_CODING_STANDARD.md for migration guide.
 
-⚠️ **Version 0.3.0 suffix rules (branch `feature/bcd-arithmetic`)**: a variable with no suffix is REAL (double precision). The suffix `#` marks decimal (BCD) variables with up to 40 significant digits. The suffix `!` is the BOOLEAN suffix. The suffix `@` is no longer valid and gives an error. The released 0.2.1 code still uses `!` for DOUBLE and `@` for BOOLEAN. The authoritative description is in `doc/BASIC.md` (section "Variables, Arrays, and Constants").
+⚠️ **Version 0.4.0 suffix rules (branch `feature/bcd-arithmetic`)**: a variable with no suffix is REAL (double precision). The suffix `#` marks decimal (BCD) variables with up to 40 significant digits. The suffix `!` is the BOOLEAN suffix. The suffix `@` is no longer valid and gives an error. The released 0.2.1 code still uses `!` for DOUBLE and `@` for BOOLEAN. The authoritative description is in `doc/BASIC.md` (section "Variables, Arrays, and Constants").
 
 ✨ **New in 0.2.0+**: Interactive line editor with LOAD, SAVE, DELETE, HELP commands. Start without a file: `java -jar BASIC-*.jar`
 
@@ -31,13 +31,13 @@ mvn test -Dtest=BasicParserTest
 mvn site
 
 # Interactive mode (no file required, NEW in 0.2.0+)
-java -jar target/BASIC-0.3.0-jar-with-dependencies.jar
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar
 
 # Run with a program file
-java -jar target/BASIC-0.3.0-jar-with-dependencies.jar program.bas
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar program.bas
 
 # Direct execution (skip interactive editor)
-java -jar target/BASIC-0.3.0-jar-with-dependencies.jar -r program.bas
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -r program.bas
 
 # Run with options
 java -jar target/BASIC-*-jar-with-dependencies.jar -v debug program.bas   # verbose logging
@@ -48,7 +48,7 @@ java -jar target/BASIC-*-jar-with-dependencies.jar -h                     # help
 
 **Requirements**: Java 21+, Maven 3.6.3+
 
-**Test Results**: 1435/1435 unit tests passing (JUnit); 62/62 system test programs passing (`test/system/run_all_tests.sh`). Zero failures.
+**Test Results**: 1560/1560 unit tests passing (JUnit); 109/109 system test runs passing (`test/system/run_all_tests.sh`), checked 2026-11-23.
 
 ## Architecture
 
@@ -65,14 +65,14 @@ Processing pipeline:
 |---|---|
 | `tokenizer` | Lexical analysis — `BasicLexer`, `Token`, `BasicTokenType` |
 | `parser` | Recursive-descent parser — `BasicParser` |
-| `statements` | 35+ statement implementations (IF, FOR, PRINT, GOSUB, …) |
-| `variableTypes` | Type system — `RealValue`, `IntegerValue`, `StringValue`, `LongValue`, `BooleanValue`, `BcdValue` (decimal, `#`) |
+| `statements` | 40 statement classes (IF, FOR, PRINT, GOSUB, …) |
+| `variabletypes` | Type system — `RealValue`, `IntegerValue`, `StringValue`, `LongValue`, `BooleanValue`, `BcdValue` (decimal, `#`) |
 | `math` | Decimal (BCD) maths — `BcdMath` (SQR, EXP, LOG, SIN, COS, TAN, ATN, power, pi) |
 | `helper` (also) | `ConsoleInput` — one shared reader for standard input (INPUT and the line editor) |
-| `memoryManager` | State — `Program`, `VariableManagement`, `Stack`, `ProgramPointer` |
-| `functions` | 40+ built-in functions (math, string, system, file) |
-| `runtimeManager` | Execution engine — `Execute` |
-| `lineEditor` | Interactive line editor — `LineEditor` (NEW in 0.2.0+) |
+| `memorymanager` | State — `Program`, `VariableManagement`, `Stack`, `ProgramPointer` |
+| `functions` | 39 function classes for built-in functions (math, string, system, file) |
+| `runtimemanager` | Execution engine — `Execute` |
+| `lineeditor` | Interactive line editor — `LineEditor` (NEW in 0.2.0+) |
 | `error` | Exception types (includes `EmptyProgramException`, `FileAlreadyExistsException`, `OverflowException` for BCD values) |
 | `helper` | `Logger`, `Printer`, `FileHandler`, `EnvParam` |
 
@@ -86,7 +86,7 @@ Controlled by `_bDartmouthFlag` in `BasicParser`:
 
 Type is indicated by suffix on variable name:
 - `%` Integer, `&` Long, `$` String, (none) = Real (default, double precision)
-- Version 0.3.0 (branch `feature/bcd-arithmetic`): `!` is Boolean, and `#` is decimal BCD (up to 40 significant digits). `@` is not a variable suffix. Released 0.2.1: `!` is Double and `@` is Boolean. The status of each suffix is in `doc/BASIC.md`.
+- Version 0.4.0 (branch `feature/bcd-arithmetic`): `!` is Boolean, and `#` is decimal BCD (up to 40 significant digits). `@` is not a variable suffix. Released 0.2.1: `!` is Double and `@` is Boolean. The status of each suffix is in `doc/BASIC.md`.
 
 Arrays are dynamically allocated — no DIM statement required.
 
@@ -151,7 +151,7 @@ Configuration is loaded from `src/main/resources/application.yaml` with two conf
 ```yaml
 environment:          # Default runtime settings
   app_name: GD-BASIC
-  version: 0.3.0
+  version: 0.4.0
   max_bcd_digits: 40
   dartmouth: false
   log_level: warning
@@ -182,7 +182,7 @@ JAVA_HOME=/path/to/jdk-21 log_level=debug mvn test
 The `EnvParam` singleton provides type-safe configuration access:
 
 ```java
-String version = EnvParam.getString("version");        // "0.3.0"
+String version = EnvParam.getString("version");        // "0.4.0"
 int maxDigits = EnvParam.getInt("max_bcd_digits");     // 40
 float timeout = EnvParam.getFloat("timeout_float");    // 30.5
 boolean dartmouth = EnvParam.getBoolean("dartmouth");  // false
@@ -205,7 +205,7 @@ The singleton instance is cached; reset via reflection in tests using the teardo
 | Key | Type | Default | Purpose |
 |---|---|---|---|
 | `app_name` | String | GD-BASIC | Application identifier |
-| `version` | String | 0.3.0 | Version number (displayed in splash) |
+| `version` | String | 0.4.0 | Version number (displayed in splash) |
 | `max_bcd_digits` | Integer | 40 | Maximum significant digits of a BCD (`#`) value (see `doc/GD-BASIC_Detailed_Design.md`) |
 | `dartmouth` | Boolean | false | Enable Dartmouth-style left-to-right evaluation |
 | `log_level` | String | warning | Default logging level (trace, debug, info, warning) |
@@ -234,18 +234,10 @@ System test pattern: tests print step descriptions; failures GOTO 9000 (error ha
 
 ## Coding Standards
 
-Follow `prompts/STYLEGUIDE.md`. Key rules:
-
-- **Hungarian notation** for member variables with underscore prefix:
-  - `_strName` (String), `_iCount` (int), `_bFlag` (boolean), `_oRef` (Object)
-  - `_fValue` (float), `_vList` (Vector), `_aArr` (array), `_mMap` (Map)
-- **Classes**: PascalCase; **Methods**: camelCase; **Constants**: UPPER_SNAKE_CASE
-- **Indentation**: 4 spaces (no tabs)
-- **Line length**: max 100 chars (120 in exceptional cases)
-- **Braces**: opening on same line, closing on own line
-- **Access modifiers**: always explicit
-
-Code quality is enforced by Checkstyle (`etc/checkstyle-config.xml`) and PMD — both run during `mvn site`.
+The authoritative style rules are in **`prompts/STYLEGUIDE.md`**. Every Java change must follow that file, including
+naming (Hungarian prefixes, `_` for members, `e` for enumerations), formatting, the 160-character line limit, and the
+ban on single-character names. Checkstyle is configured from `etc/checkstyle-config.xml` to check the same rules.
+If this file and `prompts/STYLEGUIDE.md` disagree, the style guide wins.
 
 ## BASIC Language Reference
 
@@ -259,13 +251,13 @@ See `BASIC_CODING_STANDARD.md` for the full language spec and `doc/BASIC.md` for
 - **File I/O**: FOPEN, FCLOSE, FINPUT, FPRINT, EOF, FGET, FPUT, FPEEK, FREWIND, FEXISTS, FGETNAME, FGETSIZE, FMODTIME, FISOPEN, FLINECOUNT, FCOMPARE
 - **Directory operations**: CHDIR, DIREXISTS, GETCWD, MKDIR, RMDIR
 - **System functions**: CALL, SYSTEM, MEM, TIME
-- **Total**: 40+ built-in functions
+- **Total**: 39 function classes in `functions/` (checked 2026-11-23)
 
 ## Key Documentation
 
 ### Quick Reference
 - **README.md** — Documentation index and quick start
-- **CHANGELOG.md** — Complete version history (v0.0.1 through v0.2.0+)
+- **CHANGELOG.md** — Complete version history (v0.0.1 through v0.4.0)
 - **TEST_SUMMARY.md** — Test coverage and documentation
 
 ### For Users

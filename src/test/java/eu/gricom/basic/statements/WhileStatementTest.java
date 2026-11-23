@@ -1,14 +1,14 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import eu.gricom.basic.error.EmptyStackException;
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
-import eu.gricom.basic.memoryManager.Stack;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
+import eu.gricom.basic.memorymanager.Stack;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

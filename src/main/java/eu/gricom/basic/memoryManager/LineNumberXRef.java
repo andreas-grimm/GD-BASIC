@@ -1,4 +1,4 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.helper.Logger;
@@ -17,8 +17,8 @@ import java.util.Map;
  */
 public class LineNumberXRef {
     private final Logger _oLogger = new Logger(this.getClass().getName());
-    private final static Map<Integer, Integer> _aoLineNumbers = new HashMap<>(); // Key: Token, Basic Source Line: Value
-    private final static Map<Integer, Integer> _aoStatementNumbers = new HashMap<>();
+    private static final Map<Integer, Integer> _aoLineNumbers = new HashMap<>(); // Key: Token, Basic Source Line: Value
+    private static final Map<Integer, Integer> _aoStatementNumbers = new HashMap<>();
 
     /**
      * add a line number destination in the memory management.

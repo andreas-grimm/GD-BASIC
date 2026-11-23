@@ -1,9 +1,9 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
-import eu.gricom.basic.memoryManager.Stack;
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
+import eu.gricom.basic.memorymanager.Stack;
+import eu.gricom.basic.variabletypes.IntegerValue;
 
 /**
  * ReturnStatement.java
@@ -67,7 +67,7 @@ public class ReturnStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"RETURN\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\"";
         strReturn += "}}";
         return strReturn;
     }

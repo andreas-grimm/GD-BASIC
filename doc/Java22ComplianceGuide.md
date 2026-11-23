@@ -446,14 +446,14 @@ module eu.gricom.basic {
     exports eu.gricom.basic;
     exports eu.gricom.basic.parser;
     exports eu.gricom.basic.statements;
-    exports eu.gricom.basic.variableTypes;
+    exports eu.gricom.basic.variabletypes;
     exports eu.gricom.basic.functions;
-    exports eu.gricom.basic.memoryManager;
+    exports eu.gricom.basic.memorymanager;
     exports eu.gricom.basic.tokenizer;
     exports eu.gricom.basic.error;
     exports eu.gricom.basic.helper;
-    exports eu.gricom.basic.macroManager;
-    exports eu.gricom.basic.runtimeManager;
+    exports eu.gricom.basic.macromanager;
+    exports eu.gricom.basic.runtimemanager;
     exports eu.gricom.basic.codeGenerator;
     exports eu.gricom.basic.math;
 }

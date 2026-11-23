@@ -18,7 +18,7 @@ public interface Parser {
 
     /**
      * Default constructor.
-     * The constructor receives the tokenized program and parses it.
+     * The constructor receives the tokenised program and parses it.
      * @return list of Java objects instantiated based on the token list.
      * @throws SyntaxErrorException for any found incorrect code
      */

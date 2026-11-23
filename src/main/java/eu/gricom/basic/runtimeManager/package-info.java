@@ -1,4 +1,4 @@
 /**
  *
  */
-package eu.gricom.basic.runtimeManager;
+package eu.gricom.basic.runtimemanager;

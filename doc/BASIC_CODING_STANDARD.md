@@ -1,6 +1,6 @@
 # GD-BASIC Coding Standard
 
-**Version:** 0.3.0  
+**Version:** 0.4.0  
 **Interpreter:** GriCom Basic Interpreter  
 **Last Updated:** 2026-11-22
 
@@ -58,9 +58,9 @@ Variables are identified by their suffix character:
 | `%` | Integer, 32-bit | `COUNT%`, `INDEX%` | 0 | Implemented |
 | `&` | Long, 64-bit | `BIG&` | 0 | Implemented |
 | `$` | String | `NAME$`, `MESSAGE$` | "" | Implemented |
-| `@` | Boolean (0.2.1 only) | `FLAG@` | False | Error in 0.3.0. Use `!` |
-| `!` | Boolean | `FLAG!` | False | Implemented in 0.3.0 (in 0.2.1 `!` is Double) |
-| `#` | Decimal (BCD), up to 40 significant digits | `AMOUNT#` | 0 | Implemented in 0.3.0 (rejected in 0.2.1) |
+| `@` | Boolean (0.2.1 only) | `FLAG@` | False | Error in 0.4.0. Use `!` |
+| `!` | Boolean | `FLAG!` | False | Implemented in 0.4.0 (in 0.2.1 `!` is Double) |
+| `#` | Decimal (BCD), up to 40 significant digits | `AMOUNT#` | 0 | Implemented in 0.4.0 (rejected in 0.2.1) |
 
 Full rules and open decisions: `doc/BASIC.md` and `doc/GD-BASIC_Detailed_Design.md`.
 
@@ -85,7 +85,7 @@ Full rules and open decisions: `doc/BASIC.md` and `doc/GD-BASIC_Detailed_Design.
   20 firstName$ = "Alice"
   30 my_flag! = true
   ```
-  (Version 0.3.0 syntax: the Boolean suffix is `!`. In 0.2.1 it was `@`. See `doc/BASIC.md`, "Suffix rules".)
+  (Version 0.4.0 syntax: the Boolean suffix is `!`. In 0.2.1 it was `@`. See `doc/BASIC.md`, "Suffix rules".)
 
 ### Array Variables
 

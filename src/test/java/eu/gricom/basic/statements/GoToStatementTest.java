@@ -1,8 +1,8 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

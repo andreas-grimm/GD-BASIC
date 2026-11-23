@@ -1,4 +1,4 @@
 /**
  *
  */
-package eu.gricom.basic.variableTypes;
+package eu.gricom.basic.variabletypes;

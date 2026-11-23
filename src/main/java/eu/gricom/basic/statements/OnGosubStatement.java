@@ -3,11 +3,11 @@ package eu.gricom.basic.statements;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
-import eu.gricom.basic.memoryManager.Stack;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
+import eu.gricom.basic.memorymanager.Stack;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.util.List;
 
@@ -40,10 +40,10 @@ public final class OnGosubStatement implements Statement {
      * @param aoTargetLineNumbers - list of target line numbers as strings
      */
     public OnGosubStatement(final int iTokenNumber, final Expression oSelectExpression,
-                            final List<String> aoTargetLineNumbers) {
+                            final List<String> vstrTargetLineNumbers) {
         _iTokenNumber = iTokenNumber;
         _oSelectExpression = oSelectExpression;
-        _aoTargetLineNumbers = aoTargetLineNumbers;
+        _aoTargetLineNumbers = vstrTargetLineNumbers;
     }
 
     /**
@@ -70,8 +70,8 @@ public final class OnGosubStatement implements Statement {
 
             // 1-based indexing: index 1 refers to first target, 2 to second, etc.
             if (iIndex < 1 || iIndex > _aoTargetLineNumbers.size()) {
-                _oLogger.debug("-execute-> ON GOSUB: index " + iIndex + " out of range [1.." +
-                        _aoTargetLineNumbers.size() + "], continuing normally");
+                _oLogger.debug("-execute-> ON GOSUB: index " + iIndex + " out of range [1.."
+                        + _aoTargetLineNumbers.size() + "], continuing normally");
                 return;
             }
 
@@ -80,7 +80,7 @@ public final class OnGosubStatement implements Statement {
             int iStatementNo;
             try {
                 iStatementNo = _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(strTarget));
-            } catch (RuntimeException e) {
+            } catch (RuntimeException oException) {
                 throw new SyntaxErrorException("ON GOSUB: Target line " + strTarget + " not found");
             }
 
@@ -88,10 +88,10 @@ public final class OnGosubStatement implements Statement {
             _oProgramPointer.setCurrentStatement(iStatementNo);
             _oLogger.debug("-execute-> ON GOSUB: called subroutine at line " + strTarget);
             return;
-        } catch (SyntaxErrorException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new SyntaxErrorException("ON GOSUB: " + e.getMessage());
+        } catch (SyntaxErrorException oException) {
+            throw oException;
+        } catch (Exception oException) {
+            throw new SyntaxErrorException("ON GOSUB: " + oException.getMessage());
         }
     }
 
@@ -102,13 +102,15 @@ public final class OnGosubStatement implements Statement {
      */
     @Override
     public String content() throws RuntimeException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ON GOSUB [").append(_oSelectExpression.content()).append("]: Targets: ");
-        for (int i = 0; i < _aoTargetLineNumbers.size(); i++) {
-            if (i > 0) sb.append(", ");
-            sb.append(_aoTargetLineNumbers.get(i));
+        StringBuilder oSb = new StringBuilder();
+        oSb.append("ON GOSUB [").append(_oSelectExpression.content()).append("]: Targets: ");
+        for (int iIndex = 0; iIndex < _aoTargetLineNumbers.size(); iIndex++) {
+            if (iIndex > 0) {
+                oSb.append(", ");
+            }
+            oSb.append(_aoTargetLineNumbers.get(iIndex));
         }
-        return sb.toString();
+        return oSb.toString();
     }
 
     /**
@@ -120,17 +122,29 @@ public final class OnGosubStatement implements Statement {
      */
     @Override
     public String structure() throws Exception {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{\"ON_GOSUB\": {");
-        sb.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
-        sb.append("\"EXPRESSION\": ").append(_oSelectExpression.content()).append(",");
-        sb.append("\"TARGETS\": [");
-        for (int i = 0; i < _aoTargetLineNumbers.size(); i++) {
-            if (i > 0) sb.append(", ");
-            sb.append("\"").append(_aoTargetLineNumbers.get(i)).append("\"");
+        StringBuilder oSb = new StringBuilder();
+        oSb.append("{\"ON_GOSUB\": {");
+        oSb.append("\"TOKEN_NR\": \"").append(_iTokenNumber).append("\",");
+        oSb.append("\"EXPRESSION\": ").append(_oSelectExpression.content()).append(",");
+        oSb.append("\"TARGETS\": [");
+        for (int iIndex = 0; iIndex < _aoTargetLineNumbers.size(); iIndex++) {
+            if (iIndex > 0) {
+                oSb.append(", ");
+            }
+            oSb.append("\"").append(_aoTargetLineNumbers.get(iIndex)).append("\"");
         }
-        sb.append("]");
-        sb.append("}}");
-        return sb.toString();
+        oSb.append("]");
+        oSb.append("}}");
+        return oSb.toString();
+    }
+
+    /** @return the expression that selects the target (used by the compiler) */
+    public Expression getSelectExpression() {
+        return _oSelectExpression;
+    }
+
+    /** @return the target line numbers as text (used by the compiler) */
+    public List<String> getTargetLineNumbers() {
+        return _aoTargetLineNumbers;
     }
 }

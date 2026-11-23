@@ -1,8 +1,8 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -65,10 +65,10 @@ public final class System {
                     throw new RuntimeException("System execution error: " + iExitCode);
                 }
 
-            } catch (IOException eIOException) {
-                throw new RuntimeException("System execution interrupt: " + eIOException.toString());
-            } catch (InterruptedException eInteruptedException) {
-                throw new RuntimeException("System execution interrupt: " + eInteruptedException.toString());
+            } catch (IOException oException) {
+                throw new RuntimeException("System execution interrupt: " + oException.toString());
+            } catch (InterruptedException oException) {
+                throw new RuntimeException("System execution interrupt: " + oException.toString());
             }
 
             return new StringValue(strReturn);

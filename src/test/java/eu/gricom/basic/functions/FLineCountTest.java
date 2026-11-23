@@ -1,10 +1,10 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.FileNotFoundException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.FileOpenType;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - NEGATIVE TESTS: File IDs that don't exist or have been closed
  * - EDGE CASES: Empty files, single-line files, large files, and error conditions
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Returns IntegerValue containing the line count for registered file IDs
  * - Throws FileNotFoundException for unknown or closed file IDs
  * - Counts every line including empty lines
@@ -63,7 +63,7 @@ public class FLineCountTest {
     private int _iCurrentTestFileId4;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary test files with various line counts, unique file IDs, and FileManager instance.
      */
     @BeforeEach
@@ -272,7 +272,7 @@ public class FLineCountTest {
      * When: FLineCount.execute() is called multiple times
      * Then: All calls return identical IntegerValue results
      * <p>
-     * Purpose: Verifies deterministic behavior and no side effects
+     * Purpose: Verifies deterministic behaviour and no side effects
      */
     @Test
     public void testFLineCount_WithMultipleCalls_ReturnsConsistentResults() throws Exception {

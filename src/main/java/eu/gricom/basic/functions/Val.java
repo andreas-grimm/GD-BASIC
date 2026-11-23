@@ -1,9 +1,9 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.variableTypes.RealValue;
+import eu.gricom.basic.variabletypes.RealValue;
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

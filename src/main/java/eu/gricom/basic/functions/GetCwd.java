@@ -1,8 +1,8 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 
 /**
  * GetCwd.java

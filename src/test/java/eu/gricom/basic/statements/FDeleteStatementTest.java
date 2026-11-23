@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.FileOpenType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - EDGE CASES: Unregistered IDs, multiple deletions, already closed files
  * - INTERFACE TESTS: getTokenNumber(), content(), and structure() methods
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Deletes file from file system using file ID
  * - Logs warning if file does not exist (no exception)
  * - Logs warning if file ID not registered (no exception)
@@ -48,7 +48,7 @@ public class FDeleteStatementTest {
     private FileManager _oFileManager;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary files and FileManager instance.
      */
     @BeforeEach
@@ -206,7 +206,7 @@ public class FDeleteStatementTest {
      * When: FDeleteStatement.execute() is called twice
      * Then: Second deletion logs warning but does not throw
      * <p>
-     * Purpose: Verifies idempotent behavior of file deletion
+     * Purpose: Verifies idempotent behaviour of file deletion
      */
     @Test
     public void testExecute_WithAlreadyDeletedFile_DoesNotThrow() throws Exception {

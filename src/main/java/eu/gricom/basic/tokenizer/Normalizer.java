@@ -21,11 +21,11 @@ public final class Normalizer {
     }
 
     /**
-     * The normalize function converts the input string by removing un-needed spaces and ensures that the format of the
+     * The normalise function converts the input string by removing un-needed spaces and ensures that the format of the
      * line in working with the lexer.
      *
      * @param strInput string to be adjusted
-     * @return normalized string
+     * @return normalised string
      */
     public static String normalize(final String strInput) {
         String strWork = strInput;
@@ -42,9 +42,9 @@ public final class Normalizer {
         char cPreviousChar = '\0';
         char cCurrentChar = '\0';
 
-        for (int i = 0; i < strWork.length(); i++) {
+        for (int iIndex = 0; iIndex < strWork.length(); iIndex++) {
             cPreviousChar = cCurrentChar;
-            cCurrentChar = strWork.charAt(i);
+            cCurrentChar = strWork.charAt(iIndex);
 
             // a "[" inside a string is text, not an index (Phase 7 fix: it used to remove the spaces of the string)
             if (cCurrentChar == '[' && !bQuotationMark) {
@@ -120,11 +120,11 @@ public final class Normalizer {
                         // "!" directly after a name, outside brackets, is the boolean suffix (decision A7).
                         // "A!=TRUE" becomes "A! = TRUE" (Boolean assignment). Inside brackets, and anywhere
                         // else, "!" stays part of an operator such as "!=" (comparison).
-                        if (iParenthesisDepth == 0 && isBooleanSuffix(strWork, i, strOutput)) {
+                        if (iParenthesisDepth == 0 && isBooleanSuffix(strWork, iIndex, strOutput)) {
                             strOutput += "!";
-                            if (i + 1 < strWork.length() && strWork.charAt(i + 1) == '=') {
+                            if (iIndex + 1 < strWork.length() && strWork.charAt(iIndex + 1) == '=') {
                                 strOutput += " = ";
-                                i++;
+                                iIndex++;
                             }
                         } else {
                             strOutput += cCurrentChar;
@@ -139,7 +139,7 @@ public final class Normalizer {
     }
 
     /**
-     * Normalizes spacing around operators to ensure exactly one space before and after each operator.
+     * Normalises spacing around operators to ensure exactly one space before and after each operator.
      * Handles multiple spaces and removes extra whitespace around arithmetic and assignment operators.
      * Respects variable type suffixes (%, $, #, &, !) which should not be treated as operators.
      * <p>
@@ -148,67 +148,67 @@ public final class Normalizer {
      * isBooleanSuffix(). Kept until the owner approves removal.
      *
      * @param strInput string with potentially multiple spaces
-     * @return normalized string with consistent operator spacing
+     * @return normalised string with consistent operator spacing
      */
     @Deprecated
     private static String normalizeOperatorSpacing(final String strInput) {
         String strWork = strInput;
         boolean bQuotationMark = false;
 
-        StringBuilder strOutput = new StringBuilder();
+        StringBuilder oOutput = new StringBuilder();
 
-        for (int i = 0; i < strWork.length(); i++) {
-            char cCurrentChar = strWork.charAt(i);
+        for (int iIndex = 0; iIndex < strWork.length(); iIndex++) {
+            char cCurrentChar = strWork.charAt(iIndex);
 
             if (cCurrentChar == '"') {
                 bQuotationMark = !bQuotationMark;
-                strOutput.append(cCurrentChar);
+                oOutput.append(cCurrentChar);
             } else if (bQuotationMark) {
-                strOutput.append(cCurrentChar);
+                oOutput.append(cCurrentChar);
             } else if (isOperator(cCurrentChar)) {
                 // Check if this is a variable type suffix (%, $, #, &, !)
                 // Type suffixes appear after alphanumeric characters
-                if (isVariableTypeSuffix(cCurrentChar, strOutput, strWork, i)) {
-                    strOutput.append(cCurrentChar);
+                if (isVariableTypeSuffix(cCurrentChar, oOutput, strWork, iIndex)) {
+                    oOutput.append(cCurrentChar);
                 } else {
                     // Check if this is part of a two-character operator (!=, <=, >=, <>)
-                    String twoCharOp = getTwoCharOperator(strWork, i);
-                    if (twoCharOp != null) {
+                    String strTwoCharOp = getTwoCharOperator(strWork, iIndex);
+                    if (strTwoCharOp != null) {
                         // Don't add spacing inside multi-character operators
-                        while (strOutput.length() > 0 && strOutput.charAt(strOutput.length() - 1) == ' ') {
-                            strOutput.deleteCharAt(strOutput.length() - 1);
+                        while (oOutput.length() > 0 && oOutput.charAt(oOutput.length() - 1) == ' ') {
+                            oOutput.deleteCharAt(oOutput.length() - 1);
                         }
-                        strOutput.append(' ').append(twoCharOp).append(' ');
-                        i++; // Skip the next character (second char of two-char operator)
+                        oOutput.append(' ').append(strTwoCharOp).append(' ');
+                        iIndex++; // Skip the next character (second char of two-char operator)
                         // Skip any spaces after operator
-                        while (i + 1 < strWork.length() && strWork.charAt(i + 1) == ' ') {
-                            i++;
+                        while (iIndex + 1 < strWork.length() && strWork.charAt(iIndex + 1) == ' ') {
+                            iIndex++;
                         }
                     } else {
                         // This is a single-character operator
                         // Remove trailing spaces before operator
-                        while (strOutput.length() > 0 && strOutput.charAt(strOutput.length() - 1) == ' ') {
-                            strOutput.deleteCharAt(strOutput.length() - 1);
+                        while (oOutput.length() > 0 && oOutput.charAt(oOutput.length() - 1) == ' ') {
+                            oOutput.deleteCharAt(oOutput.length() - 1);
                         }
-                        strOutput.append(' ').append(cCurrentChar).append(' ');
+                        oOutput.append(' ').append(cCurrentChar).append(' ');
 
                         // Skip any spaces after operator
-                        while (i + 1 < strWork.length() && strWork.charAt(i + 1) == ' ') {
-                            i++;
+                        while (iIndex + 1 < strWork.length() && strWork.charAt(iIndex + 1) == ' ') {
+                            iIndex++;
                         }
                     }
                 }
             } else {
-                strOutput.append(cCurrentChar);
+                oOutput.append(cCurrentChar);
             }
         }
 
         // Clean up any remaining multiple spaces but preserve single spaces
-        String result = strOutput.toString();
-        result = result.replaceAll("  +", " ");
-        result = result.trim();
+        String strResult = oOutput.toString();
+        strResult = strResult.replaceAll("  +", " ");
+        strResult = strResult.trim();
 
-        return result;
+        return strResult;
     }
 
     /**
@@ -221,24 +221,24 @@ public final class Normalizer {
      * @param iIndex current index in input string
      * @return true if this is a type suffix, false if it's an operator
      */
-    private static boolean isVariableTypeSuffix(final char c, final StringBuilder strOutput,
+    private static boolean isVariableTypeSuffix(final char cChar, final StringBuilder oOutput,
                                                   final String strInput, final int iIndex) {
         // Only %, $, #, &, ! can be type suffixes
-        if (!(c == '%' || c == '$' || c == '#' || c == '&' || c == '!')) {
+        if (!(cChar == '%' || cChar == '$' || cChar == '#' || cChar == '&' || cChar == '!')) {
             return false;
         }
 
         // A suffix belongs to a variable name. The name must start with a letter, so a number such as
         // "10#" never receives a suffix. The check is done first, so "A!=TRUE" is read as "A!" followed by "="
         // (Boolean assignment), while "A != 2" (space before !) stays the not-equal operator.
-        if (!nameStartsWithLetter(strOutput)) {
+        if (!nameStartsWithLetter(oOutput)) {
             return false;
         }
 
         // Check if the character before this is alphanumeric or another type suffix
         // If so, this is likely a type suffix at the end of a variable name
-        if (strOutput.length() > 0) {
-            char cPreviousChar = strOutput.charAt(strOutput.length() - 1);
+        if (oOutput.length() > 0) {
+            char cPreviousChar = oOutput.charAt(oOutput.length() - 1);
             if (Character.isLetterOrDigit(cPreviousChar) || isVariableTypeSuffixChar(cPreviousChar)) {
                 // Now check what comes after: space, operator, or parenthesis
                 // These all indicate this is the end of the variable name
@@ -246,8 +246,8 @@ public final class Normalizer {
                     return true; // End of line
                 }
                 char cNextChar = strInput.charAt(iIndex + 1);
-                if (cNextChar == ' ' || isOperator(cNextChar) || cNextChar == '(' || cNextChar == ')' ||
-                    cNextChar == ',' || cNextChar == ';' || cNextChar == ':') {
+                if (cNextChar == ' ' || isOperator(cNextChar) || cNextChar == '(' || cNextChar == ')'
+                    || cNextChar == ',' || cNextChar == ';' || cNextChar == ':') {
                     return true;
                 }
             }
@@ -262,13 +262,13 @@ public final class Normalizer {
      * @param strOutput output built so far
      * @return true if the run of name characters at the end of the output starts with a letter
      */
-    private static boolean nameStartsWithLetter(final CharSequence strOutput) {
-        int iStart = strOutput.length();
-        while (iStart > 0 && (Character.isLetterOrDigit(strOutput.charAt(iStart - 1))
-                || strOutput.charAt(iStart - 1) == '_')) {
+    private static boolean nameStartsWithLetter(final CharSequence oOutput) {
+        int iStart = oOutput.length();
+        while (iStart > 0 && (Character.isLetterOrDigit(oOutput.charAt(iStart - 1))
+                || oOutput.charAt(iStart - 1) == '_')) {
             iStart--;
         }
-        return iStart < strOutput.length() && Character.isLetter(strOutput.charAt(iStart));
+        return iStart < oOutput.length() && Character.isLetter(oOutput.charAt(iStart));
     }
 
     /**
@@ -299,8 +299,8 @@ public final class Normalizer {
      * @param c character to check
      * @return true if character is %, $, #, &, or !
      */
-    private static boolean isVariableTypeSuffixChar(final char c) {
-        return c == '%' || c == '$' || c == '#' || c == '&' || c == '!';
+    private static boolean isVariableTypeSuffixChar(final char cChar) {
+        return cChar == '%' || cChar == '$' || cChar == '#' || cChar == '&' || cChar == '!';
     }
 
     /**
@@ -315,13 +315,13 @@ public final class Normalizer {
         if (iIndex + 1 >= strInput.length()) {
             return null;
         }
-        char c1 = strInput.charAt(iIndex);
-        char c2 = strInput.charAt(iIndex + 1);
+        char cFirst = strInput.charAt(iIndex);
+        char cSecond = strInput.charAt(iIndex + 1);
 
-        if ((c1 == '=' || c1 == '!' || c1 == '<' || c1 == '>') && c2 == '=') {
-            return String.valueOf(c1) + c2;
+        if ((cFirst == '=' || cFirst == '!' || cFirst == '<' || cFirst == '>') && cSecond == '=') {
+            return String.valueOf(cFirst) + cSecond;
         }
-        if (c1 == '<' && c2 == '>') {
+        if (cFirst == '<' && cSecond == '>') {
             return "<>";
         }
         return null;
@@ -333,8 +333,8 @@ public final class Normalizer {
      * @param c character to check
      * @return true if character is an operator (+, -, *, /, ^, %, =, !)
      */
-    private static boolean isOperator(final char c) {
-        return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '%' || c == '=' || c == '!';
+    private static boolean isOperator(final char cChar) {
+        return cChar == '+' || cChar == '-' || cChar == '*' || cChar == '/' || cChar == '^' || cChar == '%' || cChar == '=' || cChar == '!';
     }
 
     /**
@@ -343,7 +343,7 @@ public final class Normalizer {
      * line in working with the lexer.
      *
      * @param strInput string to be adjusted
-     * @return normalized string
+     * @return normalised string
      * @throws SyntaxErrorException if the parenthesis are not set correctly
      */
     public static String normalizeIndex(final String strInput) throws SyntaxErrorException {
@@ -377,7 +377,7 @@ public final class Normalizer {
      * line in working with the lexer.
      *
      * @param strInput string to be adjusted
-     * @return normalized string
+     * @return normalised string
      * @throws SyntaxErrorException if the parenthesis is not set correctly
      */
     public static String normalizeFunction(final String strInput) throws SyntaxErrorException {
@@ -414,7 +414,7 @@ public final class Normalizer {
             strWork = strWork.substring(0, iIndexStart) + " " + strWork.substring(iIndexStart);
         }
 
-        // after the normalization above, () becomes " (  ) " - still needs to be removed
+        // after the normalisation above, () becomes " (  ) " - still needs to be removed
         strWork = strWork.replaceAll(" \\(  \\) ", "");
 
         return strWork;

@@ -102,7 +102,7 @@ class PrinterTest {
     @Test
     @DisplayName("println(String) should handle null string")
     void testPrintlnNullString() {
-        // This test documents the behavior - may throw NPE or print "null"
+        // This test documents the behaviour - may throw NPE or print "null"
         assertDoesNotThrow(() -> Printer.println(null),
             "println(String) should handle null string gracefully or as expected");
     }

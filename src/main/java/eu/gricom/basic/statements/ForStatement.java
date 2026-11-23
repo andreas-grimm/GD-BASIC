@@ -1,11 +1,11 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
-import eu.gricom.basic.memoryManager.Stack;
-import eu.gricom.basic.memoryManager.VariableManagement;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.RealValue;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
+import eu.gricom.basic.memorymanager.Stack;
+import eu.gricom.basic.memorymanager.VariableManagement;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.RealValue;
 
 /**
  * ForStatement.java
@@ -66,15 +66,15 @@ public final class ForStatement implements Statement {
 
         if (_bForStarted) {
             // if the FOR loop is already started - i.e., this is the second iteration then process here
-            double dEndValue = _oEndValue.evaluate().toReal();
-            double dStepSize = _oStepSize.evaluate().toReal();
-            double dCounter = _oVariableManagement.getMap(_strName).toReal();
+            double fEndValue = _oEndValue.evaluate().toReal();
+            double fStepSize = _oStepSize.evaluate().toReal();
+            double fCounter = _oVariableManagement.getMap(_strName).toReal();
 
-            if (dCounter + dStepSize <= dEndValue && !bCountingDown
-                || dCounter + dStepSize >= dEndValue && bCountingDown) {
+            if (fCounter + fStepSize <= fEndValue && !bCountingDown
+                || fCounter + fStepSize >= fEndValue && bCountingDown) {
 
                 // if the sum of the current value and step size remains lower than the end value, continue
-                _oVariableManagement.putMap(_strName, new RealValue(RealValue.round(dCounter + dStepSize, 2)));
+                _oVariableManagement.putMap(_strName, new RealValue(RealValue.round(fCounter + fStepSize, 2)));
                 _oStack.push(new IntegerValue(oLineNumberObject.getStatementFromToken(_iTokenNumber)));
 
             } else  {
@@ -96,18 +96,18 @@ public final class ForStatement implements Statement {
 
     @Override
     public String content() throws Exception {
-        double dCounter;
+        double fCounter;
         String strStartValue = _oEndValue.content();
         String strEndValue = _oEndValue.content();
         String strStepSize = _oStepSize.content();
         if (_oVariableManagement.getMap(_strName) != null) {
-            dCounter = _oVariableManagement.getMap(_strName).toReal();
+            fCounter = _oVariableManagement.getMap(_strName).toReal();
         } else {
-            dCounter = _oStartValue.evaluate().toReal();
+            fCounter = _oStartValue.evaluate().toReal();
         }
 
         return "FOR (" + _strName + " = " + strStartValue + " TO " + strEndValue + " STEP " + strStepSize + "): ["
-                + dCounter + "]";
+                + fCounter + "]";
     }
 
     /**
@@ -121,13 +121,39 @@ public final class ForStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"FOR\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"NAME\": \""+ _strName +"\",";
-        strReturn += "\"START_VALUE_EXPRESSION\": \""+ _oStartValue.structure() +"\",";
-        strReturn += "\"END_VALUE_EXPRESSION\": \""+ _oEndValue.structure() +"\",";
-        strReturn += "\"STEP_SIZE\": \""+ _oStepSize.structure() +"\",";
-        strReturn += "\"END_IF_STATEMENT\": \""+ _iEndForStatement +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"NAME\": \"" + _strName + "\",";
+        strReturn += "\"START_VALUE_EXPRESSION\": \"" + _oStartValue.structure() + "\",";
+        strReturn += "\"END_VALUE_EXPRESSION\": \"" + _oEndValue.structure() + "\",";
+        strReturn += "\"STEP_SIZE\": \"" + _oStepSize.structure() + "\",";
+        strReturn += "\"END_IF_STATEMENT\": \"" + _iEndForStatement + "\"";
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the loop variable name (used by the compiler) */
+    public String getName() {
+        return _strName;
+    }
+
+    /** @return the start value expression (used by the compiler) */
+    public Expression getStartValue() {
+        return _oStartValue;
+    }
+
+    /** @return the end value expression (used by the compiler) */
+    public Expression getEndValue() {
+        return _oEndValue;
+    }
+
+    /** @return the step expression (used by the compiler) */
+    public Expression getStepSize() {
+        return _oStepSize;
+    }
+
+    /** @return the line number of the matching NEXT (used by the compiler) */
+    public int getEndForStatement() {
+        return _iEndForStatement;
+    }
 }
+

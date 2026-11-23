@@ -37,6 +37,18 @@ EDITOR COMMANDS:
     Delete a range of lines using comma syntax.
     Example: DELETE 100,200
 
+  COMPILE
+    Compile the loaded program to Java and build a runnable jar file.
+    The Java source is written to the -j file (default BasicProgram.java).
+    The jar is named after the -o build target, for example hello.jar.
+    Needs the -o option when the interpreter is started.
+    Example: COMPILE
+
+  SAVEJAVA [<filename.java>]
+    Save the generated Java source of the loaded program. Nothing is compiled.
+    Without a file name the -j file is used.
+    Example: SAVEJAVA hello.java
+
   EXIT | BYE | QUIT
     Exit the BASIC interpreter.
     Example: EXIT

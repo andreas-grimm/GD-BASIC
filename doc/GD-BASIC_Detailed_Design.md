@@ -1,6 +1,6 @@
 # GD-BASIC Interpreter: Detailed Technical Design Document
 
-**Version**: 0.2.0  
+**Version**: 0.4.0  
 **Project**: GriCom Diminutive BASIC Interpreter  
 **Language**: Java 21  
 **Last Updated**: 2026-11-22
@@ -350,7 +350,7 @@ public class Trace {
 
 ---
 
-### `variableTypes` Package
+### `variabletypes` Package
 
 Type system for BASIC values, implementing Java's numeric tower with type coercion.
 
@@ -392,7 +392,7 @@ public interface Value extends Expression {
 
 Type indicators based on BASIC naming conventions:
 
-The enum below is the **version 0.3.0 code** (branch `feature/bcd-arithmetic`). The 0.2.1 rules are kept below as history.
+The enum below is the **version 0.4.0 code** (branch `feature/bcd-arithmetic`). The 0.2.1 rules are kept below as history.
 
 ```java
 public enum VariableType {
@@ -400,10 +400,10 @@ public enum VariableType {
     INTEGER       // suffix: %
     LONG          // suffix: &
     REAL          // suffix: none (double precision)
-    DOUBLE        // no suffix in 0.3.0 (kept as the internal name for untyped variables, see decision D5)
-    BOOLEAN       // suffix: ! in 0.3.0 (@ in 0.2.1 only, see decision D2)
+    DOUBLE        // no suffix in 0.4.0 (kept as the internal name for untyped variables, see decision D5)
+    BOOLEAN       // suffix: ! in 0.4.0 (@ in 0.2.1 only, see decision D2)
     UNDEFINED     // no suffix (defaults to REAL)
-    BCD           // suffix: # (0.3.0)
+    BCD           // suffix: # (0.4.0)
 }
 ```
 
@@ -416,7 +416,7 @@ public enum VariableType {
 - `name@` → BOOLEAN (`VariableManagement.java:74-75`). Planned: retired as a suffix.
 - `name` → UNDEFINED (treated as REAL)
 
-**Variable Type Detection (version 0.3.0, branch `feature/bcd-arithmetic`, implemented)**:
+**Variable Type Detection (version 0.4.0, branch `feature/bcd-arithmetic`, implemented)**:
 - `name` (no suffix) → REAL, double precision
 - `name#` → BCD, up to 40 significant digits
 - `name!` → BOOLEAN
@@ -432,7 +432,7 @@ public enum VariableType {
 | `LongValue` | `long` | Large integer operations | Implemented |
 | `StringValue` | `String` | String concatenation, comparison | Implemented |
 | `BooleanValue` | `boolean` | Logical AND, OR, negation | Implemented |
-| `BcdValue` | `BigDecimal` (up to 40 significant digits), selected by `#` | Full arithmetic and maths functions | Implemented (0.3.0) |
+| `BcdValue` | `BigDecimal` (up to 40 significant digits), selected by `#` | Full arithmetic and maths functions | Implemented (0.4.0) |
 
 **Example Type Coercion**:
 ```java
@@ -1069,7 +1069,7 @@ public class FnFunction implements Expression {
 
 ---
 
-### `memoryManager` Package
+### `memorymanager` Package
 
 Program state and execution context management.
 
@@ -1241,7 +1241,7 @@ Used for DATA statement values.
 
 ---
 
-### `runtimeManager` Package
+### `runtimemanager` Package
 
 Execution engine.
 
@@ -1309,9 +1309,9 @@ No class in `src/` calls `BCDConverter` (checked by search). It is a packing uti
 
 ---
 
-### BCD Arithmetic Design (version 0.3.0, branch `feature/bcd-arithmetic`)
+### BCD Arithmetic Design (version 0.4.0, branch `feature/bcd-arithmetic`)
 
-**Status:** Implemented in version 0.3.0 on branch `feature/bcd-arithmetic` (not yet merged). The decisions D1–D16 in the register above give the status of each point. The text below is the design as written before the work started.
+**Status:** Implemented in version 0.4.0 on branch `feature/bcd-arithmetic` (not yet merged). The decisions D1–D16 in the register above give the status of each point. The text below is the design as written before the work started.
 
 **Source:** This section replaces `requirements/BCD_ARITHMETIC_REQUIREMENTS.md` (version 1.0, 2026-05-14). That file's content is merged here. Where the requirements and the owner's decisions differ, the decision register wins.
 
@@ -1319,7 +1319,7 @@ No class in `src/` calls `BCDConverter` (checked by search). It is a packing uti
 
 | ID | Topic | Decision | Status |
 |----|-------|----------|--------|
-| D1 | BCD suffix | `#` marks a decimal (BCD) variable. In 0.2.x `#` is rejected (`VariableManagement.java:68-71`), so the code change is the one that removes that check. | Implemented (checked in version 0.3.0: `a# = 1.5` prints `1.5`) |
+| D1 | BCD suffix | `#` marks a decimal (BCD) variable. In 0.2.x `#` is rejected (`VariableManagement.java:68-71`), so the code change is the one that removes that check. | Implemented (checked in version 0.4.0: `a# = 1.5` prints `1.5`) |
 | D2 | `@` suffix | `@` is no longer a variable suffix. Only `!` is the boolean suffix. `@` is not in the lexer's suffix set (`Normalizer.java:210`), and `@PRAGMA` keeps its own meaning. | Implemented (checked: `c@ = 1` gives a syntax error that names `!`) |
 | D3 | Untyped variables | A variable with no suffix is REAL, double precision. `#` is not REAL. This replaces the earlier plan to reinstate `#` as REAL. | Implemented (checked: `x = 5 + 2.5` prints `7.5`) |
 | D4 | `!` suffix | `!` is BOOLEAN. In 0.2.x `!` is DOUBLE (`VariableManagement.java:72-73`). | Implemented (checked: `b! = TRUE` prints `True`) |
@@ -1338,9 +1338,9 @@ No class in `src/` calls `BCDConverter` (checked by search). It is a packing uti
 
 #### Class design
 
-- **`BcdValue`** in `variableTypes/`, implementing `Value`. It wraps a `java.math.BigDecimal`.
+- **`BcdValue`** in `variabletypes/`, implementing `Value`. It wraps a `java.math.BigDecimal`.
 - Each arithmetic result uses `MathContext(40, RoundingMode.HALF_UP)` (D6, D8).
-- The class checks the integer-part length after each operation and throws `OverflowException` (D7). This class exists in the `error` package (implemented in version 0.3.0).
+- The class checks the integer-part length after each operation and throws `OverflowException` (D7). This class exists in the `error` package (implemented in version 0.4.0).
 - Constructors: from `String`, `double`, `BigDecimal`, `int`, `long`.
 - Comparisons use `compareTo`, not `equals`, because `BigDecimal.equals` treats `2.0` and `2.00` as different.
 
@@ -1365,7 +1365,7 @@ The existing function classes in `functions/` take `Value` arguments. The BCD pa
 
 #### Test plan (JUnit, positive and negative)
 
-Unit tests go in `src/test/java/eu/gricom/basic/variableTypes/BcdValueTest.java`. System programs: requirements §9.2 used `src/test/basic/`, but both `src/test/basic/` (68 entries) and `test/system/` (56 programs) exist. `CLAUDE.md` names `test/system/` for system tests. Which directory the new BCD programs use is an open choice, and the existing programs in both directories are affected by D4 (see "Impact on existing programs").
+Unit tests go in `src/test/java/eu/gricom/basic/variabletypes/BcdValueTest.java`. System programs: requirements §9.2 used `src/test/basic/`, but both `src/test/basic/` (68 entries) and `test/system/` (56 programs) exist. `CLAUDE.md` names `test/system/` for system tests. Which directory the new BCD programs use is an open choice, and the existing programs in both directories are affected by D4 (see "Impact on existing programs").
 
 | Test | Kind | Expected result |
 |------|------|-----------------|
@@ -1408,14 +1408,14 @@ Question checked: after the change, is every suffix reading unambiguous? The che
 | A3 | `#` used with `!` or `@` | Not possible: each name has at most one suffix | Resolved |
 | A4 | `#PRAGMA` (in the requirements' examples) | Pragmas are `@PRAGMA` (`ReservedWords.java:25`); `#` no longer starts a pragma | Resolved; requirements examples are obsolete |
 | A5 | `@` as a boolean suffix | Not in the lexer's suffix set (`Normalizer.java:210`); D2 retires it | Resolved by D2 |
-| A6 | A line whose first token is `!`, for example `20 ! Comment` | **Checked in 0.3.0:** the line is accepted as a comment (`20 ! Comment` followed by `PRINT 1` prints `1`). A `!` after a colon is accepted with the warning `Comment after colon: use REM in place of !`. | **Implemented** (owner's design). Use `REM` in new programs |
-| A6b | `!` after a colon, for example `10 PRINT A : ! Comment` | **Checked in 0.3.0:** the line runs; the text after `!` is a comment, and the warning `Comment after colon: use REM in place of !` is logged. The `PRINT` before the colon still runs (`PRINT 1 : ! c` prints `1.0`, and the next line runs). **Owner's design:** a warning, not a comment. | **Implemented** (owner's design). Use `REM` in new programs |
-| A7 | `A!=TRUE` (no space before `=`) | **Owner's design:** a `!` directly after a name is the boolean suffix. **Checked in 0.3.0:** `A!=1 == 1` and `OTHER!=FALSE` are accepted as assignments to `A!` and `OTHER!`. | **Implemented** |
-| A8 | `10#` or `1.5#` | **Checked in 0.3.0:** `X = 10#` gives `Syntax Error: the decimal suffix '#' cannot follow a number` when the program is parsed. | **Implemented** (owner's design: invalid) |
+| A6 | A line whose first token is `!`, for example `20 ! Comment` | **Checked in 0.4.0:** the line is accepted as a comment (`20 ! Comment` followed by `PRINT 1` prints `1`). A `!` after a colon is accepted with the warning `Comment after colon: use REM in place of !`. | **Implemented** (owner's design). Use `REM` in new programs |
+| A6b | `!` after a colon, for example `10 PRINT A : ! Comment` | **Checked in 0.4.0:** the line runs; the text after `!` is a comment, and the warning `Comment after colon: use REM in place of !` is logged. The `PRINT` before the colon still runs (`PRINT 1 : ! c` prints `1.0`, and the next line runs). **Owner's design:** a warning, not a comment. | **Implemented** (owner's design). Use `REM` in new programs |
+| A7 | `A!=TRUE` (no space before `=`) | **Owner's design:** a `!` directly after a name is the boolean suffix. **Checked in 0.4.0:** `A!=1 == 1` and `OTHER!=FALSE` are accepted as assignments to `A!` and `OTHER!`. | **Implemented** |
+| A8 | `10#` or `1.5#` | **Checked in 0.4.0:** `X = 10#` gives `Syntax Error: the decimal suffix '#' cannot follow a number` when the program is parsed. | **Implemented** (owner's design: invalid) |
 | A11 | Number assigned to a `!` variable | A number is converted: 0 gives TRUE, any other number gives FALSE (owner's rule, 2026-11-22, Q1). Text is rejected. Implemented; covered by `VariableManagementTest` and `test/system/test_variable_types.bas`. | Resolved |
 | A12 | `NOT` on a number | For a number, `NOT` gives the bitwise complement: `NOT x` is `-x - 1` (owner's rule, 2026-11-22, Q4). `PRINT !1` is a syntax error. | Resolved |
 | A9 | `%` and `&` as operators, for example `17 % 5` in `test/system/test_arithmetic_operators.bas:40` | A space before the operator means the previous character is not a name character, so no suffix is read | Resolved for spaced operators. `A%5` with no spaces is read as an operator, not a suffix |
-| A10 | Messages that describe the old meaning, for example `Use untyped (no suffix) or '!' for real numbers` | **Checked in 0.3.0:** the old message text no longer exists in the code. | **Resolved** |
+| A10 | Messages that describe the old meaning, for example `Use untyped (no suffix) or '!' for real numbers` | **Checked in 0.4.0:** the old message text no longer exists in the code. | **Resolved** |
 
 **Answer (as written before the work started):** The change removes the ambiguities between `#` and REAL, between `@` and `!`, and between `#` and pragmas. A7 is resolved once the lexer checks the suffix before `!=` (one code change, `Normalizer.java:216`). A8 is resolved as "invalid". A6 and A6b are not yet decided: the built jar rejects those lines, and the warning behaviour the owner described needs a specification. A11 and A12 are defects found during this check.
 
@@ -1428,7 +1428,7 @@ Question checked: after the change, is every suffix reading unambiguous? The che
 
 ---
 
-### `macroManager` Package
+### `macromanager` Package
 
 Preprocessor for macro expansion. Processes macro definitions before tokenization.
 
@@ -1603,7 +1603,7 @@ main(String[])
                   │   └─ Expression.evaluate()
                   ├─ GotoStatement.execute()
                   │   └─ ProgramPointer.setCurrentStatement()
-                  └─ ... [35+ statement types]
+                  └─ ... [40 statement classes, checked 2026-11-23]
 ```
 
 ### Expression Evaluation
@@ -1643,7 +1643,7 @@ AssignStatement.execute()
       ├─ Determine VariableType from variable name suffix
       │   ├─ "$" → STRING, store in _moStrings
       │   ├─ "%" → INTEGER, store in _moIntegers
-      │   ├─ "#" → BCD, store in _moBcds (0.3.0; 0.2.1 rejected "#")
+      │   ├─ "#" → BCD, store in _moBcds (0.4.0; 0.2.1 rejected "#")
       │   └─ no suffix → UNDEFINED (REAL, store in _moReals)
       └─ Type coercion if needed
 
@@ -1688,7 +1688,7 @@ src/test/java/eu/gricom/basic/
 ├── helper/
 │   ├── FileHandlerTest.java
 │   └── LoggerTest.java
-├── memoryManager/
+├── memorymanager/
 │   ├── ProgramTest.java
 │   ├── VariableManagementTest.java
 │   └── StackTest.java
@@ -1714,7 +1714,7 @@ src/test/java/eu/gricom/basic/
 ├── tokenizer/
 │   ├── BasicLexerTest.java
 │   └── TokenTest.java
-└── variableTypes/
+└── variabletypes/
     ├── BooleanValueTest.java
     ├── IntegerValueTest.java
     ├── RealValueTest.java
@@ -2565,7 +2565,7 @@ Added helper methods to detect and parse IF variants:
 
 **parseBlockStatements(int iBlockEndLine)**
 - Parses all statements between THEN and ELSE/END-IF
-- Supports all 35+ statement types in block context
+- Supports the 40 statement classes in block context (checked 2026-11-23)
 - Returns `List<Statement>` for execution
 
 **parseInlineStatement()**
@@ -2794,7 +2794,7 @@ Options:
 
 ### File Handling (FileManager Class)
 
-**Location**: `memoryManager/FileManager.java`
+**Location**: `memorymanager/FileManager.java`
 
 **Purpose**: Manage file I/O operations for BASIC programs using file numbers.
 
@@ -3167,9 +3167,9 @@ BASIC variables are identified by **type suffix characters** at the end of the v
 | `$` | String | `StringValue` | Unlimited | Implemented |
 | `%` | Integer | `IntegerValue` | -2,147,483,648 to 2,147,483,647 | Implemented |
 | `&` | Long | `LongValue` | -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 | Implemented |
-| `#` | Decimal (BCD) | `BcdValue` | Up to 40 significant digits | Implemented (0.3.0; rejected in 0.2.1) |
-| `!` | Boolean | `BooleanValue` | true, false | Implemented (0.3.0; in 0.2.1 it is DOUBLE) |
-| `@` | Boolean | `BooleanValue` | true, false | 0.2.1 only; error in 0.3.0 (decision D2) |
+| `#` | Decimal (BCD) | `BcdValue` | Up to 40 significant digits | Implemented (0.4.0; rejected in 0.2.1) |
+| `!` | Boolean | `BooleanValue` | true, false | Implemented (0.4.0; in 0.2.1 it is DOUBLE) |
+| `@` | Boolean | `BooleanValue` | true, false | 0.2.1 only; error in 0.4.0 (decision D2) |
 | (none) | Default (Real) | `RealValue` | IEEE 754 double precision | Implemented |
 
 #### Valid Variable Names
@@ -3179,9 +3179,9 @@ A           ' Real, double precision (implemented)
 A%          ' Integer (implemented)
 A&          ' Long integer (implemented)
 A$          ' String (implemented)
-A@          ' Error in 0.3.0 (was Boolean in 0.2.1)
-A!          ' Boolean (implemented in 0.3.0; in 0.2.1 this is a Double)
-A#          ' Decimal, up to 40 significant digits (implemented in 0.3.0)
+A@          ' Error in 0.4.0 (was Boolean in 0.2.1)
+A!          ' Boolean (implemented in 0.4.0; in 0.2.1 this is a Double)
+A#          ' Decimal, up to 40 significant digits (implemented in 0.4.0)
 MY_VAR%     ' Multi-word integer with underscore
 ```
 
@@ -3368,14 +3368,14 @@ src/main/java/eu/gricom/basic/
 │   ├── Abs.java
 │   ├── Sin.java
 │   └── ... (30+ function classes)
-├── variableTypes/                       # Type system
+├── variabletypes/                       # Type system
 │   ├── Value.java (interface)
 │   ├── RealValue.java
 │   ├── IntegerValue.java
 │   ├── StringValue.java
 │   ├── BooleanValue.java
 │   └── LongValue.java
-├── memoryManager/                       # State and memory
+├── memorymanager/                       # State and memory
 │   ├── Program.java
 │   ├── VariableManagement.java
 │   ├── Stack.java
@@ -3383,9 +3383,9 @@ src/main/java/eu/gricom/basic/
 │   ├── LineNumberXRef.java
 │   ├── FileManager.java
 │   └── FiFoQueue.java
-├── runtimeManager/                      # Execution engine
+├── runtimemanager/                      # Execution engine
 │   └── Execute.java
-├── macroManager/                        # Preprocessor
+├── macromanager/                        # Preprocessor
 │   ├── MacroProcessor.java
 │   └── MacroList.java
 ├── error/                               # Exceptions
@@ -3436,7 +3436,7 @@ All contributions must include:
 
 ### LineNumberXRef: Program Navigation Mapping
 
-**Location**: `memoryManager/LineNumberXRef.java`
+**Location**: `memorymanager/LineNumberXRef.java`
 
 **Purpose**: Map three-way relationship between BASIC line numbers, token positions, and statement indices.
 
@@ -3510,11 +3510,11 @@ src/test/
 │   │   ├── AbsTest.java
 │   │   ├── SqrTest.java
 │   │   └── ... (test for each function)
-│   ├── variableTypes/
+│   ├── variabletypes/
 │   │   ├── RealValueTest.java
 │   │   ├── IntegerValueTest.java
 │   │   └── ... (test for each type)
-│   └── memoryManager/
+│   └── memorymanager/
 │       ├── VariableManagementTest.java
 │       ├── StackTest.java
 │       ├── LineNumberXRefTest.java
@@ -3772,7 +3772,7 @@ case NEWSTATEMENT:
 
 **Step 1**: Implement `Value` interface:
 ```java
-package eu.gricom.basic.variableTypes;
+package eu.gricom.basic.variabletypes;
 
 public class NewTypeValue implements Value {
     private final Object _oValue;
@@ -3819,7 +3819,7 @@ case BCD:
     break;
 ```
 
-The `#` example above is the BCD type (implemented in 0.3.0). The steps show the pattern for adding any new suffix.
+The `#` example above is the BCD type (implemented in 0.4.0). The steps show the pattern for adding any new suffix.
 
 ---
 
@@ -4692,3 +4692,59 @@ The following file operations are candidates for future implementation (version 
 - System tests (.bas files) should be added in src/test/basic/
 - Edge cases (empty files, special characters, permission errors) must be covered
 
+---
+
+## Appendix A: Version 0.4.0 Facts (checked 2026-11-23)
+
+This appendix was added on 2026-11-23. Every number in it was counted from the source tree or measured by running the
+jar. The later sections of this document describe the design decisions. This appendix describes what the code is now.
+
+### A.1 Counts
+
+| Item | Count | How it was counted |
+|---|---|---|
+| Java files in `src/main/java` | 165 | `find` on the folder |
+| Java files in `src/test/java` | 136 | `find` on the folder |
+| Lines of Java in `src/main/java` | 20,189 | `cat` and `wc -l` |
+| Lines of Java in `src/test/java` | 25,139 | `cat` and `wc -l` |
+| Statement classes in `statements/` | 40 | files in the folder, minus helper classes |
+| Function classes in `functions/` | 39 (41 files) | files in the folder |
+| Unit tests | 1560, 0 failing | Maven output, 2026-11-23 |
+| System test runs | 109 passing | `run_all_tests.sh`, 2026-11-23 |
+| Build time | about 27 s | Maven "Total time" for `mvn clean test package` |
+
+### A.2 Packages and their imports
+
+The import graph was measured from the `import eu.gricom.basic.*` lines of every file. The diagram and table are in
+`doc/ARCHITECTURE.md`, section "Package Map". Two cycles exist:
+
+- `statements` and `memorymanager` import each other.
+- `statements` and `variabletypes` import each other.
+
+### A.3 Decimal (BCD) value path
+
+1. The parser reads the number and makes a `RealValue` with `Double.parseDouble`
+   (`parser/BasicParser.java`, line 1024). This is a binary `double`, so long literals lose digits (KI-01).
+2. `VariableManagement` stores a `#` variable as a `BcdValue` (`memorymanager/VariableManagement.java`, line 97).
+3. `BcdValue` keeps a `BigDecimal` with at most 40 digits before the decimal point. A result with 41 digits raises
+   `OverflowException`, and the stack trace is printed as well (KI-02). The check is in `variabletypes/BcdValue.java`,
+   method `fit`, line 166.
+4. Arrays with `#` are refused with a syntax error (`VariableManagement.rejectBcdArray`, line 134).
+
+### A.4 Compile path
+
+The compiler reuses the lexer, the parser and the statement classes. `compiler/JavaCodeGenerator` writes Java source
+for each statement. `compiler/JavaSourceCompiler` runs `javac`, and `compiler/JarPackager` adds the GD-BASIC runtime
+to the jar. Details are in `doc/COMPILER.md`.
+
+### A.5 Known issues that affect the design
+
+| Issue | Effect on the design |
+|---|---|
+| KI-01 | Literal precision is lost at step 1 of A.3. |
+| KI-02 | Errors print Java stack traces, so the error path is not clean. |
+| KI-12 | `dialects/` packages (`apple`, `pet`, `trs80`) are empty and unused. |
+| KI-16 | LONG (`&`) values use the INTEGER storage in `VariableManagement`, so they are clamped. |
+| KI-18 | A `!` line without a number stops the lexer with a Java exception. |
+
+The full list, with repro programs, is in `doc/KNOWN_ISSUES.md`.

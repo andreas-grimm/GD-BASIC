@@ -2,14 +2,52 @@
 
 All notable changes to the GD-BASIC project are documented in this file.
 
-**Last Updated:** 2026-11-22
+**Last Updated:** 2026-11-23
 
 ---
 
-## [0.3.0] — 2026-11-22 (branch `feature/bcd-arithmetic`, not yet merged or committed)
+## [0.4.0] — 2026-11-22 to 2026-11-23 (branch `feature/compiler`, which contains `feature/bcd-arithmetic`; not yet merged)
 
-**Decimal numbers (BCD) and suffix changes.** Version 0.3.0 is implemented on branch `feature/bcd-arithmetic`. The
+**Decimal numbers (BCD) and suffix changes.** Version 0.4.0 is implemented on branch `feature/bcd-arithmetic`. The
 design is in `doc/GD-BASIC_Detailed_Design.md` (section "BCD Arithmetic Design"). The language rules are in `doc/BASIC.md`.
+
+### Added since the first 0.4.0 notes (2026-11-22 to 2026-11-23)
+- **BASIC-to-Java compiler** (commit `bf1d35e`). Options `-o <target>` and `-j <file.java>`; editor commands `COMPILE`
+  and `SAVEJAVA`. The compiled jar runs on its own and prints what the interpreter prints. See `doc/COMPILER.md`,
+  which also lists the statements that are not supported yet (arrays, `DATA`/`READ`, labels).
+- **Compiler system tests**: `test/system/compiler/` (9 BASIC programs and one input file, `compiler_input.in`).
+  `run_all_tests.sh` compares the interpreter output with the output of the compiled jar.
+- **Unit tests** for the new behaviour: `OperatorSpacerTest`, `UnaryMinusTest`, `FileDirectoryAndPragmaParserTest`,
+  `MinusAndArrayUseCaseTest` (17 use cases), `ChDirStatementTest`, `GetCwdTest`, `FileManagerTest`,
+  `JavaCodeGeneratorTest`.
+- **Documents**: `doc/KNOWN_ISSUES.md` (open problems, with repro programs and source lines), `doc/GLOSSARY.md`
+  (plain-English terms), and a rewritten `doc/QUICK_START.md` in which every example was run.
+
+### Fixed since the first 0.4.0 notes (2026-11-22 to 2026-11-23)
+- `A%-1` is read as `A% - 1`. The internal key `A%-1` belongs only to the array element `A%(1)`.
+- `OperatorSpacer` keeps `W$[I-1]` intact (bracket tracking).
+- `@PRAGMA` needs brackets and quoted strings: `@PRAGMA( "key" = "value" )`. Without them the parser reports
+  `expected LEFT_PAREN`.
+- Unary minus on a boolean swaps the value: `-TRUE` is `FALSE`, `-FALSE` is `TRUE`.
+- `GETCWD()` returns the absolute start directory of the program, and `CHDIR` changes it. `CHDIR ""` keeps the
+  directory. A `~` is not expanded.
+- `FileManager.openFile` joins the working directory with `Paths.get`, so a directory with or without a trailing `/`
+  gives the right file name.
+
+### Changed since the first 0.4.0 notes (2026-11-23)
+- **Package names are lowercase**: `macromanager`, `memorymanager`, `runtimemanager`, `variabletypes`, `lineeditor`.
+  Imports, the code that the compiler generates, and the current documents use the new names. Older entries in this
+  file are not changed.
+- **Code follows `prompts/STYLEGUIDE.md`**: Hungarian prefixes (`v` for lists, `e` for enumerations, `o` for objects,
+  and so on), `oException` for catch variables, British spelling in comments, lines of at most 160 characters, and no
+  single-letter names. `etc/checkstyle-config.xml` follows the same rules.
+- **Checkstyle**: 32 warnings remain (all `MethodLength`), which were approved to stay as warnings. The `PackageName`
+  rule allows digits (for the `dialects/trs80` package), and the `TodoComment` rule is turned off.
+
+### Known issues (open on 2026-11-23)
+See `doc/KNOWN_ISSUES.md`. The most important open items are KI-01 (long decimal literals lose digits), KI-04
+(`LISTDIRECTORY` crashes), KI-06 (`EXIT` does not end loops), KI-09 (a single-line `IF ... THEN ... ELSE` crashes) and
+KI-16 (LONG values above 2147483647 are clamped).
 
 ### Added
 - **Decimal variables with suffix `#`** (`amount# = 0.1 + 0.2` gives `0.3`). Up to 40 significant digits, rounding HALF_UP.
@@ -54,9 +92,9 @@ design is in `doc/GD-BASIC_Detailed_Design.md` (section "BCD Arithmetic Design")
 - Shift operators used the wrong formula. Example: `256 >> 4` gave 32; the correct result is 16.
 
 ### Testing
-- **Unit tests**: 1435 (0.2.1 had 1248). All pass. New or extended test classes include `BcdArithmeticTest`, `BcdValueTest`,
+- **Unit tests**: 1560 on 2026-11-23 (1435 when the first 0.4.0 notes were written; 0.2.1 had 1248). All pass. New or extended test classes include `BcdArithmeticTest`, `BcdValueTest`,
   `BcdFunctionsTest`, `BcdMathTest`, `BcdOutputFormatTest`, `ShiftOperatorTest`, `DollarFunctionLexerTest`, `NormalizerQuotedBracketTest`, `SuffixAndCommentRulesTest`, `NumericEqualityTest`, `InputStatementTest`, `Phase7RegressionTest`.
-- **System test programs**: 62 (`test/system/run_all_tests.sh`). The runner now fails when a program stops with an error
+- **System test runs**: 109 on 2026-11-23 (`test/system/run_all_tests.sh`). The runner now fails when a program stops with an error
   or prints `ERROR: Test failed`. Before, it only checked the exit code, which was always 0. Sixteen programs that
   were not run before are now included. Seven BCD programs run with expected output files in `test/system/examples/`;
   four of them must stop with an error and exit code 1 (overflow, division by zero, BCD array, BCD shift).

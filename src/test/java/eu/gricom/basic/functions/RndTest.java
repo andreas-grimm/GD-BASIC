@@ -2,7 +2,7 @@ package eu.gricom.basic.functions;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import eu.gricom.basic.variableTypes.RealValue;
+import eu.gricom.basic.variabletypes.RealValue;
 import org.junit.jupiter.api.Test;
 
 public class RndTest {

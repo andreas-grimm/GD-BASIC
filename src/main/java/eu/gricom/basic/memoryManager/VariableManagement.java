@@ -1,15 +1,15 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 import eu.gricom.basic.error.OverflowException;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.tokenizer.Normalizer;
-import eu.gricom.basic.variableTypes.BcdValue;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
-import eu.gricom.basic.variableTypes.VariableType;
+import eu.gricom.basic.variabletypes.BcdValue;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
+import eu.gricom.basic.variabletypes.VariableType;
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.error.SyntaxErrorException;
 
@@ -27,11 +27,11 @@ import java.util.Map;
  * (c) = 2020,.., by Andreas Grimm, The Netherlands / Norway
  */
 public class VariableManagement {
-    private final static Map<String, BooleanValue> _moBooleans = new HashMap<>();
-    private final static Map<String, BcdValue> _moBcds = new HashMap<>();
-    private final static Map<String, IntegerValue> _moIntegers = new HashMap<>();
-    private final static Map<String, RealValue> _moReals = new HashMap<>();
-    private final static Map<String, StringValue> _moStrings = new HashMap<>();
+    private static final Map<String, BooleanValue> _moBooleans = new HashMap<>();
+    private static final Map<String, BcdValue> _moBcds = new HashMap<>();
+    private static final Map<String, IntegerValue> _moIntegers = new HashMap<>();
+    private static final Map<String, RealValue> _moReals = new HashMap<>();
+    private static final Map<String, StringValue> _moStrings = new HashMap<>();
 
     /**
      * Default Constructor.
@@ -45,10 +45,10 @@ public class VariableManagement {
      * @param strKey variable name to check
      * @return true if variable has type suffix ($, %, &, !, @), false otherwise
      */
-    private boolean _hasTypeSuffix(final String strKey) {
-        return strKey.contains("$") || strKey.contains("%") ||
-               strKey.contains("&") || strKey.contains("!") ||
-               strKey.contains("#") || strKey.contains("@");
+    private boolean hasTypeSuffix(final String strKey) {
+        return strKey.contains("$") || strKey.contains("%")
+               || strKey.contains("&") || strKey.contains("!")
+               || strKey.contains("#") || strKey.contains("@");
     }
 
 // section managing internal variables...
@@ -60,7 +60,7 @@ public class VariableManagement {
      * @throws SyntaxErrorException if the parenthesis is not set correctly
      */
     public final void putMap(final String strKey, final Value oValue) throws SyntaxErrorException, OverflowException {
-        _rejectBcdArray(strKey);
+        rejectBcdArray(strKey);
         // Untyped variables are DOUBLE (decision D5: the DOUBLE type remains for variables without a suffix)
         VariableType eVariableType = VariableType.DOUBLE;
 
@@ -75,7 +75,7 @@ public class VariableManagement {
         } else if (strKey.contains("!")) {
             eVariableType = VariableType.BOOLEAN;
         } else if (strKey.contains("@")) {
-            throw _retiredSuffixError(strKey);
+            throw retiredSuffixError(strKey);
         }
 
         switch (eVariableType) {
@@ -102,7 +102,7 @@ public class VariableManagement {
                 if (oValue instanceof BooleanValue) {
                     _moBooleans.put(Normalizer.normalizeIndex(strKey), (BooleanValue) oValue);
                 } else if (oValue instanceof StringValue) {
-                    throw _typeMismatchError(strKey, "TRUE or FALSE", oValue);
+                    throw typeMismatchError(strKey, "TRUE or FALSE", oValue);
                 } else {
                     _moBooleans.put(Normalizer.normalizeIndex(strKey),
                         new BooleanValue(oValue.toReal() == 0.0));
@@ -111,7 +111,7 @@ public class VariableManagement {
             default:
                 // DOUBLE (untyped variables): numbers only
                 if (oValue instanceof BooleanValue) {
-                    throw _typeMismatchError(strKey, "a number", oValue);
+                    throw typeMismatchError(strKey, "a number", oValue);
                 }
                 if (oValue instanceof RealValue) {
                     _moReals.put(Normalizer.normalizeIndex(strKey), (RealValue) oValue);
@@ -129,7 +129,7 @@ public class VariableManagement {
      * @param strKey the variable name, including any subscript. An array key has the form NAME-index, for example F#-0
      * @throws SyntaxErrorException if the name has the '#' suffix and a subscript
      */
-    private static void _rejectBcdArray(final String strKey) throws SyntaxErrorException {
+    private static void rejectBcdArray(final String strKey) throws SyntaxErrorException {
         if (strKey.contains("#") && (strKey.contains("-") || strKey.contains("(") || strKey.contains("["))) {
             throw new SyntaxErrorException("Syntax Error: arrays with the '#' (BCD) suffix are not supported yet: "
                     + strKey);
@@ -142,7 +142,7 @@ public class VariableManagement {
      * @param strKey the variable name
      * @return the syntax error to throw
      */
-    private static SyntaxErrorException _retiredSuffixError(final String strKey) {
+    private static SyntaxErrorException retiredSuffixError(final String strKey) {
         return new SyntaxErrorException("Syntax Error: Variable name [" + strKey + "] uses '@', which is not a "
                 + "variable suffix. Use '!' for true or false.");
     }
@@ -155,7 +155,7 @@ public class VariableManagement {
      * @param oValue the value that was offered
      * @return the syntax error to throw
      */
-    private static SyntaxErrorException _typeMismatchError(final String strKey, final String strExpected,
+    private static SyntaxErrorException typeMismatchError(final String strKey, final String strExpected,
                                                            final Value oValue) {
         String strGot = oValue instanceof BooleanValue ? "TRUE or FALSE"
                 : oValue instanceof StringValue ? "text" : "a number";
@@ -170,26 +170,26 @@ public class VariableManagement {
      * @param dValue - value part of the pair, here as an double
      * @throws SyntaxErrorException variable cannot store double value
      */
-    public final void putMap(final String strKey, final double dValue) throws SyntaxErrorException, OverflowException {
-        _rejectBcdArray(strKey);
+    public final void putMap(final String strKey, final double fValue) throws SyntaxErrorException, OverflowException {
+        rejectBcdArray(strKey);
         if (strKey.contains("#")) {
-            _moBcds.put(Normalizer.normalizeIndex(strKey), new BcdValue(dValue));
+            _moBcds.put(Normalizer.normalizeIndex(strKey), new BcdValue(fValue));
             return;
         }
 
         // A number is converted for a true-or-false variable: 0 gives TRUE, any other number gives FALSE (A11)
         if (strKey.contains("!")) {
-            _moBooleans.put(Normalizer.normalizeIndex(strKey), new BooleanValue(dValue == 0.0));
+            _moBooleans.put(Normalizer.normalizeIndex(strKey), new BooleanValue(fValue == 0.0));
             return;
         }
 
         if (strKey.contains("@")) {
-            throw _retiredSuffixError(strKey);
+            throw retiredSuffixError(strKey);
         }
 
         // Untyped variables are DOUBLE
-        if (!_hasTypeSuffix(strKey)) {
-            RealValue oValue = new RealValue(dValue);
+        if (!hasTypeSuffix(strKey)) {
+            RealValue oValue = new RealValue(fValue);
             _moReals.put(Normalizer.normalizeIndex(strKey), oValue);
             return;
         }
@@ -282,7 +282,7 @@ public class VariableManagement {
         Logger oLogger = new Logger(this.getClass().getName());
         boolean bProcess = false;
 
-        _rejectBcdArray(strKey);
+        rejectBcdArray(strKey);
 
         String strWork = strKey;
 

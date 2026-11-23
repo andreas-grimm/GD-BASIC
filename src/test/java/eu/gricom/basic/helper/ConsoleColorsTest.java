@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * ConsoleColorsTest.java
  * <p>
  * Test suite for ConsoleColors class, testing ANSI escape sequence constants
- * for colored terminal output.
+ * for coloured terminal output.
  */
 @DisplayName("ConsoleColors Test Suite")
 class ConsoleColorsTest {
@@ -448,7 +448,7 @@ class ConsoleColorsTest {
     // ===== UTILITY TESTS =====
 
     @Test
-    @DisplayName("All color constants should start with escape sequence")
+    @DisplayName("All colour constants should start with escape sequence")
     void testAllColorsStartWithEscape() {
         assertAll(
                 () -> assertTrue(ConsoleColors.BLACK.startsWith("\033[")),
@@ -459,7 +459,7 @@ class ConsoleColorsTest {
     }
 
     @Test
-    @DisplayName("All color constants should end with 'm'")
+    @DisplayName("All colour constants should end with 'm'")
     void testAllColorsEndWithM() {
         assertAll(
                 () -> assertTrue(ConsoleColors.BLACK.endsWith("m")),

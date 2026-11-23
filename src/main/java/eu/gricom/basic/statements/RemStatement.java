@@ -67,8 +67,8 @@ public class RemStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"REM\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"REM_TEXT\": \""+ _strRemText +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"REM_TEXT\": \"" + _strRemText + "\"";
         strReturn += "}}";
         return strReturn;
     }

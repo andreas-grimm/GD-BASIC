@@ -5,6 +5,10 @@ what the program tests, how the runner decides whether it passed, and what the e
 
 It replaces the five older markdown files in this directory (see the last section).
 
+**Counts (checked 2026-11-23):** `run_all_tests.sh` reported 109 runs passing. The folder `test/system/` holds 62
+BASIC programs at its top level. The folder `test/system/compiler/` holds 9 BASIC programs and one input file
+(`compiler_input.in`).
+
 ## 1. Purpose and scope
 
 The system tests are small BASIC programs. Each one checks one feature of the GD-BASIC interpreter.
@@ -41,7 +45,7 @@ test/system/run_all_tests.sh
 Run one program on its own (replace the file name):
 
 ```bash
-java -jar target/BASIC-0.3.0-jar-with-dependencies.jar -r test/system/test_arithmetic_operators.bas
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -r test/system/test_arithmetic_operators.bas
 ```
 
 The runner stops at the first failing program and shows that program's output.
@@ -213,14 +217,41 @@ These files are in `test/system/examples/`. Each `.expected` file holds the exac
 |---|---|---|---|
 | `doc/GD_Basic_Examples/BSearch.bas` (not in this directory) | Binary search of a sorted array of 9 elements, read from the keyboard | `examples/BSearch.input` (6 lines) | `examples/BSearch.expected` (16 lines), for example `A HAS9ELEMENTS` and `A(0)=1.0` |
 
+### 5.3 Compiler tests (`test/system/compiler/`)
+
+These programs are run twice: by the interpreter, and as a jar compiled with `COMPILE`. The outputs must be the same
+(`run_compiler_test`). If a `.in` file with the same name exists, its content is the standard input of both runs.
+The test list is `COMPILER_TESTS` in `run_all_tests.sh`. Lines with random or machine values (`RND`, `MEM`, `TIME$`)
+are left out of the comparison.
+
+| Program | What it tests |
+|---|---|
+| `compiler/compiler_values.bas` | Arithmetic, strings, functions and number types |
+| `compiler/compiler_flow.bas` | IF, GOTO, GOSUB, FOR, WHILE and DO-UNTIL |
+| `compiler/compiler_unary_minus.bas` | Unary minus keeps the type (`PRINT -A%`), and operators without spaces (`A-B`, `2*A`, `X=-A`) |
+| `compiler/compiler_input.bas` (with `compiler_input.in`) | `INPUT` of a text and a number from standard input |
+| `compiler/compiler_system.bas` | The `SYSTEM` function runs an operating system command |
+| `compiler/compiler_file_io.bas` | `FOPEN`, `FPRINT`, `FCLOSE`, `FINPUT`, `FGET`, `FPEEK`, `FREWIND`, `FCOPY`, `FRENAME`, `FDELETE`, `FEXISTS`, `EOF`, `FISOPEN`, `FGETSIZE`, `FLINECOUNT`. The files are removed at the end. |
+| `compiler/compiler_directories.bas` | `MKDIR`, `RMDIR` (with and without `TRUE`), `DIREXISTS`, `CHDIR`, `GETCWD`. The directories are removed at the end. |
+| `compiler/compiler_error_unary_string.bas` | Negative: `PRINT -S$` must stop with `Cannot apply unary minus to a string` (checked for both the interpreter and the compiled program) |
+| `compiler/compiler_error_mkdir_exists.bas` | Negative: `MKDIR "."` must stop with `already exists` (checked for both) |
+
+The two negative programs are run by `run_compiler_error_test`.
+
+The start directory check (`run_start_directory_test`) runs the interpreter in a new temporary directory. It checks that
+`GETCWD()` prints that directory as an absolute path, and that `CHDIR "sub"` followed by `CHDIR ".."` changes it. Both the interpreter and the compiled program must exit
+with a non-zero code and print the expected text.
+
 ## 6. Side effects and known gaps
 
 - **Temporary files in `/tmp`.** The file tests write to fixed paths such as `/tmp/test_exists.txt`,
   `/tmp/copy_source.txt` and `/tmp/integration_test.txt`. The runner removes only `test_io.txt` from the
   current directory at the end of a run (`rm -f test_io.txt` in `run_all_tests.sh`). The `/tmp` files are not removed by the runner.
 - **Machine-dependent output.** `test_mixed_tests_2` runs the `SYSTEM` command, which lists a directory, so its output
-  changes from one machine to another. `MEM`, `RND` and `TIME$` values also change.
+  changes from one machine to another. `MEM`, `RND` and `TIME` values also change (`TIME` is a number of milliseconds; `TIME$` is not a valid name, see `doc/COMPILER.md`, section 6).
 - **Nine programs are not self-checking** (see the note in section 4).
+- **Open defects.** Defects that the system tests do not fix are listed, with repro programs and source lines, in
+  `doc/KNOWN_ISSUES.md`.
 - **Log output.** Running with `-r` also prints log lines with timestamps. The example comparison removes these
   lines before comparing.
 

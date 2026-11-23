@@ -2,10 +2,10 @@ package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.error.SyntaxErrorException;
-import eu.gricom.basic.memoryManager.LineNumberXRef;
-import eu.gricom.basic.memoryManager.ProgramPointer;
-import eu.gricom.basic.memoryManager.Stack;
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.memorymanager.LineNumberXRef;
+import eu.gricom.basic.memorymanager.ProgramPointer;
+import eu.gricom.basic.memorymanager.Stack;
+import eu.gricom.basic.variabletypes.IntegerValue;
 
 /**
  * GosubStatement.java
@@ -59,7 +59,7 @@ public final class GosubStatement implements Statement {
         int iStatementNo;
         try {
             iStatementNo = _oLineNumberObject.getStatementFromLineNumber(Integer.parseInt(_strTarget));
-        } catch (RuntimeException e) {
+        } catch (RuntimeException oException) {
             throw new SyntaxErrorException("GOSUB [unknown]: Target: " + _strTarget);
         }
 
@@ -92,9 +92,15 @@ public final class GosubStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"GOSUB\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"TARGET\": \""+ _strTarget +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"TARGET\": \"" + _strTarget + "\"";
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the target line number as text (used by the compiler) */
+    public String getTarget() {
+        return _strTarget;
+    }
 }
+

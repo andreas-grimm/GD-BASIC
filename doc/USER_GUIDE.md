@@ -1,7 +1,7 @@
 # GD-BASIC User's Guide
 
-**Version:** 0.2.0+  
-**Last Updated:** 2026-11-22  
+**Version:** 0.4.0 (branch `feature/compiler`, not yet merged)  
+**Last Updated:** 2026-11-23 (checked against the 0.4.0 jar)  
 **Document Type:** User Manual  
 
 ---
@@ -41,14 +41,14 @@ This guide covers using GD-BASIC from the command line and the interactive line 
 
 ### Setup
 
-1. Download the executable JAR: `BASIC-0.2.0-jar-with-dependencies.jar`
+1. Download the executable JAR: `BASIC-0.4.0-jar-with-dependencies.jar`
 2. Place it in a directory of your choice
 3. No additional installation needed
 
 ### Verify Installation
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -h
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -h
 ```
 
 You should see the help message displaying available command-line options.
@@ -62,7 +62,7 @@ You should see the help message displaying available command-line options.
 #### Run an Existing Program
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar program.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar program.bas
 ```
 
 This loads and enters the interactive line editor with your program. You can then:
@@ -74,7 +74,7 @@ This loads and enters the interactive line editor with your program. You can the
 #### Run in Direct Execution Mode
 
 ```bash
-java -jar target/BASIC-0.3.0-jar-with-dependencies.jar -r program.bas
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -r program.bas
 ```
 
 The `-r` flag (run directly) skips the interactive editor and executes immediately.
@@ -82,7 +82,7 @@ The `-r` flag (run directly) skips the interactive editor and executes immediate
 #### Start Interactive Editor with Empty Program
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar
+java -jar BASIC-0.4.0-jar-with-dependencies.jar
 ```
 
 No program file needed! Start with an empty program and build it interactively.
@@ -98,7 +98,7 @@ All command-line options use single-letter flags:
 Display the help message with all available options.
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -h
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -h
 ```
 
 ### Option: `-q` (Quiet Mode)
@@ -106,7 +106,7 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar -h
 Suppress the splash screen banner. Program still runs normally.
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -q program.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -q program.bas
 ```
 
 ### Option: `-v LEVEL` (Verbose Logging)
@@ -119,8 +119,10 @@ Set logging verbosity. Useful for debugging.
 - `info` — General informational messages (default)
 - `warning` — Warnings only (least verbose)
 
+The value `error` was also accepted when tested on 2026-11-23 (exit code 0).
+
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -v debug program.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -v debug program.bas
 ```
 
 ### Option: `-d` (Dartmouth Mode)
@@ -131,7 +133,16 @@ Enable Dartmouth-style left-to-right expression evaluation instead of standard B
 **Dartmouth mode**: `2 + 3 * 4 = 20`
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -d program.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -d program.bas
+```
+
+### Options `-o` and `-j` (compile)
+
+These options build a jar file from a program. They are described with a tested transcript in
+`doc/QUICK_START.md`, section 9, and in full in `doc/COMPILER.md`.
+
+```bash
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -o hello -j hello.java
 ```
 
 ### Option: `-r` (Run Directly)
@@ -139,12 +150,12 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar -d program.bas
 Execute the program immediately without entering the interactive editor.
 
 ```bash
-java -jar target/BASIC-0.3.0-jar-with-dependencies.jar -r program.bas
+java -jar target/BASIC-0.4.0-jar-with-dependencies.jar -r program.bas
 ```
 
 > **Note**: The `-r` flag is ignored when no program file is provided (interactive mode).
 
-**Exit codes** (new in 0.3.0): the interpreter exits with `0` when the program ends normally (`END`), and with `1` when
+**Exit codes** (new in 0.4.0): the interpreter exits with `0` when the program ends normally (`END`), and with `1` when
 the program does not parse or stops with a runtime error. Scripts and the test runner can use this code.
 
 ### Combining Options
@@ -152,7 +163,7 @@ the program does not parse or stops with a runtime error. Scripts and the test r
 Options can be combined:
 
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -q -v debug -d program.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -q -v debug -d program.bas
 ```
 
 ---
@@ -311,7 +322,7 @@ Use colons (`:`) to separate multiple statements on one line:
 
 1. Start the interpreter without a file:
    ```bash
-   java -jar BASIC-0.2.0-jar-with-dependencies.jar
+   java -jar BASIC-0.4.0-jar-with-dependencies.jar
    ```
 
 2. Build your program interactively:
@@ -361,7 +372,7 @@ Use colons (`:`) to separate multiple statements on one line:
 
 2. Test with the editor:
    ```bash
-   java -jar BASIC-0.2.0-jar-with-dependencies.jar fibonacci.bas
+   java -jar BASIC-0.4.0-jar-with-dependencies.jar fibonacci.bas
    ```
 
 3. Inside the editor:
@@ -375,7 +386,7 @@ Use colons (`:`) to separate multiple statements on one line:
 
 4. Execute directly (when ready):
    ```bash
-   java -jar BASIC-0.2.0-jar-with-dependencies.jar -r fibonacci.bas
+   java -jar BASIC-0.4.0-jar-with-dependencies.jar -r fibonacci.bas
    ```
 
 ### Workflow 3: Batch Processing
@@ -395,7 +406,7 @@ cat > batch_job.bas << 'EOF'
 EOF
 
 # Run directly without editor
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -r -q batch_job.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -r -q batch_job.bas
 ```
 
 ---
@@ -405,11 +416,11 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar -r -q batch_job.bas
 A variable's type is set by the character at the end of its name. A variable with no suffix holds a
 real number (double precision).
 
-| Suffix | Type | Example | Status in version 0.3.0 |
+| Suffix | Type | Example | Status in version 0.4.0 |
 |--------|------|---------|-------------------------|
 | *(none)* | Real number (double precision) | `X`, `VALUE` | Works |
 | `%` | Integer (32-bit) | `COUNT%` | Works |
-| `&` | Long integer (64-bit) | `BIG&` | Works |
+| `&` | Long integer | `BIG&` | Works up to 2147483647. Larger values are clamped (KI-16). |
 | `$` | Text | `NAME$` | Works |
 | `!` | True or false | `FLAG!` | Works. In version 0.2.1 `!` was a Double |
 | `#` | Decimal number, up to 40 significant digits | `AMOUNT#` | Works |
@@ -434,11 +445,11 @@ Running this program prints `Tax: 8.249175`.
 What to expect:
 - Decimal numbers keep the digits you type. `0.1 + 0.2` gives `0.3`.
 - A decimal number can have up to 40 significant digits. If a result needs more than 40 digits before the decimal point,
-  the program stops with an overflow error.
+  the program stops with an overflow error, followed by a stack trace (KI-02). Tested 2026-11-23 with a 41-digit result: `Overflow: a BCD value may have at most 40 digits before the decimal point, this value needs 41`.
 - Results are shown without trailing zeros: `2.50` prints as `2.5`, and `1000` prints as `1000`.
 - Decimal numbers work with `SQR`, `EXP`, `LOG`, `LOG10`, `SIN`, `COS`, `TAN`, `ATN`, `ABS` and `CINT`.
 - Dividing by zero stops the program with an error.
-- Arrays with a `#` suffix (for example `A#(1)`) are not supported yet. The program stops with a message.
+- Arrays with a `#` suffix (for example `A#(1)`) are not supported yet. The program stops with a `Syntax Error` message, followed by a Java stack trace (KI-02). Tested 2026-11-23.
 - Plain variables (no suffix) keep the double-precision behaviour, so existing programs do not change.
 
 ### True-or-false variables
@@ -449,8 +460,14 @@ For a not-equal comparison, put a space before `!=`, for example `IF A != 2 THEN
 
 ### Comments
 
-Use `REM` for comments. A line that starts with `!` is accepted as a comment. A `!` after a colon gives a warning
-and the rest of the line is treated as a comment. Use `REM` to avoid the warning.
+Use `REM` for comments. Each form below was run on 2026-11-23:
+
+- `10 ! text`: accepted as a comment. The line runs.
+- `10 PRINT 1 : ! text`: accepted, with the warning `Comment after colon: use REM in place of !`.
+- `10 X = 1 ! text`: stops with `Syntax Error: '!' starts a comment only at the start of a line or after ':' in Line [10]`.
+- A line with no line number that starts with `!` crashes the interpreter (KI-18). Do not use this form.
+
+Use `REM` in all cases to avoid the warnings and errors.
 
 ---
 
@@ -465,7 +482,7 @@ and the rest of the line is treated as a comment. Use `REM` to avoid the warning
 
 Run it:
 ```bash
-java -jar BASIC-0.2.0-jar-with-dependencies.jar -r -q hello.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar -r -q hello.bas
 ```
 
 ### Simple Calculator
@@ -520,7 +537,14 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar -r -q hello.bas
 
 ## Troubleshooting
 
-### "Program file name missing..."
+### `-r` with no file name starts the line editor
+
+**What you see:** `Starting line editor` and the `>` prompt. The `-r` flag has no effect without a file name (checked
+2026-11-23).
+
+**Solution:** Give a file name after `-r`, or use the editor as normal.
+
+### "Program file name missing..." (old message, not seen in 0.4.0)
 
 **Cause:** No program file provided and unclear if interactive mode intended.
 
@@ -528,13 +552,16 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar -r -q hello.bas
 
 ```bash
 # Interactive mode (empty program)
-java -jar BASIC-0.2.0-jar-with-dependencies.jar
+java -jar BASIC-0.4.0-jar-with-dependencies.jar
 
 # Or load an existing file
-java -jar BASIC-0.2.0-jar-with-dependencies.jar existing.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar existing.bas
 ```
 
-### "File not found: myfile.bas"
+### Program file could not be read
+
+**What you see:** `[ERR-IO-EXCEPT] Program file could not be read.` The message does not give the file name
+(checked 2026-11-23 with a missing file).
 
 **Cause:** The file path doesn't exist or is misspelled.
 
@@ -543,7 +570,7 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar existing.bas
 - Use absolute path: `/full/path/to/myfile.bas`
 - Check spelling and case (case-sensitive on Linux/Mac)
 
-### "File already exists: output.bas"
+### `SAVE error: File already exists: output.bas`
 
 **Cause:** SAVE target file already exists (protection against overwriting).
 
@@ -570,6 +597,55 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar existing.bas
 - Re-enter the line correctly
 - Refer to BASIC_CODING_STANDARD.md for valid syntax
 
+### `Incorrect Command: 10: [LET]`
+
+**Cause:** `LET` is not accepted in 0.4.0 (KI-08).
+
+**Solution:** Write the assignment without `LET`: `A = 4`.
+
+### `Found: = expected THEN.`
+
+**Cause:** `IF A = 1 THEN` uses `=`, which means "store a value". Comparisons need `==` (documentation correction D1 in
+`doc/KNOWN_ISSUES.md`).
+
+**Solution:** `IF A == 1 THEN`.
+
+### `Incorrect Command: 40: [EXIT]` (EXIT inside a program)
+
+**Cause:** `EXIT` does not work inside a program yet (KI-06). The editor's `EXIT` command is a different thing and does work.
+
+**Solution:** Use a condition in the loop instead.
+
+### `Missing statement END-IF`
+
+**Cause:** A block `IF ... THEN` has no `END-IF` line.
+
+**Solution:** Add `END-IF` after the last statement of the block.
+
+### `EmptyStackException: Stack Empty` after `WEND`
+
+**Cause:** A `WEND` has no `WHILE` before it (KI-11).
+
+**Solution:** Check that every `WEND` has a matching `WHILE`.
+
+### Errors followed by a Java stack trace
+
+**What you see:** A message such as `Syntax Error: arrays with the '#' (BCD) suffix are not supported yet`, or an
+overflow message, followed by lines that begin `at eu.gricom.basic...`.
+
+**Cause:** The error text is printed together with the Java stack trace (KI-02). The first line is the useful one.
+
+### `PRINT 1,2` shows `1.02.0`
+
+**Cause:** A comma between `PRINT` items adds no space. This is the behaviour confirmed by the owner on 2026-11-22
+(KI-17). It is not an error.
+
+**Solution:** Use `;` and a quoted space: `PRINT 1; " "; 2` prints `1.0 2.0`.
+
+### The line editor stops when its input ends
+
+See KI-10 in `doc/KNOWN_ISSUES.md`. The editor reports a `NullPointerException` when there is no more input.
+
 ### Program runs but produces wrong output
 
 **Cause:** Logic error in your BASIC code.
@@ -582,10 +658,12 @@ java -jar BASIC-0.2.0-jar-with-dependencies.jar existing.bas
 
 ### Out of memory error
 
+**Note:** This entry was not re-checked on 2026-11-23.
+
 **Cause:** Program uses too much memory or has infinite loop.
 
 **Solution:**
-- Increase Java heap: `java -Xmx512m -jar BASIC-0.2.0-jar-with-dependencies.jar`
+- Increase Java heap: `java -Xmx512m -jar BASIC-0.4.0-jar-with-dependencies.jar`
 - Check for infinite loops: `WHILE 1 THEN PRINT X` (missing exit condition)
 - Reduce array sizes or data volume
 
@@ -600,11 +678,11 @@ Override configuration via environment variables:
 ```bash
 # Set log level
 export log_level=debug
-java -jar BASIC-0.2.0-jar-with-dependencies.jar program.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar program.bas
 
 # Enable Dartmouth mode
 export dartmouth=true
-java -jar BASIC-0.2.0-jar-with-dependencies.jar program.bas
+java -jar BASIC-0.4.0-jar-with-dependencies.jar program.bas
 ```
 
 ### Configuration File

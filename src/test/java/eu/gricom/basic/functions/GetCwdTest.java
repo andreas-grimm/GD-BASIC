@@ -1,9 +1,9 @@
 package eu.gricom.basic.functions;
 
-import eu.gricom.basic.memoryManager.FileManager;
+import eu.gricom.basic.memorymanager.FileManager;
 import eu.gricom.basic.statements.ChDirStatement;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - INTEGRATION TESTS: GetCwd works correctly with ChDir and FileManager
  * - EDGE CASES: Empty strings, special paths, and state verification
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Returns StringValue containing the current working directory
  * - Takes no parameters
  * - Never returns null
@@ -40,7 +40,7 @@ public class GetCwdTest {
     private FileManager _oFileManager;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Resets FileManager to default state.
      */
     @BeforeEach
@@ -156,7 +156,7 @@ public class GetCwdTest {
      * When: GetCwd.execute() is called multiple times
      * Then: All calls return identical results
      * <p>
-     * Purpose: Verifies deterministic behavior
+     * Purpose: Verifies deterministic behaviour
      */
     @Test
     public void testGetCwd_WithMultipleCalls_ReturnsConsistentResults() {
@@ -227,8 +227,8 @@ public class GetCwdTest {
         // Execute: Call GetCwd
         Value oResult = GetCwd.execute();
 
-        // Verify: GetCwd returns the directory set by ChDir
-        assertEquals(strNewDirectory, oResult.toString());
+        // Verify: GetCwd returns the absolute directory set by ChDir (the trailing '/' is removed)
+        assertEquals("/tmp", oResult.toString());
     }
 
     /**

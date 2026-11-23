@@ -17,7 +17,7 @@ public class DimStatement implements Statement {
     /**
      * Default constructor.
      * <p>
-     * A "DIM" statement initializes an array of any type.
+     * A "DIM" statement initialises an array of any type.
      * @param iTokenNumber - number of the command in the basic program
      */
     public DimStatement(final int iTokenNumber) {

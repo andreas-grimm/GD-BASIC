@@ -1,10 +1,10 @@
 package eu.gricom.basic.functions;
 
 import eu.gricom.basic.error.RuntimeException;
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.FileOpenType;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.FileOpenType;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - EDGE CASES: Empty files, blank lines, special characters
  * - ERROR HANDLING: Unregistered file IDs and invalid file names
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Returns BooleanValue(true) only if all lines are identical
  * - Returns BooleanValue(false) if any line differs
  * - Returns BooleanValue(false) if file line counts differ
@@ -53,7 +53,7 @@ public class FCompareTest {
     private FileManager _oFileManager;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary files and FileManager instance.
      */
     @BeforeEach

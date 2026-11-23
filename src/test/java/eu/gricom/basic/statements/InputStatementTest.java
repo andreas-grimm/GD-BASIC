@@ -1,8 +1,8 @@
 package eu.gricom.basic.statements;
 
 import eu.gricom.basic.helper.ConsoleInput;
-import eu.gricom.basic.memoryManager.VariableManagement;
-import eu.gricom.basic.variableTypes.RealValue;
+import eu.gricom.basic.memorymanager.VariableManagement;
+import eu.gricom.basic.variabletypes.RealValue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

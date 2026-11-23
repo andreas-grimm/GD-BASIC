@@ -1,12 +1,15 @@
 package eu.gricom.basic.statements;
 
+import eu.gricom.basic.error.OverflowException;
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.helper.Logger;
 import eu.gricom.basic.tokenizer.BasicTokenType;
-import eu.gricom.basic.variableTypes.Value;
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.BooleanValue;
+import eu.gricom.basic.variabletypes.Value;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.LongValue;
+import eu.gricom.basic.variabletypes.StringValue;
 
 /**
  * UnaryOperatorExpression handles unary operators that operate on a single operand.
@@ -33,16 +36,16 @@ public class UnaryOperatorExpression implements Expression {
      * @param oOperator the unary operator (PLUS, MINUS, or NOT)
      * @param oOperand the operand to apply the operator to
      */
-    public UnaryOperatorExpression(final BasicTokenType oOperator, final Expression oOperand) {
-        _oLogger.debug("--->  " + oOperator + " " + oOperand.content());
-        _oOperator = oOperator;
+    public UnaryOperatorExpression(final BasicTokenType eOperator, final Expression oOperand) {
+        _oLogger.debug("--->  " + eOperator + " " + oOperand.content());
+        _oOperator = eOperator;
         _oOperand = oOperand;
         
         // Validate that the operator is a valid unary operator
-        if (oOperator != BasicTokenType.PLUS && 
-            oOperator != BasicTokenType.MINUS && 
-            oOperator != BasicTokenType.NOT) {
-            throw new IllegalArgumentException("Invalid unary operator: " + oOperator);
+        if (eOperator != BasicTokenType.PLUS
+            && eOperator != BasicTokenType.MINUS
+            && eOperator != BasicTokenType.NOT) {
+            throw new IllegalArgumentException("Invalid unary operator: " + eOperator);
         }
     }
 
@@ -54,14 +57,14 @@ public class UnaryOperatorExpression implements Expression {
      */
     @Override
     public final Value evaluate() throws Exception {
-        Value operandValue = _oOperand.evaluate();
+        Value oOperandValue = _oOperand.evaluate();
         
-        _oLogger.debug("Evaluating unary operator: " + _oOperator + " on operand: " + operandValue);
+        _oLogger.debug("Evaluating unary operator: " + _oOperator + " on operand: " + oOperandValue);
 
         return switch (_oOperator) {
-            case PLUS -> evaluateUnaryPlus(operandValue);
-            case MINUS -> evaluateUnaryMinus(operandValue);
-            case NOT -> evaluateUnaryNot(operandValue);
+            case PLUS -> evaluateUnaryPlus(oOperandValue);
+            case MINUS -> evaluateUnaryMinus(oOperandValue);
+            case NOT -> evaluateUnaryNot(oOperandValue);
             default -> throw new SyntaxErrorException("Unknown unary operator: " + _oOperator);
         };
     }
@@ -74,12 +77,12 @@ public class UnaryOperatorExpression implements Expression {
      * @return the operand value unchanged
      * @throws SyntaxErrorException if the operand is null
      */
-    private Value evaluateUnaryPlus(Value operand) throws SyntaxErrorException {
+    private Value evaluateUnaryPlus(Value oOperand) throws SyntaxErrorException {
         // Unary plus is mostly a no-op, but we validate the operand
-        if (operand == null) {
+        if (oOperand == null) {
             throw new SyntaxErrorException("Cannot apply unary plus to null value");
         }
-        return operand;
+        return oOperand;
     }
 
     /**
@@ -90,17 +93,34 @@ public class UnaryOperatorExpression implements Expression {
      * @return the negated value
      * @throws SyntaxErrorException if the operand cannot be negated
      */
-    private Value evaluateUnaryMinus(Value operand) throws SyntaxErrorException {
-        if (operand == null) {
+    /**
+     * Unary minus: -A gives the value of A times -1. The type is kept: an integer stays an integer, a decimal (BCD)
+     * stays a decimal. A boolean swaps TRUE and FALSE. A string is refused with an error.
+     *
+     * @param operand the value after the minus sign
+     * @return the negated value
+     * @throws SyntaxErrorException if the operand is missing or is a string
+     */
+    public static Value evaluateUnaryMinus(final Value oOperand) throws SyntaxErrorException {
+        if (oOperand == null) {
             throw new SyntaxErrorException("Cannot apply unary minus to null value");
         }
-        
+        if (oOperand instanceof StringValue) {
+            throw new SyntaxErrorException("Cannot apply unary minus to a string: " + oOperand);
+        }
+
         try {
-            // Convert to real number and negate
-            double numericValue = operand.toReal();
-            return new RealValue(-numericValue);
-        } catch (NumberFormatException e) {
-            throw new SyntaxErrorException("Cannot apply unary minus to non-numeric value: " + operand);
+            if (oOperand instanceof BooleanValue) {
+                // -TRUE is FALSE and -FALSE is TRUE: a boolean is true when its value is not zero
+                return new BooleanValue(oOperand.toReal() == 0.0);
+            }
+            // value times -1, using a -1 of the same family as the operand (a long cannot be multiplied by an integer)
+            Value oMinusOne = oOperand instanceof LongValue ? new LongValue(-1L) : new IntegerValue(-1);
+            return oOperand.multiply(oMinusOne);
+        } catch (NumberFormatException oException) {
+            throw new SyntaxErrorException("Cannot apply unary minus to non-numeric value: " + oOperand);
+        } catch (OverflowException oException) {
+            throw new SyntaxErrorException("Overflow while applying unary minus to: " + oOperand);
         }
     }
 
@@ -113,32 +133,32 @@ public class UnaryOperatorExpression implements Expression {
      * @return the result of the NOT operation
      * @throws SyntaxErrorException if the operand cannot be processed
      */
-    private Value evaluateUnaryNot(Value operand) throws SyntaxErrorException {
-        if (operand == null) {
+    public static Value evaluateUnaryNot(final Value oOperand) throws SyntaxErrorException {
+        if (oOperand == null) {
             throw new SyntaxErrorException("Cannot apply unary NOT to null value");
         }
         
         try {
             // Try to convert to boolean first
-            if (operand instanceof BooleanValue) {
-                boolean boolValue = operand.toReal() != 0.0;
-                return new BooleanValue(!boolValue);
+            if (oOperand instanceof BooleanValue) {
+                boolean bValue = oOperand.toReal() != 0.0;
+                return new BooleanValue(!bValue);
             }
             
             // For numeric values, perform bitwise NOT
-            double numericValue = operand.toReal();
-            long longValue = (long) numericValue;
-            long notValue = ~longValue;
+            double fNumericValue = oOperand.toReal();
+            long lValue = (long) fNumericValue;
+            long lNotValue = ~lValue;
             
             // Return as integer if it fits, otherwise as real
-            if (notValue >= Integer.MIN_VALUE && notValue <= Integer.MAX_VALUE) {
-                return new IntegerValue((int) notValue);
+            if (lNotValue >= Integer.MIN_VALUE && lNotValue <= Integer.MAX_VALUE) {
+                return new IntegerValue((int) lNotValue);
             } else {
-                return new RealValue((double) notValue);
+                return new RealValue((double) lNotValue);
             }
             
-        } catch (NumberFormatException e) {
-            throw new SyntaxErrorException("Cannot apply unary NOT to non-numeric value: " + operand);
+        } catch (NumberFormatException oException) {
+            throw new SyntaxErrorException("Cannot apply unary NOT to non-numeric value: " + oOperand);
         }
     }
 
@@ -168,8 +188,8 @@ public class UnaryOperatorExpression implements Expression {
      */
     @Override
     public final String content() {
-        String operatorSymbol = getOperatorSymbol(_oOperator);
-        return operatorSymbol + "(" + _oOperand.content() + ")";
+        String strOperatorSymbol = getOperatorSymbol(_oOperator);
+        return strOperatorSymbol + "(" + _oOperand.content() + ")";
     }
 
     /**
@@ -181,8 +201,8 @@ public class UnaryOperatorExpression implements Expression {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"UNARY_OP\": {";
-        strReturn += "\"OPERATOR\": \""+ _oOperator.toString() +"\",";
-        strReturn += "\"OPERAND\": \""+ _oOperand.structure() +"\"";
+        strReturn += "\"OPERATOR\": \"" + _oOperator.toString() + "\",";
+        strReturn += "\"OPERAND\": \"" + _oOperand.structure() + "\"";
         strReturn += "}}";
         return strReturn;
     }
@@ -193,12 +213,12 @@ public class UnaryOperatorExpression implements Expression {
      * @param operator the BasicTokenType operator
      * @return the string symbol for the operator
      */
-    private String getOperatorSymbol(BasicTokenType operator) {
-        return switch (operator) {
+    private String getOperatorSymbol(BasicTokenType eOperator) {
+        return switch (eOperator) {
             case PLUS -> "+";
             case MINUS -> "-";
             case NOT -> "!";
-            default -> operator.toString();
+            default -> eOperator.toString();
         };
     }
 
@@ -209,9 +229,15 @@ public class UnaryOperatorExpression implements Expression {
      */
     @Override
     public String toString() {
-        return "UnaryOperatorExpression{" +
-                "operator=" + _oOperator +
-                ", operand=" + _oOperand +
-                '}';
+        return "UnaryOperatorExpression{"
+                + "operator=" + _oOperator
+                + ", operand=" + _oOperand
+                + '}';
     }
-} 
+
+    /** @return the operator token type (used by the compiler) */
+    public BasicTokenType getTokenType() {
+        return _oOperator;
+    }
+}
+ 

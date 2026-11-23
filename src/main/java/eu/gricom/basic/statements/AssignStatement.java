@@ -1,6 +1,6 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.VariableManagement;
+import eu.gricom.basic.memorymanager.VariableManagement;
 import eu.gricom.basic.tokenizer.Normalizer;
 
 /**
@@ -73,7 +73,7 @@ public final class AssignStatement implements Statement {
 
             if (strInner.contains(",")) {
                 String[] astrCommaSeperatedList = strInner.split(",");
-                StringBuilder strCommaSeperatedList = new StringBuilder();
+                StringBuilder oCommaSeperatedList = new StringBuilder();
 
                 for (String strExpression: astrCommaSeperatedList) {
                     String strValue = strExpression;
@@ -83,11 +83,11 @@ public final class AssignStatement implements Statement {
                         strValue = oExpression.evaluate().toString();
                     }
 
-                    strCommaSeperatedList.append(strValue).append(",");
+                    oCommaSeperatedList.append(strValue).append(",");
                 }
 
                 strKey = strKey.substring(0, iIndexStart + 1)
-                        + strCommaSeperatedList.substring(0, strCommaSeperatedList.length() - 1)
+                        + oCommaSeperatedList.substring(0, oCommaSeperatedList.length() - 1)
                         + strKey.substring(iIndexEnd);
 
             } else {
@@ -128,10 +128,21 @@ public final class AssignStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"ASSIGN\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\",";
-        strReturn += "\"NAME\": \""+ _strKey +"\",";
-        strReturn += "\"EXPRESSION\": "+ _oExpression.structure();
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\",";
+        strReturn += "\"NAME\": \"" + _strKey + "\",";
+        strReturn += "\"EXPRESSION\": " + _oExpression.structure();
         strReturn += "}}";
         return strReturn;
     }
+
+    /** @return the variable key, for example A% (used by the compiler) */
+    public String getKey() {
+        return _strKey;
+    }
+
+    /** @return the value expression (used by the compiler) */
+    public Expression getExpression() {
+        return _oExpression;
+    }
 }
+

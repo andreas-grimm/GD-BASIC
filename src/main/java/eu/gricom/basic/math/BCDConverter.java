@@ -20,30 +20,30 @@ public class BCDConverter {
 
         int iByteLen = iNumOfDigits % 2 == 0 ? iNumOfDigits / 2 : (iNumOfDigits + 1) / 2;
 
-        byte[] abyteBcd = new byte[iByteLen];
+        byte[] aiAbyteBcd = new byte[iByteLen];
 
         for (int iX = 0; iX < iNumOfDigits; iX++) {
-            byte byteTmp = (byte) (fRealValue % 10);
+            byte iByteTmp = (byte) (fRealValue % 10);
 
             if (iX % 2 == 0) {
-                abyteBcd[iX / 2] = byteTmp;
+                aiAbyteBcd[iX / 2] = iByteTmp;
             } else {
-                abyteBcd[iX / 2] |= (byte) (byteTmp << 4);
+                aiAbyteBcd[iX / 2] |= (byte) (iByteTmp << 4);
             }
 
             fRealValue /= 10;
         }
 
         for (int iX = 0; iX < iByteLen / 2; iX++) {
-            byte tmp = abyteBcd[iX];
-            abyteBcd[iX] = abyteBcd[iByteLen - iX - 1];
-            abyteBcd[iByteLen - iX - 1] = tmp;
+            byte iTmp = aiAbyteBcd[iX];
+            aiAbyteBcd[iX] = aiAbyteBcd[iByteLen - iX - 1];
+            aiAbyteBcd[iByteLen - iX - 1] = iTmp;
         }
 
-        return abyteBcd;
+        return aiAbyteBcd;
     }
 
-    public static double toReal(byte[] abyteBCDValue) {
+    public static double toReal(byte[] aiAbyteBCDValue) {
         return 0;
     }
 }

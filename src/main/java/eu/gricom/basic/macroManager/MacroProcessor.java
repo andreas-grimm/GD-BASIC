@@ -1,4 +1,4 @@
-package eu.gricom.basic.macroManager;
+package eu.gricom.basic.macromanager;
 
 import eu.gricom.basic.error.SyntaxErrorException;
 import eu.gricom.basic.helper.Logger;
@@ -31,37 +31,37 @@ public class MacroProcessor {
      * @param strProgram - the program to be processed to find and replace macros.
      * @return - the generated code after the macros have benn processed
      */
-    public String process (String strProgram) throws SyntaxErrorException {
+    public String process(String strProgram) throws SyntaxErrorException {
         Vector<String> vstrParameter = new Vector<>();
         MacroList oMacroList = new MacroList();
         String strConvertedProgram = new String();
 
-        // Step 1: Tokenize the source code
-        List<Token> aoToken = tokenize(strProgram);
+        // Step 1: Tokenise the source code
+        List<Token> voToken = tokenize(strProgram);
 
         // Step 2: Build the list of all found macros
         int iCounter = 0;
 
-        while (iCounter < aoToken.size()) {
-            Token oToken  = aoToken.get(iCounter);
+        while (iCounter < voToken.size()) {
+            Token oToken  = voToken.get(iCounter);
 
             if (oToken.getType().toString().contains("DEF")) {
                 _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: [" + oToken.getType() + "]: ["
                                        + oToken.getText() + "]");
 
-                String strName = aoToken.get(iCounter + 1).getText();
+                String strName = voToken.get(iCounter + 1).getText();
 
                 int iAdd = 3;
-                while (aoToken.get(iCounter + iAdd).getType() != BasicTokenType.RIGHT_PAREN) {
-                    if (aoToken.get(iCounter + iAdd).getType() == BasicTokenType.WORD) {
-                        vstrParameter.add(aoToken.get(iCounter + iAdd).getText());
+                while (voToken.get(iCounter + iAdd).getType() != BasicTokenType.RIGHT_PAREN) {
+                    if (voToken.get(iCounter + iAdd).getType() == BasicTokenType.WORD) {
+                        vstrParameter.add(voToken.get(iCounter + iAdd).getText());
                         _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: ["
-                            + oToken.getType() + "]: Parameter: [" + aoToken.get(iCounter + iAdd).getText() + "]");
+                            + oToken.getType() + "]: Parameter: [" + voToken.get(iCounter + iAdd).getText() + "]");
                     }
                     iAdd++;
                 }
 
-                String strFunction = aoToken.get(getFunction(aoToken, iCounter)).getText();
+                String strFunction = voToken.get(getFunction(voToken, iCounter)).getText();
 
                 _oLogger.debug("[" + oToken.getLine() + "] Token # <" + iCounter + ">: ["
                                        + oToken.getType() + "] Function: <" + strFunction + ">");
@@ -102,11 +102,11 @@ public class MacroProcessor {
         return strConvertedProgram;
     }
 
-    private int getFunction(List<Token> aoToken, int iStartCounter) throws SyntaxErrorException {
+    private int getFunction(List<Token> voToken, int iStartCounter) throws SyntaxErrorException {
         int iCounter = iStartCounter;
 
-        while (iCounter < aoToken.size()) {
-            if (aoToken.get(iCounter).getType() == BasicTokenType.STRING) {
+        while (iCounter < voToken.size()) {
+            if (voToken.get(iCounter).getType() == BasicTokenType.STRING) {
                 return iCounter;
             }
             iCounter++;

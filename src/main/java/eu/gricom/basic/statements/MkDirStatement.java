@@ -2,7 +2,7 @@ package eu.gricom.basic.statements;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.helper.Logger;
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.variabletypes.StringValue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -79,19 +79,19 @@ public class MkDirStatement implements Statement {
             try {
                 Path oPath = Paths.get(strDirectory);
                 Files.createDirectory(oPath);
-            } catch (java.nio.file.FileAlreadyExistsException e) {
+            } catch (java.nio.file.FileAlreadyExistsException oException) {
                 throw new RuntimeException("Directory already exists: " + strDirectory);
-            } catch (java.nio.file.NoSuchFileException e) {
+            } catch (java.nio.file.NoSuchFileException oException) {
                 throw new RuntimeException("Parent directory does not exist: " + strDirectory);
-            } catch (java.nio.file.AccessDeniedException e) {
+            } catch (java.nio.file.AccessDeniedException oException) {
                 throw new RuntimeException("Access denied creating directory: " + strDirectory);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to create directory: " + strDirectory + ": " + e.getMessage());
+            } catch (Exception oException) {
+                throw new RuntimeException("Failed to create directory: " + strDirectory + ": " + oException.getMessage());
             }
 
-        } catch (Exception e) {
+        } catch (Exception oException) {
             Logger oLogger = new Logger("eu.gricom.basic.statements.MkDirStatement");
-            oLogger.error(e.getMessage());
+            oLogger.error(oException.getMessage());
             System.exit(-1);
         }
     }
@@ -125,5 +125,10 @@ public class MkDirStatement implements Statement {
         strReturn += "\"DIRECTORY\": \"" + strDirectory.replace("\"", "\\\"") + "\"";
         strReturn += "}}";
         return strReturn;
+    }
+
+    /** @return the Directory of this statement (used by the compiler) */
+    public StringValue getDirectory() {
+        return _oDirectory;
     }
 }

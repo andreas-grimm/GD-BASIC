@@ -1,8 +1,8 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.memoryManager.FileManager;
-import eu.gricom.basic.memoryManager.VariableManagement;
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.memorymanager.FileManager;
+import eu.gricom.basic.memorymanager.VariableManagement;
+import eu.gricom.basic.variabletypes.StringValue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * - EDGE CASES: First char, middle positions, EOF, special characters
  * - INTEGRATION TESTS: FGetStatement combined with FInputStatement for position tracking
  * <p>
- * Key Behavior:
+ * Key Behaviour:
  * - Reads character at current file position
  * - Closes and re-opens file internally
  * - Updates position to position + 1 after each read
@@ -52,7 +52,7 @@ public class FGetStatementTest {
     private FileManager _oFileManager;
 
     /**
-     * Setup method: Initializes test environment before each test.
+     * Setup method: Initialises test environment before each test.
      * Creates temporary files and FileManager instance.
      */
     @BeforeEach

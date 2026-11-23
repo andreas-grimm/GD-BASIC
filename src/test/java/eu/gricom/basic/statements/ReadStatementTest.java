@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import eu.gricom.basic.variableTypes.IntegerValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
 import eu.gricom.basic.error.OutOfDataException;
-import eu.gricom.basic.memoryManager.FiFoQueue;
-import eu.gricom.basic.memoryManager.VariableManagement;
-import eu.gricom.basic.variableTypes.StringValue;
+import eu.gricom.basic.memorymanager.FiFoQueue;
+import eu.gricom.basic.memorymanager.VariableManagement;
+import eu.gricom.basic.variabletypes.StringValue;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;

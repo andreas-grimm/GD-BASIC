@@ -1,11 +1,11 @@
-package eu.gricom.basic.memoryManager;
+package eu.gricom.basic.memorymanager;
 
 import eu.gricom.basic.error.RuntimeException;
 import eu.gricom.basic.statements.ChDirStatement;
-import eu.gricom.basic.variableTypes.BooleanValue;
-import eu.gricom.basic.variableTypes.IntegerValue;
-import eu.gricom.basic.variableTypes.StringValue;
-import eu.gricom.basic.variableTypes.Value;
+import eu.gricom.basic.variabletypes.BooleanValue;
+import eu.gricom.basic.variabletypes.IntegerValue;
+import eu.gricom.basic.variabletypes.StringValue;
+import eu.gricom.basic.variabletypes.Value;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -785,7 +786,7 @@ public class FileManagerTest {
      * When: FileManager opens files after each directory change
      * Then: Files are correctly resolved based on the current directory
      * <p>
-     * Purpose: Verifies correct behavior with multiple directory changes
+     * Purpose: Verifies correct behaviour with multiple directory changes
      */
     @Test
     public void testOpenFile_AfterMultipleChdirCalls_UsesLatestDirectory() throws IOException, Exception {
@@ -906,11 +907,12 @@ public class FileManagerTest {
         String strDir1 = oFileManager.getCurrentDirectory();
         assertTrue(strDir1.contains("/tmp"));
 
-        // Change to empty directory
+        // CHDIR "" stays in the current directory: the stored directory is absolute and does not change
         new ChDirStatement(10, new StringValue("")).execute();
         FileManager oFileManager2 = new FileManager();
         String strDir2 = oFileManager2.getCurrentDirectory();
-        assertEquals("", strDir2);
+        assertEquals(strDir1, strDir2);
+        assertTrue(java.nio.file.Paths.get(strDir2).isAbsolute());
     }
 
     /**
@@ -944,5 +946,29 @@ public class FileManagerTest {
         oFileManager.closeFile(FILE_ID_READ, false);
         Files.delete(oFileInDir);
         Files.delete(oTempDir);
+    }
+
+    /**
+     * Test: a file opened after CHDIR is created inside that directory, also when the stored directory has no
+     * trailing separator (the separator is added by Paths.get).
+     */
+    @Test
+    public void testOpenFile_RelativeNameUsesDirectoryWithoutTrailingSeparator() throws Exception {
+        Path oDirectory = Files.createTempDirectory("fm-dir-");
+        String strSaved = _oFileManager.getCurrentDirectory();
+        try {
+            _oFileManager.setCurrentDirectory(oDirectory.toString());
+            assertTrue(_oFileManager.openFile("inside.txt", 71, FileOpenType.WRITE));
+            _oFileManager.closeFile(71, false);
+            assertTrue(Files.exists(oDirectory.resolve("inside.txt")));
+        } finally {
+            _oFileManager.setCurrentDirectory(strSaved);
+        }
+    }
+
+    /** Test: the start directory is the directory in which the program was started, and it is absolute. */
+    @Test
+    public void testStartDirectory_IsAbsoluteProgramDirectory() {
+        assertTrue(Paths.get(System.getProperty("user.dir")).isAbsolute());
     }
 }

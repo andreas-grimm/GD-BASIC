@@ -1,7 +1,7 @@
 package eu.gricom.basic.statements;
 
-import eu.gricom.basic.variableTypes.RealValue;
-import eu.gricom.basic.memoryManager.VariableManagement;
+import eu.gricom.basic.variabletypes.RealValue;
+import eu.gricom.basic.memorymanager.VariableManagement;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

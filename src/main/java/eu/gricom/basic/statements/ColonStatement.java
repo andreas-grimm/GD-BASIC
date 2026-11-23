@@ -15,7 +15,7 @@ public class ColonStatement implements Statement {
     /**
      * Default constructor.
      * <p>
-     * A "DIM" statement initializes an array of any type.
+     * A "DIM" statement initialises an array of any type.
      * @param iTokenNumber - number of the command in the basic program
      */
     public ColonStatement(final int iTokenNumber) {
@@ -65,7 +65,7 @@ public class ColonStatement implements Statement {
     @Override
     public String structure() throws Exception {
         String strReturn = "{\"COLON\": {";
-        strReturn += "\"TOKEN_NR\": \""+ _iTokenNumber +"\"";
+        strReturn += "\"TOKEN_NR\": \"" + _iTokenNumber + "\"";
         strReturn += "}}";
         return strReturn;
     }
