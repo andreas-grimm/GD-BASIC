@@ -219,6 +219,8 @@ main() {
         "test_on_goto_basic.bas"
         "test_on_goto_simple.bas"
         "test_on_outofrange.bas"
+        # PI to 32 digits with BCD (#) variables: Gauss-Legendre and Machin's formula
+        "test_bcd_pi.bas"
     )
     
     # Run each test
